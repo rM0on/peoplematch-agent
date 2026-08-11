@@ -1,0 +1,70 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+*.so
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.egg-info/
+dist/
+build/
+
+# Node.js and Next.js
+node_modules/
+.next/
+out/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tsbuildinfo
+next-env.d.ts
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Runtime output
+*.log
+logs/
+tmp/
+temp/
+
+# Local databases and model artifacts
+*.db
+*.sqlite
+*.sqlite3
+postgres_data/
+redis_data/
+qdrant_storage/
+/models/
+artifacts/
+checkpoints/
+*.bin
+*.onnx
+*.safetensors
+
+# Local worktrees
+.worktrees/
+worktrees/
