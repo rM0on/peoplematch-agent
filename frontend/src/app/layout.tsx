@@ -5,8 +5,8 @@ import "./globals.css";
 
 
 export const metadata: Metadata = {
-  title: "PeopleMatch Agent",
-  description: "Evidence-aware AI Builder matching and recommendation system",
+  title: "Matching Results | PeopleMatch Agent",
+  description: "Evidence-first matching results design mock for PeopleMatch Agent",
 };
 
 

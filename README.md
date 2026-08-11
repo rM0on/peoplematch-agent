@@ -4,7 +4,7 @@
 
 PeopleMatch Agent is an autonomous, local-running prototype for evidence-aware candidate/job matching. It is designed to evolve beyond keyword search into a traceable pipeline that can rank AI Builder opportunities, explain why a match is supported by project evidence, review bad cases, and compare later algorithms through sandbox-only offline evaluation.
 
-The repository is currently at **Phase 0 — Product Definition & Engineering Bootstrap**. Matching, ranking, LLM, retrieval, feedback, and evaluation capabilities shown in the roadmap are planned—not implemented.
+The repository is currently at **Phase 0.5 — Product Design / UI System (Completed)**. Phase 0 is complete and frozen; Phase 0.5A defined product architecture and visual directions, and Phase 0.5B implemented the selected Evidence-first Matching Results design with explicitly illustrative data. Matching, ranking, LLM, retrieval, feedback, and evaluation capabilities shown in the roadmap remain planned—not implemented.
 
 ## Project Overview
 
@@ -58,8 +58,8 @@ Phase 0 implements none of these algorithmic stages. It only defines their futur
 
 ```mermaid
 flowchart LR
-    Browser["Browser"] --> Web["Next.js frontend\nCURRENT"]
-    Web --> API["FastAPI backend\nCURRENT: /health only"]
+    Browser["Browser"] --> Web["Next.js frontend\nCURRENT: Phase 0.5 design mock"]
+    Web -. "Phase 0 health client preserved; not mounted in selected mock" .-> API["FastAPI backend\nCURRENT: /health only"]
     API --> PG["PostgreSQL\nCURRENT: local service config"]
     API --> Redis["Redis\nCURRENT: local service config"]
     API --> Qdrant["Qdrant\nCURRENT: local service config"]
@@ -100,9 +100,11 @@ peoplematch-agent/
 
 ## Current Phase
 
-**Phase 0 — Product Definition & Engineering Bootstrap**
+**Phase 0.5 — Product Design / UI System (Completed)**
 
-Implemented in this phase:
+Phase 0.5A completed the information architecture, user flows, page hierarchy, design-system direction, screenshot planning, and three-way visual exploration. Phase 0.5B implemented the user-selected Evidence-first fusion for the Matching Results hero screen. Its shortlist values, score breakdowns, evidence records, risk labels, and trace are marked `Design Mock`; they do not come from a matching engine.
+
+Phase 0 completed:
 
 - product definition, PRD, architecture, API inventory, and Phase 0–12 roadmap;
 - FastAPI application factory, environment settings, CORS, logging, and Swagger docs;
@@ -121,7 +123,7 @@ Not implemented: candidate/job profiles, parsers, matching algorithms, LLM calls
 | Phase | Direction | Status |
 |---|---|---|
 | 0 | Product definition and engineering bootstrap | Completed |
-| 0.5 | Product design and UI system | Planned |
+| 0.5 | Product design and UI system | Completed |
 | 1 | Structured profile contracts and sandbox input flow | Planned |
 | 2 | Candidate/job persistence and migrations | Planned |
 | 3 | Profile extraction implementation | Planned |
@@ -195,7 +197,7 @@ $env:NEXT_PUBLIC_API_BASE_URL = "http://localhost:8000"
 npm run dev
 ```
 
-The status card reports `Unavailable` when the API URL is absent, the backend cannot be reached, or the response is invalid. It never falls back to a hard-coded healthy state.
+The Phase 0.5B root screen is a frontend-only `Design Mock` and does not call the backend. Backend liveness remains independently available at <http://localhost:8000/health>; the Phase 0 health client/status component is preserved but is not mounted in the selected Matching Results screen.
 
 ## Testing
 

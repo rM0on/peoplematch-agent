@@ -6,7 +6,7 @@ PeopleMatch Agent is a local monorepo with these logical areas:
 
 | Area | Responsibility | Phase 0 status |
 |---|---|---|
-| Frontend | Product UI and typed API consumption | **CURRENT:** minimal Next.js shell and live health status |
+| Frontend | Product UI and typed API consumption | **CURRENT:** Phase 0.5 Matching Results design mock; Phase 0 health client preserved but not mounted |
 | Backend | HTTP boundary, application configuration, tracing | **CURRENT:** FastAPI liveness only |
 | Storage | Durable candidate/job/match-run data | **CURRENT:** PostgreSQL container config; domain schema **PLANNED** |
 | Retrieval | Candidate/job recall and vector search | Qdrant container config **CURRENT**; retrieval logic **PLANNED** |
@@ -16,7 +16,7 @@ PeopleMatch Agent is a local monorepo with these logical areas:
 
 ## Current Phase Architecture
 
-**CURRENT in Phase 0:** Browser → Next.js → FastAPI `GET /health`, plus local Compose definitions for PostgreSQL, Redis, and Qdrant. The backend has Pydantic Settings, standard logging, CORS, request ID middleware, response envelopes, exception handlers, and empty SQLAlchemy metadata.
+**CURRENT after Phase 0.5:** Browser → Next.js serves the selected Matching Results design mock. FastAPI `GET /health` and the typed frontend health client remain implemented, but the selected mock screen does not issue the health request. Local Compose definitions for PostgreSQL, Redis, and Qdrant remain unchanged. The backend has Pydantic Settings, standard logging, CORS, request ID middleware, response envelopes, exception handlers, and empty SQLAlchemy metadata.
 
 The liveness route makes no downstream calls. No candidate/job table, vector collection, cache key, algorithm, or AI provider is initialized.
 
@@ -24,8 +24,8 @@ The liveness route makes no downstream calls. No candidate/job table, vector col
 
 ```mermaid
 flowchart TD
-    Browser["Browser"] --> Next["Next.js 16 frontend\nCURRENT"]
-    Next -->|"GET /health"| FastAPI["FastAPI backend\nCURRENT"]
+    Browser["Browser"] --> Next["Next.js 16 frontend\nCURRENT: design mock"]
+    Next -. "health client preserved; not mounted in selected mock" .-> FastAPI["FastAPI backend\nCURRENT: /health"]
     FastAPI --> PG["PostgreSQL\nservice configured; schema planned"]
     FastAPI --> Redis["Redis\nservice configured; usage planned"]
     FastAPI --> Qdrant["Qdrant\nservice configured; collections planned"]
@@ -57,7 +57,7 @@ flowchart TD
 2. Middleware stores the ID on request state before routing.
 3. The health route or error handler includes the same ID in the body.
 4. Middleware writes the ID to the response header.
-5. The frontend treats non-2xx, invalid, or unreachable health responses as unavailable.
+5. The preserved Phase 0 frontend health client treats non-2xx, invalid, or unreachable health responses as unavailable; it is not mounted in the Phase 0.5B mock screen.
 
 Unknown routes, validation errors, and unexpected application exceptions use one typed envelope. Unexpected error details are logged locally but not returned to clients.
 

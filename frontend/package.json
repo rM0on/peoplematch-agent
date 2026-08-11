@@ -11,17 +11,21 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
     "next": "16.3.0",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.1.12",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.3",
     "@types/node": "20.19.13",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.4",
     "eslint": "9.35.0",
     "eslint-config-next": "16.3.0",
+    "jsdom": "^26.1.0",
     "tailwindcss": "4.1.12",
     "typescript": "5.9.2",
     "vitest": "3.2.7"

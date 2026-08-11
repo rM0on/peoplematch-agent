@@ -13,12 +13,12 @@ Only the phase explicitly requested by the user may be implemented. Status value
 
 ## Phase 0.5 — Product Design / UI System
 
-**Status:** Planned
+**Status:** Completed
 
 - **Objective:** Define the visual language and interaction patterns before full product flows.
-- **Primary deliverables:** Design tokens, accessible primitives, shadcn/ui-compatible conventions, responsive navigation shell, loading/error/empty patterns, documented component examples.
+- **Primary deliverables:** Phase 0.5A defined information architecture, UX flows, design-system direction, state patterns, screenshot strategy, and three visual directions. Phase 0.5B implemented the explicitly selected Evidence-first fusion for the Matching Results design mock.
 - **Dependency:** Phase 0 complete.
-- **Quality gate:** Keyboard and responsive review passes; tokens and primitives are reusable; no fake business data or complete future workflows are introduced.
+- **Quality gate:** The selected direction preserves evidence-first hierarchy, compact rank comparison, and a lightweight trace; the frontend passes tests, lint, typecheck, build, keyboard/responsive review, and reference-image QA. All illustrative values stay labeled as design mock data, and no future business workflow is implemented.
 
 ## Phase 1 — Profile Contracts & Sandbox Input
 
