@@ -1,0 +1,65 @@
+{
+  "annotation_source": "synthetic_curated",
+  "data_origin": "synthetic_sandbox",
+  "database_insertion": "deferred_to_phase_2",
+  "dataset_version": "1.0.0",
+  "files": [
+    {
+      "path": "data/samples/candidates.jsonl",
+      "record_count": 48,
+      "sha256": "de171393cbda7c5380debecba182e45c3212a5cab0af8b22691b69519e75e92c",
+      "size_bytes": 281227
+    },
+    {
+      "path": "data/samples/jobs.jsonl",
+      "record_count": 24,
+      "sha256": "52ecce61fba9cb4d6e8f7919b67d836f1ef3372244c0981aeb2856b924bfee75",
+      "size_bytes": 81607
+    },
+    {
+      "path": "data/samples/labels.jsonl",
+      "record_count": 288,
+      "sha256": "21eca7b4de67681f84904b16512ba074711d3957b21441fa184fd35f5a56a1d3",
+      "size_bytes": 224858
+    },
+    {
+      "path": "data/eval/pairwise_preferences.jsonl",
+      "record_count": 48,
+      "sha256": "ba0842b705bc4ea1ecc639ec8ed169d215c18486b8a93181c90c179b09394a63",
+      "size_bytes": 29625
+    },
+    {
+      "path": "data/eval/query_splits.json",
+      "sha256": "79724cf33f6198bf776233947b777b4a183ae4c94022be3b425d27a509f42772",
+      "size_bytes": 671
+    },
+    {
+      "path": "data/schemas/candidate_profile.schema.json",
+      "sha256": "8ddde96283f1e012d79b2fae0cd81d0067ff1b2b6eb5f14148af6be185dce5a9",
+      "size_bytes": 10129
+    },
+    {
+      "path": "data/schemas/job_profile.schema.json",
+      "sha256": "f6f50afb64d61051a0b6e42ce9e6ade580f899a79e6bcb125845e4e69986dc8d",
+      "size_bytes": 5427
+    },
+    {
+      "path": "data/schemas/relevance_label.schema.json",
+      "sha256": "90649c4feda7352910d358363254f21ab8d3a350d086ba87ffc32143f97e608b",
+      "size_bytes": 2909
+    },
+    {
+      "path": "data/schemas/pairwise_preference.schema.json",
+      "sha256": "d67193732c898b36f86ee4a28561ec19ce034b1b262e869861fa7a50f2ce3424",
+      "size_bytes": 2220
+    }
+  ],
+  "schema_version": "1.0",
+  "split_policy": "job_query_grouped",
+  "validated_counts": {
+    "candidates": 48,
+    "jobs": 24,
+    "labels": 288,
+    "pairwise_preferences": 48
+  }
+}

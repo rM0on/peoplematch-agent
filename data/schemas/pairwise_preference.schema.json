@@ -1,0 +1,99 @@
+{
+  "$defs": {
+    "DatasetSplit": {
+      "enum": [
+        "train",
+        "dev",
+        "test"
+      ],
+      "title": "DatasetSplit",
+      "type": "string"
+    },
+    "MismatchCode": {
+      "enum": [
+        "DIRECTION_MISMATCH",
+        "EVIDENCE_INSUFFICIENT",
+        "KEYWORD_FALSE_POSITIVE",
+        "MUST_HAVE_MISSING",
+        "LOCATION_MISMATCH",
+        "SENIORITY_MISMATCH",
+        "WORK_STYLE_MISMATCH",
+        "OVERCLAIM_RISK",
+        "AI_TOOLING_GAP",
+        "PROJECT_DEPTH_GAP"
+      ],
+      "title": "MismatchCode",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "annotation_source": {
+      "const": "synthetic_curated",
+      "title": "Annotation Source",
+      "type": "string"
+    },
+    "confidence": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "job_id": {
+      "pattern": "^job_[a-z0-9_]+$",
+      "title": "Job Id",
+      "type": "string"
+    },
+    "loser_candidate_id": {
+      "pattern": "^cand_[a-z0-9_]+$",
+      "title": "Loser Candidate Id",
+      "type": "string"
+    },
+    "preference_id": {
+      "pattern": "^pref_[a-z0-9_]+$",
+      "title": "Preference Id",
+      "type": "string"
+    },
+    "rationale": {
+      "maxLength": 800,
+      "minLength": 20,
+      "title": "Rationale",
+      "type": "string"
+    },
+    "reason_codes": {
+      "items": {
+        "$ref": "#/$defs/MismatchCode"
+      },
+      "minItems": 1,
+      "title": "Reason Codes",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "split": {
+      "$ref": "#/$defs/DatasetSplit"
+    },
+    "winner_candidate_id": {
+      "pattern": "^cand_[a-z0-9_]+$",
+      "title": "Winner Candidate Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "preference_id",
+    "job_id",
+    "winner_candidate_id",
+    "loser_candidate_id",
+    "reason_codes",
+    "rationale",
+    "confidence",
+    "annotation_source",
+    "split",
+    "schema_version"
+  ],
+  "title": "PairwisePreference",
+  "type": "object"
+}

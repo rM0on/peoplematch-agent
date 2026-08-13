@@ -1,0 +1,133 @@
+{
+  "$defs": {
+    "DatasetSplit": {
+      "enum": [
+        "train",
+        "dev",
+        "test"
+      ],
+      "title": "DatasetSplit",
+      "type": "string"
+    },
+    "MismatchCode": {
+      "enum": [
+        "DIRECTION_MISMATCH",
+        "EVIDENCE_INSUFFICIENT",
+        "KEYWORD_FALSE_POSITIVE",
+        "MUST_HAVE_MISSING",
+        "LOCATION_MISMATCH",
+        "SENIORITY_MISMATCH",
+        "WORK_STYLE_MISMATCH",
+        "OVERCLAIM_RISK",
+        "AI_TOOLING_GAP",
+        "PROJECT_DEPTH_GAP"
+      ],
+      "title": "MismatchCode",
+      "type": "string"
+    },
+    "RelevanceGrade": {
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "title": "RelevanceGrade",
+      "type": "integer"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "affected_requirement_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Affected Requirement Ids",
+      "type": "array"
+    },
+    "annotation_source": {
+      "const": "synthetic_curated",
+      "title": "Annotation Source",
+      "type": "string"
+    },
+    "candidate_id": {
+      "pattern": "^cand_[a-z0-9_]+$",
+      "title": "Candidate Id",
+      "type": "string"
+    },
+    "confidence": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "hard_negative": {
+      "title": "Hard Negative",
+      "type": "boolean"
+    },
+    "job_id": {
+      "pattern": "^job_[a-z0-9_]+$",
+      "title": "Job Id",
+      "type": "string"
+    },
+    "label_id": {
+      "pattern": "^lbl_[a-z0-9_]+$",
+      "title": "Label Id",
+      "type": "string"
+    },
+    "mismatch_reasons": {
+      "items": {
+        "$ref": "#/$defs/MismatchCode"
+      },
+      "title": "Mismatch Reasons",
+      "type": "array"
+    },
+    "query_type": {
+      "const": "job_to_candidate",
+      "title": "Query Type",
+      "type": "string"
+    },
+    "rationale": {
+      "maxLength": 800,
+      "minLength": 20,
+      "title": "Rationale",
+      "type": "string"
+    },
+    "relevance_grade": {
+      "$ref": "#/$defs/RelevanceGrade"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "split": {
+      "$ref": "#/$defs/DatasetSplit"
+    },
+    "supporting_evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Supporting Evidence Ids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "label_id",
+    "query_type",
+    "job_id",
+    "candidate_id",
+    "relevance_grade",
+    "hard_negative",
+    "mismatch_reasons",
+    "rationale",
+    "supporting_evidence_ids",
+    "affected_requirement_ids",
+    "confidence",
+    "annotation_source",
+    "split",
+    "schema_version"
+  ],
+  "title": "RelevanceLabel",
+  "type": "object"
+}

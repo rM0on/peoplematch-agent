@@ -4,7 +4,7 @@
 
 PeopleMatch Agent is an autonomous, local-running prototype for evidence-aware candidate/job matching. It is designed to evolve beyond keyword search into a traceable pipeline that can rank AI Builder opportunities, explain why a match is supported by project evidence, review bad cases, and compare later algorithms through sandbox-only offline evaluation.
 
-The repository is currently at **Phase 0.5 — Product Design / UI System (Completed)**. Phase 0 is complete and frozen; Phase 0.5A defined product architecture and visual directions, and Phase 0.5B implemented the selected Evidence-first Matching Results design with explicitly illustrative data. Matching, ranking, LLM, retrieval, feedback, and evaluation capabilities shown in the roadmap remain planned—not implemented.
+The repository has completed **Phase 1 — Dataset & Schema**. Phases 0, 0.5, and 1 are frozen; Phase 2 remains planned. Dataset `1.0.0` provides canonical Pydantic data contracts, synthetic sandbox profiles, curated relevance labels, query-level splits, and a deterministic freeze manifest. Matching, ranking, LLM, retrieval, persistence, feedback, and evaluation capabilities shown in the roadmap remain planned—not implemented.
 
 ## Project Overview
 
@@ -90,7 +90,7 @@ peoplematch-agent/
 │       ├── features/         # Feature-oriented system status integration
 │       ├── lib/              # Typed backend client
 │       └── types/            # Shared frontend API types
-├── data/                     # Future samples, schemas, and eval assets
+├── data/                     # Phase 1 sandbox profiles, labels, schemas, split, and manifest
 ├── docs/                     # PRD, architecture, API plan, roadmap
 ├── infra/docker/             # Docker-specific notes and future assets
 ├── postman/                  # Future API collections
@@ -100,9 +100,11 @@ peoplematch-agent/
 
 ## Current Phase
 
-**Phase 0.5 — Product Design / UI System (Completed)**
+**Phase 1 — Dataset & Schema (Completed)**
 
-Phase 0.5A completed the information architecture, user flows, page hierarchy, design-system direction, screenshot planning, and three-way visual exploration. Phase 0.5B implemented the user-selected Evidence-first fusion for the Matching Results hero screen. Its shortlist values, score breakdowns, evidence records, risk labels, and trace are marked `Design Mock`; they do not come from a matching engine.
+Phase 1 defines versioned candidate, job, project-evidence, relevance-label, and pairwise-preference contracts. The frozen dataset `1.0.0` contains synthetic sandbox profiles and `synthetic_curated` labels with a fixed job-query split. JSON Schemas, descriptive statistics, the future seed manifest, and `data/eval/dataset_freeze_manifest.json` are deterministic. The five test queries `job_020` through `job_024` are frozen and must not be tuned against future model output.
+
+Phase 0.5A completed the information architecture, user flows, page hierarchy, design-system direction, screenshot planning, and three-way visual exploration. Phase 0.5B implemented the user-selected Evidence-first fusion for the Matching Results hero screen. Its shortlist values, score breakdowns, evidence records, risk labels, and trace remain marked `Design Mock`; they do not come from the Phase 1 dataset or a matching engine.
 
 Phase 0 completed:
 
@@ -116,7 +118,7 @@ Phase 0 completed:
 - Docker Compose definitions for PostgreSQL, Redis, Qdrant, backend, and frontend;
 - an Alembic foundation connected to empty SQLAlchemy metadata.
 
-Not implemented: candidate/job profiles, parsers, matching algorithms, LLM calls, vector retrieval, ranking, explanations, feedback workflows, evaluation metrics, or a complete dashboard.
+Not implemented: database persistence, candidate/job parsers, matching algorithms, LLM calls, vector retrieval, feature scoring, ranking, explanations, feedback workflows, evaluation metrics, or a complete dashboard.
 
 ## Roadmap
 
@@ -124,7 +126,7 @@ Not implemented: candidate/job profiles, parsers, matching algorithms, LLM calls
 |---|---|---|
 | 0 | Product definition and engineering bootstrap | Completed |
 | 0.5 | Product design and UI system | Completed |
-| 1 | Structured profile contracts and sandbox input flow | Planned |
+| 1 | Sandbox dataset, canonical contracts, and ranking labels | Completed |
 | 2 | Candidate/job persistence and migrations | Planned |
 | 3 | Profile extraction implementation | Planned |
 | 4 | Hybrid retrieval | Planned |
@@ -208,6 +210,16 @@ $env:PYTEST_DISABLE_PLUGIN_AUTOLOAD = "1"
 & .\backend\.venv\Scripts\python.exe -m pytest backend\tests -v
 ```
 
+Phase 1 data checks from the repository root:
+
+```powershell
+& .\backend\.venv\Scripts\python.exe scripts\export_json_schemas.py
+& .\backend\.venv\Scripts\python.exe scripts\validate_dataset.py
+& .\backend\.venv\Scripts\python.exe scripts\dataset_stats.py
+& .\backend\.venv\Scripts\python.exe scripts\prepare_seed_bundle.py
+& .\backend\.venv\Scripts\python.exe scripts\freeze_dataset.py
+```
+
 Frontend checks:
 
 ```powershell
@@ -250,7 +262,7 @@ This independent project is limited to:
 
 - synthetic or sandbox data;
 - public job-description examples;
-- manually created labels for small local evaluation datasets.
+- curated synthetic labels for small local evaluation datasets.
 
 It does not ingest private candidate data or claim integration with recruitment platforms, employers, or ATS products.
 

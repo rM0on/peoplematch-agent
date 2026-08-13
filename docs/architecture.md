@@ -4,11 +4,11 @@
 
 PeopleMatch Agent is a local monorepo with these logical areas:
 
-| Area | Responsibility | Phase 0 status |
+| Area | Responsibility | Current status |
 |---|---|---|
 | Frontend | Product UI and typed API consumption | **CURRENT:** Phase 0.5 Matching Results design mock; Phase 0 health client preserved but not mounted |
-| Backend | HTTP boundary, application configuration, tracing | **CURRENT:** FastAPI liveness only |
-| Storage | Durable candidate/job/match-run data | **CURRENT:** PostgreSQL container config; domain schema **PLANNED** |
+| Backend | HTTP boundary, application configuration, tracing, canonical data contracts | **CURRENT:** FastAPI liveness plus offline Phase 1 Pydantic contracts/validation; no domain API |
+| Storage | Durable candidate/job/match-run data | **CURRENT:** validated JSONL sandbox data and PostgreSQL container config; database domain schema **PLANNED** |
 | Retrieval | Candidate/job recall and vector search | Qdrant container config **CURRENT**; retrieval logic **PLANNED** |
 | Ranking | Features, LTR, and reranking | **PLANNED** |
 | AI Provider | Extraction and grounded explanation | Interface concept **PLANNED**; no provider or key required |
@@ -16,7 +16,7 @@ PeopleMatch Agent is a local monorepo with these logical areas:
 
 ## Current Phase Architecture
 
-**CURRENT after Phase 0.5:** Browser → Next.js serves the selected Matching Results design mock. FastAPI `GET /health` and the typed frontend health client remain implemented, but the selected mock screen does not issue the health request. Local Compose definitions for PostgreSQL, Redis, and Qdrant remain unchanged. The backend has Pydantic Settings, standard logging, CORS, request ID middleware, response envelopes, exception handlers, and empty SQLAlchemy metadata.
+**CURRENT during Phase 1:** Browser → Next.js still serves the selected Matching Results design mock. FastAPI `GET /health` remains the only business-facing endpoint. Separately, Phase 1 provides offline Pydantic contracts and validated JSONL for candidates, jobs, evidence, relevance labels, and pairwise preferences. These assets are consumed by developer scripts and tests, not by the UI or an API. Local Compose definitions and empty SQLAlchemy metadata remain unchanged.
 
 The liveness route makes no downstream calls. No candidate/job table, vector collection, cache key, algorithm, or AI provider is initialized.
 
@@ -31,11 +31,11 @@ flowchart TD
     FastAPI --> Qdrant["Qdrant\nservice configured; collections planned"]
 ```
 
-Solid arrows describe runtime connectivity available to the local environment. They do not imply Phase 0 performs database, cache, or vector operations.
+Solid arrows describe runtime connectivity available to the local environment. They do not imply Phase 1 performs database, cache, vector, or ranking operations.
 
 ## Target Architecture
 
-**PLANNED:** Later phases add versioned candidate/job profiles, repositories, match-run orchestration, hybrid retrieval, evidence-aware features, learned ranking, cross-encoder reranking, explanations, feedback, bad-case review, and offline evaluation.
+**PLANNED:** Later phases add persistence repositories, structured extraction, match-run orchestration, hybrid retrieval, evidence-aware features, learned ranking, cross-encoder reranking, explanations, feedback, bad-case review, and offline evaluation metrics.
 
 The target remains a modular monolith unless a measured need justifies a different deployment boundary. Phase 0 does not introduce microservices, Kubernetes, authentication, or distributed infrastructure.
 
@@ -77,7 +77,7 @@ Owns HTTP routing, transport validation, response codes, response envelopes, and
 
 ### Schema Layer
 
-Owns API request/response contracts and later domain transfer objects. Phase 0 implements only common envelopes and health data.
+Owns API request/response contracts and canonical data transfer objects. Phase 1 implements strict, versioned Pydantic v2 contracts for synthetic candidate profiles, job profiles, project evidence, relevance labels, and pairwise preferences. These are data contracts only; no persistence model or business API is implied.
 
 ### Model Layer
 
@@ -119,4 +119,4 @@ The backend reads environment-backed settings via Pydantic Settings. Compose int
 
 ## Data Architecture Boundary
 
-PostgreSQL is the future system of record, Redis is reserved for justified ephemeral use, and Qdrant is reserved for vector retrieval. No Phase 0 business code connects to them. Alembic loads empty metadata and requires `DATABASE_URL` only when a migration command actually runs.
+Phase 1 stores versioned synthetic sandbox records as validated JSONL and exports JSON Schema from the canonical Pydantic models. Its seed manifest contains deterministic hashes for future consumption but performs no database insertion. PostgreSQL remains the future system of record in Phase 2, Redis is reserved for justified ephemeral use, and Qdrant is reserved for vector retrieval. Alembic still loads empty metadata and no domain table exists.

@@ -1,0 +1,37 @@
+{
+  "description": "Every job query and all of its labels remain in one split.",
+  "schema_version": "1.0",
+  "split_policy": "job_query_grouped",
+  "splits": {
+    "dev": [
+      "job_015",
+      "job_016",
+      "job_017",
+      "job_018",
+      "job_019"
+    ],
+    "test": [
+      "job_020",
+      "job_021",
+      "job_022",
+      "job_023",
+      "job_024"
+    ],
+    "train": [
+      "job_001",
+      "job_002",
+      "job_003",
+      "job_004",
+      "job_005",
+      "job_006",
+      "job_007",
+      "job_008",
+      "job_009",
+      "job_010",
+      "job_011",
+      "job_012",
+      "job_013",
+      "job_014"
+    ]
+  }
+}

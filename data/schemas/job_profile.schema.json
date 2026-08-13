@@ -1,0 +1,241 @@
+{
+  "$defs": {
+    "JobArchetype": {
+      "enum": [
+        "ai_matching_algorithm_engineer",
+        "recommendation_algorithm_engineer",
+        "llm_agent_engineer",
+        "ai_product_engineer",
+        "rag_engineer",
+        "search_retrieval_engineer",
+        "applied_ml_engineer",
+        "ml_platform_engineer",
+        "mlops_engineer",
+        "ai_infra_engineer",
+        "backend_ai_engineer",
+        "full_stack_ai_engineer",
+        "nlp_algorithm_engineer",
+        "ai_security_engineer",
+        "data_engineer",
+        "ml_systems_engineer"
+      ],
+      "title": "JobArchetype",
+      "type": "string"
+    },
+    "JobLocation": {
+      "additionalProperties": false,
+      "properties": {
+        "cities": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 4,
+          "minItems": 1,
+          "title": "Cities",
+          "type": "array"
+        },
+        "relocation_supported": {
+          "title": "Relocation Supported",
+          "type": "boolean"
+        },
+        "remote_policy": {
+          "$ref": "#/$defs/RemotePolicy"
+        }
+      },
+      "required": [
+        "cities",
+        "remote_policy",
+        "relocation_supported"
+      ],
+      "title": "JobLocation",
+      "type": "object"
+    },
+    "JobRequirement": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "$ref": "#/$defs/RequirementCategory"
+        },
+        "evidence_expectation": {
+          "maxLength": 300,
+          "minLength": 8,
+          "title": "Evidence Expectation",
+          "type": "string"
+        },
+        "requirement_id": {
+          "pattern": "^req_[a-z0-9_]+$",
+          "title": "Requirement Id",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 240,
+          "minLength": 5,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "requirement_id",
+        "text",
+        "category",
+        "evidence_expectation"
+      ],
+      "title": "JobRequirement",
+      "type": "object"
+    },
+    "ProductStage": {
+      "enum": [
+        "zero_to_one",
+        "growth",
+        "mature"
+      ],
+      "title": "ProductStage",
+      "type": "string"
+    },
+    "RemotePolicy": {
+      "enum": [
+        "remote",
+        "hybrid",
+        "onsite",
+        "flexible"
+      ],
+      "title": "RemotePolicy",
+      "type": "string"
+    },
+    "RequirementCategory": {
+      "enum": [
+        "skill",
+        "project_evidence",
+        "experience",
+        "role_direction",
+        "location",
+        "seniority",
+        "work_style",
+        "ai_tooling"
+      ],
+      "title": "RequirementCategory",
+      "type": "string"
+    },
+    "Seniority": {
+      "enum": [
+        "early_career",
+        "mid",
+        "senior",
+        "staff"
+      ],
+      "title": "Seniority",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "archetype": {
+      "$ref": "#/$defs/JobArchetype"
+    },
+    "company_name": {
+      "maxLength": 100,
+      "minLength": 3,
+      "title": "Company Name",
+      "type": "string"
+    },
+    "data_origin": {
+      "const": "synthetic_sandbox",
+      "title": "Data Origin",
+      "type": "string"
+    },
+    "evaluation_focus": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Evaluation Focus",
+      "type": "array"
+    },
+    "job_id": {
+      "pattern": "^job_[a-z0-9_]+$",
+      "title": "Job Id",
+      "type": "string"
+    },
+    "location": {
+      "$ref": "#/$defs/JobLocation"
+    },
+    "must_have": {
+      "items": {
+        "$ref": "#/$defs/JobRequirement"
+      },
+      "minItems": 1,
+      "title": "Must Have",
+      "type": "array"
+    },
+    "nice_to_have": {
+      "items": {
+        "$ref": "#/$defs/JobRequirement"
+      },
+      "title": "Nice To Have",
+      "type": "array"
+    },
+    "product_stage": {
+      "$ref": "#/$defs/ProductStage"
+    },
+    "raw_jd": {
+      "maxLength": 6000,
+      "minLength": 60,
+      "title": "Raw Jd",
+      "type": "string"
+    },
+    "role_direction": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Role Direction",
+      "type": "array"
+    },
+    "role_title": {
+      "maxLength": 120,
+      "minLength": 3,
+      "title": "Role Title",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "seniority_requirement": {
+      "items": {
+        "$ref": "#/$defs/Seniority"
+      },
+      "minItems": 1,
+      "title": "Seniority Requirement",
+      "type": "array"
+    },
+    "team_tags": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Team Tags",
+      "type": "array"
+    }
+  },
+  "required": [
+    "job_id",
+    "company_name",
+    "role_title",
+    "archetype",
+    "raw_jd",
+    "must_have",
+    "nice_to_have",
+    "role_direction",
+    "team_tags",
+    "location",
+    "seniority_requirement",
+    "product_stage",
+    "evaluation_focus",
+    "data_origin",
+    "schema_version"
+  ],
+  "title": "JobProfile",
+  "type": "object"
+}

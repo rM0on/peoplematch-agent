@@ -1,0 +1,73 @@
+{
+  "candidate_archetype_distribution": {
+    "ai_product_engineer": 4,
+    "ai_security_engineer": 4,
+    "backend_distributed_systems_engineer": 4,
+    "data_engineer": 4,
+    "early_career_strong_project": 4,
+    "frontend_ai_product_engineer": 4,
+    "llm_application_agent_engineer": 4,
+    "ml_infra_mlops_engineer": 4,
+    "nlp_model_algorithm_engineer": 4,
+    "overclaim_candidate": 4,
+    "rag_search_engineer": 4,
+    "recommendation_ranking_engineer": 4
+  },
+  "candidate_count": 48,
+  "data_origin": "synthetic_sandbox",
+  "dataset_version": "1.0.0",
+  "hard_negative_count": 46,
+  "job_archetype_distribution": {
+    "ai_infra_engineer": 1,
+    "ai_matching_algorithm_engineer": 2,
+    "ai_product_engineer": 2,
+    "ai_security_engineer": 1,
+    "applied_ml_engineer": 1,
+    "backend_ai_engineer": 1,
+    "data_engineer": 2,
+    "full_stack_ai_engineer": 1,
+    "llm_agent_engineer": 2,
+    "ml_platform_engineer": 2,
+    "ml_systems_engineer": 1,
+    "mlops_engineer": 1,
+    "nlp_algorithm_engineer": 1,
+    "rag_engineer": 2,
+    "recommendation_algorithm_engineer": 2,
+    "search_retrieval_engineer": 2
+  },
+  "job_count": 24,
+  "label_count": 288,
+  "mismatch_reason_distribution": {
+    "DIRECTION_MISMATCH": 212,
+    "EVIDENCE_INSUFFICIENT": 152,
+    "KEYWORD_FALSE_POSITIVE": 46,
+    "LOCATION_MISMATCH": 86,
+    "MUST_HAVE_MISSING": 240,
+    "OVERCLAIM_RISK": 66,
+    "PROJECT_DEPTH_GAP": 152,
+    "SENIORITY_MISMATCH": 44,
+    "WORK_STYLE_MISMATCH": 37
+  },
+  "missing_field_distribution": {
+    "github_url": 24,
+    "project_outcomes": 12
+  },
+  "overclaim_risk_distribution": {
+    "high": 15,
+    "low": 22,
+    "medium": 11
+  },
+  "pairwise_count": 48,
+  "relevance_grade_distribution": {
+    "0": 88,
+    "1": 97,
+    "2": 55,
+    "3": 48
+  },
+  "schema_version": "1.0",
+  "split_job_counts": {
+    "dev": 5,
+    "test": 5,
+    "train": 14
+  }
+}

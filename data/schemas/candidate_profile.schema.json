@@ -1,0 +1,445 @@
+{
+  "$defs": {
+    "CandidateArchetype": {
+      "enum": [
+        "llm_application_agent_engineer",
+        "recommendation_ranking_engineer",
+        "ml_infra_mlops_engineer",
+        "ai_product_engineer",
+        "rag_search_engineer",
+        "nlp_model_algorithm_engineer",
+        "ai_security_engineer",
+        "backend_distributed_systems_engineer",
+        "data_engineer",
+        "frontend_ai_product_engineer",
+        "early_career_strong_project",
+        "overclaim_candidate"
+      ],
+      "title": "CandidateArchetype",
+      "type": "string"
+    },
+    "CandidateLocationPreference": {
+      "additionalProperties": false,
+      "properties": {
+        "cities": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 4,
+          "minItems": 1,
+          "title": "Cities",
+          "type": "array"
+        },
+        "relocation_open": {
+          "title": "Relocation Open",
+          "type": "boolean"
+        },
+        "remote_policy": {
+          "$ref": "#/$defs/RemotePolicy"
+        }
+      },
+      "required": [
+        "cities",
+        "remote_policy",
+        "relocation_open"
+      ],
+      "title": "CandidateLocationPreference",
+      "type": "object"
+    },
+    "EvidenceType": {
+      "enum": [
+        "code",
+        "tests",
+        "evaluation_report",
+        "architecture_doc",
+        "readme",
+        "workflow_trace",
+        "dataset",
+        "demo",
+        "experiment_report"
+      ],
+      "title": "EvidenceType",
+      "type": "string"
+    },
+    "OverclaimRisk": {
+      "additionalProperties": false,
+      "properties": {
+        "level": {
+          "$ref": "#/$defs/RiskLevel"
+        },
+        "reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reasons",
+          "type": "array"
+        }
+      },
+      "required": [
+        "level",
+        "reasons"
+      ],
+      "title": "OverclaimRisk",
+      "type": "object"
+    },
+    "Project": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "maxLength": 120,
+          "minLength": 3,
+          "title": "Name",
+          "type": "string"
+        },
+        "outcomes": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Outcomes",
+          "type": "array"
+        },
+        "project_id": {
+          "pattern": "^prj_[a-z0-9_]+$",
+          "title": "Project Id",
+          "type": "string"
+        },
+        "role": {
+          "maxLength": 120,
+          "minLength": 2,
+          "title": "Role",
+          "type": "string"
+        },
+        "skills_demonstrated": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Skills Demonstrated",
+          "type": "array"
+        },
+        "summary": {
+          "maxLength": 600,
+          "minLength": 20,
+          "title": "Summary",
+          "type": "string"
+        },
+        "technologies": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Technologies",
+          "type": "array"
+        }
+      },
+      "required": [
+        "project_id",
+        "name",
+        "summary",
+        "role",
+        "technologies",
+        "outcomes",
+        "skills_demonstrated"
+      ],
+      "title": "Project",
+      "type": "object"
+    },
+    "ProjectEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_ref": {
+          "maxLength": 300,
+          "minLength": 12,
+          "title": "Artifact Ref",
+          "type": "string"
+        },
+        "evidence_id": {
+          "pattern": "^ev_[a-z0-9_]+$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "evidence_type": {
+          "$ref": "#/$defs/EvidenceType"
+        },
+        "project_id": {
+          "pattern": "^prj_[a-z0-9_]+$",
+          "title": "Project Id",
+          "type": "string"
+        },
+        "statement": {
+          "maxLength": 500,
+          "minLength": 20,
+          "title": "Statement",
+          "type": "string"
+        },
+        "supports_skills": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Supports Skills",
+          "type": "array"
+        },
+        "verification_status": {
+          "$ref": "#/$defs/VerificationStatus"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "project_id",
+        "supports_skills",
+        "evidence_type",
+        "statement",
+        "artifact_ref",
+        "verification_status"
+      ],
+      "title": "ProjectEvidence",
+      "type": "object"
+    },
+    "RemotePolicy": {
+      "enum": [
+        "remote",
+        "hybrid",
+        "onsite",
+        "flexible"
+      ],
+      "title": "RemotePolicy",
+      "type": "string"
+    },
+    "RiskLevel": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "title": "RiskLevel",
+      "type": "string"
+    },
+    "SelfReportedLevel": {
+      "enum": [
+        "familiar",
+        "practiced",
+        "advanced"
+      ],
+      "title": "SelfReportedLevel",
+      "type": "string"
+    },
+    "Seniority": {
+      "enum": [
+        "early_career",
+        "mid",
+        "senior",
+        "staff"
+      ],
+      "title": "Seniority",
+      "type": "string"
+    },
+    "SkillCategory": {
+      "enum": [
+        "llm_application",
+        "recommendation",
+        "retrieval_search",
+        "ml_infra",
+        "model_algorithm",
+        "security",
+        "backend",
+        "data",
+        "frontend",
+        "product_delivery",
+        "evaluation",
+        "ai_tooling"
+      ],
+      "title": "SkillCategory",
+      "type": "string"
+    },
+    "SkillClaim": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "$ref": "#/$defs/SkillCategory"
+        },
+        "name": {
+          "maxLength": 80,
+          "minLength": 2,
+          "title": "Name",
+          "type": "string"
+        },
+        "self_reported_level": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SelfReportedLevel"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "category"
+      ],
+      "title": "SkillClaim",
+      "type": "object"
+    },
+    "VerificationStatus": {
+      "enum": [
+        "available",
+        "described",
+        "missing"
+      ],
+      "title": "VerificationStatus",
+      "type": "string"
+    },
+    "WorkStyle": {
+      "additionalProperties": false,
+      "properties": {
+        "collaboration_style": {
+          "maxLength": 100,
+          "minLength": 3,
+          "title": "Collaboration Style",
+          "type": "string"
+        },
+        "team_stage_preference": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 3,
+          "minItems": 1,
+          "title": "Team Stage Preference",
+          "type": "array"
+        }
+      },
+      "required": [
+        "team_stage_preference",
+        "collaboration_style"
+      ],
+      "title": "WorkStyle",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "ai_tools": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Ai Tools",
+      "type": "array"
+    },
+    "archetype": {
+      "$ref": "#/$defs/CandidateArchetype"
+    },
+    "candidate_id": {
+      "pattern": "^cand_[a-z0-9_]+$",
+      "title": "Candidate Id",
+      "type": "string"
+    },
+    "data_origin": {
+      "const": "synthetic_sandbox",
+      "title": "Data Origin",
+      "type": "string"
+    },
+    "github_url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Github Url"
+    },
+    "missing_fields": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Missing Fields",
+      "type": "array"
+    },
+    "name": {
+      "maxLength": 80,
+      "minLength": 3,
+      "title": "Name",
+      "type": "string"
+    },
+    "overclaim_risk": {
+      "$ref": "#/$defs/OverclaimRisk"
+    },
+    "preferred_locations": {
+      "$ref": "#/$defs/CandidateLocationPreference"
+    },
+    "project_evidence": {
+      "items": {
+        "$ref": "#/$defs/ProjectEvidence"
+      },
+      "title": "Project Evidence",
+      "type": "array"
+    },
+    "projects": {
+      "items": {
+        "$ref": "#/$defs/Project"
+      },
+      "minItems": 1,
+      "title": "Projects",
+      "type": "array"
+    },
+    "raw_text": {
+      "maxLength": 5000,
+      "minLength": 40,
+      "title": "Raw Text",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "seniority": {
+      "$ref": "#/$defs/Seniority"
+    },
+    "skills": {
+      "items": {
+        "$ref": "#/$defs/SkillClaim"
+      },
+      "minItems": 1,
+      "title": "Skills",
+      "type": "array"
+    },
+    "target_roles": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Target Roles",
+      "type": "array"
+    },
+    "work_style": {
+      "$ref": "#/$defs/WorkStyle"
+    }
+  },
+  "required": [
+    "candidate_id",
+    "name",
+    "archetype",
+    "raw_text",
+    "skills",
+    "projects",
+    "project_evidence",
+    "ai_tools",
+    "target_roles",
+    "preferred_locations",
+    "seniority",
+    "work_style",
+    "missing_fields",
+    "overclaim_risk",
+    "data_origin",
+    "schema_version"
+  ],
+  "title": "CandidateProfile",
+  "type": "object"
+}

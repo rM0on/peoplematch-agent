@@ -1,0 +1,45 @@
+{
+  "candidate_count": 48,
+  "canonical_files": {
+    "data/eval/pairwise_preferences.jsonl": "ba0842b705bc4ea1ecc639ec8ed169d215c18486b8a93181c90c179b09394a63",
+    "data/eval/query_splits.json": "79724cf33f6198bf776233947b777b4a183ae4c94022be3b425d27a509f42772",
+    "data/samples/candidates.jsonl": "de171393cbda7c5380debecba182e45c3212a5cab0af8b22691b69519e75e92c",
+    "data/samples/jobs.jsonl": "52ecce61fba9cb4d6e8f7919b67d836f1ef3372244c0981aeb2856b924bfee75",
+    "data/samples/labels.jsonl": "21eca7b4de67681f84904b16512ba074711d3957b21441fa184fd35f5a56a1d3"
+  },
+  "dataset_version": "1.0.0",
+  "dev_job_ids": [
+    "job_015",
+    "job_016",
+    "job_017",
+    "job_018",
+    "job_019"
+  ],
+  "job_count": 24,
+  "label_count": 288,
+  "pairwise_count": 48,
+  "schema_version": "1.0",
+  "test_job_ids": [
+    "job_020",
+    "job_021",
+    "job_022",
+    "job_023",
+    "job_024"
+  ],
+  "train_job_ids": [
+    "job_001",
+    "job_002",
+    "job_003",
+    "job_004",
+    "job_005",
+    "job_006",
+    "job_007",
+    "job_008",
+    "job_009",
+    "job_010",
+    "job_011",
+    "job_012",
+    "job_013",
+    "job_014"
+  ]
+}

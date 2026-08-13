@@ -51,7 +51,7 @@ Backend tests exercise health success, generated request IDs, propagated request
 
 ## Integrity constraints
 
-Only synthetic/sandbox data, public job-description examples, and manually created labels may be used in future phases. The repository must contain no fake product metrics, online experimentation claims, production-readiness claims, employer integrations, private candidate data, or fabricated business impact.
+Only synthetic/sandbox data, public job-description examples, and curated synthetic labels with explicit provenance may be used in future phases. The repository must contain no fake product metrics, online experimentation claims, production-readiness claims, employer integrations, private candidate data, or fabricated business impact.
 
 ## Scope self-review
 
@@ -59,4 +59,3 @@ Only synthetic/sandbox data, public job-description examples, and manually creat
 - Current and planned architecture are explicitly separated.
 - The design contains no Phase 1+ implementation.
 - The frontend and backend interfaces use the same health response and environment-variable names.
-

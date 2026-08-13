@@ -20,14 +20,14 @@ Only the phase explicitly requested by the user may be implemented. Status value
 - **Dependency:** Phase 0 complete.
 - **Quality gate:** The selected direction preserves evidence-first hierarchy, compact rank comparison, and a lightweight trace; the frontend passes tests, lint, typecheck, build, keyboard/responsive review, and reference-image QA. All illustrative values stay labeled as design mock data, and no future business workflow is implemented.
 
-## Phase 1 — Profile Contracts & Sandbox Input
+## Phase 1 — Dataset & Schema
 
-**Status:** Planned
+**Status:** Completed
 
-- **Objective:** Define versioned candidate/job domain contracts and manual sandbox input/review flows.
-- **Primary deliverables:** Pydantic/domain schemas, validation rules, evidence/source model, synthetic fixtures, API contract updates.
+- **Objective:** Define versioned candidate/job contracts and a deterministic evidence-aware sandbox dataset for later retrieval, ranking, and evaluation work.
+- **Primary deliverables:** Pydantic v2 contracts, 48 synthetic candidates, 24 fictional jobs, graded and pairwise `synthetic_curated` labels, job-query splits, hard negatives, JSON Schema exports, descriptive statistics, seed manifest, dataset freeze manifest, and dataset documentation.
 - **Dependency:** Phase 0.5 complete.
-- **Quality gate:** Schema tests cover valid/invalid contracts; skill claims and evidence are structurally distinct; no LLM parser is implemented.
+- **Quality gate:** Data contracts and dataset integrity tests pass; 48/24/288/48 scale and 14/5/5 query split are validated; skill claims and evidence are structurally distinct; dataset `1.0.0` and its test queries are hash-pinned after external review; no database, parser, retrieval, ranking, or metric implementation is introduced.
 
 ## Phase 2 — Persistence Foundation
 

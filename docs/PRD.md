@@ -4,7 +4,7 @@
 
 AI Builder roles often share vocabulary while differing sharply in actual direction: product-focused agents, retrieval systems, evaluation infrastructure, applied model work, and developer tooling can all mention Python, LLMs, and vector search. A useful matching system therefore needs evidence, constraints, and traceable ranking logic rather than keyword overlap alone.
 
-PeopleMatch Agent is an autonomous, local-running prototype for exploring that problem with synthetic/sandbox data, public job-description examples, and manually created labels.
+PeopleMatch Agent is an autonomous, local-running prototype for exploring that problem with synthetic/sandbox data, public job-description examples, and curated synthetic labels.
 
 ## 2. Problem
 
@@ -69,11 +69,11 @@ Phase 0 provides documentation and request IDs as the first traceability primiti
 
 ## 9. Candidate Profile Concept
 
-**PLANNED:** A typed, versioned representation of skills, project evidence, role direction, seniority indicators, location/preferences, constraints, source references, and extraction confidence. Claimed skills and evidence must remain separate fields.
+**CURRENT in Phase 1:** A typed, versioned Pydantic representation of skills, projects, project evidence, target roles, seniority, location/preferences, work style, missing fields, and explainable overclaim risk. Claimed skills and evidence are separate fields. Extraction confidence remains planned for the parser phase because Phase 1 profiles are curated sandbox records rather than parser output.
 
 ## 10. Job Profile Concept
 
-**PLANNED:** A typed, versioned representation of required and preferred skills, responsibilities, role direction, seniority, location/work mode, team stage, constraints, and source references.
+**CURRENT in Phase 1:** A typed, versioned Pydantic representation of must-have and nice-to-have requirements, role direction, seniority, location/work mode, product stage, team tags, and evaluation focus. Persistence and parsing remain planned.
 
 ## 11. Matching Engine Concept
 
@@ -93,7 +93,7 @@ Phase 0 provides documentation and request IDs as the first traceability primiti
 
 ## 15. Offline Evaluation Concept
 
-**PLANNED:** Reproducible evaluation on a small local dataset with manually documented labels. Future Recall, NDCG, MRR, and related results must identify dataset version, split, configuration, comparison baseline, and limitations. No result implies online impact.
+**PLANNED:** Reproducible evaluation on a small local dataset with documented label provenance. Future Recall, NDCG, MRR, and related results must identify dataset version, split, configuration, comparison baseline, and limitations. No result implies online impact.
 
 ## 16. Product Success Criteria
 
@@ -121,7 +121,7 @@ A later phase begins only after the preceding phase's quality gate and an explic
 
 ## 18. Privacy / Honesty Constraints
 
-- Use only synthetic/sandbox data, public job-description examples, and manually created labels.
+- Use only synthetic/sandbox data, public job-description examples, and labels with explicit provenance.
 - Do not ingest or commit private candidate data.
 - Do not claim production deployment, real users, employers, integrations, traffic, revenue, partnerships, or online experiments.
 - Do not invent performance metrics or algorithm improvements.
