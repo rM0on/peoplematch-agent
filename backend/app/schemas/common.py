@@ -1,4 +1,4 @@
-from typing import Any, Generic, Optional, TypeVar
+from typing import Any, Generic, List, Optional, TypeVar
 
 from pydantic import BaseModel
 
@@ -17,3 +17,10 @@ class ApiResponse(BaseModel, Generic[DataT]):
     data: Optional[DataT] = None
     error: Optional[ApiError] = None
     request_id: str
+
+
+class PaginatedData(BaseModel, Generic[DataT]):
+    items: List[DataT]
+    total: int
+    limit: int
+    offset: int

@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import sys
 from typing import Any, Dict
+import argparse
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
@@ -57,9 +58,19 @@ def build_freeze_manifest() -> Dict[str, Any]:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description="Write or verify the dataset freeze manifest.")
+    parser.add_argument("--check", action="store_true", help="verify without rewriting")
+    args = parser.parse_args()
     output_path = REPOSITORY_ROOT / "data" / "eval" / "dataset_freeze_manifest.json"
+    expected = json.dumps(build_freeze_manifest(), indent=2, sort_keys=True) + "\n"
+    if args.check:
+        if not output_path.exists() or output_path.read_text(encoding="utf-8") != expected:
+            print("dataset freeze verification failed", file=sys.stderr)
+            return 1
+        print("Dataset freeze verification PASS.")
+        return 0
     output_path.write_text(
-        json.dumps(build_freeze_manifest(), indent=2, sort_keys=True) + "\n",
+        expected,
         encoding="utf-8",
     )
     print(f"Wrote deterministic dataset freeze manifest to {output_path}.")

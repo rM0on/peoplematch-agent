@@ -4,7 +4,7 @@
 
 PeopleMatch Agent is an autonomous, local-running prototype for evidence-aware candidate/job matching. It is designed to evolve beyond keyword search into a traceable pipeline that can rank AI Builder opportunities, explain why a match is supported by project evidence, review bad cases, and compare later algorithms through sandbox-only offline evaluation.
 
-The repository has completed **Phase 1 — Dataset & Schema**. Phases 0, 0.5, and 1 are frozen; Phase 2 remains planned. Dataset `1.0.0` provides canonical Pydantic data contracts, synthetic sandbox profiles, curated relevance labels, query-level splits, and a deterministic freeze manifest. Matching, ranking, LLM, retrieval, persistence, feedback, and evaluation capabilities shown in the roadmap remain planned—not implemented.
+The repository has completed **Phase 2 — Persistence & Backend Domain Layer**. Phases 0, 0.5, 1, and 2 are frozen. Dataset `1.0.0` provides canonical Pydantic contracts and synthetic sandbox profiles; Phase 2 adds PostgreSQL persistence, profile-domain services, and typed candidate/job APIs. Matching, ranking, LLM, retrieval, feedback, and evaluation capabilities shown in the roadmap remain planned—not implemented.
 
 ## Project Overview
 
@@ -52,17 +52,18 @@ flowchart LR
     I -. "documented iteration" .-> D
 ```
 
-Phase 0 implements none of these algorithmic stages. It only defines their future boundaries.
+Phase 2 implements none of these algorithmic stages. It only persists canonical profiles and exposes structured profile APIs.
 
 ## Architecture Overview
 
 ```mermaid
 flowchart LR
     Browser["Browser"] --> Web["Next.js frontend\nCURRENT: Phase 0.5 design mock"]
-    Web -. "Phase 0 health client preserved; not mounted in selected mock" .-> API["FastAPI backend\nCURRENT: /health only"]
-    API --> PG["PostgreSQL\nCURRENT: local service config"]
-    API --> Redis["Redis\nCURRENT: local service config"]
-    API --> Qdrant["Qdrant\nCURRENT: local service config"]
+    Web -. "frontend integration remains a later phase" .-> API["FastAPI backend\nCURRENT: health + profile APIs"]
+    API --> Domain["Candidate / Job services and repositories\nCURRENT"]
+    Domain --> PG["PostgreSQL\nCURRENT: canonical profile store"]
+    API -.-> Redis["Redis\nCURRENT: infrastructure only"]
+    API -.-> Qdrant["Qdrant\nCURRENT: infrastructure only"]
     API -.-> Matching["Ranking services\nPLANNED"]
     API -.-> AI["LLM provider boundary\nPLANNED"]
 ```
@@ -73,16 +74,17 @@ The health endpoint is liveness-only and intentionally does not fail when infras
 
 ```text
 peoplematch-agent/
-├── backend/                  # FastAPI app, API tests, Alembic foundation
+├── backend/                  # FastAPI app, domain persistence, Alembic, tests
 │   ├── app/
 │   │   ├── api/              # Routers, routes, unified error handlers
 │   │   ├── core/             # Settings and standard logging
 │   │   ├── middleware/       # Request ID tracing
-│   │   ├── models/           # Empty SQLAlchemy metadata root
-│   │   ├── schemas/          # Shared API envelopes
-│   │   └── services/         # Documented future domain boundaries
-│   ├── alembic/              # Migration environment; no domain revisions yet
-│   └── tests/                # Deterministic API tests
+│   │   ├── models/           # Normalized SQLAlchemy candidate/job models
+│   │   ├── repositories/     # Async persistence mechanics
+│   │   ├── schemas/          # Canonical records, mutations, API envelopes
+│   │   └── services/         # Profile rules, transactions, frozen seed
+│   ├── alembic/              # PostgreSQL profile-domain migration
+│   └── tests/                # Unit, API, and PostgreSQL integration tests
 ├── frontend/                 # Next.js App Router frontend
 │   └── src/
 │       ├── app/              # Layout, page, and global styles
@@ -94,15 +96,15 @@ peoplematch-agent/
 ├── docs/                     # PRD, architecture, API plan, roadmap
 ├── infra/docker/             # Docker-specific notes and future assets
 ├── postman/                  # Future API collections
-├── scripts/                  # Future focused developer scripts
+├── scripts/                  # Dataset validation, frozen seed, DB verification
 └── screenshots/              # Future verified product captures
 ```
 
 ## Current Phase
 
-**Phase 1 — Dataset & Schema (Completed)**
+**Phase 2 — Persistence & Backend Domain Layer (Completed)**
 
-Phase 1 defines versioned candidate, job, project-evidence, relevance-label, and pairwise-preference contracts. The frozen dataset `1.0.0` contains synthetic sandbox profiles and `synthetic_curated` labels with a fixed job-query split. JSON Schemas, descriptive statistics, the future seed manifest, and `data/eval/dataset_freeze_manifest.json` are deterministic. The five test queries `job_020` through `job_024` are frozen and must not be tuned against future model output.
+Phase 2 persists candidates, skills, projects, project evidence, jobs, and requirements in PostgreSQL through async SQLAlchemy. FastAPI candidate/job CRUD uses router → service → repository boundaries, typed envelopes, structured filters, limit/offset pagination, and canonical reconstruction. Frozen dataset `1.0.0` profiles are imported only after SHA-256 verification and are protected from PATCH/DELETE; API-created synthetic profiles remain mutable. Relevance labels and pairwise preferences remain offline files.
 
 Phase 0.5A completed the information architecture, user flows, page hierarchy, design-system direction, screenshot planning, and three-way visual exploration. Phase 0.5B implemented the user-selected Evidence-first fusion for the Matching Results hero screen. Its shortlist values, score breakdowns, evidence records, risk labels, and trace remain marked `Design Mock`; they do not come from the Phase 1 dataset or a matching engine.
 
@@ -116,9 +118,9 @@ Phase 0 completed:
 - minimal responsive Next.js shell with a real backend health request;
 - frontend loading, healthy, unavailable, and retry states;
 - Docker Compose definitions for PostgreSQL, Redis, Qdrant, backend, and frontend;
-- an Alembic foundation connected to empty SQLAlchemy metadata.
+- an Alembic foundation later extended by the Phase 2 profile migration.
 
-Not implemented: database persistence, candidate/job parsers, matching algorithms, LLM calls, vector retrieval, feature scoring, ranking, explanations, feedback workflows, evaluation metrics, or a complete dashboard.
+Not implemented: candidate/job parsers, matching algorithms, LLM calls, vector retrieval, feature scoring, ranking, explanations, feedback workflows, evaluation metrics, or a complete product dashboard.
 
 ## Roadmap
 
@@ -127,7 +129,7 @@ Not implemented: database persistence, candidate/job parsers, matching algorithm
 | 0 | Product definition and engineering bootstrap | Completed |
 | 0.5 | Product design and UI system | Completed |
 | 1 | Sandbox dataset, canonical contracts, and ranking labels | Completed |
-| 2 | Candidate/job persistence and migrations | Planned |
+| 2 | Candidate/job persistence and migrations | Completed |
 | 3 | Profile extraction implementation | Planned |
 | 4 | Hybrid retrieval | Planned |
 | 5 | Evidence-aware feature scoring | Planned |
@@ -171,6 +173,15 @@ Verify the backend in another PowerShell window:
 Invoke-RestMethod -Uri http://localhost:8000/health
 ```
 
+Import the frozen candidate/job fixtures after the containers are healthy. `.env.example` uses the Docker-internal hostname, so first override the URL for commands executed on the Windows host. The script verifies the dataset freeze manifest before writing and is safe to repeat:
+
+```powershell
+$env:DATABASE_URL = "postgresql+asyncpg://peoplematch:peoplematch_local@localhost:5432/peoplematch"
+& .\backend\.venv\Scripts\python.exe scripts\freeze_dataset.py --check
+& .\backend\.venv\Scripts\python.exe scripts\seed_database.py
+& .\backend\.venv\Scripts\python.exe scripts\verify_seeded_database.py
+```
+
 Stop the environment without deleting named volumes:
 
 ```powershell
@@ -179,13 +190,23 @@ docker compose down
 
 ### Backend without Docker (PowerShell)
 
-The Phase 0 backend does not require infrastructure to serve liveness:
+Liveness can run without infrastructure, but profile APIs require a migrated PostgreSQL database:
 
 ```powershell
 python -m venv backend\.venv
 & .\backend\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt
 Set-Location backend
 & .\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+Before starting Uvicorn for profile work:
+
+```powershell
+$env:DATABASE_URL = "postgresql+asyncpg://peoplematch:peoplematch_local@localhost:5432/peoplematch"
+Set-Location backend
+& .\.venv\Scripts\alembic.exe upgrade head
+Set-Location ..
+& .\backend\.venv\Scripts\python.exe scripts\seed_database.py
 ```
 
 ### Frontend without Docker (PowerShell)
@@ -207,8 +228,11 @@ Backend tests from the repository root:
 
 ```powershell
 $env:PYTEST_DISABLE_PLUGIN_AUTOLOAD = "1"
+$env:TEST_DATABASE_URL = "postgresql+asyncpg://peoplematch:peoplematch_local@localhost:5432/peoplematch_test"
 & .\backend\.venv\Scripts\python.exe -m pytest backend\tests -v
 ```
+
+Tests that require PostgreSQL are skipped when `TEST_DATABASE_URL` is not set. Use a dedicated database because the integration suite truncates profile tables for isolation.
 
 Phase 1 data checks from the repository root:
 
@@ -217,7 +241,7 @@ Phase 1 data checks from the repository root:
 & .\backend\.venv\Scripts\python.exe scripts\validate_dataset.py
 & .\backend\.venv\Scripts\python.exe scripts\dataset_stats.py
 & .\backend\.venv\Scripts\python.exe scripts\prepare_seed_bundle.py
-& .\backend\.venv\Scripts\python.exe scripts\freeze_dataset.py
+& .\backend\.venv\Scripts\python.exe scripts\freeze_dataset.py --check
 ```
 
 Frontend checks:

@@ -31,8 +31,8 @@ def create_app() -> FastAPI:
         title=settings.app_name,
         version=settings.app_version,
         description=(
-            "Phase 0 liveness API for the local PeopleMatch Agent prototype. "
-            "Matching capabilities are planned for later phases."
+            "Phase 2 persistence and canonical profile API for the local "
+            "PeopleMatch Agent prototype. Matching capabilities remain planned."
         ),
         lifespan=lifespan,
     )

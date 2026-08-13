@@ -42,6 +42,12 @@ class Settings(BaseSettings):
             if origin.strip()
         ]
 
+    @property
+    def required_database_url(self) -> str:
+        if not self.database_url:
+            raise RuntimeError("DATABASE_URL must be configured for persistence operations")
+        return self.database_url
+
 
 @lru_cache
 def get_settings() -> Settings:

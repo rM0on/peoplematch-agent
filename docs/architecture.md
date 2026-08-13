@@ -7,8 +7,8 @@ PeopleMatch Agent is a local monorepo with these logical areas:
 | Area | Responsibility | Current status |
 |---|---|---|
 | Frontend | Product UI and typed API consumption | **CURRENT:** Phase 0.5 Matching Results design mock; Phase 0 health client preserved but not mounted |
-| Backend | HTTP boundary, application configuration, tracing, canonical data contracts | **CURRENT:** FastAPI liveness plus offline Phase 1 Pydantic contracts/validation; no domain API |
-| Storage | Durable candidate/job/match-run data | **CURRENT:** validated JSONL sandbox data and PostgreSQL container config; database domain schema **PLANNED** |
+| Backend | HTTP boundary, application configuration, tracing, canonical data contracts | **CURRENT:** FastAPI liveness plus Phase 2 candidate/job CRUD through service and repository layers |
+| Storage | Durable candidate/job/match-run data | **CURRENT:** PostgreSQL candidate/job profiles with normalized evidence and requirements; match-run storage **PLANNED** |
 | Retrieval | Candidate/job recall and vector search | Qdrant container config **CURRENT**; retrieval logic **PLANNED** |
 | Ranking | Features, LTR, and reranking | **PLANNED** |
 | AI Provider | Extraction and grounded explanation | Interface concept **PLANNED**; no provider or key required |
@@ -16,26 +16,28 @@ PeopleMatch Agent is a local monorepo with these logical areas:
 
 ## Current Phase Architecture
 
-**CURRENT during Phase 1:** Browser → Next.js still serves the selected Matching Results design mock. FastAPI `GET /health` remains the only business-facing endpoint. Separately, Phase 1 provides offline Pydantic contracts and validated JSONL for candidates, jobs, evidence, relevance labels, and pairwise preferences. These assets are consumed by developer scripts and tests, not by the UI or an API. Local Compose definitions and empty SQLAlchemy metadata remain unchanged.
+**CURRENT during Phase 2:** Next.js still serves the selected Matching Results design mock and does not consume profile APIs. FastAPI exposes liveness and typed candidate/job CRUD. Routers handle HTTP concerns, services enforce canonical validation, ID generation, frozen-record protection, and transaction rules, repositories implement structured queries and eager loading, and async SQLAlchemy persists to PostgreSQL. Phase 1 JSONL remains the frozen source fixture and is imported only after hash verification.
 
-The liveness route makes no downstream calls. No candidate/job table, vector collection, cache key, algorithm, or AI provider is initialized.
+The liveness route still makes no downstream calls. Redis and Qdrant are healthy local infrastructure only; Phase 2 initializes no cache key, vector collection, algorithm, or AI provider.
 
 ### Runtime Architecture
 
 ```mermaid
 flowchart TD
     Browser["Browser"] --> Next["Next.js 16 frontend\nCURRENT: design mock"]
-    Next -. "health client preserved; not mounted in selected mock" .-> FastAPI["FastAPI backend\nCURRENT: /health"]
-    FastAPI --> PG["PostgreSQL\nservice configured; schema planned"]
-    FastAPI --> Redis["Redis\nservice configured; usage planned"]
-    FastAPI --> Qdrant["Qdrant\nservice configured; collections planned"]
+    Next -. "health client preserved; not mounted in selected mock" .-> FastAPI["FastAPI backend\nCURRENT: health + profile APIs"]
+    FastAPI --> Service["Candidate / Job services\nCURRENT"]
+    Service --> Repository["Repositories\nCURRENT"]
+    Repository --> PG["PostgreSQL via async SQLAlchemy\nCURRENT"]
+    FastAPI -.-> Redis["Redis\nusage planned"]
+    FastAPI -.-> Qdrant["Qdrant\ncollections planned"]
 ```
 
-Solid arrows describe runtime connectivity available to the local environment. They do not imply Phase 1 performs database, cache, vector, or ranking operations.
+Solid arrows describe the current Phase 2 profile-persistence flow. Dotted arrows show configured infrastructure with no business integration.
 
 ## Target Architecture
 
-**PLANNED:** Later phases add persistence repositories, structured extraction, match-run orchestration, hybrid retrieval, evidence-aware features, learned ranking, cross-encoder reranking, explanations, feedback, bad-case review, and offline evaluation metrics.
+**PLANNED:** Later phases add structured extraction, match-run orchestration, hybrid retrieval, evidence-aware features, learned ranking, cross-encoder reranking, explanations, feedback, bad-case review, and offline evaluation metrics. Phase 2 persistence remains the stable domain foundation for those later capabilities.
 
 The target remains a modular monolith unless a measured need justifies a different deployment boundary. Phase 0 does not introduce microservices, Kubernetes, authentication, or distributed infrastructure.
 
@@ -69,19 +71,19 @@ Owns HTTP routing, transport validation, response codes, response envelopes, and
 
 ### Service Layer
 
-**PLANNED:** Owns application use cases and orchestration across profile parsing, retrieval, scoring, ranking, explanation, feedback, and evaluation. A service is added only when executable phase behavior exists.
+Owns candidate/job validation, server-generated identifiers, frozen-record protection, and atomic mutation boundaries. Parser, retrieval, scoring, ranking, explanation, feedback, and evaluation services remain planned.
 
 ### Repository Layer
 
-**PLANNED:** Owns persistence operations and hides storage mechanics from services. Phase 0 has no repositories because it has no domain data.
+Owns candidate/job persistence operations and hides async SQLAlchemy mechanics from services. Candidate queries eagerly load skills, projects, and evidence with `selectinload`; job queries eagerly load requirements.
 
 ### Schema Layer
 
-Owns API request/response contracts and canonical data transfer objects. Phase 1 implements strict, versioned Pydantic v2 contracts for synthetic candidate profiles, job profiles, project evidence, relevance labels, and pairwise preferences. These are data contracts only; no persistence model or business API is implied.
+Owns API request/response contracts and canonical data transfer objects. Phase 2 extends the frozen Phase 1 profile semantics with typed create/PATCH records and persistence provenance while leaving label/evaluation contracts offline.
 
 ### Model Layer
 
-Owns SQLAlchemy persistence models and metadata. Phase 0 exposes empty metadata for Alembic and intentionally defines no domain table.
+Owns PostgreSQL SQLAlchemy models and metadata. Phase 2 normalizes candidate skills/projects/evidence and job requirements while using typed ARRAY/JSONB fields for bounded structured metadata.
 
 ### Infrastructure
 
@@ -115,8 +117,8 @@ Clear module boundaries matter before deployment boundaries. A local modular mon
 
 ## Configuration and Secrets
 
-The backend reads environment-backed settings via Pydantic Settings. Compose interpolates the same variable names from root `.env`. `.env.example` contains local-only examples; `.env` is ignored. `LLM_API_KEY` is optional and unused in Phase 0.
+The backend reads environment-backed settings via Pydantic Settings. Compose interpolates the same variable names from root `.env`. `.env.example` contains local-only examples; `.env` is ignored. `LLM_API_KEY` is optional and unused in Phase 2.
 
 ## Data Architecture Boundary
 
-Phase 1 stores versioned synthetic sandbox records as validated JSONL and exports JSON Schema from the canonical Pydantic models. Its seed manifest contains deterministic hashes for future consumption but performs no database insertion. PostgreSQL remains the future system of record in Phase 2, Redis is reserved for justified ephemeral use, and Qdrant is reserved for vector retrieval. Alembic still loads empty metadata and no domain table exists.
+Phase 1 remains the immutable source of synthetic sandbox profiles and offline labels. Phase 2 imports only candidate and job profiles into PostgreSQL; relevance labels and pairwise preferences remain offline evaluation files. The importer validates the freeze manifest, preserves all canonical IDs, is idempotent for identical frozen records, and fails rather than overwriting conflicts. Redis is reserved for justified ephemeral use and Qdrant for future vector retrieval.

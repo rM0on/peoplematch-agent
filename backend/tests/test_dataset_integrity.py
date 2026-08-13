@@ -236,6 +236,24 @@ def test_dataset_freeze_manifest_is_deterministic_and_pins_test_queries() -> Non
     )
 
 
+def test_dataset_freeze_check_verifies_without_rewriting_manifest() -> None:
+    manifest_path = (
+        REPOSITORY_ROOT / "data" / "eval" / "dataset_freeze_manifest.json"
+    )
+    before = manifest_path.read_bytes()
+
+    result = subprocess.run(
+        [sys.executable, "scripts/freeze_dataset.py", "--check"],
+        cwd=REPOSITORY_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    assert manifest_path.read_bytes() == before
+    assert "Dataset freeze verification PASS" in result.stdout
+
+
 def test_strong_labels_respect_candidate_constraints() -> None:
     from app.services.dataset_validation import load_dataset
 

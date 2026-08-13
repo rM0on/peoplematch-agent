@@ -67,13 +67,19 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-peoplematch}
       POSTGRES_USER: ${POSTGRES_USER:-peoplematch}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-peoplematch_local}
-      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://peoplematch:peoplematch_local@postgres:5432/peoplematch}
+      DATABASE_URL: ${DATABASE_URL:-postgresql+asyncpg://peoplematch:peoplematch_local@postgres:5432/peoplematch}
       REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
       QDRANT_URL: ${QDRANT_URL:-http://qdrant:6333}
       NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8000}
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
     ports:
       - "${BACKEND_PORT:-8000}:8000"
+    command:
+      [
+        "sh",
+        "-c",
+        "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000",
+      ]
     depends_on:
       postgres:
         condition: service_healthy

@@ -42,3 +42,29 @@ def test_validation_error_uses_api_error_schema(app: FastAPI) -> None:
     assert payload["error"]["message"] == "Request validation failed"
     assert payload["error"]["details"]
     assert payload["request_id"] == "validation-id"
+
+
+def test_unexpected_error_does_not_expose_internal_details(app: FastAPI) -> None:
+    @app.get("/_test/failure", include_in_schema=False)
+    async def failure_target() -> None:
+        raise RuntimeError("database-url-or-secret-must-not-leak")
+
+    with TestClient(app, raise_server_exceptions=False) as client:
+        response = client.get(
+            "/_test/failure",
+            headers={"X-Request-ID": "internal-error-id"},
+        )
+
+    assert response.status_code == 500
+    assert response.headers["X-Request-ID"] == "internal-error-id"
+    assert response.json() == {
+        "success": False,
+        "data": None,
+        "error": {
+            "code": "internal_error",
+            "message": "Internal server error",
+            "details": None,
+        },
+        "request_id": "internal-error-id",
+    }
+    assert "database-url-or-secret" not in response.text

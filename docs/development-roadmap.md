@@ -29,14 +29,14 @@ Only the phase explicitly requested by the user may be implemented. Status value
 - **Dependency:** Phase 0.5 complete.
 - **Quality gate:** Data contracts and dataset integrity tests pass; 48/24/288/48 scale and 14/5/5 query split are validated; skill claims and evidence are structurally distinct; dataset `1.0.0` and its test queries are hash-pinned after external review; no database, parser, retrieval, ranking, or metric implementation is introduced.
 
-## Phase 2 — Persistence Foundation
+## Phase 2 — Persistence & Backend Domain Layer
 
-**Status:** Planned
+**Status:** Completed
 
 - **Objective:** Persist versioned candidate/job profiles and their evidence safely in PostgreSQL.
-- **Primary deliverables:** SQLAlchemy models, repositories, first real Alembic revisions, CRUD endpoints, transaction/error tests.
+- **Primary deliverables:** Async SQLAlchemy models, normalized nested profile data, repositories, domain services, the first real Alembic revision, typed CRUD APIs, frozen-dataset import, and transaction/error/integration tests.
 - **Dependency:** Phase 1 contracts stable.
-- **Quality gate:** Upgrade/downgrade migrations pass on a clean database; repository/API tests pass; no fake ranking data is stored.
+- **Quality gate:** Upgrade/downgrade migrations pass on PostgreSQL; frozen seed hashes and idempotency are verified; repository/service/API integration tests and canonical roundtrips pass; no fake ranking data is stored.
 
 ## Phase 3 — Structured Profile Extraction
 

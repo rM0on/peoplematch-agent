@@ -9,6 +9,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from app.core.logging import get_logger
 from app.middleware.request_id import get_request_id
 from app.schemas.common import ApiError, ApiResponse
+from app.exceptions import DomainError
 
 
 logger = get_logger("api.errors")
@@ -22,19 +23,33 @@ def _error_response(
     message: str,
     details: Optional[Any] = None,
 ) -> JSONResponse:
+    request_id = get_request_id(request)
     payload = ApiResponse[Any](
         success=False,
         data=None,
         error=ApiError(code=code, message=message, details=details),
-        request_id=get_request_id(request),
+        request_id=request_id,
     )
     return JSONResponse(
         status_code=status_code,
         content=jsonable_encoder(payload),
+        headers={"X-Request-ID": request_id},
     )
 
 
 def register_exception_handlers(app: FastAPI) -> None:
+    @app.exception_handler(DomainError)
+    async def handle_domain_exception(
+        request: Request,
+        exception: DomainError,
+    ) -> JSONResponse:
+        return _error_response(
+            request,
+            status_code=exception.status_code,
+            code=exception.code,
+            message=str(exception),
+        )
+
     @app.exception_handler(StarletteHTTPException)
     async def handle_http_exception(
         request: Request,
