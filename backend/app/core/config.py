@@ -2,6 +2,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import List, Optional
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -26,6 +27,9 @@ class Settings(BaseSettings):
     next_public_api_base_url: Optional[str] = None
     cors_origins: str = "http://localhost:3000"
     llm_api_key: Optional[str] = None
+    extraction_provider: str = "mock"
+    extraction_max_attempts: int = Field(default=2, ge=1, le=2)
+    extraction_timeout_seconds: float = Field(default=10.0, gt=0, le=120)
 
     model_config = SettingsConfigDict(
         env_file=PROJECT_ROOT / ".env",

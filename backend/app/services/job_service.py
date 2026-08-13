@@ -15,6 +15,7 @@ from app.exceptions import (
 from app.persistence.mappers import apply_job_record, job_model_from_record, job_record_from_model
 from app.schemas.mutations import JobCreate, JobPatch
 from app.schemas.persistence import DataOrigin, JobRecord
+from app.schemas.extraction import JobExtractionDraft
 
 
 class JobService:
@@ -63,6 +64,38 @@ class JobService:
                     **payload.model_dump(mode="json"),
                     "archetype": None,
                     "data_origin": DataOrigin.USER_CREATED,
+                    "schema_version": "1.0",
+                    "dataset_version": None,
+                }
+            )
+        except ValidationError as exc:
+            raise DomainValidationError(str(exc)) from exc
+        try:
+            async with self.session.begin_nested():
+                self.repository.create(job_model_from_record(record))
+                await self.session.flush()
+        except IntegrityError as exc:
+            raise DuplicateProfileError("Job or requirement ID already exists") from exc
+        return await self.get(job_id)
+
+    async def create_from_extraction(
+        self,
+        draft: JobExtractionDraft,
+        *,
+        raw_jd: str,
+        data_origin: DataOrigin,
+    ) -> JobRecord:
+        if data_origin not in {DataOrigin.MOCK_PARSED, DataOrigin.LLM_PARSED}:
+            raise DomainValidationError("Extraction origin must be parsed provenance")
+        job_id = f"job_parse_{uuid4().hex}"
+        try:
+            record = JobRecord.model_validate(
+                {
+                    "job_id": job_id,
+                    "raw_jd": raw_jd,
+                    **draft.model_dump(mode="json"),
+                    "archetype": None,
+                    "data_origin": data_origin,
                     "schema_version": "1.0",
                     "dataset_version": None,
                 }

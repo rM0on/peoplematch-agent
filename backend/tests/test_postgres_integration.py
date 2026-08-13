@@ -521,3 +521,175 @@ def test_postgres_job_api_crud_and_frozen_protection() -> None:
         missing_response = client.get(f"/api/v1/jobs/{job_id}")
         assert missing_response.status_code == 404
         assert missing_response.json()["error"]["code"] == "profile_not_found"
+
+
+def test_postgres_extraction_preview_persistence_and_failed_output_are_atomic() -> None:
+    from app.models.candidate import CandidateProfileModel, CandidateSkillModel
+    from app.models.job import JobProfileModel, JobRequirementModel
+    from app.repositories.candidate_repository import CandidateRepository
+    from app.repositories.job_repository import JobRepository
+    from app.schemas.mutations import CandidatePatch, JobPatch
+    from app.services.candidate_service import CandidateService
+    from app.services.job_service import JobService
+    from app.services.profile_extraction.mock_provider import MockStructuredOutputProvider
+    from app.services.profile_extraction.parser import ProfileExtractionService
+    from app.services.profile_extraction.provider import MOCK_PROVIDER_DESCRIPTOR
+
+    fixture_root = REPOSITORY_ROOT / "data" / "samples" / "extraction"
+    candidate_source = (fixture_root / "candidate_matching_resume.txt").read_text(encoding="utf-8")
+    job_source = (fixture_root / "job_matching_engineer.txt").read_text(encoding="utf-8")
+
+    async def scenario(session):
+        candidate_service = CandidateService(session, CandidateRepository(session))
+        job_service = JobService(session, JobRepository(session))
+        preview_service = ProfileExtractionService(
+            MockStructuredOutputProvider.from_fixture_directory(fixture_root),
+            MOCK_PROVIDER_DESCRIPTOR,
+            candidate_service=candidate_service,
+            job_service=job_service,
+        )
+
+        before_candidates = await session.scalar(select(func.count()).select_from(CandidateProfileModel))
+        before_jobs = await session.scalar(select(func.count()).select_from(JobProfileModel))
+        candidate_preview = await preview_service.parse_candidate(candidate_source, persist=False)
+        job_preview = await preview_service.parse_job(job_source, persist=False)
+        assert candidate_preview.record is None
+        assert job_preview.record is None
+        assert await session.scalar(select(func.count()).select_from(CandidateProfileModel)) == before_candidates
+        assert await session.scalar(select(func.count()).select_from(JobProfileModel)) == before_jobs
+
+        candidate_result = await preview_service.parse_candidate(candidate_source, persist=True)
+        job_result = await preview_service.parse_job(job_source, persist=True)
+        candidate = candidate_result.record
+        job = job_result.record
+        assert candidate.candidate_id.startswith("cand_parse_")
+        assert candidate.data_origin.value == "mock_parsed"
+        assert candidate.dataset_version is None and candidate.archetype is None
+        assert candidate.raw_text == candidate_source
+        assert candidate_result.extraction.persisted is True
+        assert job.job_id.startswith("job_parse_")
+        assert job.data_origin.value == "mock_parsed"
+        assert job.dataset_version is None and job.archetype is None
+        assert job.raw_jd == job_source
+        assert job_result.extraction.persisted is True
+
+        await candidate_service.patch(
+            candidate.candidate_id,
+            CandidatePatch(name="Parsed Candidate Updated"),
+        )
+        await job_service.patch(
+            job.job_id,
+            JobPatch(company_name="Parsed Job Updated"),
+        )
+
+        candidate_count = await session.scalar(select(func.count()).select_from(CandidateProfileModel))
+        job_count = await session.scalar(select(func.count()).select_from(JobProfileModel))
+        child_counts = (
+            await session.scalar(select(func.count()).select_from(CandidateSkillModel)),
+            await session.scalar(select(func.count()).select_from(JobRequirementModel)),
+        )
+        failing = ProfileExtractionService(
+            MockStructuredOutputProvider.with_responses(["invalid", "invalid again"]),
+            MOCK_PROVIDER_DESCRIPTOR,
+            candidate_service=candidate_service,
+            job_service=job_service,
+        )
+        from app.exceptions import ProviderOutputInvalidError
+        with pytest.raises(ProviderOutputInvalidError):
+            await failing.parse_candidate(candidate_source, persist=True)
+        with pytest.raises(ProviderOutputInvalidError):
+            await ProfileExtractionService(
+                MockStructuredOutputProvider.with_responses(["invalid", "invalid again"]),
+                MOCK_PROVIDER_DESCRIPTOR,
+                candidate_service=candidate_service,
+                job_service=job_service,
+            ).parse_job(job_source, persist=True)
+        assert await session.scalar(select(func.count()).select_from(CandidateProfileModel)) == candidate_count
+        assert await session.scalar(select(func.count()).select_from(JobProfileModel)) == job_count
+        assert (
+            await session.scalar(select(func.count()).select_from(CandidateSkillModel)),
+            await session.scalar(select(func.count()).select_from(JobRequirementModel)),
+        ) == child_counts
+
+    asyncio.run(_run_isolated(scenario))
+
+
+def test_postgres_extraction_routes_preview_persist_get_and_delete() -> None:
+    from fastapi.testclient import TestClient
+
+    from app.api.dependencies import get_db_session
+    from app.main import create_app
+
+    async def prepare() -> None:
+        async def no_op(_session):
+            return None
+
+        await _run_isolated(no_op)
+
+    asyncio.run(prepare())
+    app = create_app()
+
+    async def database_override():
+        engine = create_async_engine(TEST_DATABASE_URL, poolclass=NullPool)
+        factory = async_sessionmaker(engine, expire_on_commit=False)
+        try:
+            async with factory() as session:
+                async with session.begin():
+                    yield session
+        finally:
+            await engine.dispose()
+
+    app.dependency_overrides[get_db_session] = database_override
+    fixture_root = REPOSITORY_ROOT / "data" / "samples" / "extraction"
+    candidate_source = (fixture_root / "candidate_matching_resume.txt").read_text(
+        encoding="utf-8"
+    )
+    job_source = (fixture_root / "job_matching_engineer.txt").read_text(
+        encoding="utf-8"
+    )
+    with TestClient(app) as client:
+        candidate_preview = client.post(
+            "/api/v1/candidates/parse",
+            json={"text": candidate_source},
+            headers={"X-Request-ID": "candidate-route-preview"},
+        )
+        assert candidate_preview.status_code == 200
+        assert candidate_preview.headers["X-Request-ID"] == "candidate-route-preview"
+        assert candidate_preview.json()["request_id"] == "candidate-route-preview"
+        assert candidate_preview.json()["data"]["record"] is None
+
+        candidate_persisted = client.post(
+            "/api/v1/candidates/parse",
+            json={"text": candidate_source, "persist": True},
+        )
+        assert candidate_persisted.status_code == 200
+        candidate_record = candidate_persisted.json()["data"]["record"]
+        candidate_id = candidate_record["candidate_id"]
+        assert candidate_id.startswith("cand_parse_")
+        assert candidate_record["data_origin"] == "mock_parsed"
+        assert candidate_record["raw_text"] == candidate_source
+        assert client.get(f"/api/v1/candidates/{candidate_id}").status_code == 200
+        assert client.delete(f"/api/v1/candidates/{candidate_id}").status_code == 204
+
+        job_preview = client.post(
+            "/api/v1/jobs/parse",
+            json={"text": job_source},
+            headers={"X-Request-ID": "job-route-preview"},
+        )
+        assert job_preview.status_code == 200
+        assert job_preview.headers["X-Request-ID"] == "job-route-preview"
+        assert job_preview.json()["request_id"] == "job-route-preview"
+        assert job_preview.json()["data"]["record"] is None
+
+        job_persisted = client.post(
+            "/api/v1/jobs/parse",
+            json={"text": job_source, "persist": True},
+        )
+        assert job_persisted.status_code == 200
+        job_record = job_persisted.json()["data"]["record"]
+        job_id = job_record["job_id"]
+        assert job_id.startswith("job_parse_")
+        assert job_record["data_origin"] == "mock_parsed"
+        assert job_record["raw_jd"] == job_source
+        assert client.get(f"/api/v1/jobs/{job_id}").status_code == 200
+        assert client.delete(f"/api/v1/jobs/{job_id}").status_code == 204

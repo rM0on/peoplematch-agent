@@ -6,13 +6,14 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-COPY requirements.txt ./requirements.txt
+COPY backend/requirements.txt ./requirements.txt
 RUN python -m pip install --upgrade pip && \
     python -m pip install -r requirements.txt
 
-COPY app ./app
-COPY alembic.ini ./alembic.ini
-COPY alembic ./alembic
+COPY backend/app ./app
+COPY backend/alembic.ini ./alembic.ini
+COPY backend/alembic ./alembic
+COPY data/samples/extraction /data/samples/extraction
 
 RUN useradd --create-home --uid 10001 appuser && chown -R appuser:appuser /app
 USER appuser

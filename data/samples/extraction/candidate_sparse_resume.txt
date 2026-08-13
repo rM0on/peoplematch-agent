@@ -1,0 +1,1 @@
+Sparse Candidate Demo is a synthetic early-career profile that reports Python familiarity and a locally runnable small API prototype. It targets a backend AI role, prefers remote work from Shanghai without relocation, and is open to early product teams. The source does not provide a portfolio link, detailed project artifacts, or measured outcomes.

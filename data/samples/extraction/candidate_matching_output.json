@@ -1,0 +1,48 @@
+{
+  "name": "Candidate Parse Demo",
+  "skills": [
+    {"name": "Python", "category": "backend", "self_reported_level": "advanced"},
+    {"name": "Candidate Retrieval", "category": "retrieval_search", "self_reported_level": "practiced"},
+    {"name": "Feature Engineering", "category": "recommendation", "self_reported_level": "practiced"},
+    {"name": "Offline Evaluation", "category": "evaluation", "self_reported_level": "practiced"}
+  ],
+  "projects": [
+    {
+      "project_id": "prj_matching_console",
+      "name": "Matching Console Sandbox",
+      "summary": "Built a local candidate matching console with retrieval preparation and an offline evaluation harness.",
+      "role": "Project developer",
+      "technologies": ["Python", "FastAPI", "PostgreSQL"],
+      "outcomes": ["Implemented deterministic profile comparison tests", "Documented the evaluation workflow"],
+      "skills_demonstrated": ["Python", "Candidate Retrieval", "Feature Engineering", "Offline Evaluation"]
+    }
+  ],
+  "project_evidence": [
+    {
+      "evidence_id": "ev_matching_tests",
+      "project_id": "prj_matching_console",
+      "supports_skills": ["Python", "Candidate Retrieval", "Feature Engineering"],
+      "evidence_type": "tests",
+      "statement": "The sandbox test suite exercises candidate retrieval preparation and feature construction behavior.",
+      "artifact_ref": "sandbox://extraction/candidate/matching-console/tests",
+      "verification_status": "available"
+    },
+    {
+      "evidence_id": "ev_matching_eval",
+      "project_id": "prj_matching_console",
+      "supports_skills": ["Offline Evaluation"],
+      "evidence_type": "evaluation_report",
+      "statement": "A documented local evaluation harness compares deterministic profile-processing scenarios without performance claims.",
+      "artifact_ref": "sandbox://extraction/candidate/matching-console/evaluation",
+      "verification_status": "described"
+    }
+  ],
+  "github_url": "https://example.invalid/candidate/parse-demo",
+  "ai_tools": ["FastAPI", "Pydantic"],
+  "target_roles": ["AI Matching Algorithm Engineer", "Recommendation Engineer"],
+  "preferred_locations": {"cities": ["Shanghai"], "remote_policy": "hybrid", "relocation_open": false},
+  "seniority": "mid",
+  "work_style": {"team_stage_preference": ["zero_to_one"], "collaboration_style": "Collaborative product and engineering iteration"},
+  "missing_fields": ["years_of_experience"],
+  "overclaim_risk": {"level": "low", "reasons": []}
+}

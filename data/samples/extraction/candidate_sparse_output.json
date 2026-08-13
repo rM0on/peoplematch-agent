@@ -1,0 +1,14 @@
+{
+  "name": "Sparse Candidate Demo",
+  "skills": [{"name": "Python", "category": "backend", "self_reported_level": "familiar"}],
+  "projects": [{"project_id": "prj_api_prototype", "name": "API Prototype", "summary": "Created a small synthetic API prototype with limited implementation detail in the supplied source.", "role": "Project developer", "technologies": ["Python"], "outcomes": ["Produced a locally runnable prototype"], "skills_demonstrated": ["Python"]}],
+  "project_evidence": [],
+  "github_url": null,
+  "ai_tools": [],
+  "target_roles": ["Backend AI Engineer"],
+  "preferred_locations": {"cities": ["Shanghai"], "remote_policy": "remote", "relocation_open": false},
+  "seniority": "early_career",
+  "work_style": {"team_stage_preference": ["early product"], "collaboration_style": "Remote collaboration preference stated without further detail"},
+  "missing_fields": ["github_url", "project_evidence", "measured_outcomes"],
+  "overclaim_risk": {"level": "medium", "reasons": ["The source claims Python familiarity but provides no available artifact evidence."]}
+}

@@ -1,0 +1,12 @@
+{
+  "company_name": "Helix Sandbox Studio",
+  "role_title": "AI Engineer",
+  "must_have": [{"requirement_id": "req_must_python", "text": "Use Python for an early AI product prototype", "category": "skill", "evidence_expectation": "A source-supported Python project description"}],
+  "nice_to_have": [],
+  "role_direction": ["AI product prototyping"],
+  "team_tags": ["zero_to_one"],
+  "location": {"cities": ["Shanghai"], "remote_policy": "remote", "relocation_supported": false},
+  "seniority_requirement": ["early_career"],
+  "product_stage": "zero_to_one",
+  "evaluation_focus": ["Python project discussion"]
+}

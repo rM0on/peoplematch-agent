@@ -2,15 +2,36 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, Query, Request, Response, status
 
-from app.api.dependencies import get_candidate_service
+from app.api.dependencies import get_candidate_service, get_profile_extraction_service
 from app.middleware.request_id import get_request_id
 from app.schemas.common import ApiResponse, PaginatedData
 from app.schemas.mutations import CandidateCreate, CandidatePatch
 from app.schemas.persistence import CandidateRecord
 from app.services.candidate_service import CandidateService
+from app.schemas.extraction import CandidateParseData, CandidateParseRequest
+from app.services.profile_extraction.parser import ProfileExtractionService
 
 
 router = APIRouter(prefix="/candidates", tags=["candidates"])
+
+
+@router.post("/parse", response_model=ApiResponse[CandidateParseData])
+async def parse_candidate(
+    payload: CandidateParseRequest,
+    request: Request,
+    service: ProfileExtractionService = Depends(get_profile_extraction_service),
+) -> ApiResponse[CandidateParseData]:
+    request_id = get_request_id(request)
+    return ApiResponse(
+        success=True,
+        data=await service.parse_candidate(
+            payload.text,
+            persist=payload.persist,
+            request_id=request_id,
+        ),
+        error=None,
+        request_id=request_id,
+    )
 
 
 @router.get("", response_model=ApiResponse[PaginatedData[CandidateRecord]])

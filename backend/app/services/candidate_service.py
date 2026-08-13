@@ -19,6 +19,7 @@ from app.persistence.mappers import (
 )
 from app.schemas.mutations import CandidateCreate, CandidatePatch
 from app.schemas.persistence import CandidateRecord, DataOrigin
+from app.schemas.extraction import CandidateExtractionDraft
 
 
 class CandidateService:
@@ -54,6 +55,38 @@ class CandidateService:
                     **payload.model_dump(mode="json"),
                     "archetype": None,
                     "data_origin": DataOrigin.USER_CREATED,
+                    "schema_version": "1.0",
+                    "dataset_version": None,
+                }
+            )
+        except ValidationError as exc:
+            raise DomainValidationError(str(exc)) from exc
+        try:
+            async with self.session.begin_nested():
+                self.repository.create(candidate_model_from_record(record))
+                await self.session.flush()
+        except IntegrityError as exc:
+            raise DuplicateProfileError("Candidate or nested ID already exists") from exc
+        return await self.get(candidate_id)
+
+    async def create_from_extraction(
+        self,
+        draft: CandidateExtractionDraft,
+        *,
+        raw_text: str,
+        data_origin: DataOrigin,
+    ) -> CandidateRecord:
+        if data_origin not in {DataOrigin.MOCK_PARSED, DataOrigin.LLM_PARSED}:
+            raise DomainValidationError("Extraction origin must be parsed provenance")
+        candidate_id = f"cand_parse_{uuid4().hex}"
+        try:
+            record = CandidateRecord.model_validate(
+                {
+                    "candidate_id": candidate_id,
+                    "raw_text": raw_text,
+                    **draft.model_dump(mode="json"),
+                    "archetype": None,
+                    "data_origin": data_origin,
                     "schema_version": "1.0",
                     "dataset_version": None,
                 }

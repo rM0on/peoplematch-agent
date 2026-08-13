@@ -2,15 +2,36 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, Query, Request, Response, status
 
-from app.api.dependencies import get_job_service
+from app.api.dependencies import get_job_service, get_profile_extraction_service
 from app.middleware.request_id import get_request_id
 from app.schemas.common import ApiResponse, PaginatedData
 from app.schemas.mutations import JobCreate, JobPatch
 from app.schemas.persistence import JobRecord
 from app.services.job_service import JobService
+from app.schemas.extraction import JobParseData, JobParseRequest
+from app.services.profile_extraction.parser import ProfileExtractionService
 
 
 router = APIRouter(prefix="/jobs", tags=["jobs"])
+
+
+@router.post("/parse", response_model=ApiResponse[JobParseData])
+async def parse_job(
+    payload: JobParseRequest,
+    request: Request,
+    service: ProfileExtractionService = Depends(get_profile_extraction_service),
+) -> ApiResponse[JobParseData]:
+    request_id = get_request_id(request)
+    return ApiResponse(
+        success=True,
+        data=await service.parse_job(
+            payload.text,
+            persist=payload.persist,
+            request_id=request_id,
+        ),
+        error=None,
+        request_id=request_id,
+    )
 
 
 @router.get("", response_model=ApiResponse[PaginatedData[JobRecord]])

@@ -7,18 +7,18 @@ PeopleMatch Agent is a local monorepo with these logical areas:
 | Area | Responsibility | Current status |
 |---|---|---|
 | Frontend | Product UI and typed API consumption | **CURRENT:** Phase 0.5 Matching Results design mock; Phase 0 health client preserved but not mounted |
-| Backend | HTTP boundary, application configuration, tracing, canonical data contracts | **CURRENT:** FastAPI liveness plus Phase 2 candidate/job CRUD through service and repository layers |
+| Backend | HTTP boundary, application configuration, tracing, canonical data contracts | **CURRENT:** FastAPI liveness, candidate/job CRUD, and Phase 3 structured extraction |
 | Storage | Durable candidate/job/match-run data | **CURRENT:** PostgreSQL candidate/job profiles with normalized evidence and requirements; match-run storage **PLANNED** |
 | Retrieval | Candidate/job recall and vector search | Qdrant container config **CURRENT**; retrieval logic **PLANNED** |
 | Ranking | Features, LTR, and reranking | **PLANNED** |
-| AI Provider | Extraction and grounded explanation | Interface concept **PLANNED**; no provider or key required |
+| AI Provider | Structured extraction and later grounded explanation | **CURRENT:** provider interface plus deterministic no-network mock; real LLM and explanation **PLANNED** |
 | Cache / ephemeral state | Later caching and coordination | Redis container config **CURRENT**; business usage **PLANNED** |
 
 ## Current Phase Architecture
 
-**CURRENT during Phase 2:** Next.js still serves the selected Matching Results design mock and does not consume profile APIs. FastAPI exposes liveness and typed candidate/job CRUD. Routers handle HTTP concerns, services enforce canonical validation, ID generation, frozen-record protection, and transaction rules, repositories implement structured queries and eager loading, and async SQLAlchemy persists to PostgreSQL. Phase 1 JSONL remains the frozen source fixture and is imported only after hash verification.
+**CURRENT during Phase 3:** Next.js still serves the selected Matching Results design mock and does not consume profile APIs. FastAPI exposes liveness, typed candidate/job CRUD, and structured extraction preview/persistence endpoints. Extraction prompts treat source text as untrusted, the deterministic mock proposes strict JSON business fields, Pydantic reuses canonical nested/domain validation, and existing Candidate/Job services inject server-owned source, identity, and provenance before optional PostgreSQL persistence. Phase 1 JSONL remains frozen and is imported only after hash verification.
 
-The liveness route still makes no downstream calls. Redis and Qdrant are healthy local infrastructure only; Phase 2 initializes no cache key, vector collection, algorithm, or AI provider.
+The liveness route still makes no downstream calls. Redis and Qdrant are healthy local infrastructure only; Phase 3 initializes no cache key, vector collection, retrieval algorithm, or real AI provider.
 
 ### Runtime Architecture
 
@@ -26,18 +26,20 @@ The liveness route still makes no downstream calls. Redis and Qdrant are healthy
 flowchart TD
     Browser["Browser"] --> Next["Next.js 16 frontend\nCURRENT: design mock"]
     Next -. "health client preserved; not mounted in selected mock" .-> FastAPI["FastAPI backend\nCURRENT: health + profile APIs"]
-    FastAPI --> Service["Candidate / Job services\nCURRENT"]
+    FastAPI --> Extraction["Profile extraction service\nCURRENT: strict JSON + mock"]
+    Extraction --> Service["Candidate / Job services\nCURRENT"]
+    FastAPI --> Service
     Service --> Repository["Repositories\nCURRENT"]
     Repository --> PG["PostgreSQL via async SQLAlchemy\nCURRENT"]
     FastAPI -.-> Redis["Redis\nusage planned"]
     FastAPI -.-> Qdrant["Qdrant\ncollections planned"]
 ```
 
-Solid arrows describe the current Phase 2 profile-persistence flow. Dotted arrows show configured infrastructure with no business integration.
+Solid arrows describe the current Phase 3 extraction and profile-persistence flow. Dotted arrows show configured infrastructure with no business integration.
 
 ## Target Architecture
 
-**PLANNED:** Later phases add structured extraction, match-run orchestration, hybrid retrieval, evidence-aware features, learned ranking, cross-encoder reranking, explanations, feedback, bad-case review, and offline evaluation metrics. Phase 2 persistence remains the stable domain foundation for those later capabilities.
+**PLANNED:** Later phases add a real structured-output provider, match-run orchestration, hybrid retrieval, evidence-aware features, learned ranking, cross-encoder reranking, explanations, feedback, bad-case review, and offline evaluation metrics. Phase 2 persistence remains the stable domain foundation.
 
 The target remains a modular monolith unless a measured need justifies a different deployment boundary. Phase 0 does not introduce microservices, Kubernetes, authentication, or distributed infrastructure.
 
@@ -45,7 +47,7 @@ The target remains a modular monolith unless a measured need justifies a differe
 
 ```mermaid
 flowchart TD
-    Input["Candidate / Job"] --> Parser["Structured parser\nPLANNED"]
+    Input["Candidate / Job"] --> Parser["Structured extraction\nCURRENT: deterministic mock"]
     Parser --> Retrieval["Hybrid retrieval\nPLANNED"]
     Retrieval --> Features["Feature scoring\nPLANNED"]
     Features --> LTR["Learning-to-rank\nPLANNED"]
@@ -71,7 +73,7 @@ Owns HTTP routing, transport validation, response codes, response envelopes, and
 
 ### Service Layer
 
-Owns candidate/job validation, server-generated identifiers, frozen-record protection, and atomic mutation boundaries. Parser, retrieval, scoring, ranking, explanation, feedback, and evaluation services remain planned.
+Owns candidate/job validation, server-generated identifiers, frozen-record protection, and atomic mutation boundaries. The extraction service owns prompt construction, provider resolution, strict decoding, bounded repair, fingerprints, and optional handoff to persistence. Retrieval, scoring, ranking, explanation, feedback, and evaluation services remain planned.
 
 ### Repository Layer
 
@@ -117,7 +119,7 @@ Clear module boundaries matter before deployment boundaries. A local modular mon
 
 ## Configuration and Secrets
 
-The backend reads environment-backed settings via Pydantic Settings. Compose interpolates the same variable names from root `.env`. `.env.example` contains local-only examples; `.env` is ignored. `LLM_API_KEY` is optional and unused in Phase 2.
+The backend reads environment-backed settings via Pydantic Settings. Compose interpolates the same variable names from root `.env`. `.env.example` contains local-only examples; `.env` is ignored. `EXTRACTION_PROVIDER=mock` is the only implemented Phase 3 provider; attempts are bounded to two and timeout is environment-backed. `LLM_API_KEY` remains optional and unused. Selecting an unimplemented provider fails explicitly rather than falling back to mock.
 
 ## Data Architecture Boundary
 

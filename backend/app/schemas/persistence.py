@@ -1,9 +1,15 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import List, Optional
+from typing import Annotated, List, Optional
 
-from pydantic import AnyHttpUrl, TypeAdapter, ValidationError, model_validator
+from pydantic import (
+    AnyHttpUrl,
+    StringConstraints,
+    TypeAdapter,
+    ValidationError,
+    model_validator,
+)
 
 from app.schemas.candidate import (
     CandidateArchetype,
@@ -22,6 +28,7 @@ from app.schemas.shared import ContractModel, ProductStage, SchemaVersion, Senio
 class DataOrigin(str, Enum):
     SYNTHETIC_SANDBOX = "synthetic_sandbox"
     USER_CREATED = "user_created"
+    MOCK_PARSED = "mock_parsed"
     LLM_PARSED = "llm_parsed"
 
 
@@ -29,7 +36,7 @@ class CandidateRecord(ContractModel):
     candidate_id: str
     name: str
     archetype: Optional[CandidateArchetype] = None
-    raw_text: str
+    raw_text: Annotated[str, StringConstraints(strip_whitespace=False)]
     skills: List[SkillClaim]
     projects: List[Project]
     project_evidence: List[ProjectEvidence]
@@ -48,7 +55,10 @@ class CandidateRecord(ContractModel):
     @model_validator(mode="after")
     def nested_references_must_be_valid(self) -> "CandidateRecord":
         if self.github_url is not None:
-            if self.data_origin == DataOrigin.SYNTHETIC_SANDBOX:
+            if self.data_origin in {
+                DataOrigin.SYNTHETIC_SANDBOX,
+                DataOrigin.MOCK_PARSED,
+            }:
                 if not self.github_url.startswith("sandbox://"):
                     try:
                         parsed_url = TypeAdapter(AnyHttpUrl).validate_python(
@@ -94,7 +104,7 @@ class JobRecord(ContractModel):
     company_name: str
     role_title: str
     archetype: Optional[JobArchetype] = None
-    raw_jd: str
+    raw_jd: Annotated[str, StringConstraints(strip_whitespace=False)]
     must_have: List[JobRequirement]
     nice_to_have: List[JobRequirement]
     role_direction: List[str]

@@ -54,8 +54,8 @@ services:
 
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     restart: unless-stopped
     environment:
       APP_NAME: ${APP_NAME:-PeopleMatch Agent Backend}
@@ -72,6 +72,9 @@ services:
       QDRANT_URL: ${QDRANT_URL:-http://qdrant:6333}
       NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8000}
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+      EXTRACTION_PROVIDER: ${EXTRACTION_PROVIDER:-mock}
+      EXTRACTION_MAX_ATTEMPTS: ${EXTRACTION_MAX_ATTEMPTS:-2}
+      EXTRACTION_TIMEOUT_SECONDS: ${EXTRACTION_TIMEOUT_SECONDS:-10}
     ports:
       - "${BACKEND_PORT:-8000}:8000"
     command:

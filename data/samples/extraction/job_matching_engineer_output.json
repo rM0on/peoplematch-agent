@@ -1,0 +1,20 @@
+{
+  "company_name": "Northstar Sandbox Labs",
+  "role_title": "AI Matching Algorithm Engineer",
+  "must_have": [
+    {"requirement_id": "req_must_ranking", "text": "Build matching or recommendation ranking foundations", "category": "role_direction", "evidence_expectation": "A project artifact showing matching or recommendation system design"},
+    {"requirement_id": "req_must_retrieval", "text": "Implement candidate retrieval preparation", "category": "skill", "evidence_expectation": "Code, tests, or architecture documentation for retrieval behavior"},
+    {"requirement_id": "req_must_features", "text": "Design evidence-aware matching features", "category": "project_evidence", "evidence_expectation": "Project evidence that distinguishes claims, evidence, and constraints"},
+    {"requirement_id": "req_must_evaluation", "text": "Document offline evaluation workflows", "category": "experience", "evidence_expectation": "An evaluation report, test harness, or experiment document"}
+  ],
+  "nice_to_have": [
+    {"requirement_id": "req_nice_fastapi", "text": "Use FastAPI in applied AI systems", "category": "ai_tooling", "evidence_expectation": "A documented FastAPI project or runnable demo"},
+    {"requirement_id": "req_nice_agents", "text": "Understand bounded agent workflows", "category": "skill", "evidence_expectation": "A workflow trace or architecture document"}
+  ],
+  "role_direction": ["candidate matching", "recommendation ranking", "offline evaluation"],
+  "team_tags": ["zero_to_one", "evidence_driven", "cross_functional"],
+  "location": {"cities": ["Shanghai"], "remote_policy": "hybrid", "relocation_supported": true},
+  "seniority_requirement": ["senior"],
+  "product_stage": "zero_to_one",
+  "evaluation_focus": ["project evidence", "system design", "constraint-aware reasoning"]
+}

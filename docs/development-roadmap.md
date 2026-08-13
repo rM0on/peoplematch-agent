@@ -40,12 +40,12 @@ Only the phase explicitly requested by the user may be implemented. Status value
 
 ## Phase 3 — Structured Profile Extraction
 
-**Status:** Planned
+**Status:** Completed
 
 - **Objective:** Convert permitted raw sandbox/public text into reviewable structured profiles.
-- **Primary deliverables:** Provider boundary, candidate/job extraction services, prompt/schema versioning, deterministic fixtures, human-review flow.
+- **Primary deliverables:** Provider-agnostic structured-output boundary, deterministic mock provider, candidate/job prompt builders and draft schemas, strict JSON/Pydantic validation, bounded repair, preview/persistence APIs, and synthetic fixtures.
 - **Dependency:** Phase 2 persistence and Phase 1 contracts.
-- **Quality gate:** Extraction tests cover missing/unsupported evidence and provider failure; outputs preserve source traceability; no ranking is performed.
+- **Quality gate:** Extraction tests cover missing/unsupported evidence, malformed output, bounded repair, provider failures, provenance, PostgreSQL persistence, and source traceability; no real LLM, retrieval, or ranking is implemented.
 
 ## Phase 4 — Hybrid Retrieval
 

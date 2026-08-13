@@ -68,12 +68,16 @@ def register_exception_handlers(app: FastAPI) -> None:
         request: Request,
         exception: RequestValidationError,
     ) -> JSONResponse:
+        safe_details = [
+            {key: value for key, value in error.items() if key not in {"input", "ctx"}}
+            for error in exception.errors()
+        ]
         return _error_response(
             request,
             status_code=422,
             code="validation_error",
             message="Request validation failed",
-            details=jsonable_encoder(exception.errors()),
+            details=jsonable_encoder(safe_details),
         )
 
     @app.exception_handler(Exception)

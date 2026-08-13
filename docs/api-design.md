@@ -14,13 +14,13 @@
 | Method | Path | Status | Intended responsibility |
 |---|---|---|---|
 | GET | `/health` | **Implemented** | Application liveness; no downstream readiness checks |
-| POST | `/api/v1/candidates/parse` | **Planned** | Parse candidate input into a structured reviewable profile |
+| POST | `/api/v1/candidates/parse` | **Implemented** | Validate a deterministic mock candidate extraction preview and optionally persist it |
 | GET | `/api/v1/candidates` | **Implemented** | List stored candidate profiles with pagination and structured filters |
 | GET | `/api/v1/candidates/{candidate_id}` | **Implemented** | Read one canonical candidate profile, projects, and evidence |
 | POST | `/api/v1/candidates` | **Implemented** | Create a validated `user_created` candidate with a server-generated ID |
 | PATCH | `/api/v1/candidates/{candidate_id}` | **Implemented** | Partially update a mutable profile, then validate the complete result |
 | DELETE | `/api/v1/candidates/{candidate_id}` | **Implemented** | Delete a mutable profile and its nested records |
-| POST | `/api/v1/jobs/parse` | **Planned** | Parse a job description into a structured reviewable profile |
+| POST | `/api/v1/jobs/parse` | **Implemented** | Validate a deterministic mock job extraction preview and optionally persist it |
 | GET | `/api/v1/jobs` | **Implemented** | List stored job profiles with pagination and structured filters |
 | GET | `/api/v1/jobs/{job_id}` | **Implemented** | Read one canonical job profile and its requirements |
 | POST | `/api/v1/jobs` | **Implemented** | Create a validated `user_created` job with a server-generated ID |
@@ -82,7 +82,21 @@ PATCH uses replacement semantics for each supplied nested collection; omitted ne
 
 Canonical project and evidence IDs are unique within their candidate owner, and canonical requirement IDs are unique within their job owner. Different owners may reuse them. Internal database surrogate IDs are persistence-only and never appear in API records.
 
-Candidate GitHub URL policy is origin-aware. `synthetic_sandbox` records accept only `sandbox://` or `example.invalid` references; `user_created` and future `llm_parsed` records may use `None` or a valid HTTP(S) URL. Mutation clients cannot provide `data_origin`, `dataset_version`, or `archetype`; POST assigns `user_created`, a null dataset version, and a null archetype.
+Candidate GitHub URL policy is origin-aware. `synthetic_sandbox` and `mock_parsed` records accept only `sandbox://` or valid HTTP(S) references whose hostname is exactly `example.invalid`; `user_created` and future `llm_parsed` records may use `None` or a valid HTTP(S) URL. Mutation clients cannot provide `data_origin`, `dataset_version`, or `archetype`; manual POST assigns `user_created`, a null dataset version, and a null archetype.
+
+## Structured Extraction APIs
+
+`POST /api/v1/candidates/parse` and `POST /api/v1/jobs/parse` accept typed `{ "text": string, "persist": boolean }` requests. `persist` defaults to `false`, so parsing is a zero-write preview unless the caller opts in. Clients cannot select a provider or provide identity, source-copy, origin, dataset-version, schema-version, or archetype fields.
+
+Successful `data` contains:
+
+- `draft`: the validated domain-specific extraction draft;
+- `record`: `null` for preview or the persisted canonical record;
+- `extraction`: `provider`, `provider_kind`, `attempts`, `repaired`, `persisted`, and a SHA-256 `input_fingerprint`.
+
+Phase 3 implements only the deterministic mock provider and only registered synthetic fixture inputs. A persisted mock draft receives a server-generated `cand_parse_<uuid>` or `job_parse_<uuid>`, the exact request source, `data_origin=mock_parsed`, `schema_version=1.0`, and null dataset version/archetype. Manual POST behavior remains `user_created`. Mock records are mutable because they are not part of frozen dataset `1.0.0`.
+
+Provider output is decoded with strict `json.loads` and validated against Pydantic drafts that reuse the canonical nested contracts. Invalid JSON or schema/domain output receives at most one repair attempt. Repeated invalid output returns HTTP 502 `provider_output_invalid`; provider exceptions and timeouts return HTTP 503 `provider_unavailable` or `provider_timeout`; an unknown mock input returns HTTP 422 `mock_input_not_supported`. No raw provider response, prompt, source, stack trace, or database detail appears in an error response.
 
 ## Frozen Mutation Policy
 

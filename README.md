@@ -4,7 +4,7 @@
 
 PeopleMatch Agent is an autonomous, local-running prototype for evidence-aware candidate/job matching. It is designed to evolve beyond keyword search into a traceable pipeline that can rank AI Builder opportunities, explain why a match is supported by project evidence, review bad cases, and compare later algorithms through sandbox-only offline evaluation.
 
-The repository has completed **Phase 2 — Persistence & Backend Domain Layer**. Phases 0, 0.5, 1, and 2 are frozen. Dataset `1.0.0` provides canonical Pydantic contracts and synthetic sandbox profiles; Phase 2 adds PostgreSQL persistence, profile-domain services, and typed candidate/job APIs. Matching, ranking, LLM, retrieval, feedback, and evaluation capabilities shown in the roadmap remain planned—not implemented.
+The repository is in **Phase 3 — Structured Profile Extraction (Completed)**. Phases 0, 0.5, 1, 2, and 3 are frozen. Dataset `1.0.0` provides canonical contracts and synthetic sandbox profiles; Phase 2 provides PostgreSQL profile APIs; Phase 3 adds provider-agnostic structured extraction with a deterministic mock, strict validation, bounded repair, and optional persistence. No real LLM, retrieval, or ranking provider is implemented.
 
 ## Project Overview
 
@@ -52,7 +52,7 @@ flowchart LR
     I -. "documented iteration" .-> D
 ```
 
-Phase 2 implements none of these algorithmic stages. It only persists canonical profiles and exposes structured profile APIs.
+Phase 3 implements structured extraction architecture with a deterministic mock only. Hybrid retrieval and every downstream matching stage remain planned.
 
 ## Architecture Overview
 
@@ -60,12 +60,14 @@ Phase 2 implements none of these algorithmic stages. It only persists canonical 
 flowchart LR
     Browser["Browser"] --> Web["Next.js frontend\nCURRENT: Phase 0.5 design mock"]
     Web -. "frontend integration remains a later phase" .-> API["FastAPI backend\nCURRENT: health + profile APIs"]
-    API --> Domain["Candidate / Job services and repositories\nCURRENT"]
+    API --> Extract["Structured extraction\nCURRENT: deterministic mock"]
+    Extract --> Domain["Candidate / Job services and repositories\nCURRENT"]
+    API --> Domain
     Domain --> PG["PostgreSQL\nCURRENT: canonical profile store"]
     API -.-> Redis["Redis\nCURRENT: infrastructure only"]
     API -.-> Qdrant["Qdrant\nCURRENT: infrastructure only"]
     API -.-> Matching["Ranking services\nPLANNED"]
-    API -.-> AI["LLM provider boundary\nPLANNED"]
+    Extract -.-> AI["Real LLM provider\nPLANNED"]
 ```
 
 The health endpoint is liveness-only and intentionally does not fail when infrastructure is unavailable. Dependency readiness will be added separately in a later phase.
@@ -102,9 +104,9 @@ peoplematch-agent/
 
 ## Current Phase
 
-**Phase 2 — Persistence & Backend Domain Layer (Completed)**
+**Phase 3 — Structured Profile Extraction (Completed)**
 
-Phase 2 persists candidates, skills, projects, project evidence, jobs, and requirements in PostgreSQL through async SQLAlchemy. FastAPI candidate/job CRUD uses router → service → repository boundaries, typed envelopes, structured filters, limit/offset pagination, and canonical reconstruction. Frozen dataset `1.0.0` profiles are imported only after SHA-256 verification and are protected from PATCH/DELETE; API-created synthetic profiles remain mutable. Relevance labels and pairwise preferences remain offline files.
+Phase 3 accepts registered synthetic resume/JD fixtures through Candidate and Job parse endpoints. A provider interface isolates structured-output generation; the only implementation is a deterministic, no-network mock. Strict JSON decoding, canonical Pydantic validation, at most one repair attempt, source fingerprinting, server-owned identity/provenance, and optional atomic persistence are implemented. This verifies architecture and failure behavior, not real-world extraction accuracy.
 
 Phase 0.5A completed the information architecture, user flows, page hierarchy, design-system direction, screenshot planning, and three-way visual exploration. Phase 0.5B implemented the user-selected Evidence-first fusion for the Matching Results hero screen. Its shortlist values, score breakdowns, evidence records, risk labels, and trace remain marked `Design Mock`; they do not come from the Phase 1 dataset or a matching engine.
 
@@ -120,7 +122,7 @@ Phase 0 completed:
 - Docker Compose definitions for PostgreSQL, Redis, Qdrant, backend, and frontend;
 - an Alembic foundation later extended by the Phase 2 profile migration.
 
-Not implemented: candidate/job parsers, matching algorithms, LLM calls, vector retrieval, feature scoring, ranking, explanations, feedback workflows, evaluation metrics, or a complete product dashboard.
+Not implemented: any real LLM provider, general-purpose resume/JD parsing, matching algorithms, vector retrieval, feature scoring, ranking, explanations, feedback workflows, evaluation metrics, or a complete product dashboard.
 
 ## Roadmap
 
@@ -130,7 +132,7 @@ Not implemented: candidate/job parsers, matching algorithms, LLM calls, vector r
 | 0.5 | Product design and UI system | Completed |
 | 1 | Sandbox dataset, canonical contracts, and ranking labels | Completed |
 | 2 | Candidate/job persistence and migrations | Completed |
-| 3 | Profile extraction implementation | Planned |
+| 3 | Structured profile extraction with deterministic mock | Completed |
 | 4 | Hybrid retrieval | Planned |
 | 5 | Evidence-aware feature scoring | Planned |
 | 6 | Learning-to-rank | Planned |
@@ -208,6 +210,22 @@ Set-Location backend
 Set-Location ..
 & .\backend\.venv\Scripts\python.exe scripts\seed_database.py
 ```
+
+### Structured extraction demo (PowerShell)
+
+Phase 3 supports only the repository's deterministic synthetic fixtures. It requires no API key and is not a real LLM extraction demonstration. With the backend running, preview a Candidate and Job without writing to PostgreSQL:
+
+```powershell
+$candidateText = [System.IO.File]::ReadAllText((Resolve-Path data\samples\extraction\candidate_matching_resume.txt))
+$candidateBody = @{ text = $candidateText; persist = $false } | ConvertTo-Json
+Invoke-RestMethod -Method Post -Uri http://localhost:8000/api/v1/candidates/parse -ContentType application/json -Body $candidateBody
+
+$jobText = [System.IO.File]::ReadAllText((Resolve-Path data\samples\extraction\job_matching_engineer.txt))
+$jobBody = @{ text = $jobText; persist = $false } | ConvertTo-Json
+Invoke-RestMethod -Method Post -Uri http://localhost:8000/api/v1/jobs/parse -ContentType application/json -Body $jobBody
+```
+
+Set `persist = $true` to create a mutable `mock_parsed` record. The response returns its server-generated `cand_parse_<uuid>` or `job_parse_<uuid>` for use with the existing GET and DELETE endpoints. Unknown text returns `mock_input_not_supported`; the mock never fabricates an arbitrary profile.
 
 ### Frontend without Docker (PowerShell)
 

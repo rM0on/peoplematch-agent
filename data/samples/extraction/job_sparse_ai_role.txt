@@ -1,0 +1,1 @@
+Helix Sandbox Studio is a fictional zero-to-one team seeking an early-career AI Engineer. The role uses Python to support an early product prototype and can be remote from Shanghai; relocation is not supported. Interviews focus on discussing a source-supported Python project. No additional nice-to-have requirements are stated.
