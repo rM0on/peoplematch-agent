@@ -4,7 +4,7 @@
 
 PeopleMatch Agent is an autonomous, local-running prototype for evidence-aware candidate/job matching. It is designed to evolve beyond keyword search into a traceable pipeline that can rank AI Builder opportunities, explain why a match is supported by project evidence, review bad cases, and compare later algorithms through sandbox-only offline evaluation.
 
-The repository is in **Phase 3 — Structured Profile Extraction (Completed)**. Phases 0, 0.5, 1, 2, and 3 are frozen. Dataset `1.0.0` provides canonical contracts and synthetic sandbox profiles; Phase 2 provides PostgreSQL profile APIs; Phase 3 adds provider-agnostic structured extraction with a deterministic mock, strict validation, bounded repair, and optional persistence. No real LLM, retrieval, or ranking provider is implemented.
+The repository has completed **Phase 4 — Hybrid Retrieval**. Phases 0, 0.5, 1, 2, 3, and 4 are frozen. Dataset `1.0.0` provides canonical contracts and synthetic sandbox profiles; Phase 2 provides PostgreSQL profile APIs; Phase 3 adds deterministic structured extraction; Phase 4 adds first-stage dense/sparse/hybrid Candidate/Job recall with strict index freshness and fixed-sandbox offline evaluation. No real LLM, feature-scoring, or final-ranking provider is implemented.
 
 ## Project Overview
 
@@ -52,7 +52,7 @@ flowchart LR
     I -. "documented iteration" .-> D
 ```
 
-Phase 3 implements structured extraction architecture with a deterministic mock only. Hybrid retrieval and every downstream matching stage remain planned.
+Phase 3 implements structured extraction architecture with a deterministic mock only. Phase 4 implements completed Hybrid Retrieval; every downstream feature/ranking stage remains planned.
 
 ## Architecture Overview
 
@@ -104,7 +104,13 @@ peoplematch-agent/
 
 ## Current Phase
 
-**Phase 3 — Structured Profile Extraction (Completed)**
+**Phase 4 — Hybrid Retrieval (Completed)**
+
+Phase 4 constructs versioned, label-free semantic documents from canonical PostgreSQL Candidate/Job records. Dense retrieval uses the real local pretrained `sentence-transformers/all-MiniLM-L6-v2` model with exact cosine search in Qdrant; sparse retrieval uses in-process BM25; equal-weight Reciprocal Rank Fusion combines ranks for a deterministic first-stage Top-K. Explicit city/seniority filters only reduce eligibility and never add a match score. Qdrant is derived state rebuilt explicitly from PostgreSQL and every dense/hybrid request checks sandbox-scale document freshness.
+
+The completed Phase 4 report compares Dense, Sparse, and Hybrid as a post-exposure fixed synthetic sandbox benchmark. It reports judged-relevant Recall@K, HitRate@K, and diagnostic MRR@20 with a v4-internal sealed configuration. Earlier v1-v3 experiments exposed the same test queries before construction-artifact remediation, so v4 is not a pristine held-out estimate and is not evidence of unseen-query generalization, real hiring accuracy, production recall, or business lift. External Phase 4 review has passed; Phase 5 remains `Planned`.
+
+**Phase 3 baseline — Structured Profile Extraction (Completed)**
 
 Phase 3 accepts registered synthetic resume/JD fixtures through Candidate and Job parse endpoints. A provider interface isolates structured-output generation; the only implementation is a deterministic, no-network mock. Strict JSON decoding, canonical Pydantic validation, at most one repair attempt, source fingerprinting, server-owned identity/provenance, and optional atomic persistence are implemented. This verifies architecture and failure behavior, not real-world extraction accuracy.
 
@@ -122,7 +128,7 @@ Phase 0 completed:
 - Docker Compose definitions for PostgreSQL, Redis, Qdrant, backend, and frontend;
 - an Alembic foundation later extended by the Phase 2 profile migration.
 
-Not implemented: any real LLM provider, general-purpose resume/JD parsing, matching algorithms, vector retrieval, feature scoring, ranking, explanations, feedback workflows, evaluation metrics, or a complete product dashboard.
+Not implemented: any real LLM provider, general-purpose resume/JD parsing, evidence-aware feature scoring, final matching score, LTR, Cross-Encoder reranking, explanations, feedback workflows, persistent match runs, or a complete product dashboard.
 
 ## Roadmap
 
@@ -133,7 +139,7 @@ Not implemented: any real LLM provider, general-purpose resume/JD parsing, match
 | 1 | Sandbox dataset, canonical contracts, and ranking labels | Completed |
 | 2 | Candidate/job persistence and migrations | Completed |
 | 3 | Structured profile extraction with deterministic mock | Completed |
-| 4 | Hybrid retrieval | Planned |
+| 4 | Hybrid retrieval | Completed |
 | 5 | Evidence-aware feature scoring | Planned |
 | 6 | Learning-to-rank | Planned |
 | 7 | Cross-encoder reranking | Planned |

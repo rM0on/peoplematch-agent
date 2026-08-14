@@ -31,9 +31,9 @@ def create_app() -> FastAPI:
         title=settings.app_name,
         version=settings.app_version,
         description=(
-            "Phase 3 deterministic structured extraction and canonical profile API "
-            "for the local PeopleMatch Agent prototype. No real LLM, retrieval, or "
-            "ranking provider is implemented."
+            "Phase 4 completed canonical profile, deterministic extraction, and "
+            "first-stage hybrid retrieval API for the local PeopleMatch Agent "
+            "prototype. No real LLM or final ranking provider is implemented."
         ),
         lifespan=lifespan,
     )

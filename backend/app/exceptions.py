@@ -41,3 +41,32 @@ class ProviderTimeoutError(DomainError):
 class ProviderOutputInvalidError(DomainError):
     code = "provider_output_invalid"
     status_code = 502
+
+
+class EmbeddingProviderUnavailableError(DomainError):
+    code = "embedding_provider_unavailable"
+    status_code = 503
+
+
+class EmbeddingDimensionMismatchError(DomainError):
+    code = "embedding_dimension_mismatch"
+    status_code = 503
+
+
+class RetrievalIndexMissingError(DomainError):
+    code = "retrieval_index_missing"
+    status_code = 503
+
+
+class RetrievalIndexStaleError(DomainError):
+    code = "retrieval_index_stale"
+    status_code = 409
+
+
+class VectorStoreUnavailableError(DomainError):
+    code = "vector_store_unavailable"
+    status_code = 503
+
+
+class EvaluationIntegrityError(RuntimeError):
+    """Offline-only failure when frozen benchmark inputs do not match."""

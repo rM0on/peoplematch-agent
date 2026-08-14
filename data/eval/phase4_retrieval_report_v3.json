@@ -1,0 +1,154 @@
+{
+  "config_fingerprint": "53e2258a9831d8d058018cce9d68e09f1ef82868d591bbe5aa9d7dca7e5aaea7",
+  "dataset_version": "1.0.0",
+  "invalidation_reason": "retrieval_doc_v3 removed exact owned project names but derived synthetic base and variant family phrases remained in summaries; metrics are audit history only",
+  "interpretation": "fixed synthetic sandbox offline retrieval evaluation",
+  "judgment_coverage": {
+    "complete": false,
+    "judgments_per_query": 12,
+    "labeled_pairs": 288,
+    "possible_pairs": 1152
+  },
+  "metrics": {
+    "dev": {
+      "dense": {
+        "hit_rate_at_k": {
+          "hit_rate_at_10": 0.6,
+          "hit_rate_at_5": 0.4
+        },
+        "mrr_at_20": 0.452836,
+        "query_count": 5,
+        "recall_at_k": {
+          "recall_at_10": 0.34,
+          "recall_at_20": 0.65,
+          "recall_at_5": 0.17
+        }
+      },
+      "hybrid": {
+        "hit_rate_at_k": {
+          "hit_rate_at_10": 1.0,
+          "hit_rate_at_5": 0.6
+        },
+        "mrr_at_20": 0.553333,
+        "query_count": 5,
+        "recall_at_k": {
+          "recall_at_10": 0.71,
+          "recall_at_20": 0.85,
+          "recall_at_5": 0.31
+        }
+      },
+      "sparse": {
+        "hit_rate_at_k": {
+          "hit_rate_at_10": 1.0,
+          "hit_rate_at_5": 1.0
+        },
+        "mrr_at_20": 0.766667,
+        "query_count": 5,
+        "recall_at_k": {
+          "recall_at_10": 0.77,
+          "recall_at_20": 0.86,
+          "recall_at_5": 0.68
+        }
+      }
+    },
+    "test": {
+      "dense": {
+        "hit_rate_at_k": {
+          "hit_rate_at_10": 0.8,
+          "hit_rate_at_5": 0.6
+        },
+        "mrr_at_20": 0.433333,
+        "query_count": 5,
+        "recall_at_k": {
+          "recall_at_10": 0.37,
+          "recall_at_20": 0.57,
+          "recall_at_5": 0.23
+        }
+      },
+      "hybrid": {
+        "hit_rate_at_k": {
+          "hit_rate_at_10": 1.0,
+          "hit_rate_at_5": 0.8
+        },
+        "mrr_at_20": 0.625,
+        "query_count": 5,
+        "recall_at_k": {
+          "recall_at_10": 0.62,
+          "recall_at_20": 0.9,
+          "recall_at_5": 0.47
+        }
+      },
+      "sparse": {
+        "hit_rate_at_k": {
+          "hit_rate_at_10": 1.0,
+          "hit_rate_at_5": 1.0
+        },
+        "mrr_at_20": 0.866667,
+        "query_count": 5,
+        "recall_at_k": {
+          "recall_at_10": 0.8,
+          "recall_at_20": 0.95,
+          "recall_at_5": 0.67
+        }
+      }
+    }
+  },
+  "phase": "4",
+  "retrieval_config": {
+    "bm25_b": 0.75,
+    "bm25_k1": 1.5,
+    "candidate_document_fields": [
+      "target_roles",
+      "skills.name",
+      "skills.category",
+      "projects.summary",
+      "projects.role",
+      "projects.technologies",
+      "projects.skills_demonstrated",
+      "project_evidence.supports_skills",
+      "project_evidence.evidence_type",
+      "project_evidence.statement",
+      "ai_tools"
+    ],
+    "default_filters": null,
+    "dense_tie_policy": "exact_all_eligible_then_score_entity_id_then_pool",
+    "dense_weight": 1.0,
+    "document_version": "retrieval_doc_v3",
+    "embedding_dimension": 384,
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "embedding_provider": "sentence_transformers",
+    "hit_rate_k_values": [
+      5,
+      10
+    ],
+    "job_document_fields": [
+      "role_title",
+      "role_direction",
+      "must_have.text",
+      "must_have.category",
+      "must_have.evidence_expectation",
+      "nice_to_have.text",
+      "nice_to_have.category",
+      "nice_to_have.evidence_expectation",
+      "evaluation_focus"
+    ],
+    "metric_k_values": [
+      5,
+      10,
+      20
+    ],
+    "owned_project_name_policy": "remove_exact_case_insensitive_occurrences_from_all_candidate_text",
+    "pool_minimum": 20,
+    "pool_multiplier": 3,
+    "relevance_threshold": 2,
+    "rrf_k": 60,
+    "sparse_weight": 1.0
+  },
+  "schema_version": "1.0",
+  "status": "invalidated",
+  "superseded_by": "data/eval/phase4_retrieval_report_v4.json",
+  "test_seal": {
+    "sealed_after_dev": true,
+    "test_tuning_permitted": false
+  }
+}

@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.models.job import JobProfileModel
+from app.persistence.mappers import job_record_from_model
 
 
 class JobRepository:
@@ -85,6 +86,19 @@ class JobRepository:
             .where(JobProfileModel.job_id == job_id)
         )
         return bool(await self.session.scalar(statement))
+
+    async def get_record_by_id(self, job_id: str):
+        model = await self.get_by_id(job_id)
+        return job_record_from_model(model) if model is not None else None
+
+    async def list_all_records(self):
+        statement = (
+            select(JobProfileModel)
+            .options(selectinload(JobProfileModel.requirements))
+            .order_by(JobProfileModel.job_id)
+        )
+        models = (await self.session.scalars(statement)).unique().all()
+        return [job_record_from_model(model) for model in models]
 
     def create(self, model: JobProfileModel) -> None:
         self.session.add(model)

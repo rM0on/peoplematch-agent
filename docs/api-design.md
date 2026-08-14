@@ -26,6 +26,8 @@
 | POST | `/api/v1/jobs` | **Implemented** | Create a validated `user_created` job with a server-generated ID |
 | PATCH | `/api/v1/jobs/{job_id}` | **Implemented** | Partially update a mutable job, then validate the complete result |
 | DELETE | `/api/v1/jobs/{job_id}` | **Implemented** | Delete a mutable job and its requirements |
+| POST | `/api/v1/retrieval/jobs/{job_id}/candidates` | **Implemented / Phase 4 Completed** | Retrieve a first-stage Candidate recall set for one stored Job |
+| POST | `/api/v1/retrieval/candidates/{candidate_id}/jobs` | **Implemented / Phase 4 Completed** | Retrieve a first-stage Job recall set for one stored Candidate |
 | POST | `/api/v1/match/retrieve` | **Planned** | Run retrieval for an explicit candidate/job query |
 | POST | `/api/v1/match/score` | **Planned** | Compute versioned evidence-aware features |
 | POST | `/api/v1/match/rerank` | **Planned** | Apply later ranking/reranking stages |
@@ -97,6 +99,31 @@ Successful `data` contains:
 Phase 3 implements only the deterministic mock provider and only registered synthetic fixture inputs. A persisted mock draft receives a server-generated `cand_parse_<uuid>` or `job_parse_<uuid>`, the exact request source, `data_origin=mock_parsed`, `schema_version=1.0`, and null dataset version/archetype. Manual POST behavior remains `user_created`. Mock records are mutable because they are not part of frozen dataset `1.0.0`.
 
 Provider output is decoded with strict `json.loads` and validated against Pydantic drafts that reuse the canonical nested contracts. Invalid JSON or schema/domain output receives at most one repair attempt. Repeated invalid output returns HTTP 502 `provider_output_invalid`; provider exceptions and timeouts return HTTP 503 `provider_unavailable` or `provider_timeout`; an unknown mock input returns HTTP 422 `mock_input_not_supported`. No raw provider response, prompt, source, stack trace, or database detail appears in an error response.
+
+## Hybrid Retrieval APIs
+
+`POST /api/v1/retrieval/jobs/{job_id}/candidates` and `POST /api/v1/retrieval/candidates/{candidate_id}/jobs` accept a strict request:
+
+```json
+{
+  "strategy": "hybrid",
+  "top_k": 10,
+  "filters": {
+    "cities": ["Shanghai"],
+    "seniorities": ["mid"]
+  }
+}
+```
+
+`strategy` is `dense`, `sparse`, or `hybrid`; default is `hybrid`. `top_k` defaults to 10 and is bounded to 1–50. Filters are optional and explicit-only. Job-to-Candidate filters compare Candidate preferred cities and Candidate seniority; Candidate-to-Job filters compare Job cities and accepted seniorities. Callers cannot select collection names, providers/models, RRF parameters, provenance, archetypes, dataset versions, splits, labels, or grades.
+
+Each result contains entity ID, rank, matched channels, nullable dense rank/score, nullable sparse rank/score, and nullable RRF fusion score. These are retrieval diagnostics, not a final match score. Responses never contain embedding vectors, labels, feature scores, or explanation text.
+
+Diagnostics include query/result type, query ID, strategy, requested/returned counts, corpus/eligible counts, channel pool sizes, server-owned embedding provider/model, document version, RRF k, whether filters were applied, index freshness state, and local stage timings. Timings are development diagnostics, not a production latency SLA.
+
+Dense and hybrid requests require an explicitly built, fresh Qdrant index. Missing collections return HTTP 503 `retrieval_index_missing`; mismatched dimensions/entity sets/document fingerprints return HTTP 409 `retrieval_index_stale`; embedding-model failures return HTTP 503 `embedding_provider_unavailable`; Qdrant failures return HTTP 503 `vector_store_unavailable`. A missing query profile uses the existing HTTP 404 `profile_not_found` contract. Raw model/Qdrant exceptions are not returned.
+
+These endpoints perform first-stage recall only. They do not compute skill fit, evidence fit, location/seniority scores, penalties, final ordering, LTR, or Cross-Encoder output.
 
 ## Frozen Mutation Policy
 

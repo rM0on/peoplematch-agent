@@ -1,0 +1,164 @@
+{
+  "config_fingerprint": "b004bc52c33f3e15bf38dba1777305039909bb5229261dcf1851b289e7c8f2e7",
+  "dataset_version": "1.0.0",
+  "evaluation_protocol": {
+    "exposed_predecessor_versions": [
+      "retrieval_doc_v1",
+      "retrieval_doc_v2",
+      "retrieval_doc_v3"
+    ],
+    "interpretation": "post-exposure fixed synthetic sandbox benchmark",
+    "prior_test_exposure": true,
+    "pristine_held_out": false
+  },
+  "interpretation": "post-exposure fixed synthetic sandbox benchmark",
+  "judgment_coverage": {
+    "complete": false,
+    "judgments_per_query": 12,
+    "labeled_pairs": 288,
+    "possible_pairs": 1152
+  },
+  "metrics": {
+    "dev": {
+      "dense": {
+        "hit_rate_at_k": {
+          "hit_rate_at_10": 0.8,
+          "hit_rate_at_5": 0.4
+        },
+        "mrr_at_20": 0.453333,
+        "query_count": 5,
+        "recall_at_k": {
+          "recall_at_10": 0.4,
+          "recall_at_20": 0.7,
+          "recall_at_5": 0.22
+        }
+      },
+      "hybrid": {
+        "hit_rate_at_k": {
+          "hit_rate_at_10": 0.8,
+          "hit_rate_at_5": 0.8
+        },
+        "mrr_at_20": 0.666667,
+        "query_count": 5,
+        "recall_at_k": {
+          "recall_at_10": 0.66,
+          "recall_at_20": 0.85,
+          "recall_at_5": 0.4
+        }
+      },
+      "sparse": {
+        "hit_rate_at_k": {
+          "hit_rate_at_10": 1.0,
+          "hit_rate_at_5": 1.0
+        },
+        "mrr_at_20": 0.766667,
+        "query_count": 5,
+        "recall_at_k": {
+          "recall_at_10": 0.77,
+          "recall_at_20": 0.86,
+          "recall_at_5": 0.68
+        }
+      }
+    },
+    "test": {
+      "dense": {
+        "hit_rate_at_k": {
+          "hit_rate_at_10": 0.8,
+          "hit_rate_at_5": 0.8
+        },
+        "mrr_at_20": 0.477778,
+        "query_count": 5,
+        "recall_at_k": {
+          "recall_at_10": 0.42,
+          "recall_at_20": 0.7,
+          "recall_at_5": 0.42
+        }
+      },
+      "hybrid": {
+        "hit_rate_at_k": {
+          "hit_rate_at_10": 1.0,
+          "hit_rate_at_5": 0.8
+        },
+        "mrr_at_20": 0.728571,
+        "query_count": 5,
+        "recall_at_k": {
+          "recall_at_10": 0.66,
+          "recall_at_20": 0.9,
+          "recall_at_5": 0.47
+        }
+      },
+      "sparse": {
+        "hit_rate_at_k": {
+          "hit_rate_at_10": 1.0,
+          "hit_rate_at_5": 1.0
+        },
+        "mrr_at_20": 0.866667,
+        "query_count": 5,
+        "recall_at_k": {
+          "recall_at_10": 0.8,
+          "recall_at_20": 0.95,
+          "recall_at_5": 0.67
+        }
+      }
+    }
+  },
+  "phase": "4",
+  "retrieval_config": {
+    "bm25_b": 0.75,
+    "bm25_k1": 1.5,
+    "candidate_document_fields": [
+      "target_roles",
+      "skills.name",
+      "skills.category",
+      "projects.summary",
+      "projects.role",
+      "projects.technologies",
+      "projects.skills_demonstrated",
+      "project_evidence.supports_skills",
+      "project_evidence.evidence_type",
+      "project_evidence.statement",
+      "ai_tools"
+    ],
+    "default_filters": null,
+    "dense_tie_policy": "exact_all_eligible_then_score_entity_id_then_pool",
+    "dense_weight": 1.0,
+    "document_version": "retrieval_doc_v4",
+    "embedding_dimension": 384,
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "embedding_provider": "sentence_transformers",
+    "hit_rate_k_values": [
+      5,
+      10
+    ],
+    "job_document_fields": [
+      "role_title",
+      "role_direction",
+      "must_have.text",
+      "must_have.category",
+      "must_have.evidence_expectation",
+      "nice_to_have.text",
+      "nice_to_have.category",
+      "nice_to_have.evidence_expectation",
+      "evaluation_focus"
+    ],
+    "metric_k_values": [
+      5,
+      10,
+      20
+    ],
+    "pool_minimum": 20,
+    "pool_multiplier": 3,
+    "project_construction_signal_policy": "derive_full_base_variant_fragments_from_owned_names_and_remove_case_insensitively_from_all_candidate_text",
+    "relevance_threshold": 2,
+    "rrf_k": 60,
+    "sparse_weight": 1.0
+  },
+  "schema_version": "1.0",
+  "status": "completed",
+  "test_seal": {
+    "pristine_held_out": false,
+    "scope": "v4_internal_only",
+    "sealed_after_dev": true,
+    "test_tuning_permitted": false
+  }
+}

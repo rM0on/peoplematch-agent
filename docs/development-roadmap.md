@@ -49,12 +49,12 @@ Only the phase explicitly requested by the user may be implemented. Status value
 
 ## Phase 4 — Hybrid Retrieval
 
-**Status:** Planned
+**Status:** Completed
 
 - **Objective:** Produce auditable candidate/job recall sets using lexical and vector retrieval.
-- **Primary deliverables:** Qdrant collection design, embedding-provider boundary, lexical retrieval, fusion strategy, retrieval run records.
+- **Primary deliverables:** Versioned retrieval documents, local pretrained embedding-provider boundary, derived Qdrant indexes, BM25 lexical retrieval, explicit metadata filters, RRF fusion, response diagnostics, and fixed-sandbox offline retrieval evaluation.
 - **Dependency:** Phase 3 structured profiles.
-- **Quality gate:** Retrieval is evaluated on a documented sandbox set; collection/schema versions are traceable; no final-ranking claims are made.
+- **Quality gate:** Retrieval documents and indexes exclude construction metadata and labels; real local dense retrieval and Qdrant integration run successfully; Dense/Sparse/Hybrid are evaluated with a v4-internal dev-sealed config on the documented post-exposure fixed synthetic sandbox benchmark; collection/document versions are traceable; no final-ranking claims are made. External review passed before status became Completed.
 
 ## Phase 5 — Evidence-aware Feature Scoring
 

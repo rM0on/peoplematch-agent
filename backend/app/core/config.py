@@ -30,6 +30,16 @@ class Settings(BaseSettings):
     extraction_provider: str = "mock"
     extraction_max_attempts: int = Field(default=2, ge=1, le=2)
     extraction_timeout_seconds: float = Field(default=10.0, gt=0, le=120)
+    retrieval_embedding_provider: str = "sentence_transformers"
+    retrieval_embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
+    retrieval_embedding_dimension: int = Field(default=384, gt=0)
+    retrieval_candidate_collection: str = "peoplematch_candidates_retrieval_v1"
+    retrieval_job_collection: str = "peoplematch_jobs_retrieval_v1"
+    retrieval_rrf_k: int = Field(default=60, ge=1)
+    retrieval_bm25_k1: float = Field(default=1.5, gt=0)
+    retrieval_bm25_b: float = Field(default=0.75, ge=0, le=1)
+    retrieval_pool_minimum: int = Field(default=20, ge=1)
+    retrieval_pool_multiplier: int = Field(default=3, ge=1)
 
     model_config = SettingsConfigDict(
         env_file=PROJECT_ROOT / ".env",
