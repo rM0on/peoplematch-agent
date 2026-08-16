@@ -28,6 +28,8 @@
 | DELETE | `/api/v1/jobs/{job_id}` | **Implemented** | Delete a mutable job and its requirements |
 | POST | `/api/v1/retrieval/jobs/{job_id}/candidates` | **Implemented / Phase 4 Completed** | Retrieve a first-stage Candidate recall set for one stored Job |
 | POST | `/api/v1/retrieval/candidates/{candidate_id}/jobs` | **Implemented / Phase 4 Completed** | Retrieve a first-stage Job recall set for one stored Candidate |
+| POST | `/api/v1/features/jobs/{job_id}/candidates` | **Implemented / Phase 5 Completed / Frozen** | Preserve Job-to-Candidate retrieval order and attach versioned pair features |
+| POST | `/api/v1/features/candidates/{candidate_id}/jobs` | **Implemented / Phase 5 Completed / Frozen** | Preserve Candidate-to-Job retrieval order and attach versioned pair features |
 | POST | `/api/v1/match/retrieve` | **Planned** | Run retrieval for an explicit candidate/job query |
 | POST | `/api/v1/match/score` | **Planned** | Compute versioned evidence-aware features |
 | POST | `/api/v1/match/rerank` | **Planned** | Apply later ranking/reranking stages |
@@ -124,6 +126,16 @@ Diagnostics include query/result type, query ID, strategy, requested/returned co
 Dense and hybrid requests require an explicitly built, fresh Qdrant index. Missing collections return HTTP 503 `retrieval_index_missing`; mismatched dimensions/entity sets/document fingerprints return HTTP 409 `retrieval_index_stale`; embedding-model failures return HTTP 503 `embedding_provider_unavailable`; Qdrant failures return HTTP 503 `vector_store_unavailable`. A missing query profile uses the existing HTTP 404 `profile_not_found` contract. Raw model/Qdrant exceptions are not returned.
 
 These endpoints perform first-stage recall only. They do not compute skill fit, evidence fit, location/seniority scores, penalties, final ordering, LTR, or Cross-Encoder output.
+
+## Feature Engineering APIs
+
+`POST /api/v1/features/jobs/{job_id}/candidates` and `POST /api/v1/features/candidates/{candidate_id}/jobs` accept the same strict `strategy`, `top_k`, and explicit `filters` request as retrieval. The server first calls the existing Phase 4 retrieval service and then batch-enriches each pair; it does not duplicate dense/BM25/RRF execution and never sorts by a feature.
+
+Top-level `data` contains `feature_version`, `feature_fingerprint`, ordered `results`, and the unchanged retrieval diagnostics. Each result contains `entity_id`, the original retrieval result, a ten-field nullable `feature_vector`, and separate `feature_diagnostics`. `null` plus `availability=false` means unavailable and remains distinct from a real zero.
+
+The current contract is `feature_schema_v1`. Runtime inputs exclude labels, splits, hard negatives, pairwise preferences, construction metadata, raw source, Candidate/company names, project names/summaries, and evidence statements. Dense/BM25 values are copied unchanged when their channel is present. Ranks and RRF remain diagnostics, not model features. Missing profiles and retrieval infrastructure failures keep their existing typed errors; invalid profile state and contract violations return `invalid_profile_state` and `feature_contract_violation` respectively.
+
+These endpoints are inspection/enrichment only. They do not return a final match score, learned weight, LTR/Cross-Encoder output, feature-based rank, or explanation.
 
 ## Frozen Mutation Policy
 

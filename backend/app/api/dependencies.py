@@ -14,6 +14,7 @@ from app.exceptions import ProviderUnavailableError
 from app.services.profile_extraction.mock_provider import MockStructuredOutputProvider
 from app.services.profile_extraction.parser import ProfileExtractionService
 from app.services.profile_extraction.provider import MOCK_PROVIDER_DESCRIPTOR
+from app.services.features.service import FeatureEngineeringService
 from app.services.retrieval.embedding import SentenceTransformerEmbeddingProvider
 from app.services.retrieval.service import RetrievalService
 from app.services.retrieval.vector_store import QdrantDenseVectorStore
@@ -89,4 +90,15 @@ def get_retrieval_service(
         bm25_b=settings.retrieval_bm25_b,
         pool_minimum=settings.retrieval_pool_minimum,
         pool_multiplier=settings.retrieval_pool_multiplier,
+    )
+
+
+def get_feature_engineering_service(
+    session: AsyncSession = Depends(get_db_session),
+    retrieval_service: RetrievalService = Depends(get_retrieval_service),
+) -> FeatureEngineeringService:
+    return FeatureEngineeringService(
+        retrieval_service=retrieval_service,
+        candidate_repository=CandidateRepository(session),
+        job_repository=JobRepository(session),
     )

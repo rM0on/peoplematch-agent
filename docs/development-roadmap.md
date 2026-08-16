@@ -56,14 +56,14 @@ Only the phase explicitly requested by the user may be implemented. Status value
 - **Dependency:** Phase 3 structured profiles.
 - **Quality gate:** Retrieval documents and indexes exclude construction metadata and labels; real local dense retrieval and Qdrant integration run successfully; Dense/Sparse/Hybrid are evaluated with a v4-internal dev-sealed config on the documented post-exposure fixed synthetic sandbox benchmark; collection/document versions are traceable; no final-ranking claims are made. External review passed before status became Completed.
 
-## Phase 5 — Evidence-aware Feature Scoring
+## Phase 5 — Feature Engineering
 
-**Status:** Planned
+**Status:** Completed / Frozen
 
-- **Objective:** Compute typed, inspectable features for skills, evidence, direction, constraints, and context.
-- **Primary deliverables:** Feature registry/versioning, deterministic feature computations, constraint handling, feature-level tests.
+- **Objective:** Compute typed, inspectable, label-free Candidate/Job pair features after retrieval without scoring or changing retrieval order.
+- **Primary deliverables:** Versioned feature registry/fingerprint, stable ordered model contract, separate diagnostics, deterministic normalization/matching, bidirectional inspection APIs, train/dev-only descriptive feature audit, and feature/API/leakage tests.
 - **Dependency:** Phase 4 recall candidates and stable profiles.
-- **Quality gate:** Each feature has a documented meaning/source; missing evidence is not treated as evidence; deterministic fixtures pass.
+- **Quality gate:** Each feature has a documented meaning/source/direction/range/missing policy; claimed skills and supporting evidence remain distinct; labels/construction metadata do not affect runtime values; both directions preserve Phase 4 order; no LTR, final score, reranking, Test tuning, or migration is introduced. Independent source review passed and the Phase 5 implementation is frozen for the Phase 6 handoff.
 
 ## Phase 6 — Learning-to-Rank
 

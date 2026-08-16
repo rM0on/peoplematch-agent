@@ -68,5 +68,15 @@ class VectorStoreUnavailableError(DomainError):
     status_code = 503
 
 
+class FeatureContractViolationError(DomainError):
+    code = "feature_contract_violation"
+    status_code = 500
+
+
+class InvalidProfileStateError(DomainError):
+    code = "invalid_profile_state"
+    status_code = 409
+
+
 class EvaluationIntegrityError(RuntimeError):
     """Offline-only failure when frozen benchmark inputs do not match."""

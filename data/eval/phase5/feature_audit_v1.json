@@ -1,0 +1,125 @@
+{
+  "scope": "train_dev_profile_pairs_only",
+  "feature_version": "feature_schema_v1",
+  "feature_fingerprint": "dc85c7237c6c67785199d221c919ae48c31c9a6323857070e6399d3eae365e42",
+  "candidate_count": 48,
+  "job_count": 19,
+  "pair_count": 912,
+  "job_ids": [
+    "job_001",
+    "job_002",
+    "job_003",
+    "job_004",
+    "job_005",
+    "job_006",
+    "job_007",
+    "job_008",
+    "job_009",
+    "job_010",
+    "job_011",
+    "job_012",
+    "job_013",
+    "job_014",
+    "job_015",
+    "job_016",
+    "job_017",
+    "job_018",
+    "job_019"
+  ],
+  "features": {
+    "semantic_score": {
+      "minimum": null,
+      "maximum": null,
+      "available_count": 0,
+      "missing_count": 912,
+      "missing_rate": 1.0,
+      "distinct_value_count": 0
+    },
+    "sparse_score": {
+      "minimum": null,
+      "maximum": null,
+      "available_count": 0,
+      "missing_count": 912,
+      "missing_rate": 1.0,
+      "distinct_value_count": 0
+    },
+    "skill_fit_score": {
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "available_count": 912,
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "distinct_value_count": 3
+    },
+    "project_evidence_score": {
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "available_count": 912,
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "distinct_value_count": 4
+    },
+    "role_direction_score": {
+      "minimum": 0.16666666666666666,
+      "maximum": 1.0,
+      "available_count": 912,
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "distinct_value_count": 9
+    },
+    "ai_tool_score": {
+      "minimum": 0.0,
+      "maximum": 0.0,
+      "available_count": 912,
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "distinct_value_count": 1
+    },
+    "location_score": {
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "available_count": 912,
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "distinct_value_count": 2
+    },
+    "seniority_score": {
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "available_count": 912,
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "distinct_value_count": 2
+    },
+    "missing_penalty": {
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "available_count": 912,
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "distinct_value_count": 3
+    },
+    "overclaim_penalty": {
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "available_count": 912,
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "distinct_value_count": 3
+    }
+  },
+  "constant_features": [
+    "ai_tool_score"
+  ],
+  "fully_unavailable_features": [
+    "semantic_score",
+    "sparse_score"
+  ],
+  "invariant_checks": {
+    "bounds_valid": true,
+    "deterministic": true,
+    "json_values_finite": true,
+    "model_feature_order_matches_contract": true,
+    "source_allowlist_only": true
+  }
+}
