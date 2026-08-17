@@ -40,6 +40,10 @@ class Settings(BaseSettings):
     retrieval_bm25_b: float = Field(default=0.75, ge=0, le=1)
     retrieval_pool_minimum: int = Field(default=20, ge=1)
     retrieval_pool_multiplier: int = Field(default=3, ge=1)
+    ranking_model_path: str = str(PROJECT_ROOT / "artifacts" / "phase6" / "ltr_ranker_v1.txt")
+    ranking_model_metadata_path: str = str(
+        PROJECT_ROOT / "data" / "eval" / "phase6" / "ltr_model_metadata_v1.json"
+    )
 
     model_config = SettingsConfigDict(
         env_file=PROJECT_ROOT / ".env",

@@ -11,13 +11,13 @@ PeopleMatch Agent is a local monorepo with these logical areas:
 | Storage | Durable candidate/job/match-run data | **CURRENT:** PostgreSQL candidate/job profiles with normalized evidence and requirements; match-run storage **PLANNED** |
 | Retrieval | Candidate/job first-stage recall and vector search | **CURRENT / PHASE 4 COMPLETED:** versioned documents, local pretrained dense embeddings, Qdrant exact search, BM25, explicit filters, RRF, and offline retrieval evaluation |
 | Feature Engineering | Versioned pair features and diagnostics | **CURRENT / PHASE 5 COMPLETED / FROZEN:** label-free on-demand extraction that preserves retrieval order |
-| Ranking | LTR, final scoring, and reranking | **PLANNED** |
+| Ranking | LTR, final scoring, and reranking | **CURRENT / PHASE 6 PASS / FROZEN:** deterministic LightGBM LambdaMART Job-to-Candidates reranking; final score and later rerankers remain planned |
 | AI Provider | Structured extraction and later grounded explanation | **CURRENT:** provider interface plus deterministic no-network mock; real LLM and explanation **PLANNED** |
 | Cache / ephemeral state | Later caching and coordination | Redis container config **CURRENT**; business usage **PLANNED** |
 
 ## Current Phase Architecture
 
-**CURRENT after Phase 5 closeout:** Next.js still serves the selected Matching Results design mock and does not consume profile/retrieval/feature APIs. FastAPI exposes liveness, typed Candidate/Job CRUD, deterministic structured extraction, bidirectional first-stage retrieval, and bidirectional feature inspection. PostgreSQL canonical records build frozen `retrieval_doc_v4` documents; Phase 5 wraps retrieval results with `feature_schema_v1` vectors and separate diagnostics without sorting. Phase 1 JSONL remains frozen and is imported only after hash verification.
+**CURRENT after Phase 6 implementation:** Next.js still serves the selected Matching Results design mock and does not consume the ranking API. FastAPI exposes liveness, typed Candidate/Job CRUD, deterministic structured extraction, bidirectional first-stage retrieval, bidirectional feature inspection, and a Job-to-Candidates LambdaMART endpoint. PostgreSQL canonical records build frozen `retrieval_doc_v4` documents; Phase 5 wraps retrieval results with `feature_schema_v1` vectors and separate diagnostics without sorting; Phase 6 scores only the retrieved Hybrid pool with those ten features. Phase 1 JSONL remains frozen and is imported only after hash verification.
 
 The liveness route still makes no downstream calls and therefore does not load or download the embedding model. Redis remains infrastructure-only. Qdrant now stores derived Candidate/Job retrieval indexes; it is never the canonical profile source.
 
@@ -41,16 +41,17 @@ flowchart TD
     Sparse --> Fusion
 Fusion --> FeatureService["Feature engineering service\nCURRENT / PHASE 5 COMPLETED / FROZEN"]
     Repository --> FeatureService
-    FeatureService --> FeatureContract["FeatureVector + diagnostics\nno reranking"]
+    FeatureService --> FeatureContract["FeatureVector + diagnostics\nPhase 5 frozen"]
+    FeatureContract --> Ranker["Phase 6 LambdaMART\nJob → Candidates pool rerank"]
     FastAPI -.-> Redis["Redis\nusage planned"]
     FastAPI --> Qdrant["Qdrant derived retrieval indexes\nCURRENT / PHASE 4 COMPLETED"]
 ```
 
-Solid arrows describe the current profile, extraction, frozen Phase 4 retrieval, and Phase 5 feature flows. The dotted Redis arrow shows configured infrastructure with no business integration.
+Solid arrows describe the current profile, extraction, frozen Phase 4 retrieval, Phase 5 feature flow, and Phase 6 Job-to-Candidates pool rerank. The dotted Redis arrow shows configured infrastructure with no business integration.
 
 ## Target Architecture
 
-**PLANNED:** Later phases add a real structured-output provider, evidence-aware features, learned ranking, cross-encoder reranking, match-run orchestration, explanations, feedback, bad-case review, and broader offline evaluation. Phase 2 persistence remains the stable domain foundation; Phase 4 retrieval supplies recall sets rather than final ordering.
+Later phases add a real structured-output provider, cross-encoder reranking, match-run orchestration, explanations, feedback, bad-case review, and broader offline evaluation. Phase 6 is a single deterministic LambdaMART baseline, not a final match score; Phase 2 persistence remains the stable domain foundation and Phase 4 retrieval supplies the bounded recall pool.
 
 The target remains a modular monolith unless a measured need justifies a different deployment boundary. Phase 0 does not introduce microservices, Kubernetes, authentication, or distributed infrastructure.
 
@@ -61,7 +62,7 @@ flowchart TD
     Input["Candidate / Job"] --> Parser["Structured extraction\nCURRENT: deterministic mock"]
     Parser --> Retrieval["Hybrid retrieval\nCURRENT / PHASE 4 COMPLETED"]
 Retrieval --> Features["Feature engineering\nCURRENT / PHASE 5 COMPLETED / FROZEN"]
-    Features --> LTR["Learning-to-rank\nPLANNED"]
+    Features --> LTR["Learning-to-rank\nCURRENT / PASS / FROZEN"]
     LTR --> CrossEncoder["Cross-encoder\nPLANNED"]
     CrossEncoder --> Explanation["Evidence-grounded explanation\nPLANNED"]
 ```
@@ -84,7 +85,7 @@ Owns HTTP routing, transport validation, response codes, response envelopes, and
 
 ### Service Layer
 
-Owns Candidate/Job validation, server-generated identifiers, frozen-record protection, and atomic mutation boundaries. The extraction service owns prompt construction, provider resolution, strict decoding, bounded repair, fingerprints, and optional handoff to persistence. The retrieval service owns document construction, explicit eligibility, dense/sparse channel execution, RRF, Top-K, diagnostics, and freshness enforcement. The Phase 5 feature service batch-loads profiles, applies the versioned label-free extractor, and preserves retrieval order. Learned scoring/ranking, explanation, feedback, and persistent run orchestration remain planned.
+Owns Candidate/Job validation, server-generated identifiers, frozen-record protection, and atomic mutation boundaries. The extraction service owns prompt construction, provider resolution, strict decoding, bounded repair, fingerprints, and optional handoff to persistence. The retrieval service owns document construction, explicit eligibility, dense/sparse channel execution, RRF, Top-K, diagnostics, and freshness enforcement. The Phase 5 feature service batch-loads profiles, applies the versioned label-free extractor, and preserves retrieval order. Phase 6 owns the deterministic LambdaMART model contract, validated native model loading, judged-pool Job-to-Candidates reranking, and raw-score response fields. Cross-Encoder reranking, explanation, feedback, and persistent run orchestration remain planned.
 
 ### Repository Layer
 
@@ -134,4 +135,4 @@ The backend reads environment-backed settings via Pydantic Settings. Compose int
 
 ## Data Architecture Boundary
 
-Phase 1 remains the immutable source of synthetic sandbox profiles and offline labels. Phase 2 imports only Candidate and Job profiles into PostgreSQL; relevance labels and pairwise preferences remain offline evaluation files. PostgreSQL is the canonical runtime profile state. Qdrant is a derived frozen Phase 4 vector index rebuilt explicitly from PostgreSQL and guarded by ID/version/fingerprint freshness checks; loss of Qdrant does not lose canonical data. Runtime retrieval and feature extraction never read labels or splits. Phase 5 vectors are derived on demand and add no persistence migration. Redis remains reserved for justified future ephemeral use.
+Phase 1 remains the immutable source of synthetic sandbox profiles and offline labels. Phase 2 imports only Candidate and Job profiles into PostgreSQL; relevance labels and pairwise preferences remain offline evaluation files. PostgreSQL is the canonical runtime profile state. Qdrant is a derived frozen Phase 4 vector index rebuilt explicitly from PostgreSQL and guarded by ID/version/fingerprint freshness checks; loss of Qdrant does not lose canonical data. Runtime retrieval, feature extraction, and ranking never read labels or splits. Phase 6 offline builders consume only explicit Train/Dev judgments; its runtime loader consumes only the validated native model and Phase 5 vectors. Redis remains reserved for justified future ephemeral use.

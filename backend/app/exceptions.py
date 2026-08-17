@@ -78,5 +78,15 @@ class InvalidProfileStateError(DomainError):
     status_code = 409
 
 
+class RankingModelUnavailableError(DomainError):
+    code = "ranking_model_unavailable"
+    status_code = 503
+
+
+class RankingContractMismatchError(DomainError):
+    code = "ranking_contract_mismatch"
+    status_code = 409
+
+
 class EvaluationIntegrityError(RuntimeError):
     """Offline-only failure when frozen benchmark inputs do not match."""

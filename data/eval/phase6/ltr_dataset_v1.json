@@ -1,0 +1,4212 @@
+{
+  "schema_version": "1.0",
+  "artifact_version": "ltr_dataset_v1",
+  "dataset_version": "1.0.0",
+  "feature_version": "feature_schema_v1",
+  "feature_fingerprint": "dc85c7237c6c67785199d221c919ae48c31c9a6323857070e6399d3eae365e42",
+  "model_feature_order": [
+    "semantic_score",
+    "sparse_score",
+    "skill_fit_score",
+    "project_evidence_score",
+    "role_direction_score",
+    "ai_tool_score",
+    "location_score",
+    "seniority_score",
+    "missing_penalty",
+    "overclaim_penalty"
+  ],
+  "retrieval": {
+    "strategy": "hybrid",
+    "top_k": 48,
+    "row_order_policy": "frozen_hybrid_relative_order"
+  },
+  "source_fingerprints": {
+    "dataset_freeze_manifest_sha256": "a2300d7de103e861f7321f600ba959cbcde21c90e8d78f6d42e8de54ce0cceb2",
+    "canonical_files": {
+      "data/eval/pairwise_preferences.jsonl": "ba0842b705bc4ea1ecc639ec8ed169d215c18486b8a93181c90c179b09394a63",
+      "data/eval/query_splits.json": "79724cf33f6198bf776233947b777b4a183ae4c94022be3b425d27a509f42772",
+      "data/samples/candidates.jsonl": "de171393cbda7c5380debecba182e45c3212a5cab0af8b22691b69519e75e92c",
+      "data/samples/jobs.jsonl": "52ecce61fba9cb4d6e8f7919b67d836f1ef3372244c0981aeb2856b924bfee75",
+      "data/samples/labels.jsonl": "21eca7b4de67681f84904b16512ba074711d3957b21441fa184fd35f5a56a1d3"
+    },
+    "retrieval_configuration_fingerprint": "b004bc52c33f3e15bf38dba1777305039909bb5229261dcf1851b289e7c8f2e7"
+  },
+  "splits": {
+    "train": {
+      "query_ids": [
+        "job_001",
+        "job_002",
+        "job_003",
+        "job_004",
+        "job_005",
+        "job_006",
+        "job_007",
+        "job_008",
+        "job_009",
+        "job_010",
+        "job_011",
+        "job_012",
+        "job_013",
+        "job_014"
+      ],
+      "group_sizes": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "row_count": 168,
+      "label_distribution": {
+        "0": 52,
+        "1": 56,
+        "2": 32,
+        "3": 28
+      },
+      "rows": [
+        {
+          "split": "train",
+          "job_id": "job_001",
+          "candidate_id": "cand_046",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7674918,
+            36.98998163958805,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_001",
+          "candidate_id": "cand_042",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7481177,
+            36.35849297233468,
+            0.0,
+            0.0,
+            0.4,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_001",
+          "candidate_id": "cand_045",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.723199,
+            42.31442543668243,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_001",
+          "candidate_id": "cand_006",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.70346487,
+            80.36654631432158,
+            1.0,
+            0.6666666666666666,
+            0.4,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_001",
+          "candidate_id": "cand_007",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.64258623,
+            57.76078287845306,
+            1.0,
+            1.0,
+            0.4,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_001",
+          "candidate_id": "cand_005",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.6481931,
+            57.35144189335635,
+            1.0,
+            1.0,
+            0.4,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_001",
+          "candidate_id": "cand_022",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.7145158,
+            24.72621056588775,
+            0.0,
+            0.0,
+            0.4,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_001",
+          "candidate_id": "cand_041",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.6885111,
+            25.905471422964496,
+            0.0,
+            0.0,
+            0.4,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_001",
+          "candidate_id": "cand_021",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.69646883,
+            20.09775119632722,
+            0.0,
+            0.0,
+            0.4,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_001",
+          "candidate_id": "cand_033",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.6229548,
+            18.009713511020383,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_001",
+          "candidate_id": "cand_011",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.5611319,
+            12.513121774854227,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_001",
+          "candidate_id": "cand_012",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.57009387,
+            11.037384203272948,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_002",
+          "candidate_id": "cand_006",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.75819874,
+            96.10994061148547,
+            1.0,
+            0.3333333333333333,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_002",
+          "candidate_id": "cand_046",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.77949256,
+            39.78059572097192,
+            0.5,
+            0.0,
+            0.6666666666666666,
+            0.0,
+            1.0,
+            1.0,
+            0.5,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_002",
+          "candidate_id": "cand_048",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7536587,
+            34.497840070219596,
+            0.5,
+            0.0,
+            0.6666666666666666,
+            0.0,
+            0.0,
+            1.0,
+            0.5,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_002",
+          "candidate_id": "cand_005",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.7338428,
+            75.14989412063267,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_002",
+          "candidate_id": "cand_007",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.7193895,
+            82.33906622463935,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_002",
+          "candidate_id": "cand_018",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.7230355,
+            24.026571462137703,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_002",
+          "candidate_id": "cand_013",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.7497287,
+            16.13701490351096,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_002",
+          "candidate_id": "cand_014",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.7169877,
+            19.02937093144907,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_002",
+          "candidate_id": "cand_017",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.6791502,
+            17.625244690485246,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_002",
+          "candidate_id": "cand_009",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.6421379,
+            16.903814435094837,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_002",
+          "candidate_id": "cand_025",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.62266076,
+            14.160517934168938,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_002",
+          "candidate_id": "cand_010",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.64438134,
+            12.337762282012452,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_003",
+          "candidate_id": "cand_001",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.7807697,
+            56.17037712005691,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_003",
+          "candidate_id": "cand_003",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.76517344,
+            57.292551910634494,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_003",
+          "candidate_id": "cand_041",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.73549414,
+            53.289991254046825,
+            0.5,
+            0.6666666666666666,
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_003",
+          "candidate_id": "cand_043",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.7197639,
+            55.08002125995068,
+            0.5,
+            0.6666666666666666,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_003",
+          "candidate_id": "cand_047",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7283294,
+            45.575198791061645,
+            0.5,
+            0.3333333333333333,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            0.5,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_003",
+          "candidate_id": "cand_048",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7097949,
+            37.473263318272075,
+            0.5,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            0.5,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_003",
+          "candidate_id": "cand_019",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.527758,
+            23.226142799371537,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_003",
+          "candidate_id": "cand_010",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.62413347,
+            13.498340708077292,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_003",
+          "candidate_id": "cand_018",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.5706327,
+            14.632321294516842,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_003",
+          "candidate_id": "cand_012",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.590681,
+            9.857468028057442,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_003",
+          "candidate_id": "cand_011",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.5783145,
+            12.562631092481555,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_003",
+          "candidate_id": "cand_020",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.53237945,
+            11.121435945252985,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_004",
+          "candidate_id": "cand_013",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.76807076,
+            59.68758660104813,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_004",
+          "candidate_id": "cand_015",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.7662524,
+            63.893358549978295,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_004",
+          "candidate_id": "cand_003",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.73905957,
+            33.87484139561595,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_004",
+          "candidate_id": "cand_001",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.7441628,
+            32.29437539381624,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_004",
+          "candidate_id": "cand_037",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.71015745,
+            44.284652704596645,
+            0.0,
+            0.3333333333333333,
+            0.75,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_004",
+          "candidate_id": "cand_048",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.70110446,
+            25.49383968939759,
+            0.0,
+            0.0,
+            0.6666666666666666,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_004",
+          "candidate_id": "cand_023",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.64321506,
+            14.582384767430336,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_004",
+          "candidate_id": "cand_025",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.6181173,
+            14.990770376264573,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_004",
+          "candidate_id": "cand_019",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.5420448,
+            23.544576467590577,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_004",
+          "candidate_id": "cand_011",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.5900457,
+            17.532336291110134,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_004",
+          "candidate_id": "cand_012",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.6195541,
+            12.491607155994025,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_004",
+          "candidate_id": "cand_020",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.55707026,
+            10.379335472084751,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_005",
+          "candidate_id": "cand_018",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.76970756,
+            63.2893369095605,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_005",
+          "candidate_id": "cand_003",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.7653341,
+            35.04914365406761,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_005",
+          "candidate_id": "cand_020",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.7451378,
+            62.69200554605413,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_005",
+          "candidate_id": "cand_006",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.71563417,
+            40.552910185256145,
+            0.0,
+            0.0,
+            0.3333333333333333,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_005",
+          "candidate_id": "cand_048",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7470956,
+            23.550770182424337,
+            0.5,
+            0.0,
+            0.3333333333333333,
+            0.0,
+            0.0,
+            1.0,
+            0.5,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_005",
+          "candidate_id": "cand_016",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.7116447,
+            19.814084847684693,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_005",
+          "candidate_id": "cand_022",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.7000072,
+            18.054312278113834,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_005",
+          "candidate_id": "cand_021",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.6943769,
+            15.003826245205158,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_005",
+          "candidate_id": "cand_034",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.62399995,
+            19.403145942261826,
+            0.0,
+            0.0,
+            0.3333333333333333,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_005",
+          "candidate_id": "cand_024",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.679917,
+            14.275089700982782,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_005",
+          "candidate_id": "cand_023",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.670991,
+            14.914214838332365,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_005",
+          "candidate_id": "cand_036",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.6169909,
+            14.947772768985798,
+            0.0,
+            0.0,
+            0.3333333333333333,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_006",
+          "candidate_id": "cand_018",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.7684675,
+            76.49087963197267,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_006",
+          "candidate_id": "cand_020",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.73320335,
+            71.8687634091682,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_006",
+          "candidate_id": "cand_019",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.71982014,
+            76.62288269879491,
+            1.0,
+            0.3333333333333333,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_006",
+          "candidate_id": "cand_047",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7701181,
+            42.57142905701461,
+            0.5,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            0.5,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_006",
+          "candidate_id": "cand_048",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7464379,
+            34.35215918912049,
+            0.5,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            0.5,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_006",
+          "candidate_id": "cand_007",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.6845654,
+            61.940549553918856,
+            0.0,
+            0.3333333333333333,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_006",
+          "candidate_id": "cand_015",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.69684887,
+            20.561131731095266,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_006",
+          "candidate_id": "cand_031",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.61062646,
+            30.953488273310462,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_006",
+          "candidate_id": "cand_013",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.7027442,
+            15.770909585684942,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_006",
+          "candidate_id": "cand_014",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.68394935,
+            17.60027753939114,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_006",
+          "candidate_id": "cand_029",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.59685487,
+            22.736886965912117,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_006",
+          "candidate_id": "cand_032",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.5930775,
+            19.39521806852972,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_007",
+          "candidate_id": "cand_022",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.7799914,
+            35.930671751746544,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_007",
+          "candidate_id": "cand_024",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.74781555,
+            31.630424152924512,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_007",
+          "candidate_id": "cand_006",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.6625745,
+            37.776567612976116,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_007",
+          "candidate_id": "cand_027",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.66492784,
+            35.367865063260574,
+            0.5,
+            0.6666666666666666,
+            0.2,
+            0.0,
+            1.0,
+            1.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_007",
+          "candidate_id": "cand_048",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7446118,
+            23.96423436633331,
+            0.5,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            1.0,
+            0.5,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_007",
+          "candidate_id": "cand_014",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7138596,
+            23.629062824697957,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_007",
+          "candidate_id": "cand_029",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.63121307,
+            28.955721080001943,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_007",
+          "candidate_id": "cand_032",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.63999146,
+            25.645743654412133,
+            0.0,
+            0.3333333333333333,
+            0.2,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_007",
+          "candidate_id": "cand_005",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.63086665,
+            25.949564373754345,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_007",
+          "candidate_id": "cand_019",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.58062017,
+            21.63974560249182,
+            0.0,
+            0.3333333333333333,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_007",
+          "candidate_id": "cand_018",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.6150397,
+            14.38523569603397,
+            0.0,
+            0.3333333333333333,
+            0.25,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_007",
+          "candidate_id": "cand_020",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.57843804,
+            10.563279522167315,
+            0.0,
+            0.3333333333333333,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_008",
+          "candidate_id": "cand_010",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.7622248,
+            56.44656212018088,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_008",
+          "candidate_id": "cand_012",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.7328236,
+            54.29545486068354,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_008",
+          "candidate_id": "cand_048",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7330959,
+            35.469490026307895,
+            0.5,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            0.5,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_008",
+          "candidate_id": "cand_021",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.7172158,
+            20.928947077389793,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_008",
+          "candidate_id": "cand_022",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.7086891,
+            24.011081646306145,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_008",
+          "candidate_id": "cand_030",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.6767224,
+            34.16903858634231,
+            0.5,
+            0.3333333333333333,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_008",
+          "candidate_id": "cand_032",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.6729482,
+            32.8053539741057,
+            0.5,
+            0.3333333333333333,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_008",
+          "candidate_id": "cand_003",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.70719314,
+            18.445772847989364,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_008",
+          "candidate_id": "cand_023",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.67588365,
+            20.788278776659947,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_008",
+          "candidate_id": "cand_004",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7171492,
+            11.840429639523459,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_008",
+          "candidate_id": "cand_019",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.571919,
+            20.338856391880125,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_008",
+          "candidate_id": "cand_020",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.57616866,
+            7.19117484083097,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_009",
+          "candidate_id": "cand_010",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.76230043,
+            72.44084112963338,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_009",
+          "candidate_id": "cand_009",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.7629789,
+            62.75357937877334,
+            1.0,
+            0.6666666666666666,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_009",
+          "candidate_id": "cand_012",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.727121,
+            67.89118922229666,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_009",
+          "candidate_id": "cand_047",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.71916574,
+            26.8719241552134,
+            0.0,
+            0.0,
+            0.3333333333333333,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_009",
+          "candidate_id": "cand_016",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7012037,
+            22.945665540284107,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_009",
+          "candidate_id": "cand_015",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.6929432,
+            24.109132574391868,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_009",
+          "candidate_id": "cand_048",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7117516,
+            18.99413393687486,
+            0.0,
+            0.0,
+            0.3333333333333333,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_009",
+          "candidate_id": "cand_022",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.6882301,
+            21.64986282189086,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_009",
+          "candidate_id": "cand_030",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.6521701,
+            28.141064736835194,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_009",
+          "candidate_id": "cand_021",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.6948153,
+            18.568525195972903,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_009",
+          "candidate_id": "cand_014",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.6675643,
+            21.055733472365883,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_009",
+          "candidate_id": "cand_020",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.5348277,
+            7.19117484083097,
+            0.0,
+            0.0,
+            0.3333333333333333,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_010",
+          "candidate_id": "cand_009",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.7621977,
+            49.47218801089482,
+            1.0,
+            0.3333333333333333,
+            0.25,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_010",
+          "candidate_id": "cand_010",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.7712883,
+            38.967601415248566,
+            1.0,
+            1.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_010",
+          "candidate_id": "cand_012",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.7409596,
+            38.803156011188015,
+            1.0,
+            1.0,
+            0.25,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_010",
+          "candidate_id": "cand_032",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.65576607,
+            43.615092647102884,
+            0.5,
+            0.3333333333333333,
+            0.5,
+            0.0,
+            0.0,
+            1.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_010",
+          "candidate_id": "cand_048",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.71190554,
+            20.240793960985194,
+            0.5,
+            0.0,
+            0.6666666666666666,
+            0.0,
+            0.0,
+            0.0,
+            0.5,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_010",
+          "candidate_id": "cand_030",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.6416055,
+            41.75812342019378,
+            0.5,
+            0.3333333333333333,
+            0.5,
+            0.0,
+            1.0,
+            1.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_010",
+          "candidate_id": "cand_003",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.6995193,
+            18.47511272162915,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_010",
+          "candidate_id": "cand_004",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.69823587,
+            16.117950229819325,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_010",
+          "candidate_id": "cand_026",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.6688494,
+            19.052610534377777,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_010",
+          "candidate_id": "cand_027",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.60828495,
+            20.012466648614865,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_010",
+          "candidate_id": "cand_023",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.6508006,
+            16.14371336158367,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_010",
+          "candidate_id": "cand_025",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.61930275,
+            14.249284633055769,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_011",
+          "candidate_id": "cand_031",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.76081663,
+            54.64230147167281,
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_011",
+          "candidate_id": "cand_030",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.7492434,
+            33.67401975247791,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_011",
+          "candidate_id": "cand_016",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.77429235,
+            21.85774000669952,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_011",
+          "candidate_id": "cand_032",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.7195858,
+            36.85051338953343,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_011",
+          "candidate_id": "cand_022",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.73697186,
+            23.20828701546683,
+            0.0,
+            0.3333333333333333,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_011",
+          "candidate_id": "cand_040",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7390905,
+            20.89627173740549,
+            0.0,
+            0.0,
+            0.4,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_011",
+          "candidate_id": "cand_048",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7496524,
+            17.54633899080221,
+            0.0,
+            0.0,
+            0.6666666666666666,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_011",
+          "candidate_id": "cand_024",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.71731377,
+            20.975158397711528,
+            0.0,
+            0.3333333333333333,
+            0.2,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_011",
+          "candidate_id": "cand_023",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.6896907,
+            21.78184845740443,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_011",
+          "candidate_id": "cand_039",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7363913,
+            17.820283333802905,
+            0.0,
+            0.0,
+            0.4,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_011",
+          "candidate_id": "cand_026",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.71501946,
+            19.049371460868205,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_011",
+          "candidate_id": "cand_025",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.670568,
+            14.234054134915489,
+            0.0,
+            0.3333333333333333,
+            0.5,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_012",
+          "candidate_id": "cand_015",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.80092144,
+            62.2767560729442,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_012",
+          "candidate_id": "cand_013",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.7931252,
+            58.1791121563483,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_012",
+          "candidate_id": "cand_038",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.7665547,
+            30.932277508883118,
+            0.5,
+            0.3333333333333333,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_012",
+          "candidate_id": "cand_047",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.72727025,
+            37.08048316808326,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_012",
+          "candidate_id": "cand_037",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.7345648,
+            33.863237226119956,
+            0.5,
+            0.3333333333333333,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_012",
+          "candidate_id": "cand_048",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7145084,
+            28.975610450305712,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_012",
+          "candidate_id": "cand_022",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7040432,
+            21.032816936439147,
+            0.0,
+            0.0,
+            0.16666666666666666,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_012",
+          "candidate_id": "cand_024",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.6990144,
+            17.078935617415556,
+            0.0,
+            0.0,
+            0.16666666666666666,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_012",
+          "candidate_id": "cand_023",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.6642677,
+            14.547590670095541,
+            0.0,
+            0.0,
+            0.16666666666666666,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_012",
+          "candidate_id": "cand_033",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.6214895,
+            14.71920398218431,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_012",
+          "candidate_id": "cand_028",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.6283448,
+            12.254703478586398,
+            0.0,
+            0.0,
+            0.4,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_012",
+          "candidate_id": "cand_027",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.6010682,
+            13.689237013000707,
+            0.0,
+            0.0,
+            0.4,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_013",
+          "candidate_id": "cand_021",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.8046534,
+            87.1979988140332,
+            1.0,
+            0.3333333333333333,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_013",
+          "candidate_id": "cand_022",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.7910274,
+            86.47783286750966,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_013",
+          "candidate_id": "cand_024",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.74218357,
+            81.00761081233165,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_013",
+          "candidate_id": "cand_047",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7263255,
+            23.662070464823795,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_013",
+          "candidate_id": "cand_026",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.6915916,
+            26.399445624207086,
+            0.5,
+            0.3333333333333333,
+            0.2,
+            0.0,
+            1.0,
+            1.0,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_013",
+          "candidate_id": "cand_003",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.71482027,
+            18.445772847989364,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_013",
+          "candidate_id": "cand_048",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7187706,
+            15.80327589243087,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_013",
+          "candidate_id": "cand_027",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.61495745,
+            26.80459305273717,
+            0.5,
+            0.3333333333333333,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_013",
+          "candidate_id": "cand_029",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.6073076,
+            22.698986907457414,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_013",
+          "candidate_id": "cand_004",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7140481,
+            11.840429639523459,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_013",
+          "candidate_id": "cand_030",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.6135683,
+            20.480064617462524,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_013",
+          "candidate_id": "cand_020",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.5766717,
+            14.337613530171994,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_014",
+          "candidate_id": "cand_027",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.7521334,
+            86.86057992587477,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_014",
+          "candidate_id": "cand_025",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.7693683,
+            81.6195444355791,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_014",
+          "candidate_id": "cand_048",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.6968334,
+            16.464946734440215,
+            0.0,
+            0.0,
+            0.6666666666666666,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_014",
+          "candidate_id": "cand_001",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.67460036,
+            17.17884315170733,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_014",
+          "candidate_id": "cand_003",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.65455866,
+            19.13293096387139,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_014",
+          "candidate_id": "cand_037",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.65362287,
+            9.951692142064095,
+            0.0,
+            0.0,
+            0.4,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_014",
+          "candidate_id": "cand_033",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.56057954,
+            15.78189382795511,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_014",
+          "candidate_id": "cand_012",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.583769,
+            12.967137375715327,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_014",
+          "candidate_id": "cand_036",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.5585445,
+            13.492212127675737,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_014",
+          "candidate_id": "cand_011",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.57176775,
+            12.738778152025873,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_014",
+          "candidate_id": "cand_034",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.5435684,
+            14.02435371678068,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "train",
+          "job_id": "job_014",
+          "candidate_id": "cand_035",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.50956786,
+            13.909036090731888,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "dev": {
+      "query_ids": [
+        "job_015",
+        "job_016",
+        "job_017",
+        "job_018",
+        "job_019"
+      ],
+      "group_sizes": [
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "row_count": 60,
+      "label_distribution": {
+        "0": 17,
+        "1": 21,
+        "2": 12,
+        "3": 10
+      },
+      "rows": [
+        {
+          "split": "dev",
+          "job_id": "job_015",
+          "candidate_id": "cand_033",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.7456687,
+            76.46062246774967,
+            1.0,
+            0.6666666666666666,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_015",
+          "candidate_id": "cand_036",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.73572576,
+            75.61495284519602,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_015",
+          "candidate_id": "cand_035",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.71560884,
+            74.14951354392957,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_015",
+          "candidate_id": "cand_047",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7275215,
+            24.285972190756237,
+            0.0,
+            0.0,
+            0.3333333333333333,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_015",
+          "candidate_id": "cand_048",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.70781523,
+            16.404143752570693,
+            0.0,
+            0.0,
+            0.3333333333333333,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_015",
+          "candidate_id": "cand_029",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.6485968,
+            22.698986907457414,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_015",
+          "candidate_id": "cand_032",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.63552296,
+            19.358783287711418,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_015",
+          "candidate_id": "cand_026",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.6401205,
+            17.466779597204727,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_015",
+          "candidate_id": "cand_027",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.5899688,
+            13.629609319912804,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_015",
+          "candidate_id": "cand_028",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.59282386,
+            9.008981813993216,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_015",
+          "candidate_id": "cand_017",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.5374726,
+            11.911023854873648,
+            0.0,
+            0.0,
+            0.3333333333333333,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_015",
+          "candidate_id": "cand_020",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.55082077,
+            7.19117484083097,
+            0.0,
+            0.0,
+            0.3333333333333333,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_016",
+          "candidate_id": "cand_031",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.7233539,
+            88.2258385721362,
+            1.0,
+            0.6666666666666666,
+            0.5,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_016",
+          "candidate_id": "cand_047",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7339337,
+            31.92417416116599,
+            0.5,
+            0.0,
+            0.5,
+            0.0,
+            1.0,
+            1.0,
+            0.5,
+            1.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_016",
+          "candidate_id": "cand_032",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.7146938,
+            70.75096802947407,
+            1.0,
+            1.0,
+            0.5,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_016",
+          "candidate_id": "cand_030",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.7075156,
+            72.76793512203362,
+            1.0,
+            1.0,
+            0.5,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_016",
+          "candidate_id": "cand_010",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.72868747,
+            25.537197598928987,
+            0.5,
+            0.3333333333333333,
+            0.5,
+            0.0,
+            0.0,
+            1.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_016",
+          "candidate_id": "cand_016",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.75222087,
+            19.472214127643912,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_016",
+          "candidate_id": "cand_048",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7221466,
+            24.116947946191413,
+            0.5,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            0.0,
+            0.5,
+            1.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_016",
+          "candidate_id": "cand_012",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.7201629,
+            22.058167460697817,
+            0.5,
+            0.3333333333333333,
+            0.5,
+            0.0,
+            1.0,
+            1.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_016",
+          "candidate_id": "cand_014",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.70084834,
+            17.613745989259034,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_016",
+          "candidate_id": "cand_037",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.63436806,
+            17.182616644325325,
+            0.0,
+            0.0,
+            0.16666666666666666,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_016",
+          "candidate_id": "cand_036",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.66032606,
+            10.20332056886946,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_016",
+          "candidate_id": "cand_035",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.6148535,
+            16.59348551443217,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_017",
+          "candidate_id": "cand_048",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7241006,
+            24.70324175084907,
+            0.0,
+            0.0,
+            0.4,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_017",
+          "candidate_id": "cand_043",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.68097985,
+            27.748357657435545,
+            0.0,
+            0.0,
+            0.3333333333333333,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_017",
+          "candidate_id": "cand_005",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.6267599,
+            62.31769354922748,
+            1.0,
+            1.0,
+            0.3333333333333333,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_017",
+          "candidate_id": "cand_007",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.61718315,
+            63.68969029119375,
+            1.0,
+            1.0,
+            0.3333333333333333,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_017",
+          "candidate_id": "cand_039",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.7017219,
+            17.18756933274681,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_017",
+          "candidate_id": "cand_019",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.5805619,
+            27.212729054780336,
+            0.0,
+            0.0,
+            0.16666666666666666,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_017",
+          "candidate_id": "cand_040",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.68022245,
+            20.304479469842317,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_017",
+          "candidate_id": "cand_038",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.69164264,
+            16.580616614696513,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_017",
+          "candidate_id": "cand_037",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.6808113,
+            13.913885576390953,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_017",
+          "candidate_id": "cand_011",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.54746854,
+            14.274444578778146,
+            0.0,
+            0.0,
+            0.16666666666666666,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_017",
+          "candidate_id": "cand_036",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.57114625,
+            11.75401807954623,
+            0.0,
+            0.0,
+            0.16666666666666666,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_017",
+          "candidate_id": "cand_012",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.56741107,
+            10.38593880891134,
+            0.0,
+            0.0,
+            0.16666666666666666,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_018",
+          "candidate_id": "cand_047",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7579583,
+            45.99893207973747,
+            0.5,
+            0.0,
+            0.3333333333333333,
+            0.0,
+            0.0,
+            1.0,
+            0.5,
+            1.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_018",
+          "candidate_id": "cand_006",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.7222389,
+            95.094874940826,
+            1.0,
+            0.3333333333333333,
+            0.6666666666666666,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_018",
+          "candidate_id": "cand_048",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.73763216,
+            32.558850545831476,
+            0.5,
+            0.0,
+            0.3333333333333333,
+            0.0,
+            0.0,
+            1.0,
+            0.5,
+            1.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_018",
+          "candidate_id": "cand_005",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.69988984,
+            72.81756452851364,
+            1.0,
+            1.0,
+            0.6666666666666666,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_018",
+          "candidate_id": "cand_007",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.69472593,
+            77.19738959430325,
+            1.0,
+            1.0,
+            0.6666666666666666,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_018",
+          "candidate_id": "cand_019",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.65309715,
+            25.700132152636332,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_018",
+          "candidate_id": "cand_033",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.6434413,
+            29.66202913807458,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.5
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_018",
+          "candidate_id": "cand_024",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.69161296,
+            21.375569029070643,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_018",
+          "candidate_id": "cand_034",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.6104456,
+            22.60955212664236,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_018",
+          "candidate_id": "cand_035",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.61119443,
+            22.488945395922787,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_018",
+          "candidate_id": "cand_017",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.6520364,
+            12.533567398616125,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_018",
+          "candidate_id": "cand_020",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.6562083,
+            7.80153980273211,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_019",
+          "candidate_id": "cand_002",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.77059925,
+            62.528640122994524,
+            1.0,
+            0.6666666666666666,
+            0.5,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_019",
+          "candidate_id": "cand_001",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.73699856,
+            54.87228377313557,
+            1.0,
+            1.0,
+            0.5,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_019",
+          "candidate_id": "cand_003",
+          "relevance_grade": 3,
+          "feature_vector": [
+            0.73251617,
+            56.04946090911839,
+            1.0,
+            1.0,
+            0.5,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_019",
+          "candidate_id": "cand_047",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7315786,
+            45.06363421566501,
+            0.5,
+            0.3333333333333333,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            0.5,
+            1.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_019",
+          "candidate_id": "cand_043",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.6886422,
+            58.83555249257365,
+            0.5,
+            0.6666666666666666,
+            0.5,
+            0.0,
+            0.0,
+            0.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_019",
+          "candidate_id": "cand_041",
+          "relevance_grade": 2,
+          "feature_vector": [
+            0.6944884,
+            57.189075589291626,
+            0.5,
+            0.6666666666666666,
+            0.5,
+            0.0,
+            1.0,
+            0.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_019",
+          "candidate_id": "cand_048",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.7077234,
+            36.98862259563943,
+            0.5,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            0.5,
+            1.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_019",
+          "candidate_id": "cand_034",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.6019001,
+            13.455533530416252,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_019",
+          "candidate_id": "cand_035",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.5755429,
+            15.751153880247871,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_019",
+          "candidate_id": "cand_036",
+          "relevance_grade": 0,
+          "feature_vector": [
+            0.5903628,
+            9.244325173743468,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_019",
+          "candidate_id": "cand_012",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.58680713,
+            9.951519635766159,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "split": "dev",
+          "job_id": "job_019",
+          "candidate_id": "cand_011",
+          "relevance_grade": 1,
+          "feature_vector": [
+            0.5734092,
+            12.660950513554548,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ]
+    }
+  },
+  "unjudged_policy": "excluded_not_negative",
+  "test_rows_included": false,
+  "ltr_dataset_fingerprint": "9fcef60627a0e5e7a9a2c757c3c3c82cbe85f27fb30f2aeb25305e68bda243db"
+}

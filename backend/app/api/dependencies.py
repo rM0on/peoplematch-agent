@@ -18,6 +18,8 @@ from app.services.features.service import FeatureEngineeringService
 from app.services.retrieval.embedding import SentenceTransformerEmbeddingProvider
 from app.services.retrieval.service import RetrievalService
 from app.services.retrieval.vector_store import QdrantDenseVectorStore
+from app.services.ranking.model import load_ranking_model
+from app.services.ranking.service import RankingService
 
 
 @lru_cache
@@ -101,4 +103,25 @@ def get_feature_engineering_service(
         retrieval_service=retrieval_service,
         candidate_repository=CandidateRepository(session),
         job_repository=JobRepository(session),
+    )
+
+
+@lru_cache
+def get_runtime_ranking_model():
+    settings = get_settings()
+    return load_ranking_model(
+        model_path=Path(settings.ranking_model_path),
+        metadata_path=Path(settings.ranking_model_metadata_path),
+    )
+
+
+def get_ranking_service(
+    feature_service: FeatureEngineeringService = Depends(
+        get_feature_engineering_service
+    ),
+    ranking_model=Depends(get_runtime_ranking_model),
+) -> RankingService:
+    return RankingService(
+        feature_service=feature_service,
+        ranking_model=ranking_model,
     )

@@ -30,6 +30,7 @@
 | POST | `/api/v1/retrieval/candidates/{candidate_id}/jobs` | **Implemented / Phase 4 Completed** | Retrieve a first-stage Job recall set for one stored Candidate |
 | POST | `/api/v1/features/jobs/{job_id}/candidates` | **Implemented / Phase 5 Completed / Frozen** | Preserve Job-to-Candidate retrieval order and attach versioned pair features |
 | POST | `/api/v1/features/candidates/{candidate_id}/jobs` | **Implemented / Phase 5 Completed / Frozen** | Preserve Candidate-to-Job retrieval order and attach versioned pair features |
+| POST | `/api/v1/ranking/jobs/{job_id}/candidates` | **Implemented / Phase 6 PASS / FROZEN** | Rerank one Hybrid Candidate pool with the deterministic LambdaMART baseline |
 | POST | `/api/v1/match/retrieve` | **Planned** | Run retrieval for an explicit candidate/job query |
 | POST | `/api/v1/match/score` | **Planned** | Compute versioned evidence-aware features |
 | POST | `/api/v1/match/rerank` | **Planned** | Apply later ranking/reranking stages |
@@ -136,6 +137,32 @@ Top-level `data` contains `feature_version`, `feature_fingerprint`, ordered `res
 The current contract is `feature_schema_v1`. Runtime inputs exclude labels, splits, hard negatives, pairwise preferences, construction metadata, raw source, Candidate/company names, project names/summaries, and evidence statements. Dense/BM25 values are copied unchanged when their channel is present. Ranks and RRF remain diagnostics, not model features. Missing profiles and retrieval infrastructure failures keep their existing typed errors; invalid profile state and contract violations return `invalid_profile_state` and `feature_contract_violation` respectively.
 
 These endpoints are inspection/enrichment only. They do not return a final match score, learned weight, LTR/Cross-Encoder output, feature-based rank, or explanation.
+
+## Phase 6 Job-to-Candidates ranking API
+
+`POST /api/v1/ranking/jobs/{job_id}/candidates` performs exactly one existing
+Hybrid retrieval call with a bounded `candidate_pool_k`, reuses the frozen
+Phase 5 `FeatureVector`, and applies the validated native `ltr_ranker_v1`
+model within that pool. The request is:
+
+```json
+{
+  "candidate_pool_k": 20,
+  "top_k": 10,
+  "filters": null
+}
+```
+
+The server enforces `1 <= top_k <= candidate_pool_k <= 50` and does not accept
+an alternative retrieval strategy. Results expose `entity_id`, `ltr_rank`,
+`ltr_score_raw`, retrieval/feature context, `ranker_version`, model SHA-256,
+the Phase 5 feature version/fingerprint, and `candidate_pool_k`. The raw score
+is a LightGBM model margin, not a probability, percentage, or final match
+score. Ties use original retrieval rank and then entity ID; retrieval rank is
+not a model feature. Missing or stale model artifacts fail closed with typed
+`ranking_model_unavailable` (503) or `ranking_contract_mismatch` (409)
+errors. There is intentionally no Candidate-to-Jobs LTR endpoint, explanation,
+Cross-Encoder, or Test-label access at runtime.
 
 ## Frozen Mutation Policy
 

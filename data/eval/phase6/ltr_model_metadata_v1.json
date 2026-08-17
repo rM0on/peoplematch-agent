@@ -1,0 +1,133 @@
+{
+  "best_iteration": null,
+  "dataset_freeze_manifest_sha256": "a2300d7de103e861f7321f600ba959cbcde21c90e8d78f6d42e8de54ce0cceb2",
+  "dev_group_sizes": [
+    12,
+    12,
+    12,
+    12,
+    12
+  ],
+  "dev_job_ids": [
+    "job_015",
+    "job_016",
+    "job_017",
+    "job_018",
+    "job_019"
+  ],
+  "dev_label_distribution": {
+    "0": 17,
+    "1": 21,
+    "2": 12,
+    "3": 10
+  },
+  "dev_rows": 60,
+  "feature_fingerprint": "dc85c7237c6c67785199d221c919ae48c31c9a6323857070e6399d3eae365e42",
+  "feature_version": "feature_schema_v1",
+  "known_limitations": [
+    "judged-set evaluation excludes unjudged pairs rather than treating them as negatives",
+    "synthetic sandbox labels are not evidence of production hiring accuracy",
+    "Phase 6 v1 supports Job-to-Candidates only"
+  ],
+  "label_gain": [
+    0,
+    1,
+    3,
+    7
+  ],
+  "lightgbm_version": "4.6.0",
+  "ltr_dataset_fingerprint": "9fcef60627a0e5e7a9a2c757c3c3c82cbe85f27fb30f2aeb25305e68bda243db",
+  "metric": "ndcg",
+  "model_feature_order": [
+    "semantic_score",
+    "sparse_score",
+    "skill_fit_score",
+    "project_evidence_score",
+    "role_direction_score",
+    "ai_tool_score",
+    "location_score",
+    "seniority_score",
+    "missing_penalty",
+    "overclaim_penalty"
+  ],
+  "model_format": "lightgbm_native_text",
+  "model_sha256": "c8f235ebd95dce611f892394859f9f0251f43f8822a39bd316c404d9ff75a000",
+  "model_tree_count": 100,
+  "num_boost_round": 100,
+  "objective": "lambdarank",
+  "python_version": "3.9.13",
+  "ranker_version": "ltr_ranker_v1",
+  "repeat_model_sha256": "c8f235ebd95dce611f892394859f9f0251f43f8822a39bd316c404d9ff75a000",
+  "repeat_predictions_identical": true,
+  "retrieval_configuration_fingerprint": "b004bc52c33f3e15bf38dba1777305039909bb5229261dcf1851b289e7c8f2e7",
+  "test_metrics": null,
+  "test_used": false,
+  "train_group_sizes": [
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12
+  ],
+  "train_job_ids": [
+    "job_001",
+    "job_002",
+    "job_003",
+    "job_004",
+    "job_005",
+    "job_006",
+    "job_007",
+    "job_008",
+    "job_009",
+    "job_010",
+    "job_011",
+    "job_012",
+    "job_013",
+    "job_014"
+  ],
+  "train_label_distribution": {
+    "0": 52,
+    "1": 56,
+    "2": 32,
+    "3": 28
+  },
+  "train_rows": 168,
+  "training_parameters": {
+    "bagging_fraction": 1.0,
+    "bagging_freq": 0,
+    "bagging_seed": 42,
+    "boosting_type": "gbdt",
+    "data_random_seed": 42,
+    "deterministic": true,
+    "device_type": "cpu",
+    "feature_fraction": 1.0,
+    "feature_fraction_seed": 42,
+    "force_row_wise": true,
+    "label_gain": [
+      0,
+      1,
+      3,
+      7
+    ],
+    "lambda_l2": 1.0,
+    "lambdarank_truncation_level": 12,
+    "learning_rate": 0.05,
+    "max_depth": 3,
+    "metric": "ndcg",
+    "min_data_in_leaf": 5,
+    "num_leaves": 7,
+    "num_threads": 1,
+    "objective": "lambdarank",
+    "seed": 42,
+    "verbosity": -1
+  }
+}

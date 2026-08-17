@@ -4,7 +4,7 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass
 import json
 from pathlib import Path
-from typing import Dict, Iterable, List, Sequence, Type, TypeVar
+from typing import Collection, Dict, Iterable, List, Sequence, Type, TypeVar
 
 from pydantic import BaseModel, ValidationError
 
@@ -109,6 +109,153 @@ def _load_query_splits(path: Path) -> Dict[str, str]:
     if errors:
         raise DatasetValidationError(errors)
     return job_to_split
+
+
+def load_query_splits(repository_root: Path) -> Dict[str, str]:
+    """Load the canonical job-query split manifest without loading labels."""
+
+    return _load_query_splits(repository_root.resolve() / "data" / "eval" / "query_splits.json")
+
+
+def _phase6_allowed_jobs(
+    repository_root: Path, allowed_job_ids: Collection[str]
+) -> tuple[Dict[str, str], set[str]]:
+    query_splits = load_query_splits(repository_root)
+    allowed = {str(job_id) for job_id in allowed_job_ids}
+    unknown = allowed - set(query_splits)
+    if unknown:
+        raise DatasetValidationError(
+            [f"unknown Phase 6 Job IDs: {sorted(unknown)}"]
+        )
+    test_jobs = {
+        job_id for job_id in allowed if query_splits[job_id] == DatasetSplit.TEST.value
+    }
+    if test_jobs:
+        raise DatasetValidationError(
+            [f"Test jobs are not permitted in Phase 6 label loading: {sorted(test_jobs)}"]
+        )
+    return query_splits, allowed
+
+
+def _read_filtered_jsonl(
+    path: Path,
+    model: Type[ModelT],
+    *,
+    allowed_job_ids: set[str],
+    record_name: str,
+) -> List[ModelT]:
+    records: List[ModelT] = []
+    errors: List[str] = []
+    if not path.is_file():
+        raise DatasetValidationError([f"missing dataset file: {path}"])
+
+    with path.open("r", encoding="utf-8") as stream:
+        for line_number, raw_line in enumerate(stream, start=1):
+            line = raw_line.strip()
+            if not line:
+                errors.append(f"{path.name}:{line_number} is blank")
+                continue
+            try:
+                payload = json.loads(line)
+            except json.JSONDecodeError as exc:
+                errors.append(f"{path.name}:{line_number}: {exc}")
+                continue
+            if str(payload.get("job_id")) not in allowed_job_ids:
+                continue
+            try:
+                records.append(model.model_validate(payload))
+            except ValidationError as exc:
+                errors.append(f"{path.name}:{line_number}: {exc}")
+
+    if errors:
+        raise DatasetValidationError(
+            [f"invalid Phase 6 {record_name} record: {error}" for error in errors]
+        )
+    return records
+
+
+def load_relevance_labels(
+    repository_root: Path, allowed_job_ids: Collection[str]
+) -> List[RelevanceLabel]:
+    """Materialize only non-Test relevance labels for the explicit Job set."""
+
+    query_splits, allowed = _phase6_allowed_jobs(repository_root, allowed_job_ids)
+    labels = _read_filtered_jsonl(
+        repository_root.resolve() / "data" / "samples" / "labels.jsonl",
+        RelevanceLabel,
+        allowed_job_ids=allowed,
+        record_name="relevance label",
+    )
+    errors = [
+        f"label {label.label_id} split {label.split.value} conflicts with canonical Job split {query_splits[label.job_id]}"
+        for label in labels
+        if label.split.value != query_splits[label.job_id]
+    ]
+    if errors:
+        raise DatasetValidationError(errors)
+    return labels
+
+
+def load_pairwise_preferences(
+    repository_root: Path, allowed_job_ids: Collection[str]
+) -> List[PairwisePreference]:
+    """Materialize only non-Test pairwise annotations for the explicit Job set."""
+
+    query_splits, allowed = _phase6_allowed_jobs(repository_root, allowed_job_ids)
+    preferences = _read_filtered_jsonl(
+        repository_root.resolve() / "data" / "eval" / "pairwise_preferences.jsonl",
+        PairwisePreference,
+        allowed_job_ids=allowed,
+        record_name="pairwise preference",
+    )
+    errors = [
+        f"preference {preference.preference_id} split {preference.split.value} conflicts with canonical Job split {query_splits[preference.job_id]}"
+        for preference in preferences
+        if preference.split.value != query_splits[preference.job_id]
+    ]
+    if errors:
+        raise DatasetValidationError(errors)
+    return preferences
+
+
+def load_phase6_bundle(
+    repository_root: Path,
+    *,
+    allowed_splits: Collection[str],
+    pairwise_splits: Collection[str] = (),
+) -> DatasetBundle:
+    """Load profiles plus only the requested Train/Dev offline annotations."""
+
+    root = repository_root.resolve()
+    query_splits = load_query_splits(root)
+    invalid_splits = set(allowed_splits) - {DatasetSplit.TRAIN.value, DatasetSplit.DEV.value}
+    if invalid_splits:
+        raise DatasetValidationError(
+            [f"Phase 6 allows only Train/Dev splits: {sorted(invalid_splits)}"]
+        )
+    invalid_pairwise_splits = set(pairwise_splits) - {
+        DatasetSplit.TRAIN.value,
+        DatasetSplit.DEV.value,
+    }
+    if invalid_pairwise_splits:
+        raise DatasetValidationError(
+            [f"Phase 6 allows only Train/Dev pairwise splits: {sorted(invalid_pairwise_splits)}"]
+        )
+    allowed_jobs = {
+        job_id for job_id, split in query_splits.items() if split in set(allowed_splits)
+    }
+    pairwise_jobs = {
+        job_id for job_id, split in query_splits.items() if split in set(pairwise_splits)
+    }
+    return DatasetBundle(
+        candidates=_read_jsonl(root / "data" / "samples" / "candidates.jsonl", CandidateProfile),
+        jobs=_read_jsonl(root / "data" / "samples" / "jobs.jsonl", JobProfile),
+        labels=load_relevance_labels(root, allowed_jobs),
+        pairwise_preferences=load_pairwise_preferences(root, pairwise_jobs)
+        if pairwise_jobs
+        else [],
+        query_splits=query_splits,
+    )
 
 
 def load_dataset(repository_root: Path) -> DatasetBundle:

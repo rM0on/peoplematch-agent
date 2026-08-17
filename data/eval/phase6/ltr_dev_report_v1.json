@@ -1,0 +1,109 @@
+{
+  "artifact_version": "ltr_dev_report_v1",
+  "evaluation_scope": "judged_set_reranking",
+  "feature_fingerprint": "dc85c7237c6c67785199d221c919ae48c31c9a6323857070e6399d3eae365e42",
+  "gain_policy": "2^relevance_minus_1",
+  "incomplete_judgments": true,
+  "judged_row_count": 60,
+  "ltr_dataset_fingerprint": "9fcef60627a0e5e7a9a2c757c3c3c82cbe85f27fb30f2aeb25305e68bda243db",
+  "metrics": {
+    "hybrid": {
+      "mrr": 0.8,
+      "ndcg_at_10": 0.7622055777930254,
+      "ndcg_at_5": 0.7245053116013586,
+      "pairwise_accuracy": 0.6
+    },
+    "ltr": {
+      "mrr": 1.0,
+      "ndcg_at_10": 0.9709986829742865,
+      "ndcg_at_5": 0.9704922899797717,
+      "pairwise_accuracy": 1.0
+    }
+  },
+  "per_query": {
+    "hybrid": [
+      {
+        "job_id": "job_015",
+        "mrr": 1.0,
+        "ndcg_at_10": 0.8232120002616589,
+        "ndcg_at_5": 0.8039550181360283,
+        "pairwise_accuracy": 1.0
+      },
+      {
+        "job_id": "job_016",
+        "mrr": 1.0,
+        "ndcg_at_10": 0.7941879809902906,
+        "ndcg_at_5": 0.7356466384828252,
+        "pairwise_accuracy": 1.0
+      },
+      {
+        "job_id": "job_017",
+        "mrr": 0.5,
+        "ndcg_at_10": 0.7043022542824305,
+        "ndcg_at_5": 0.64455452575448,
+        "pairwise_accuracy": 0.0
+      },
+      {
+        "job_id": "job_018",
+        "mrr": 0.5,
+        "ndcg_at_10": 0.6551674382843712,
+        "ndcg_at_5": 0.6245461303486183,
+        "pairwise_accuracy": 0.0
+      },
+      {
+        "job_id": "job_019",
+        "mrr": 1.0,
+        "ndcg_at_10": 0.8341582151463759,
+        "ndcg_at_5": 0.8138242452848412,
+        "pairwise_accuracy": 1.0
+      }
+    ],
+    "ltr": [
+      {
+        "job_id": "job_015",
+        "mrr": 1.0,
+        "ndcg_at_10": 0.963854940040822,
+        "ndcg_at_5": 0.9409845799595433,
+        "pairwise_accuracy": 1.0
+      },
+      {
+        "job_id": "job_016",
+        "mrr": 1.0,
+        "ndcg_at_10": 0.9819473692965225,
+        "ndcg_at_5": 1.0,
+        "pairwise_accuracy": 1.0
+      },
+      {
+        "job_id": "job_017",
+        "mrr": 1.0,
+        "ndcg_at_10": 0.9737993133977121,
+        "ndcg_at_5": 1.0,
+        "pairwise_accuracy": 1.0
+      },
+      {
+        "job_id": "job_018",
+        "mrr": 1.0,
+        "ndcg_at_10": 0.9534444228398538,
+        "ndcg_at_5": 0.911476869939315,
+        "pairwise_accuracy": 1.0
+      },
+      {
+        "job_id": "job_019",
+        "mrr": 1.0,
+        "ndcg_at_10": 0.9819473692965225,
+        "ndcg_at_5": 1.0,
+        "pairwise_accuracy": 1.0
+      }
+    ]
+  },
+  "query_ids": [
+    "job_015",
+    "job_016",
+    "job_017",
+    "job_018",
+    "job_019"
+  ],
+  "ranker_version": "ltr_ranker_v1",
+  "relevance_threshold": 2,
+  "test_evaluated": false
+}

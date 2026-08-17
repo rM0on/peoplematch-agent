@@ -10,6 +10,10 @@ COPY backend/requirements.txt ./requirements.txt
 RUN python -m pip install --upgrade pip && \
     python -m pip install -r requirements.txt
 
+RUN apt-get update && \
+    apt-get install --no-install-recommends --yes libgomp1 && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY backend/app ./app
 COPY backend/alembic.ini ./alembic.ini
 COPY backend/alembic ./alembic

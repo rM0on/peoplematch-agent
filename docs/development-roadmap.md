@@ -67,12 +67,12 @@ Only the phase explicitly requested by the user may be implemented. Status value
 
 ## Phase 6 — Learning-to-Rank
 
-**Status:** Planned
+**Status:** Completed / Frozen
 
-- **Objective:** Train and compare a learned ranking stage without handing final ordering to an LLM.
-- **Primary deliverables:** Training data contract, baseline ranker, LTR experiment pipeline, model/version metadata, offline comparison report.
+- **Objective:** Train and compare one deterministic learned ranking stage without handing final ordering to an LLM.
+- **Primary deliverables:** Versioned LambdaMART contract, explicit Train/Dev judged-pair dataset, native model and provenance metadata, judged-set Dev comparison report, Job-to-Candidates Hybrid-pool ranking API, and leakage/integrity tests.
 - **Dependency:** Phase 5 features and documented labels.
-- **Quality gate:** Fixed data split and baseline are documented; results are reproducible; no online-impact claims or cherry-picked metrics.
+- **Quality gate:** Fixed data split and baseline are documented; Train/Dev rows are explicit judgments only; no Test rows or Test metrics are used; exact Phase 5 fingerprint/order is validated; deterministic native model reproduction, artifact hashes, runtime contract checks, full regressions, and honest synthetic limitations are documented. No online-impact claims or cherry-picked metrics.
 
 ## Phase 7 — Cross-Encoder Reranking
 

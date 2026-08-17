@@ -4,7 +4,7 @@
 
 PeopleMatch Agent is an autonomous, local-running prototype for evidence-aware candidate/job matching. It is designed to evolve beyond keyword search into a traceable pipeline that can rank AI Builder opportunities, explain why a match is supported by project evidence, review bad cases, and compare later algorithms through sandbox-only offline evaluation.
 
-The repository has completed and frozen **Phase 4 — Hybrid Retrieval** and **Phase 5 — Feature Engineering**. Dataset `1.0.0` provides canonical contracts and synthetic sandbox profiles; Phase 2 provides PostgreSQL profile APIs; Phase 3 adds deterministic structured extraction; Phase 4 adds first-stage dense/sparse/hybrid recall; Phase 5 adds on-demand, label-free pair feature vectors without changing retrieval order. No real LLM, learned ranker, final match score, or reranker is implemented.
+The repository has completed and frozen **Phase 4 — Hybrid Retrieval** and **Phase 5 — Feature Engineering**. Phase 6 now adds one deterministic, local LightGBM LambdaMART ranker over the frozen ten-feature contract, with judged Train/Dev-only artifacts and a Job-to-Candidates pool-reranking API. Dataset `1.0.0` provides canonical contracts and synthetic sandbox profiles; Phase 2 provides PostgreSQL profile APIs; Phase 3 adds deterministic structured extraction; Phase 4 adds first-stage dense/sparse/hybrid recall; Phase 5 adds on-demand, label-free pair feature vectors without changing retrieval order. No real LLM provider, Cross-Encoder, final match score, or production hiring claim is implemented.
 
 ## Project Overview
 
@@ -35,9 +35,9 @@ PeopleMatch Agent is planned around explicit evidence, separable ranking stages,
 - **Recruiter / Founder / Hiring Team:** reviews ranked matches, constraints, and grounded reasons without treating semantic similarity as the final decision.
 - **Platform Operator:** traces match runs, investigates bad cases, manages sandbox labels, and compares offline evaluation runs.
 
-## Planned Matching Pipeline
+## Matching Pipeline
 
-The following is the target sequence. Every stage is planned for a later phase.
+The current local sequence ends at the Phase 6 baseline; later reranking and explanation stages remain planned.
 
 ```mermaid
 flowchart LR
@@ -52,7 +52,7 @@ flowchart LR
     I -. "documented iteration" .-> D
 ```
 
-Phase 3 implements structured extraction with a deterministic mock only. Phase 4 implements completed Hybrid Retrieval. Phase 5 Feature Engineering is completed and frozen; all learned ranking and reranking stages remain planned.
+Phase 3 implements structured extraction with a deterministic mock only. Phase 4 implements completed Hybrid Retrieval. Phase 5 Feature Engineering is completed and frozen. Phase 6 implements one deterministic LambdaMART baseline for Job-to-Candidates judged-pool reranking; Cross-Encoder and explanation stages remain planned.
 
 ## Architecture Overview
 
@@ -66,7 +66,7 @@ flowchart LR
     Domain --> PG["PostgreSQL\nCURRENT: canonical profile store"]
     API -.-> Redis["Redis\nCURRENT: infrastructure only"]
     API -.-> Qdrant["Qdrant\nCURRENT: derived retrieval index"]
-    API -.-> Matching["Ranking services\nPLANNED"]
+    API --> Matching["Phase 6 ranking service\nCURRENT / PASS / FROZEN"]
     Extract -.-> AI["Real LLM provider\nPLANNED"]
 ```
 
@@ -104,6 +104,10 @@ peoplematch-agent/
 
 ## Current Phase
 
+**Phase 6 — Learning-to-Rank (Completed / Frozen)**
+
+Phase 6 uses `lightgbm==4.6.0` on Python 3.9.13, objective `lambdarank`, graded labels `0/1/2/3`, and label gain `[0, 1, 3, 7]`. It trains only on 168 explicit Train judgments in 14 Job groups and evaluates only 60 explicit Dev judgments in 5 Job groups. The derived dataset excludes unjudged pairs and all Test rows. Runtime reranks one Hybrid candidate pool with the exact Phase 5 feature order and exposes a raw model margin through `POST /api/v1/ranking/jobs/{job_id}/candidates`; it supports Job-to-Candidates only. See `docs/ltr-ranking.md`. This is a synthetic judged-set sandbox implementation approved for Phase 6 closeout, not a production accuracy claim.
+
 **Phase 5 — Feature Engineering (Completed / Frozen)**
 
 Phase 5 defines `feature_schema_v1`, a deterministic feature registry/fingerprint, ten ordered nullable model features, and separate non-model diagnostics. Bidirectional inspection APIs enrich existing Phase 4 results while preserving their exact order. Runtime feature extraction is label-free and uses only allowlisted structured profile fields plus unchanged dense/BM25 channel scores. The train/dev-only feature audit is descriptive rather than a ranking evaluation; Phase 5 has no final match score, learned weights, LTR, Cross-Encoder, or Test tuning. The implementation passed independent source review and is frozen for the Phase 6 handoff. See `docs/feature-engineering.md`.
@@ -132,7 +136,7 @@ Phase 0 completed:
 - Docker Compose definitions for PostgreSQL, Redis, Qdrant, backend, and frontend;
 - an Alembic foundation later extended by the Phase 2 profile migration.
 
-Not implemented: any real LLM provider, general-purpose resume/JD parsing, learned feature weighting, final matching score, LTR, Cross-Encoder reranking, explanations, feedback workflows, persistent match runs, or a complete product dashboard.
+Not implemented: any real LLM provider, general-purpose resume/JD parsing, Cross-Encoder reranking, explanations, feedback workflows, persistent match runs, or a complete product dashboard. Phase 6 does not add a final match score, probability, online experiment, or production hiring claim.
 
 ## Roadmap
 
@@ -145,7 +149,7 @@ Not implemented: any real LLM provider, general-purpose resume/JD parsing, learn
 | 3 | Structured profile extraction with deterministic mock | Completed |
 | 4 | Hybrid retrieval | Completed |
 | 5 | Versioned, label-free feature engineering | Completed / Frozen |
-| 6 | Learning-to-rank | Planned |
+| 6 | Learning-to-rank | Completed / Frozen |
 | 7 | Cross-encoder reranking | Planned |
 | 8 | Match-run orchestration and traceability | Planned |
 | 9 | Evidence-grounded explanations | Planned |
@@ -220,6 +224,23 @@ Set-Location backend
 Set-Location ..
 & .\backend\.venv\Scripts\python.exe scripts\seed_database.py
 ```
+
+Phase 6 ranking requires the locally generated, gitignored native model before
+the final Docker runtime is ready. From the repository root, build the tracked
+Train/Dev artifact through the current Feature API, train the local model, run
+the strict artifact check, and then start/rebuild Compose:
+
+```powershell
+& .\backend\.venv\Scripts\python.exe scripts\build_ltr_dataset.py --api-url http://127.0.0.1:8000 --write
+& .\backend\.venv\Scripts\python.exe scripts\train_ltr.py --write
+& .\backend\.venv\Scripts\python.exe scripts\check_ltr_artifacts.py
+docker compose up --build -d
+```
+
+Compose passes explicit container ranking paths and mounts the generated
+`artifacts` directory plus tracked `data/eval/phase6` metadata read-only. A
+fresh clone before the training step must not be described as ranking-runtime
+ready.
 
 ### Structured extraction demo (PowerShell)
 

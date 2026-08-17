@@ -85,8 +85,13 @@ services:
       RETRIEVAL_BM25_B: ${RETRIEVAL_BM25_B:-0.75}
       RETRIEVAL_POOL_MINIMUM: ${RETRIEVAL_POOL_MINIMUM:-20}
       RETRIEVAL_POOL_MULTIPLIER: ${RETRIEVAL_POOL_MULTIPLIER:-3}
+      RANKING_MODEL_PATH: /app/artifacts/phase6/ltr_ranker_v1.txt
+      RANKING_MODEL_METADATA_PATH: /app/data/eval/phase6/ltr_model_metadata_v1.json
     ports:
       - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      - ./artifacts:/app/artifacts:ro
+      - ./data/eval/phase6:/app/data/eval/phase6:ro
     command:
       [
         "sh",
