@@ -4,10 +4,13 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1
 
+ARG PYTORCH_CPU_INDEX_URL=https://download.pytorch.org/whl/cpu
+
 WORKDIR /app
 
 COPY backend/requirements.txt ./requirements.txt
 RUN python -m pip install --upgrade pip && \
+    python -m pip install --index-url "${PYTORCH_CPU_INDEX_URL}" torch==2.8.0 && \
     python -m pip install -r requirements.txt
 
 RUN apt-get update && \

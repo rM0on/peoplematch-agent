@@ -76,12 +76,12 @@ Only the phase explicitly requested by the user may be implemented. Status value
 
 ## Phase 7 — Cross-Encoder Reranking
 
-**Status:** Planned
+**Status:** Completed / Frozen
 
 - **Objective:** Evaluate a bounded reranking stage over retrieved/ranked candidates.
-- **Primary deliverables:** Cross-encoder provider boundary, top-k rerank flow, batching/configuration, offline comparison.
+- **Primary deliverables:** Frozen pretrained Cross-Encoder provider boundary, immutable model/text manifests, Job-to-Candidates top-k rerank flow, batching/configuration, Dev judged-set comparison, and local CPU latency diagnostics. No fine-tuning or Test evaluation.
 - **Dependency:** Phase 6 ranking outputs.
-- **Quality gate:** Latency/cost are measured only in the local sandbox; comparison uses the same dataset and labels; fallback behavior is explicit.
+- **Quality gate:** Immutable revision and snapshot hashes are verified; latency is measured only in the local sandbox; comparison uses the same explicitly judged Dev candidates and labels; fallback behavior is explicit; Phase 4/5/6 contracts remain frozen. The frozen result is an optional experimental comparison: Phase 6 LambdaMART remains the stronger current synthetic Dev baseline, with no fine-tuning or production claim.
 
 ## Phase 8 — Match-run Orchestration & Traceability
 

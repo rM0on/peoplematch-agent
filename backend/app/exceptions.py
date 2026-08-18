@@ -88,5 +88,15 @@ class RankingContractMismatchError(DomainError):
     status_code = 409
 
 
+class CrossEncoderModelUnavailableError(DomainError):
+    code = "cross_encoder_model_unavailable"
+    status_code = 503
+
+
+class CrossEncoderContractMismatchError(DomainError):
+    code = "cross_encoder_contract_mismatch"
+    status_code = 409
+
+
 class EvaluationIntegrityError(RuntimeError):
     """Offline-only failure when frozen benchmark inputs do not match."""

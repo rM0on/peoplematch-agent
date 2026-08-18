@@ -87,11 +87,16 @@ services:
       RETRIEVAL_POOL_MULTIPLIER: ${RETRIEVAL_POOL_MULTIPLIER:-3}
       RANKING_MODEL_PATH: /app/artifacts/phase6/ltr_ranker_v1.txt
       RANKING_MODEL_METADATA_PATH: /app/data/eval/phase6/ltr_model_metadata_v1.json
+      CROSS_ENCODER_MODEL_PATH: /app/artifacts/phase7/cross_encoder_ms_marco_minilm_l6_v2
+      CROSS_ENCODER_MODEL_MANIFEST_PATH: /app/data/eval/phase7/cross_encoder_model_manifest_v1.json
+      CROSS_ENCODER_TEXT_CONTRACT_PATH: /app/data/eval/phase7/cross_encoder_text_contract_v1.json
+      CROSS_ENCODER_BATCH_SIZE: ${CROSS_ENCODER_BATCH_SIZE:-10}
     ports:
       - "${BACKEND_PORT:-8000}:8000"
     volumes:
       - ./artifacts:/app/artifacts:ro
       - ./data/eval/phase6:/app/data/eval/phase6:ro
+      - ./data/eval/phase7:/app/data/eval/phase7:ro
     command:
       [
         "sh",

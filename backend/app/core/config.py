@@ -44,6 +44,27 @@ class Settings(BaseSettings):
     ranking_model_metadata_path: str = str(
         PROJECT_ROOT / "data" / "eval" / "phase6" / "ltr_model_metadata_v1.json"
     )
+    cross_encoder_model_path: str = str(
+        PROJECT_ROOT
+        / "artifacts"
+        / "phase7"
+        / "cross_encoder_ms_marco_minilm_l6_v2"
+    )
+    cross_encoder_model_manifest_path: str = str(
+        PROJECT_ROOT
+        / "data"
+        / "eval"
+        / "phase7"
+        / "cross_encoder_model_manifest_v1.json"
+    )
+    cross_encoder_text_contract_path: str = str(
+        PROJECT_ROOT
+        / "data"
+        / "eval"
+        / "phase7"
+        / "cross_encoder_text_contract_v1.json"
+    )
+    cross_encoder_batch_size: int = Field(default=10, ge=1, le=50)
 
     model_config = SettingsConfigDict(
         env_file=PROJECT_ROOT / ".env",

@@ -1,0 +1,175 @@
+{
+  "text_schema_version": "cross_encoder_text_v1",
+  "pair_order": "job_then_candidate",
+  "normalization": {
+    "unicode": "NFKC",
+    "strip": true,
+    "collapse_internal_whitespace": true,
+    "value_order": "canonical_source_order",
+    "deduplication": "first_occurrence_within_section"
+  },
+  "section_separator": "\\n",
+  "value_separator": " | ",
+  "candidate_sections": [
+    {
+      "label": "TARGET ROLES",
+      "source": [
+        "target_roles"
+      ]
+    },
+    {
+      "label": "SKILLS",
+      "source": [
+        "skills.name"
+      ]
+    },
+    {
+      "label": "PROJECT TECHNOLOGIES",
+      "source": [
+        "projects.technologies"
+      ]
+    },
+    {
+      "label": "PROJECT-CLAIMED SKILLS",
+      "source": [
+        "projects.skills_demonstrated"
+      ]
+    },
+    {
+      "label": "VERIFIED EVIDENCE SKILLS",
+      "source": [
+        "project_evidence.supports_skills",
+        "verification_status=available"
+      ]
+    },
+    {
+      "label": "AI TOOLS",
+      "source": [
+        "ai_tools"
+      ]
+    },
+    {
+      "label": "LOCATION",
+      "source": [
+        "preferred_locations.cities",
+        "preferred_locations.remote_policy",
+        "preferred_locations.relocation_open"
+      ]
+    },
+    {
+      "label": "SENIORITY",
+      "source": [
+        "seniority"
+      ]
+    },
+    {
+      "label": "WORK STYLE",
+      "source": [
+        "work_style.team_stage_preference"
+      ]
+    }
+  ],
+  "job_sections": [
+    {
+      "label": "ROLE TITLE",
+      "source": [
+        "role_title"
+      ]
+    },
+    {
+      "label": "ROLE DIRECTION",
+      "source": [
+        "role_direction"
+      ]
+    },
+    {
+      "label": "MUST HAVE",
+      "source": [
+        "must_have.category",
+        "must_have.text"
+      ],
+      "category_policy": "canonical_requirement_category_value"
+    },
+    {
+      "label": "NICE TO HAVE",
+      "source": [
+        "nice_to_have.category",
+        "nice_to_have.text"
+      ],
+      "category_policy": "canonical_requirement_category_value"
+    },
+    {
+      "label": "LOCATION",
+      "source": [
+        "location.cities",
+        "location.remote_policy",
+        "location.relocation_supported"
+      ]
+    },
+    {
+      "label": "SENIORITY",
+      "source": [
+        "seniority_requirement"
+      ]
+    },
+    {
+      "label": "PRODUCT STAGE",
+      "source": [
+        "product_stage"
+      ]
+    }
+  ],
+  "excluded_candidate_fields": [
+    "candidate_id",
+    "name",
+    "archetype",
+    "raw_text",
+    "github_url",
+    "project_id",
+    "project.name",
+    "project.summary",
+    "project.role",
+    "project.outcomes",
+    "project_evidence.evidence_id",
+    "project_evidence.statement",
+    "project_evidence.project_id",
+    "project_evidence.artifact_ref",
+    "project_evidence.evidence_type",
+    "project_evidence.verification_status",
+    "described_evidence",
+    "missing_evidence",
+    "missing_fields",
+    "overclaim_risk",
+    "data_origin",
+    "schema_version",
+    "dataset_version",
+    "split",
+    "labels",
+    "pairwise_preferences",
+    "hard_negative_metadata"
+  ],
+  "excluded_job_fields": [
+    "job_id",
+    "company_name",
+    "archetype",
+    "raw_jd",
+    "requirement_id",
+    "evidence_expectation",
+    "team_tags",
+    "evaluation_focus",
+    "data_origin",
+    "schema_version",
+    "dataset_version",
+    "split",
+    "labels",
+    "pairwise_preferences",
+    "hard_negative_metadata"
+  ],
+  "score_policy": {
+    "score_type": "raw_logit",
+    "score_direction": "higher_is_better",
+    "activation": "identity",
+    "calibration": false
+  },
+  "text_contract_fingerprint": "45803a625d6bb28b3155f216a1d6b571ebb978771cd398134fa984e356c703ee"
+}

@@ -1,0 +1,310 @@
+{
+  "artifact_version": "cross_encoder_dev_report_v1",
+  "title": "CROSS-ENCODER JUDGED-SET DEV RERANKING EVALUATION",
+  "evaluation_scope": "cross_encoder_judged_set_dev_reranking",
+  "candidate_set_policy": "identical_judged_candidates_for_ltr_and_cross_encoder",
+  "incomplete_judgments": true,
+  "test_evaluated": false,
+  "gain_policy": "2^relevance_minus_1",
+  "relevance_threshold": 2,
+  "tie_policy": "0.5",
+  "query_ids": [
+    "job_015",
+    "job_016",
+    "job_017",
+    "job_018",
+    "job_019"
+  ],
+  "judged_row_count": 60,
+  "model": {
+    "model_id": "cross-encoder/ms-marco-MiniLM-L6-v2",
+    "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+    "snapshot_fingerprint": "013355448b38f6190a4d7250b1d062f76caddd8a5f1cabc47bdc716490a60236",
+    "text_schema_version": "cross_encoder_text_v1",
+    "text_contract_fingerprint": "45803a625d6bb28b3155f216a1d6b571ebb978771cd398134fa984e356c703ee"
+  },
+  "score_semantics": {
+    "field": "cross_encoder_score_raw",
+    "type": "raw_logit",
+    "direction": "higher_is_better",
+    "calibrated": false
+  },
+  "per_query": {
+    "ltr": [
+      {
+        "job_id": "job_015",
+        "judged_candidate_ids": [
+          "cand_033",
+          "cand_036",
+          "cand_035",
+          "cand_047",
+          "cand_048",
+          "cand_029",
+          "cand_032",
+          "cand_026",
+          "cand_027",
+          "cand_028",
+          "cand_017",
+          "cand_020"
+        ],
+        "ndcg_at_5": 0.9409845799595433,
+        "ndcg_at_10": 0.963854940040822,
+        "mrr": 1.0,
+        "pairwise_accuracy": 1.0
+      },
+      {
+        "job_id": "job_016",
+        "judged_candidate_ids": [
+          "cand_031",
+          "cand_047",
+          "cand_032",
+          "cand_030",
+          "cand_010",
+          "cand_016",
+          "cand_048",
+          "cand_012",
+          "cand_014",
+          "cand_037",
+          "cand_036",
+          "cand_035"
+        ],
+        "ndcg_at_5": 1.0,
+        "ndcg_at_10": 0.9819473692965225,
+        "mrr": 1.0,
+        "pairwise_accuracy": 1.0
+      },
+      {
+        "job_id": "job_017",
+        "judged_candidate_ids": [
+          "cand_048",
+          "cand_043",
+          "cand_005",
+          "cand_007",
+          "cand_039",
+          "cand_019",
+          "cand_040",
+          "cand_038",
+          "cand_037",
+          "cand_011",
+          "cand_036",
+          "cand_012"
+        ],
+        "ndcg_at_5": 1.0,
+        "ndcg_at_10": 0.9737993133977121,
+        "mrr": 1.0,
+        "pairwise_accuracy": 1.0
+      },
+      {
+        "job_id": "job_018",
+        "judged_candidate_ids": [
+          "cand_047",
+          "cand_006",
+          "cand_048",
+          "cand_005",
+          "cand_007",
+          "cand_019",
+          "cand_033",
+          "cand_024",
+          "cand_034",
+          "cand_035",
+          "cand_017",
+          "cand_020"
+        ],
+        "ndcg_at_5": 0.911476869939315,
+        "ndcg_at_10": 0.9534444228398538,
+        "mrr": 1.0,
+        "pairwise_accuracy": 1.0
+      },
+      {
+        "job_id": "job_019",
+        "judged_candidate_ids": [
+          "cand_002",
+          "cand_001",
+          "cand_003",
+          "cand_047",
+          "cand_043",
+          "cand_041",
+          "cand_048",
+          "cand_034",
+          "cand_035",
+          "cand_036",
+          "cand_012",
+          "cand_011"
+        ],
+        "ndcg_at_5": 1.0,
+        "ndcg_at_10": 0.9819473692965225,
+        "mrr": 1.0,
+        "pairwise_accuracy": 1.0
+      }
+    ],
+    "cross_encoder": [
+      {
+        "job_id": "job_015",
+        "judged_candidate_ids": [
+          "cand_033",
+          "cand_036",
+          "cand_035",
+          "cand_047",
+          "cand_048",
+          "cand_029",
+          "cand_032",
+          "cand_026",
+          "cand_027",
+          "cand_028",
+          "cand_017",
+          "cand_020"
+        ],
+        "ndcg_at_5": 0.8039550181360283,
+        "ndcg_at_10": 0.8408033760957079,
+        "mrr": 1.0,
+        "pairwise_accuracy": 1.0
+      },
+      {
+        "job_id": "job_016",
+        "judged_candidate_ids": [
+          "cand_031",
+          "cand_047",
+          "cand_032",
+          "cand_030",
+          "cand_010",
+          "cand_016",
+          "cand_048",
+          "cand_012",
+          "cand_014",
+          "cand_037",
+          "cand_036",
+          "cand_035"
+        ],
+        "ndcg_at_5": 0.3618694409494734,
+        "ndcg_at_10": 0.6696280067388223,
+        "mrr": 1.0,
+        "pairwise_accuracy": 0.0
+      },
+      {
+        "job_id": "job_017",
+        "judged_candidate_ids": [
+          "cand_048",
+          "cand_043",
+          "cand_005",
+          "cand_007",
+          "cand_039",
+          "cand_019",
+          "cand_040",
+          "cand_038",
+          "cand_037",
+          "cand_011",
+          "cand_036",
+          "cand_012"
+        ],
+        "ndcg_at_5": 0.686157436523901,
+        "ndcg_at_10": 0.7578397630109779,
+        "mrr": 1.0,
+        "pairwise_accuracy": 0.5
+      },
+      {
+        "job_id": "job_018",
+        "judged_candidate_ids": [
+          "cand_047",
+          "cand_006",
+          "cand_048",
+          "cand_005",
+          "cand_007",
+          "cand_019",
+          "cand_033",
+          "cand_024",
+          "cand_034",
+          "cand_035",
+          "cand_017",
+          "cand_020"
+        ],
+        "ndcg_at_5": 0.9409845799595433,
+        "ndcg_at_10": 0.9688256612653269,
+        "mrr": 1.0,
+        "pairwise_accuracy": 1.0
+      },
+      {
+        "job_id": "job_019",
+        "judged_candidate_ids": [
+          "cand_002",
+          "cand_001",
+          "cand_003",
+          "cand_047",
+          "cand_043",
+          "cand_041",
+          "cand_048",
+          "cand_034",
+          "cand_035",
+          "cand_036",
+          "cand_012",
+          "cand_011"
+        ],
+        "ndcg_at_5": 0.9098794036419109,
+        "ndcg_at_10": 0.9407427391280637,
+        "mrr": 1.0,
+        "pairwise_accuracy": 1.0
+      }
+    ]
+  },
+  "metrics": {
+    "ltr": {
+      "ndcg_at_5": 0.9704922899797717,
+      "ndcg_at_10": 0.9709986829742865,
+      "mrr": 1.0,
+      "pairwise_accuracy": 1.0
+    },
+    "cross_encoder": {
+      "ndcg_at_5": 0.7405691758421714,
+      "ndcg_at_10": 0.8355679092477797,
+      "mrr": 1.0,
+      "pairwise_accuracy": 0.7
+    }
+  },
+  "disclosures": {
+    "ceiling_effect": "Phase 6 Dev MRR and pairwise accuracy are already 1.0; only NDCG@5 and NDCG@10 have aggregate headroom.",
+    "domain_mismatch": "The frozen model was trained for MS MARCO passage ranking, not Job/Candidate matching, and was not fine-tuned here.",
+    "scope": "This isolates ordering over identical explicitly judged Dev pairs; it is not full-cascade or production hiring accuracy."
+  },
+  "model_sanity": {
+    "train_scores_finite": true,
+    "dev_scores_finite": true,
+    "train_scores_nonconstant": true,
+    "dev_scores_nonconstant": true,
+    "dev_query_score_variation": {
+      "job_015": true,
+      "job_016": true,
+      "job_017": true,
+      "job_018": true,
+      "job_019": true
+    }
+  },
+  "tokenizer_audit": {
+    "tokenizer_class": "BertTokenizerFast",
+    "max_length": 512,
+    "truncation_policy": "normal_deterministic_single_pair_truncation_if_needed",
+    "train": {
+      "min": 254,
+      "median": 303.0,
+      "p95": 332.65,
+      "max": 345,
+      "over_max_count": 0,
+      "over_max_percentage": 0.0
+    },
+    "dev": {
+      "min": 259,
+      "median": 299.0,
+      "p95": 327.2,
+      "max": 338,
+      "over_max_count": 0,
+      "over_max_percentage": 0.0
+    }
+  },
+  "language_audit": {
+    "scope": "Train/Dev allowlisted semantic text only",
+    "job_count": 19,
+    "candidate_count": 46,
+    "latin_script_letter_percentage": 100.0,
+    "non_ascii_character_count": 0,
+    "model_language_compatible": true,
+    "test_inspected": false
+  }
+}

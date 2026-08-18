@@ -31,6 +31,7 @@
 | POST | `/api/v1/features/jobs/{job_id}/candidates` | **Implemented / Phase 5 Completed / Frozen** | Preserve Job-to-Candidate retrieval order and attach versioned pair features |
 | POST | `/api/v1/features/candidates/{candidate_id}/jobs` | **Implemented / Phase 5 Completed / Frozen** | Preserve Candidate-to-Job retrieval order and attach versioned pair features |
 | POST | `/api/v1/ranking/jobs/{job_id}/candidates` | **Implemented / Phase 6 PASS / FROZEN** | Rerank one Hybrid Candidate pool with the deterministic LambdaMART baseline |
+| POST | `/api/v1/reranking/jobs/{job_id}/candidates` | **Implemented / Phase 7 PASS / FROZEN / Optional experimental comparison** | Apply the pinned frozen Cross-Encoder to the Phase 6 LTR shortlist (Job → Candidates only); Phase 6 remains the stronger current synthetic Dev baseline |
 | POST | `/api/v1/match/retrieve` | **Planned** | Run retrieval for an explicit candidate/job query |
 | POST | `/api/v1/match/score` | **Planned** | Compute versioned evidence-aware features |
 | POST | `/api/v1/match/rerank` | **Planned** | Apply later ranking/reranking stages |
@@ -161,8 +162,37 @@ is a LightGBM model margin, not a probability, percentage, or final match
 score. Ties use original retrieval rank and then entity ID; retrieval rank is
 not a model feature. Missing or stale model artifacts fail closed with typed
 `ranking_model_unavailable` (503) or `ranking_contract_mismatch` (409)
-errors. There is intentionally no Candidate-to-Jobs LTR endpoint, explanation,
-Cross-Encoder, or Test-label access at runtime.
+errors. There is intentionally no Candidate-to-Jobs LTR or Cross-Encoder endpoint,
+explanation, or Test-label access at runtime.
+
+## Phase 7 Cross-Encoder reranking API
+
+`POST /api/v1/reranking/jobs/{job_id}/candidates` is a sequential second-stage
+operation. It calls the frozen Phase 6 ranking service with a retrieval pool and
+an LTR shortlist, then scores that shortlist in one batch with the pinned local
+Cross-Encoder. The request bounds are:
+
+```json
+{
+  "retrieval_pool_k": 20,
+  "cross_encoder_pool_k": 10,
+  "top_k": 5,
+  "filters": null
+}
+```
+
+The final order is `cross_encoder_score_raw` descending, then LTR rank,
+retrieval rank, and entity ID. The raw field is an identity-activation model
+logit (`higher_is_better`), not a probability, confidence, match percentage, or
+final match score. The response records model ID/revision/snapshot fingerprint,
+text schema/fingerprint, pair order, pool sizes, and the Phase 4/5/6 provenance
+for each returned Candidate; it does not return the serialized input text.
+
+If the ignored local snapshot is absent, the Phase 7 dependency raises HTTP 503
+`cross_encoder_model_unavailable`; a hash, revision, dependency, or text
+contract mismatch fails closed with HTTP 409 `cross_encoder_contract_mismatch`.
+Normal inference is local-only and does not require network access. This phase
+does not fine-tune the model, evaluate Test Jobs, or generate explanations.
 
 ## Frozen Mutation Policy
 

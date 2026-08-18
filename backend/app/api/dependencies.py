@@ -20,6 +20,8 @@ from app.services.retrieval.service import RetrievalService
 from app.services.retrieval.vector_store import QdrantDenseVectorStore
 from app.services.ranking.model import load_ranking_model
 from app.services.ranking.service import RankingService
+from app.services.cross_encoder.model import load_cross_encoder_model
+from app.services.cross_encoder.service import CrossEncoderRerankingService
 
 
 @lru_cache
@@ -124,4 +126,28 @@ def get_ranking_service(
     return RankingService(
         feature_service=feature_service,
         ranking_model=ranking_model,
+    )
+
+
+@lru_cache
+def get_runtime_cross_encoder_model():
+    settings = get_settings()
+    return load_cross_encoder_model(
+        model_path=Path(settings.cross_encoder_model_path),
+        manifest_path=Path(settings.cross_encoder_model_manifest_path),
+        text_contract_path=Path(settings.cross_encoder_text_contract_path),
+    )
+
+
+def get_cross_encoder_reranking_service(
+    session: AsyncSession = Depends(get_db_session),
+    ranking_service: RankingService = Depends(get_ranking_service),
+    cross_encoder_model=Depends(get_runtime_cross_encoder_model),
+) -> CrossEncoderRerankingService:
+    return CrossEncoderRerankingService(
+        ranking_service=ranking_service,
+        cross_encoder_model=cross_encoder_model,
+        job_repository=JobRepository(session),
+        candidate_repository=CandidateRepository(session),
+        batch_size=get_settings().cross_encoder_batch_size,
     )

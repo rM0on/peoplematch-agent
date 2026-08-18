@@ -1,0 +1,39 @@
+{
+  "cold_model_load": {
+    "p50_ms": 147.96004999999911,
+    "p95_ms": 170.777
+  },
+  "known_limitations": [
+    "local sandbox CPU measurements only; not production latency, QPS, or capacity"
+  ],
+  "measurement_policy": {
+    "batch_size": 10,
+    "max_length": 512,
+    "measurement_count": 50,
+    "warmup_count": 5
+  },
+  "runtime": {
+    "dependencies": {
+      "huggingface-hub": "0.36.2",
+      "sentence-transformers": "3.4.1",
+      "tokenizers": "0.22.2",
+      "torch": "2.8.0",
+      "transformers": "4.57.6"
+    },
+    "model_id": "cross-encoder/ms-marco-MiniLM-L6-v2",
+    "os": "Windows-10-10.0.26200-SP0",
+    "python": "3.9.13",
+    "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+    "snapshot_fingerprint": "013355448b38f6190a4d7250b1d062f76caddd8a5f1cabc47bdc716490a60236",
+    "torch_num_threads": 14
+  },
+  "title": "LOCAL SANDBOX CPU LATENCY",
+  "warm_single_pair_scoring": {
+    "p50_ms": 11.967100000000563,
+    "p95_ms": 12.86545000000121
+  },
+  "warm_ten_pair_shortlist_scoring": {
+    "p50_ms": 25.45360000000052,
+    "p95_ms": 27.597235000000264
+  }
+}

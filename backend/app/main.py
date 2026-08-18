@@ -33,10 +33,12 @@ def create_app() -> FastAPI:
         description=(
             "Phase 5 frozen canonical profile, deterministic extraction, first-stage "
             "hybrid retrieval, and label-free feature inspection plus the Phase 6 "
-            "deterministic LambdaMART Job-to-Candidates ranking API for the local "
-            "PeopleMatch Agent prototype. The ranker is trained only on explicit "
-            "synthetic Train/Dev judgments; no real LLM, Cross-Encoder, probability, "
-            "or final production match score is implemented."
+            "deterministic LambdaMART ranking API and the Phase 7 frozen local "
+            "Cross-Encoder reranking endpoint for Job-to-Candidates. The ranker is "
+            "trained only on explicit synthetic Train/Dev judgments, while the "
+            "Cross-Encoder uses an immutable pretrained snapshot and raw logits. "
+            "No real LLM, fine-tuning, Test evaluation, calibrated probability, "
+            "explanation, or final production match score is implemented."
         ),
         lifespan=lifespan,
     )
