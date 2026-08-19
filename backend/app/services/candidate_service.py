@@ -17,6 +17,7 @@ from app.persistence.mappers import (
     candidate_model_from_record,
     candidate_record_from_model,
 )
+from app.persistence.integrity import is_historical_profile_fk_violation
 from app.schemas.mutations import CandidateCreate, CandidatePatch
 from app.schemas.persistence import CandidateRecord, DataOrigin
 from app.schemas.extraction import CandidateExtractionDraft
@@ -129,10 +130,20 @@ class CandidateService:
         return await self.get(candidate_id)
 
     async def delete(self, candidate_id: str) -> None:
-        async with self.session.begin_nested():
-            model = await self.repository.get_by_id(candidate_id)
-            if model is None:
-                raise ProfileNotFoundError(f"Candidate {candidate_id} was not found")
-            if model.dataset_version is not None:
-                raise FrozenRecordError("Frozen dataset candidates are read-only")
-            await self.repository.delete(model)
+        try:
+            async with self.session.begin_nested():
+                model = await self.repository.get_by_id(candidate_id)
+                if model is None:
+                    raise ProfileNotFoundError(f"Candidate {candidate_id} was not found")
+                if model.dataset_version is not None:
+                    raise FrozenRecordError("Frozen dataset candidates are read-only")
+                await self.repository.delete(model)
+                await self.session.flush()
+        except IntegrityError as exc:
+            from app.exceptions import ProfileHistoryConflictError
+
+            if not is_historical_profile_fk_violation(exc):
+                raise
+            raise ProfileHistoryConflictError(
+                "Candidate is referenced by a historical match run"
+            ) from exc

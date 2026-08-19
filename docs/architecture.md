@@ -7,17 +7,17 @@ PeopleMatch Agent is a local monorepo with these logical areas:
 | Area | Responsibility | Current status |
 |---|---|---|
 | Frontend | Product UI and typed API consumption | **CURRENT:** Phase 0.5 Matching Results design mock; Phase 0 health client preserved but not mounted |
-| Backend | HTTP boundary, application configuration, tracing, canonical data contracts | **CURRENT:** FastAPI liveness, candidate/job CRUD, Phase 3 structured extraction, Phase 4 retrieval, and Phase 5 feature inspection |
-| Storage | Durable candidate/job/match-run data | **CURRENT:** PostgreSQL candidate/job profiles with normalized evidence and requirements; match-run storage **PLANNED** |
+| Backend | HTTP boundary, application configuration, tracing, canonical data contracts | **CURRENT:** FastAPI liveness, profile/extraction/retrieval/feature APIs, frozen Phase 6/7 ranking endpoints, and Phase 8 MatchRun create/detail/list APIs |
+| Storage | Durable candidate/job/match-run data | **CURRENT:** PostgreSQL candidate/job profiles plus Phase 8 MatchRun, MatchResult, and RunStep history |
 | Retrieval | Candidate/job first-stage recall and vector search | **CURRENT / PHASE 4 COMPLETED:** versioned documents, local pretrained dense embeddings, Qdrant exact search, BM25, explicit filters, RRF, and offline retrieval evaluation |
 | Feature Engineering | Versioned pair features and diagnostics | **CURRENT / PHASE 5 COMPLETED / FROZEN:** label-free on-demand extraction that preserves retrieval order |
-| Ranking | LTR, final scoring, and reranking | **CURRENT / PHASE 6 FROZEN + PHASE 7 IMPLEMENTATION:** deterministic LightGBM LambdaMART followed by one pinned frozen Cross-Encoder Job-to-Candidates rerank; no final hiring score |
+| Ranking | LTR, final scoring, and reranking | **CURRENT / PHASE 6 FROZEN + PHASE 7 FROZEN:** deterministic LightGBM LambdaMART followed by one pinned frozen Cross-Encoder Job-to-Candidates rerank; no final hiring score |
 | AI Provider | Structured extraction and later grounded explanation | **CURRENT:** provider interface plus deterministic no-network mock; real LLM and explanation **PLANNED** |
 | Cache / ephemeral state | Later caching and coordination | Redis container config **CURRENT**; business usage **PLANNED** |
 
 ## Current Phase Architecture
 
-**CURRENT after Phase 7 implementation:** Next.js still serves the selected Matching Results design mock and does not consume the ranking APIs. FastAPI exposes liveness, typed Candidate/Job CRUD, deterministic structured extraction, bidirectional first-stage retrieval, bidirectional feature inspection, the frozen Job-to-Candidates LambdaMART endpoint, and a Job-to-Candidates frozen Cross-Encoder second-stage endpoint. PostgreSQL canonical records build frozen `retrieval_doc_v4` documents; Phase 5 wraps retrieval results with `feature_schema_v1` vectors and separate diagnostics without sorting; Phase 6 scores only the retrieved Hybrid pool with those ten features; Phase 7 scores only the resulting LTR shortlist with an immutable local snapshot and a separate `cross_encoder_text_v1` contract. Phase 1 JSONL remains frozen and is imported only after hash verification.
+**CURRENT after Phase 8 closeout:** Next.js still serves the selected Matching Results design mock and does not consume the ranking APIs. FastAPI exposes liveness, profile/extraction/retrieval/feature APIs, the frozen Phase 6 and Phase 7 direct endpoints, and durable MatchRun create/detail/list APIs. Phase 8 uses deterministic, server-controlled MatchRun orchestration around the existing ranking services without changing their algorithms. It records only actual execution boundaries and stores privacy-bounded historical Job/Candidate inputs, stage scores/features, and failure state. Runtime provenance is observed from the actual ranking execution, validated against frozen expected contracts, and persisted only when validation succeeds. Phase 1 JSONL remains frozen and is imported only after hash verification.
 
 The liveness route still makes no downstream calls and therefore does not load or download the embedding model. Redis remains infrastructure-only. Qdrant now stores derived Candidate/Job retrieval indexes; it is never the canonical profile source.
 
@@ -32,9 +32,14 @@ flowchart TD
     FastAPI --> Service
     Service --> Repository["Repositories\nCURRENT"]
     Repository --> PG["PostgreSQL via async SQLAlchemy\nCURRENT"]
-    FastAPI --> RetrievalService["Retrieval service\nCURRENT"]
-    RetrievalService --> Repository
-    Repository --> Retrieval["Retrieval document builder\nCURRENT"]
+    FastAPI --> MatchRun["MatchRunService\ndeterministic orchestration"]
+    MatchRun --> Lifecycle["Independent lifecycle transactions\nRUNNING + actual steps"]
+    Lifecycle --> PG
+    MatchRun --> Execution["Dedicated PostgreSQL\nREPEATABLE READ session"]
+    Execution --> Inputs["Resolve canonical\nhistorical inputs"]
+    Inputs --> Repository
+    Inputs --> RetrievalService["Retrieval service\nCURRENT"]
+    RetrievalService --> Retrieval["Retrieval document builder\nCURRENT"]
     Retrieval --> Dense["MiniLM + Qdrant exact cosine\nCURRENT"]
     Retrieval --> Sparse["BM25\nCURRENT"]
     Dense --> Fusion["RRF Top-K\nCURRENT"]
@@ -42,17 +47,20 @@ flowchart TD
 Fusion --> FeatureService["Feature engineering service\nCURRENT / PHASE 5 COMPLETED / FROZEN"]
     Repository --> FeatureService
     FeatureService --> FeatureContract["FeatureVector + diagnostics\nPhase 5 frozen"]
-    FeatureContract --> Ranker["Phase 6 LambdaMART\nJob → Candidates pool rerank"]
-    Ranker --> CrossEncoder["Phase 7 frozen Cross-Encoder\nJob → Candidates shortlist rerank"]
+    FeatureContract --> Ranker["Phase 6 LambdaMART\ndefault frozen ranking"]
+    Ranker --> CrossEncoder["Phase 7 frozen Cross-Encoder\nexplicit experiment only"]
+    Ranker --> Finalize["Historical Candidate snapshots\natomic result finalization"]
+    CrossEncoder --> Finalize
+    Finalize --> Lifecycle
     FastAPI -.-> Redis["Redis\nusage planned"]
     FastAPI --> Qdrant["Qdrant derived retrieval indexes\nCURRENT / PHASE 4 COMPLETED"]
 ```
 
-Solid arrows describe the current profile, extraction, frozen Phase 4 retrieval, Phase 5 feature flow, and Phase 6 Job-to-Candidates pool rerank. The dotted Redis arrow shows configured infrastructure with no business integration.
+The MatchRun request first creates durable `RUNNING` history through an independent lifecycle transaction. One dedicated PostgreSQL `REPEATABLE READ` execution session then resolves canonical inputs and flows through the frozen Phase 4/5/6 graph plus the explicit optional Phase 7 service. Returned Candidate snapshots, results, `persist_results` completion, and terminal `COMPLETED` state are finalized atomically. PostgreSQL snapshot isolation stabilizes canonical profile reads for that execution; it does not transactionally freeze Qdrant. Qdrant remains derived external retrieval state whose freshness and configuration provenance are recorded. The dotted Redis arrow shows configured infrastructure with no business integration.
 
 ## Target Architecture
 
-Later phases add a real structured-output provider, match-run orchestration, explanations, feedback, bad-case review, and broader offline evaluation. Phase 6 remains the stronger current synthetic Dev ranking baseline and Phase 7 is an optional experimental pinned frozen Cross-Encoder comparison, neither of which is a final match score; Phase 2 persistence remains the stable domain foundation and Phase 4 retrieval supplies the bounded recall pool.
+Later phases add a real structured-output provider, explanations, feedback, bad-case review, and broader offline evaluation. Phase 8 now supplies durable historical execution context. Phase 6 remains the stronger/default ranking baseline and Phase 7 is an optional experimental pinned comparison, neither of which is a final match score.
 
 The target remains a modular monolith unless a measured need justifies a different deployment boundary. Phase 0 does not introduce microservices, Kubernetes, authentication, or distributed infrastructure.
 
@@ -61,11 +69,14 @@ The target remains a modular monolith unless a measured need justifies a differe
 ```mermaid
 flowchart TD
     Input["Candidate / Job"] --> Parser["Structured extraction\nCURRENT: deterministic mock"]
-    Parser --> Retrieval["Hybrid retrieval\nCURRENT / PHASE 4 COMPLETED"]
-Retrieval --> Features["Feature engineering\nCURRENT / PHASE 5 COMPLETED / FROZEN"]
+    Parser --> MatchRun["Deterministic MatchRun\nCURRENT / PHASE 8 FROZEN"]
+    MatchRun --> Retrieval["Hybrid retrieval\nCURRENT / PHASE 4 COMPLETED"]
+    Retrieval --> Features["Feature engineering\nCURRENT / PHASE 5 COMPLETED / FROZEN"]
     Features --> LTR["Learning-to-rank\nCURRENT / PASS / FROZEN"]
-    LTR --> CrossEncoder["Frozen Cross-encoder\nCURRENT / PHASE 7 REVIEW"]
-    CrossEncoder --> Explanation["Evidence-grounded explanation\nPLANNED"]
+    LTR --> CrossEncoder["Frozen Cross-encoder\nOPTIONAL"]
+    LTR --> History["Persisted MatchRun history"]
+    CrossEncoder --> History
+    History --> Explanation["Evidence-grounded explanation\nPLANNED NEXT / PHASE 9"]
 ```
 
 ## Request and Error Flow
@@ -86,7 +97,7 @@ Owns HTTP routing, transport validation, response codes, response envelopes, and
 
 ### Service Layer
 
-Owns Candidate/Job validation, server-generated identifiers, frozen-record protection, and atomic mutation boundaries. The extraction service owns prompt construction, provider resolution, strict decoding, bounded repair, fingerprints, and optional handoff to persistence. The retrieval service owns document construction, explicit eligibility, dense/sparse channel execution, RRF, Top-K, diagnostics, and freshness enforcement. The Phase 5 feature service batch-loads profiles, applies the versioned label-free extractor, and preserves retrieval order. Phase 6 owns the deterministic LambdaMART model contract, validated native model loading, judged-pool Job-to-Candidates reranking, and raw-score response fields. Phase 7 reuses that shortlist, validates an immutable local Cross-Encoder snapshot and text contract, scores one batch, and sorts by raw CE logit with deterministic upstream/entity tie-breakers. Explanation, feedback, and persistent run orchestration remain planned.
+Owns Candidate/Job validation, extraction, retrieval, frozen Phase 5/6/7 behavior, and Phase 8 orchestration. MatchRunService creates a durable RUNNING identity, captures structured inputs, calls the unchanged ranking service through a tracing proxy, and atomically finalizes results. Completed and failed runs are terminal and immutable through the application/repository contract, have no normal mutation path, and are replaced by a new `run_id` when rerun; this is not database-level tamper-proof storage. A dedicated MatchRunRepository owns independent lifecycle transactions so a failed request cannot roll back its audit history. Explanation and feedback remain planned.
 
 ### Repository Layer
 

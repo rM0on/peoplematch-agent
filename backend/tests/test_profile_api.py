@@ -128,3 +128,71 @@ def test_frozen_candidate_patch_returns_conflict_envelope(app) -> None:
     assert response.status_code == 409
     assert response.json()["error"]["code"] == "frozen_record"
     assert response.json()["request_id"] == response.headers["X-Request-ID"]
+
+
+def test_referenced_profile_delete_returns_typed_409(app) -> None:
+    from app.api.dependencies import get_candidate_service, get_job_service
+    from app.exceptions import ProfileHistoryConflictError
+
+    class ReferencedCandidateService(CandidateApiService):
+        async def delete(self, candidate_id: str):
+            raise ProfileHistoryConflictError("Candidate is referenced by history")
+
+    class ReferencedJobService(JobApiService):
+        async def delete(self, job_id: str):
+            raise ProfileHistoryConflictError("Job is referenced by history")
+
+    app.dependency_overrides[get_candidate_service] = lambda: ReferencedCandidateService()
+    app.dependency_overrides[get_job_service] = lambda: ReferencedJobService()
+    with TestClient(app) as client:
+        candidate = client.delete("/api/v1/candidates/cand_005")
+        job = client.delete("/api/v1/jobs/job_001")
+
+    assert candidate.status_code == 409
+    assert candidate.json()["error"]["code"] == "profile_history_conflict"
+    assert job.status_code == 409
+    assert job.json()["error"]["code"] == "profile_history_conflict"
+
+
+def test_non_foreign_key_delete_integrity_error_is_not_profile_history_conflict() -> None:
+    from types import SimpleNamespace
+
+    from sqlalchemy.exc import IntegrityError
+
+    from app.exceptions import ProfileHistoryConflictError
+    from app.services.candidate_service import CandidateService
+
+    class PgError:
+        pgcode = "23505"
+        sqlstate = "23505"
+
+    class Nested:
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, *_args):
+            return False
+
+    class Session:
+        def begin_nested(self):
+            return Nested()
+
+        async def flush(self):
+            raise IntegrityError("delete", {}, PgError())
+
+    class Repository:
+        async def get_by_id(self, _candidate_id):
+            return SimpleNamespace(dataset_version=None)
+
+        async def delete(self, _model):
+            return None
+
+    service = CandidateService(Session(), Repository())
+    try:
+        import asyncio
+
+        asyncio.run(service.delete("cand_usr_non_fk"))
+    except ProfileHistoryConflictError as exc:
+        raise AssertionError("non-FK IntegrityError must not become history conflict") from exc
+    except IntegrityError:
+        pass

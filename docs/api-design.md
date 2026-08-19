@@ -32,13 +32,14 @@
 | POST | `/api/v1/features/candidates/{candidate_id}/jobs` | **Implemented / Phase 5 Completed / Frozen** | Preserve Candidate-to-Job retrieval order and attach versioned pair features |
 | POST | `/api/v1/ranking/jobs/{job_id}/candidates` | **Implemented / Phase 6 PASS / FROZEN** | Rerank one Hybrid Candidate pool with the deterministic LambdaMART baseline |
 | POST | `/api/v1/reranking/jobs/{job_id}/candidates` | **Implemented / Phase 7 PASS / FROZEN / Optional experimental comparison** | Apply the pinned frozen Cross-Encoder to the Phase 6 LTR shortlist (Job → Candidates only); Phase 6 remains the stronger current synthetic Dev baseline |
+| POST | `/api/v1/match-runs` | **Implemented / Phase 8 Completed / Frozen** | Create and synchronously execute a durable default-LTR or explicit CE-experiment MatchRun |
+| GET | `/api/v1/match-runs` | **Implemented / Phase 8 Completed / Frozen** | List historical runs with bounded pagination and Job/status/variant filters |
+| GET | `/api/v1/match-runs/{run_id}` | **Implemented / Phase 8 Completed / Frozen** | Read persisted run metadata, results, provenance, and actual steps without recomputation |
 | POST | `/api/v1/match/retrieve` | **Planned** | Run retrieval for an explicit candidate/job query |
 | POST | `/api/v1/match/score` | **Planned** | Compute versioned evidence-aware features |
 | POST | `/api/v1/match/rerank` | **Planned** | Apply later ranking/reranking stages |
 | POST | `/api/v1/match/explain` | **Planned** | Generate an explanation grounded in an existing ranking result |
-| GET | `/api/v1/match/runs` | **Planned** | List traceable match runs |
-| GET | `/api/v1/match/runs/{id}` | **Planned** | Read stage details for one match run |
-| POST | `/api/v1/feedback` | **Planned** | Record explicit feedback linked to an immutable match run |
+| POST | `/api/v1/feedback` | **Planned** | Record explicit feedback linked to a terminal MatchRun protected by the application/repository contract |
 | GET | `/api/v1/bad-cases` | **Planned** | List bad cases and failure categories |
 | GET | `/api/v1/bad-cases/{id}` | **Planned** | Inspect one attributed bad case |
 | POST | `/api/v1/eval/run` | **Planned** | Start a sandbox offline evaluation |
@@ -193,6 +194,16 @@ If the ignored local snapshot is absent, the Phase 7 dependency raises HTTP 503
 contract mismatch fails closed with HTTP 409 `cross_encoder_contract_mismatch`.
 Normal inference is local-only and does not require network access. This phase
 does not fine-tune the model, evaluate Test Jobs, or generate explanations.
+
+## Phase 8 MatchRun APIs
+
+`POST /api/v1/match-runs` accepts a discriminated variant request. Omitted variant means `ltr` with MatchRun-local defaults `candidate_pool_k=20` and `top_k=10`. `cross_encoder_experiment` is explicit and defaults to retrieval pool 20, CE pool 10, and top 5. Callers cannot select model IDs, revisions, feature weights, blend weights, providers, labels, or splits.
+
+The response contains durable run/request identities, lifecycle timestamps, workflow and frozen stage provenance, result count/fingerprint, persisted results, and actual step records. Results expose retrieval ranks/raw scores, exactly ten nullable Phase 5 features, selected diagnostics, the raw Phase 6 margin, and optional raw CE logit. Raw historical profile snapshots are not returned by default. No field is a probability, confidence, percentage, final match score, or explanation.
+
+`GET /api/v1/match-runs/{run_id}` only reads PostgreSQL history and never calls retrieval, feature, ranking, or CE services. `GET /api/v1/match-runs` defaults to limit 20, allows at most 100, orders by creation time then run ID descending, and supports optional `job_id`, `status`, and `ranking_variant` filters.
+
+A valid missing-Job request creates a FAILED run and returns `match_run_execution_failed` with `run_id` and the safe failure code. Other ranking/CE failures are retained the same way. Referenced mutable profiles return `profile_history_conflict` on deletion. There is no update, delete, retry, replay, result-detail, or explanation endpoint in Phase 8.
 
 ## Frozen Mutation Policy
 

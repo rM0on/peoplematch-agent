@@ -48,6 +48,7 @@ def register_exception_handlers(app: FastAPI) -> None:
             status_code=exception.status_code,
             code=exception.code,
             message=str(exception),
+            details=getattr(exception, "details", None),
         )
 
     @app.exception_handler(StarletteHTTPException)

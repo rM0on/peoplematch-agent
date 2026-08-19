@@ -7,6 +7,7 @@ from app.api.routes.retrieval import router as retrieval_router
 from app.api.routes.features import router as features_router
 from app.api.routes.ranking import router as ranking_router
 from app.api.routes.cross_encoder import router as cross_encoder_router
+from app.api.routes.match_runs import router as match_runs_router
 from app.core.config import get_settings
 
 
@@ -18,3 +19,4 @@ api_router.include_router(retrieval_router, prefix=get_settings().api_v1_prefix)
 api_router.include_router(features_router, prefix=get_settings().api_v1_prefix)
 api_router.include_router(ranking_router, prefix=get_settings().api_v1_prefix)
 api_router.include_router(cross_encoder_router, prefix=get_settings().api_v1_prefix)
+api_router.include_router(match_runs_router, prefix=get_settings().api_v1_prefix)

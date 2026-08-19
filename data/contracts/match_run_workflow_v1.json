@@ -1,0 +1,40 @@
+{
+  "workflow_version": "match_run_workflow_v1",
+  "workflow_fingerprint": "5773d9a3e2c78f1b750961682cc4808e7d157be74af030aeb9f396f2c237e1b9",
+  "variants": {
+    "ltr": {
+      "default": true,
+      "steps": ["resolve_inputs", "phase6_ltr_rank", "persist_results"],
+      "requires_cross_encoder_provenance": false
+    },
+    "cross_encoder_experiment": {
+      "default": false,
+      "steps": ["resolve_inputs", "phase6_ltr_rank", "phase7_cross_encoder_rerank", "persist_results"],
+      "requires_cross_encoder_provenance": true
+    }
+  },
+  "run_statuses": ["RUNNING", "COMPLETED", "FAILED"],
+  "step_statuses": ["RUNNING", "COMPLETED", "FAILED"],
+  "terminal_runs_immutable": true,
+  "rerun_creates_new_run": true,
+  "failed_run_retained": true,
+  "result_set_atomic": true,
+  "required_provenance": {
+    "retrieval_document_version": "retrieval_doc_v4",
+    "retrieval_configuration_fingerprint": "b004bc52c33f3e15bf38dba1777305039909bb5229261dcf1851b289e7c8f2e7",
+    "feature_version": "feature_schema_v1",
+    "feature_fingerprint": "dc85c7237c6c67785199d221c919ae48c31c9a6323857070e6399d3eae365e42",
+    "ranker_version": "ltr_ranker_v1"
+  },
+  "cross_encoder_provenance": {
+    "reranker_version": "cross_encoder_reranker_v1",
+    "text_schema_version": "cross_encoder_text_v1",
+    "text_contract_fingerprint": "45803a625d6bb28b3155f216a1d6b571ebb978771cd398134fa984e356c703ee",
+    "pair_order": "job_then_candidate",
+    "score_type": "raw_logit",
+    "score_direction": "higher_is_better",
+    "calibration": false
+  },
+  "no_background_worker_v1": true,
+  "no_replay_endpoint_v1": true
+}

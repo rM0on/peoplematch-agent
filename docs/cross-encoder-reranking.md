@@ -91,5 +91,5 @@ LambdaMART baseline: LTR NDCG@5/NDCG@10 are
 NDCG@5/NDCG@10 are `0.7405691758421714`/`0.8355679092477797`.
 LambdaMART therefore remains the stronger current ranking baseline. Phase 7 is
 an optional, experimental frozen semantic reranker retained for comparison;
-it does not replace Phase 6. Explanations and Phase 8 orchestration remain
-planned.
+it does not replace Phase 6. Phase 8 MatchRun orchestration is completed and
+frozen; Phase 9 evidence-grounded explanation is planned next.

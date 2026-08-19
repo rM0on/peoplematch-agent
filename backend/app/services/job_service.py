@@ -13,6 +13,7 @@ from app.exceptions import (
     ProfileNotFoundError,
 )
 from app.persistence.mappers import apply_job_record, job_model_from_record, job_record_from_model
+from app.persistence.integrity import is_historical_profile_fk_violation
 from app.schemas.mutations import JobCreate, JobPatch
 from app.schemas.persistence import DataOrigin, JobRecord
 from app.schemas.extraction import JobExtractionDraft
@@ -138,10 +139,20 @@ class JobService:
         return await self.get(job_id)
 
     async def delete(self, job_id: str) -> None:
-        async with self.session.begin_nested():
-            model = await self.repository.get_by_id(job_id)
-            if model is None:
-                raise ProfileNotFoundError(f"Job {job_id} was not found")
-            if model.dataset_version is not None:
-                raise FrozenRecordError("Frozen dataset jobs are read-only")
-            await self.repository.delete(model)
+        try:
+            async with self.session.begin_nested():
+                model = await self.repository.get_by_id(job_id)
+                if model is None:
+                    raise ProfileNotFoundError(f"Job {job_id} was not found")
+                if model.dataset_version is not None:
+                    raise FrozenRecordError("Frozen dataset jobs are read-only")
+                await self.repository.delete(model)
+                await self.session.flush()
+        except IntegrityError as exc:
+            from app.exceptions import ProfileHistoryConflictError
+
+            if not is_historical_profile_fk_violation(exc):
+                raise
+            raise ProfileHistoryConflictError(
+                "Job is referenced by a historical match run"
+            ) from exc

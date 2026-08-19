@@ -9,6 +9,7 @@ from app.core.config import get_settings
 from app.models.base import target_metadata
 from app.models.candidate import CandidateProfileModel  # noqa: F401
 from app.models.job import JobProfileModel  # noqa: F401
+from app.models.match_run import MatchRunModel  # noqa: F401
 
 
 config = context.config

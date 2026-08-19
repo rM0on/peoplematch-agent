@@ -4,7 +4,11 @@ from functools import lru_cache
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.database import get_db_session
+from app.core.database import (
+    get_db_session,
+    get_repeatable_read_session_factory,
+    get_session_factory,
+)
 from app.repositories.candidate_repository import CandidateRepository
 from app.repositories.job_repository import JobRepository
 from app.services.candidate_service import CandidateService
@@ -22,6 +26,9 @@ from app.services.ranking.model import load_ranking_model
 from app.services.ranking.service import RankingService
 from app.services.cross_encoder.model import load_cross_encoder_model
 from app.services.cross_encoder.service import CrossEncoderRerankingService
+from app.repositories.match_run_repository import MatchRunRepository
+from app.services.match_runs.lazy import LazyCrossEncoderRuntime
+from app.services.match_runs.service import MatchRunService
 
 
 @lru_cache
@@ -150,4 +157,63 @@ def get_cross_encoder_reranking_service(
         job_repository=JobRepository(session),
         candidate_repository=CandidateRepository(session),
         batch_size=get_settings().cross_encoder_batch_size,
+    )
+
+
+def get_match_run_service(
+    session: AsyncSession = Depends(get_db_session),
+) -> MatchRunService:
+    def ranking_service_factory() -> RankingService:
+        retrieval_service = get_retrieval_service(session)
+        feature_service = get_feature_engineering_service(session, retrieval_service)
+        return RankingService(
+            feature_service=feature_service,
+            ranking_model=get_runtime_ranking_model(),
+        )
+
+    def cross_encoder_service_factory(ranking_service) -> CrossEncoderRerankingService:
+        return CrossEncoderRerankingService(
+            ranking_service=ranking_service,
+            cross_encoder_model=LazyCrossEncoderRuntime(get_runtime_cross_encoder_model),
+            job_repository=JobRepository(session),
+            candidate_repository=CandidateRepository(session),
+            batch_size=get_settings().cross_encoder_batch_size,
+        )
+
+    def execution_graph_factory(execution_session: AsyncSession):
+        retrieval_service = get_retrieval_service(execution_session)
+        feature_service = get_feature_engineering_service(
+            execution_session, retrieval_service
+        )
+        ranking_service_factory = lambda: RankingService(
+            feature_service=feature_service,
+            ranking_model=get_runtime_ranking_model(),
+        )
+
+        def execution_cross_encoder_factory(ranking_service):
+            return CrossEncoderRerankingService(
+                ranking_service=ranking_service,
+                cross_encoder_model=LazyCrossEncoderRuntime(
+                    get_runtime_cross_encoder_model
+                ),
+                job_repository=JobRepository(execution_session),
+                candidate_repository=CandidateRepository(execution_session),
+                batch_size=get_settings().cross_encoder_batch_size,
+            )
+
+        return {
+            "job_repository": JobRepository(execution_session),
+            "candidate_repository": CandidateRepository(execution_session),
+            "ranking_service_factory": ranking_service_factory,
+            "cross_encoder_service_factory": execution_cross_encoder_factory,
+        }
+
+    return MatchRunService(
+        lifecycle_repository=MatchRunRepository(get_session_factory()),
+        job_repository=JobRepository(session),
+        candidate_repository=CandidateRepository(session),
+        ranking_service_factory=ranking_service_factory,
+        cross_encoder_service_factory=cross_encoder_service_factory,
+        execution_session_factory=get_repeatable_read_session_factory(),
+        execution_graph_factory=execution_graph_factory,
     )

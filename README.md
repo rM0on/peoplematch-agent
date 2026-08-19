@@ -2,9 +2,9 @@
 
 **PeopleMatch Agent：AI Builder 人岗匹配与推荐解释系统**
 
-PeopleMatch Agent is an autonomous, local-running prototype for evidence-aware candidate/job matching. It is designed to evolve beyond keyword search into a traceable pipeline that can rank AI Builder opportunities, explain why a match is supported by project evidence, review bad cases, and compare later algorithms through sandbox-only offline evaluation.
+PeopleMatch Agent is a local-running, evidence-aware, traceable, and deterministically orchestrated candidate/job matching prototype. It is designed to evolve beyond keyword search into a pipeline that can rank AI Builder opportunities, explain why a match is supported by project evidence, review bad cases, and compare later algorithms through sandbox-only offline evaluation.
 
-The repository has completed and frozen **Phase 4 — Hybrid Retrieval**, **Phase 5 — Feature Engineering**, and **Phase 6 — Learning-to-Rank**. Phase 7 now adds one pinned, frozen pretrained Cross-Encoder as a second-stage Job-to-Candidates reranker over the Phase 6 shortlist. Dataset `1.0.0` provides canonical contracts and synthetic sandbox profiles; Phase 2 provides PostgreSQL profile APIs; Phase 3 adds deterministic structured extraction; Phase 4 adds first-stage dense/sparse/hybrid recall; Phase 5 adds on-demand, label-free pair feature vectors without changing retrieval order. There is no real LLM provider, fine-tuning, final match score, or production hiring claim.
+The repository has completed and frozen **Phase 4 — Hybrid Retrieval**, **Phase 5 — Feature Engineering**, **Phase 6 — Learning-to-Rank**, **Phase 7 — Cross-Encoder Reranking**, and **Phase 8 — Match-run Orchestration & Traceability**. Phase 9 evidence-grounded explanation is planned next. Dataset `1.0.0` provides canonical contracts and synthetic sandbox profiles; Phase 2 provides PostgreSQL profile APIs; Phase 3 adds deterministic structured extraction. There is no real LLM provider, explanation, fine-tuning, final match score, or production hiring claim.
 
 ## Project Overview
 
@@ -37,7 +37,7 @@ PeopleMatch Agent is planned around explicit evidence, separable ranking stages,
 
 ## Matching Pipeline
 
-The current local sequence ends at the Phase 7 Cross-Encoder implementation awaiting review; explanation and orchestration stages remain planned.
+The current local sequence includes Phase 8 deterministic MatchRun orchestration around the Phase 6 default and explicit optional Phase 7 experiment. Evidence-grounded explanation remains planned for Phase 9.
 
 ```mermaid
 flowchart LR
@@ -66,7 +66,9 @@ flowchart LR
     Domain --> PG["PostgreSQL\nCURRENT: canonical profile store"]
     API -.-> Redis["Redis\nCURRENT: infrastructure only"]
     API -.-> Qdrant["Qdrant\nCURRENT: derived retrieval index"]
-    API --> Matching["Phase 6 LTR + Phase 7 CE\nCURRENT / Phase 7 review"]
+    API --> Runs["Phase 8 deterministic MatchRun\nCOMPLETED / FROZEN"]
+    Runs --> Matching["Phase 6 LTR + optional Phase 7 CE\nFROZEN"]
+    Runs --> PG
     Extract -.-> AI["Real LLM provider\nPLANNED"]
 ```
 
@@ -103,6 +105,10 @@ peoplematch-agent/
 ```
 
 ## Current Phase
+
+**Phase 8 — Match-run Orchestration & Traceability (Completed / Frozen)**
+
+Phase 8 persists `MatchRun`, `MatchResult`, and `RunStep` history. Completed and failed runs are terminal and immutable through the application/repository contract; every rerun receives a new `run_id`. `ltr` remains the default and reuses the frozen Phase 6 service; `cross_encoder_experiment` must be requested explicitly and reuses the frozen Phase 7 service. Runtime provenance is observed from the actual ranking execution, validated against frozen expected contracts, and persisted only when validation succeeds. The APIs are `POST /api/v1/match-runs`, `GET /api/v1/match-runs/{run_id}`, and paginated `GET /api/v1/match-runs`. Historical reads never rerank. Structured snapshots exclude raw resumes/JDs, names, URLs, labels, splits, and explanation content. See `docs/match-run-orchestration.md`.
 
 **Phase 7 — Cross-Encoder Reranking (PASS / FROZEN)**
 
@@ -152,7 +158,7 @@ Phase 0 completed:
 - Docker Compose definitions for PostgreSQL, Redis, Qdrant, backend, and frontend;
 - an Alembic foundation later extended by the Phase 2 profile migration.
 
-Not implemented: any real LLM provider, general-purpose resume/JD parsing, explanations, feedback workflows, persistent match runs, or a complete product dashboard. Phase 7 does not add fine-tuning, a final match score, probability, online experiment, or production hiring claim.
+Not implemented: any real LLM provider, general-purpose resume/JD parsing, explanations, feedback workflows, automated run replay/recovery, or a complete product dashboard. Phase 8 does not add a final match score, probability, online experiment, or production hiring claim.
 
 ## Roadmap
 
@@ -166,9 +172,9 @@ Not implemented: any real LLM provider, general-purpose resume/JD parsing, expla
 | 4 | Hybrid retrieval | Completed |
 | 5 | Versioned, label-free feature engineering | Completed / Frozen |
 | 6 | Learning-to-rank | Completed / Frozen |
-| 7 | Cross-encoder reranking | In Progress / Awaiting Review |
-| 8 | Match-run orchestration and traceability | Planned |
-| 9 | Evidence-grounded explanations | Planned |
+| 7 | Cross-encoder reranking | Completed / Frozen |
+| 8 | Match-run orchestration and traceability | Completed / Frozen |
+| 9 | Evidence-grounded explanations | Planned / NEXT |
 | 10 | Feedback and bad-case review | Planned |
 | 11 | Offline evaluation | Planned |
 | 12 | Local prototype hardening and documented demo | Planned |

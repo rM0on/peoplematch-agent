@@ -1,0 +1,68 @@
+{
+  "contract_version": "ranking_input_snapshot_v1",
+  "job_snapshot": {
+    "allow": [
+      "job_id",
+      "role_title",
+      "role_direction",
+      "must_have.requirement_id",
+      "must_have.category",
+      "must_have.text",
+      "must_have.evidence_expectation",
+      "nice_to_have.requirement_id",
+      "nice_to_have.category",
+      "nice_to_have.text",
+      "nice_to_have.evidence_expectation",
+      "location.cities",
+      "location.remote_policy",
+      "location.relocation_supported",
+      "seniority_requirement",
+      "product_stage"
+    ]
+  },
+  "candidate_snapshot": {
+    "contract_version": "candidate_input_snapshot_v1",
+    "allow": [
+      "candidate_id",
+      "target_roles",
+      "skills.name",
+      "skills.category",
+      "projects.project_id",
+      "projects.technologies",
+      "projects.skills_demonstrated",
+      "project_evidence.evidence_id",
+      "project_evidence.project_id",
+      "project_evidence.supports_skills",
+      "project_evidence.verification_status",
+      "project_evidence.evidence_type",
+      "ai_tools",
+      "preferred_locations.cities",
+      "preferred_locations.remote_policy",
+      "preferred_locations.relocation_open",
+      "seniority",
+      "team_stage_preference",
+      "overclaim_risk.level",
+      "overclaim_risk.reason_count"
+    ]
+  },
+  "selected_diagnostics_contract_version": "selected_feature_diagnostics_v1",
+  "excluded": [
+    "raw_text",
+    "raw_jd",
+    "name",
+    "company_name",
+    "github_url",
+    "artifact_ref",
+    "statement",
+    "project.summary",
+    "project.role",
+    "project.outcomes",
+    "labels",
+    "split",
+    "archetype",
+    "pairwise_preferences",
+    "hard_negative_metadata",
+    "explanation"
+  ],
+  "fingerprint": "canonical_json_sha256_v1"
+}

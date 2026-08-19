@@ -4,7 +4,7 @@
 
 AI Builder roles often share vocabulary while differing sharply in actual direction: product-focused agents, retrieval systems, evaluation infrastructure, applied model work, and developer tooling can all mention Python, LLMs, and vector search. A useful matching system therefore needs evidence, constraints, and traceable ranking logic rather than keyword overlap alone.
 
-PeopleMatch Agent is an autonomous, local-running prototype for exploring that problem with synthetic/sandbox data, public job-description examples, and curated synthetic labels.
+PeopleMatch Agent is a local-running, evidence-aware, traceable, and deterministically orchestrated matching prototype for exploring that problem with synthetic/sandbox data, public job-description examples, and curated synthetic labels.
 
 ## 2. Problem
 

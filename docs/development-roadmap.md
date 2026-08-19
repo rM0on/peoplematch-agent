@@ -85,16 +85,16 @@ Only the phase explicitly requested by the user may be implemented. Status value
 
 ## Phase 8 — Match-run Orchestration & Traceability
 
-**Status:** Planned
+**Status:** Completed / Frozen
 
 - **Objective:** Orchestrate the pipeline as inspectable, versioned match runs.
-- **Primary deliverables:** Run state model, stage execution contract, request/run correlation, retry/idempotency rules, run-detail API.
+- **Primary deliverables:** Durable MatchRun/MatchResult/RunStep state, actual-stage workflow contract, request/run correlation, historical snapshots and observed runtime provenance protected by the application/repository contract, failure retention, create/detail/list APIs, and explicit rerun/no-idempotency v1 rules.
 - **Dependency:** Phases 4–7 stage contracts.
-- **Quality gate:** A run can be reproduced from captured versions/configuration; partial failure is visible; no fake fallback success.
+- **Quality gate:** Historical results and versions/configuration are inspectable without reranking; partial failure remains durable; result persistence is atomic; completed/failed runs are terminal and immutable through the application/repository contract; no fake fallback success, Test evaluation, explanation, or ranking change.
 
 ## Phase 9 — Evidence-grounded Explanation
 
-**Status:** Planned
+**Status:** Planned / NEXT
 
 - **Objective:** Explain an existing rank using cited evidence and explicit gaps.
 - **Primary deliverables:** Explanation input contract, grounded prompt/service, evidence citations, uncertainty/gap handling, hallucination tests.
