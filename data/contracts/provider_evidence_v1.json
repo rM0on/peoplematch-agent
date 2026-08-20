@@ -1,0 +1,1071 @@
+{
+  "$defs": {
+    "EvidenceType": {
+      "enum": [
+        "code",
+        "tests",
+        "evaluation_report",
+        "architecture_doc",
+        "readme",
+        "workflow_trace",
+        "dataset",
+        "demo",
+        "experiment_report"
+      ],
+      "title": "EvidenceType",
+      "type": "string"
+    },
+    "ProductStage": {
+      "enum": [
+        "zero_to_one",
+        "growth",
+        "mature"
+      ],
+      "title": "ProductStage",
+      "type": "string"
+    },
+    "ProviderCandidateEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,99}$",
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "diagnostics": {
+          "$ref": "#/$defs/ProviderDiagnosticEvidence"
+        },
+        "features": {
+          "$ref": "#/$defs/ProviderFeatureEvidence"
+        },
+        "overclaim_risk": {
+          "$ref": "#/$defs/ProviderCandidateOverclaimEvidence"
+        },
+        "preferred_locations": {
+          "$ref": "#/$defs/ProviderCandidateLocationEvidence"
+        },
+        "project_evidence": {
+          "items": {
+            "$ref": "#/$defs/ProviderCandidateEvidenceRecord"
+          },
+          "maxItems": 200,
+          "title": "Project Evidence",
+          "type": "array"
+        },
+        "projects": {
+          "items": {
+            "$ref": "#/$defs/ProviderCandidateProjectEvidence"
+          },
+          "maxItems": 100,
+          "title": "Projects",
+          "type": "array"
+        },
+        "ranking": {
+          "$ref": "#/$defs/ProviderRankingEvidence"
+        },
+        "result_rank": {
+          "maximum": 50,
+          "minimum": 1,
+          "title": "Result Rank",
+          "type": "integer"
+        },
+        "retrieval": {
+          "$ref": "#/$defs/ProviderRetrievalEvidence"
+        },
+        "seniority": {
+          "$ref": "#/$defs/Seniority"
+        },
+        "skills": {
+          "items": {
+            "$ref": "#/$defs/ProviderCandidateSkillEvidence"
+          },
+          "maxItems": 200,
+          "title": "Skills",
+          "type": "array"
+        },
+        "top1_comparison": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderTop1Comparison"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "candidate_id",
+        "result_rank",
+        "skills",
+        "projects",
+        "project_evidence",
+        "preferred_locations",
+        "seniority",
+        "overclaim_risk",
+        "retrieval",
+        "features",
+        "ranking",
+        "diagnostics",
+        "top1_comparison"
+      ],
+      "title": "ProviderCandidateEvidence",
+      "type": "object"
+    },
+    "ProviderCandidateEvidenceRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "maxLength": 180,
+          "minLength": 3,
+          "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "evidence_type": {
+          "$ref": "#/$defs/EvidenceType"
+        },
+        "project_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,99}$",
+          "title": "Project Id",
+          "type": "string"
+        },
+        "source_evidence_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,99}$",
+          "title": "Source Evidence Id",
+          "type": "string"
+        },
+        "verification_status": {
+          "$ref": "#/$defs/VerificationStatus"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "source_evidence_id",
+        "project_id",
+        "verification_status",
+        "evidence_type"
+      ],
+      "title": "ProviderCandidateEvidenceRecord",
+      "type": "object"
+    },
+    "ProviderCandidateLocationEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "relocation_open": {
+          "title": "Relocation Open",
+          "type": "boolean"
+        },
+        "remote_policy": {
+          "$ref": "#/$defs/RemotePolicy"
+        }
+      },
+      "required": [
+        "remote_policy",
+        "relocation_open"
+      ],
+      "title": "ProviderCandidateLocationEvidence",
+      "type": "object"
+    },
+    "ProviderCandidateOverclaimEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "level": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RiskLevel"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "reason_count": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Reason Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "reason_count"
+      ],
+      "title": "ProviderCandidateOverclaimEvidence",
+      "type": "object"
+    },
+    "ProviderCandidateProjectEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "maxLength": 180,
+          "minLength": 3,
+          "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "project_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,99}$",
+          "title": "Project Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "project_id"
+      ],
+      "title": "ProviderCandidateProjectEvidence",
+      "type": "object"
+    },
+    "ProviderCandidateSkillEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "$ref": "#/$defs/SkillCategory"
+        },
+        "evidence_id": {
+          "maxLength": 180,
+          "minLength": 3,
+          "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+          "title": "Evidence Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "category"
+      ],
+      "title": "ProviderCandidateSkillEvidence",
+      "type": "object"
+    },
+    "ProviderChannelEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "maxLength": 180,
+          "minLength": 3,
+          "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "value": {
+          "items": {
+            "enum": [
+              "dense",
+              "sparse"
+            ],
+            "type": "string"
+          },
+          "maxItems": 10,
+          "title": "Value",
+          "type": "array"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "value"
+      ],
+      "title": "ProviderChannelEvidence",
+      "type": "object"
+    },
+    "ProviderCountEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "maxLength": 180,
+          "minLength": 3,
+          "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "value": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Value",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "value"
+      ],
+      "title": "ProviderCountEvidence",
+      "type": "object"
+    },
+    "ProviderDiagnosticEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_supported_requirement_ids": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderRequirementIdsEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "location_relation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderRelationEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "matched_must_have_requirement_ids": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderRequirementIdsEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "matched_nice_to_have_requirement_ids": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderRequirementIdsEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "missing_must_have_requirement_ids": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderRequirementIdsEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "overclaim_level": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderRiskLevelEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "overclaim_reason_count": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderCountEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "seniority_relation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderRelationEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "weak_matched_must_have_requirement_ids": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderRequirementIdsEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "ProviderDiagnosticEvidence",
+      "type": "object"
+    },
+    "ProviderFeatureEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "ai_tool_score": {
+          "$ref": "#/$defs/ProviderScoreEvidence"
+        },
+        "location_score": {
+          "$ref": "#/$defs/ProviderScoreEvidence"
+        },
+        "missing_penalty": {
+          "$ref": "#/$defs/ProviderScoreEvidence"
+        },
+        "overclaim_penalty": {
+          "$ref": "#/$defs/ProviderScoreEvidence"
+        },
+        "project_evidence_score": {
+          "$ref": "#/$defs/ProviderScoreEvidence"
+        },
+        "role_direction_score": {
+          "$ref": "#/$defs/ProviderScoreEvidence"
+        },
+        "semantic_score": {
+          "$ref": "#/$defs/ProviderScoreEvidence"
+        },
+        "seniority_score": {
+          "$ref": "#/$defs/ProviderScoreEvidence"
+        },
+        "skill_fit_score": {
+          "$ref": "#/$defs/ProviderScoreEvidence"
+        },
+        "sparse_score": {
+          "$ref": "#/$defs/ProviderScoreEvidence"
+        }
+      },
+      "required": [
+        "semantic_score",
+        "sparse_score",
+        "skill_fit_score",
+        "project_evidence_score",
+        "role_direction_score",
+        "ai_tool_score",
+        "location_score",
+        "seniority_score",
+        "missing_penalty",
+        "overclaim_penalty"
+      ],
+      "title": "ProviderFeatureEvidence",
+      "type": "object"
+    },
+    "ProviderJobEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "location": {
+          "$ref": "#/$defs/ProviderJobLocation"
+        },
+        "product_stage": {
+          "$ref": "#/$defs/ProductStage"
+        },
+        "requirements": {
+          "items": {
+            "$ref": "#/$defs/ProviderRequirementEvidence"
+          },
+          "maxItems": 100,
+          "minItems": 1,
+          "title": "Requirements",
+          "type": "array"
+        },
+        "seniority_requirement": {
+          "items": {
+            "$ref": "#/$defs/Seniority"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "title": "Seniority Requirement",
+          "type": "array"
+        }
+      },
+      "required": [
+        "requirements",
+        "location",
+        "seniority_requirement",
+        "product_stage"
+      ],
+      "title": "ProviderJobEvidence",
+      "type": "object"
+    },
+    "ProviderJobLocation": {
+      "additionalProperties": false,
+      "properties": {
+        "relocation_supported": {
+          "title": "Relocation Supported",
+          "type": "boolean"
+        },
+        "remote_policy": {
+          "$ref": "#/$defs/RemotePolicy"
+        }
+      },
+      "required": [
+        "remote_policy",
+        "relocation_supported"
+      ],
+      "title": "ProviderJobLocation",
+      "type": "object"
+    },
+    "ProviderRankEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "maxLength": 180,
+          "minLength": 3,
+          "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "value": {
+          "maximum": 50,
+          "minimum": 1,
+          "title": "Value",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "value"
+      ],
+      "title": "ProviderRankEvidence",
+      "type": "object"
+    },
+    "ProviderRankingEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "cross_encoder_rank": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderRankEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cross_encoder_score_raw": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderRequiredScoreEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ltr_rank": {
+          "$ref": "#/$defs/ProviderRankEvidence"
+        },
+        "ltr_score_raw": {
+          "$ref": "#/$defs/ProviderRequiredScoreEvidence"
+        },
+        "result_rank": {
+          "$ref": "#/$defs/ProviderRankEvidence"
+        }
+      },
+      "required": [
+        "result_rank",
+        "ltr_rank",
+        "ltr_score_raw",
+        "cross_encoder_rank",
+        "cross_encoder_score_raw"
+      ],
+      "title": "ProviderRankingEvidence",
+      "type": "object"
+    },
+    "ProviderRelationEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "maxLength": 180,
+          "minLength": 3,
+          "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "value": {
+          "enum": [
+            "exact_match",
+            "mismatch",
+            "unavailable"
+          ],
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "value"
+      ],
+      "title": "ProviderRelationEvidence",
+      "type": "object"
+    },
+    "ProviderRequiredScoreEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "maxLength": 180,
+          "minLength": 3,
+          "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "value"
+      ],
+      "title": "ProviderRequiredScoreEvidence",
+      "type": "object"
+    },
+    "ProviderRequirementEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "$ref": "#/$defs/RequirementCategory"
+        },
+        "evidence_id": {
+          "pattern": "^job_requirement:[A-Za-z0-9_.-]{1,100}$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "priority": {
+          "$ref": "#/$defs/RequirementPriority"
+        },
+        "requirement_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,99}$",
+          "title": "Requirement Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "requirement_id",
+        "priority",
+        "category"
+      ],
+      "title": "ProviderRequirementEvidence",
+      "type": "object"
+    },
+    "ProviderRequirementIdsEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "maxLength": 180,
+          "minLength": 3,
+          "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "value": {
+          "items": {
+            "pattern": "^job_requirement:[A-Za-z0-9_.-]{1,100}$",
+            "type": "string"
+          },
+          "maxItems": 100,
+          "title": "Value",
+          "type": "array"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "value"
+      ],
+      "title": "ProviderRequirementIdsEvidence",
+      "type": "object"
+    },
+    "ProviderRetrievalEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "dense_rank": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderRankEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dense_score": {
+          "$ref": "#/$defs/ProviderScoreEvidence"
+        },
+        "fusion_score": {
+          "$ref": "#/$defs/ProviderRequiredScoreEvidence"
+        },
+        "matched_channels": {
+          "$ref": "#/$defs/ProviderChannelEvidence"
+        },
+        "retrieval_rank": {
+          "$ref": "#/$defs/ProviderRankEvidence"
+        },
+        "sparse_rank": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderRankEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sparse_score": {
+          "$ref": "#/$defs/ProviderScoreEvidence"
+        }
+      },
+      "required": [
+        "retrieval_rank",
+        "matched_channels",
+        "dense_rank",
+        "dense_score",
+        "sparse_rank",
+        "sparse_score",
+        "fusion_score"
+      ],
+      "title": "ProviderRetrievalEvidence",
+      "type": "object"
+    },
+    "ProviderRiskLevelEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "maxLength": 180,
+          "minLength": 3,
+          "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "value": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "value"
+      ],
+      "title": "ProviderRiskLevelEvidence",
+      "type": "object"
+    },
+    "ProviderScoreEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "maxLength": 180,
+          "minLength": 3,
+          "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "value"
+      ],
+      "title": "ProviderScoreEvidence",
+      "type": "object"
+    },
+    "ProviderTop1Comparison": {
+      "additionalProperties": false,
+      "properties": {
+        "ai_tool_score": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderScoreEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "cross_encoder_rank": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderRankEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "cross_encoder_score_raw": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderRequiredScoreEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "location_score": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderScoreEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "ltr_rank": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderRankEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "ltr_score_raw": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderRequiredScoreEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "missing_penalty": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderScoreEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "overclaim_penalty": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderScoreEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "project_evidence_score": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderScoreEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "result_rank": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderRankEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "role_direction_score": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderScoreEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "seniority_score": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderScoreEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "skill_fit_score": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderScoreEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "top1_candidate_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,99}$",
+          "title": "Top1 Candidate Id",
+          "type": "string"
+        },
+        "top1_rank": {
+          "maximum": 1,
+          "minimum": 1,
+          "title": "Top1 Rank",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "top1_candidate_id",
+        "top1_rank"
+      ],
+      "title": "ProviderTop1Comparison",
+      "type": "object"
+    },
+    "RemotePolicy": {
+      "enum": [
+        "remote",
+        "hybrid",
+        "onsite",
+        "flexible"
+      ],
+      "title": "RemotePolicy",
+      "type": "string"
+    },
+    "RequirementCategory": {
+      "enum": [
+        "skill",
+        "project_evidence",
+        "experience",
+        "role_direction",
+        "location",
+        "seniority",
+        "work_style",
+        "ai_tooling"
+      ],
+      "title": "RequirementCategory",
+      "type": "string"
+    },
+    "RequirementPriority": {
+      "enum": [
+        "must_have",
+        "nice_to_have"
+      ],
+      "title": "RequirementPriority",
+      "type": "string"
+    },
+    "RiskLevel": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "title": "RiskLevel",
+      "type": "string"
+    },
+    "Seniority": {
+      "enum": [
+        "early_career",
+        "mid",
+        "senior",
+        "staff"
+      ],
+      "title": "Seniority",
+      "type": "string"
+    },
+    "SkillCategory": {
+      "enum": [
+        "llm_application",
+        "recommendation",
+        "retrieval_search",
+        "ml_infra",
+        "model_algorithm",
+        "security",
+        "backend",
+        "data",
+        "frontend",
+        "product_delivery",
+        "evaluation",
+        "ai_tooling"
+      ],
+      "title": "SkillCategory",
+      "type": "string"
+    },
+    "VerificationStatus": {
+      "enum": [
+        "available",
+        "described",
+        "missing"
+      ],
+      "title": "VerificationStatus",
+      "type": "string"
+    }
+  },
+  "$id": "urn:peoplematch:provider_evidence_v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "candidates": {
+      "items": {
+        "$ref": "#/$defs/ProviderCandidateEvidence"
+      },
+      "maxItems": 10,
+      "minItems": 1,
+      "title": "Candidates",
+      "type": "array"
+    },
+    "contract_version": {
+      "const": "provider_evidence_v1",
+      "title": "Contract Version",
+      "type": "string"
+    },
+    "job": {
+      "$ref": "#/$defs/ProviderJobEvidence"
+    }
+  },
+  "required": [
+    "contract_version",
+    "job",
+    "candidates"
+  ],
+  "title": "ProviderEvidenceV1",
+  "type": "object",
+  "x-contract-version": "provider_evidence_v1",
+  "x-runtime-model": "app.schemas.explanations.ProviderEvidenceV1"
+}

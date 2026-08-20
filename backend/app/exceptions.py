@@ -129,6 +129,16 @@ class MatchRunExecutionError(DomainError):
         )
 
 
+class ExplanationRunNotFoundError(DomainError):
+    code = "explanation_run_not_found"
+    status_code = 404
+
+
+class ExplanationRunConflictError(DomainError):
+    code = "explanation_run_conflict"
+    status_code = 409
+
+
 class ProfileHistoryConflictError(DomainError):
     code = "profile_history_conflict"
     status_code = 409

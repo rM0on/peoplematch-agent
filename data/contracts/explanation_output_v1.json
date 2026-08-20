@@ -1,0 +1,627 @@
+{
+  "$defs": {
+    "CandidateExplanationOutput": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "interview_questions": {
+          "items": {
+            "$ref": "#/$defs/InterviewQuestion"
+          },
+          "maxItems": 3,
+          "title": "Interview Questions",
+          "type": "array"
+        },
+        "match_reasons": {
+          "items": {
+            "$ref": "#/$defs/MatchReason"
+          },
+          "maxItems": 4,
+          "minItems": 2,
+          "title": "Match Reasons",
+          "type": "array"
+        },
+        "missing_skills": {
+          "items": {
+            "$ref": "#/$defs/MissingSkill"
+          },
+          "maxItems": 50,
+          "title": "Missing Skills",
+          "type": "array"
+        },
+        "output_schema_version": {
+          "const": "explanation_output_v1",
+          "title": "Output Schema Version",
+          "type": "string"
+        },
+        "profile_rewrite_suggestion": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProfileRewriteSuggestion"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "result_rank": {
+          "maximum": 50,
+          "minimum": 1,
+          "title": "Result Rank",
+          "type": "integer"
+        },
+        "risk_points": {
+          "items": {
+            "$ref": "#/$defs/RiskPoint"
+          },
+          "maxItems": 4,
+          "title": "Risk Points",
+          "type": "array"
+        },
+        "summary": {
+          "$ref": "#/$defs/GroundedSummary"
+        },
+        "why_not_top1": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/WhyNotTop1"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "output_schema_version",
+        "candidate_id",
+        "result_rank",
+        "summary",
+        "match_reasons",
+        "risk_points",
+        "missing_skills",
+        "interview_questions",
+        "why_not_top1",
+        "profile_rewrite_suggestion"
+      ],
+      "title": "CandidateExplanationOutput",
+      "type": "object"
+    },
+    "ClarifyEvidenceStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_record_id": {
+          "pattern": "^candidate:[1-9][0-9]*:project_evidence:[A-Za-z0-9_.-]{1,100}$",
+          "title": "Evidence Record Id",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "maxLength": 180,
+            "minLength": 3,
+            "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "operation": {
+          "const": "clarify_evidence_status",
+          "title": "Operation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "evidence_record_id",
+        "evidence_refs"
+      ],
+      "title": "ClarifyEvidenceStatus",
+      "type": "object"
+    },
+    "GroundedSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "items": {
+            "maxLength": 180,
+            "minLength": 3,
+            "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "text": {
+          "maxLength": 400,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "evidence_refs"
+      ],
+      "title": "GroundedSummary",
+      "type": "object"
+    },
+    "InterviewQuestion": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "items": {
+            "maxLength": 180,
+            "minLength": 3,
+            "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "question": {
+          "maxLength": 240,
+          "minLength": 5,
+          "title": "Question",
+          "type": "string"
+        },
+        "rationale": {
+          "maxLength": 240,
+          "minLength": 5,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "question",
+        "rationale",
+        "evidence_refs"
+      ],
+      "title": "InterviewQuestion",
+      "type": "object"
+    },
+    "LinkSkillToProject": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "items": {
+            "maxLength": 180,
+            "minLength": 3,
+            "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "operation": {
+          "const": "link_skill_to_project",
+          "title": "Operation",
+          "type": "string"
+        },
+        "project_evidence_id": {
+          "anyOf": [
+            {
+              "pattern": "^candidate:[1-9][0-9]*:project:[A-Za-z0-9_.-]{1,100}$",
+              "type": "string"
+            },
+            {
+              "pattern": "^candidate:[1-9][0-9]*:project_evidence:[A-Za-z0-9_.-]{1,100}$",
+              "type": "string"
+            }
+          ],
+          "title": "Project Evidence Id"
+        },
+        "skill_evidence_id": {
+          "pattern": "^candidate:[1-9][0-9]*:skill:[a-f0-9]{32,64}$",
+          "title": "Skill Evidence Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "skill_evidence_id",
+        "project_evidence_id",
+        "evidence_refs"
+      ],
+      "title": "LinkSkillToProject",
+      "type": "object"
+    },
+    "MatchReason": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "$ref": "#/$defs/MatchReasonCategory"
+        },
+        "evidence_refs": {
+          "items": {
+            "maxLength": 180,
+            "minLength": 3,
+            "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "text": {
+          "maxLength": 400,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "category",
+        "text",
+        "evidence_refs"
+      ],
+      "title": "MatchReason",
+      "type": "object"
+    },
+    "MatchReasonCategory": {
+      "enum": [
+        "skill_alignment",
+        "project_evidence",
+        "role_direction",
+        "ai_tooling",
+        "location",
+        "seniority",
+        "ranking_context"
+      ],
+      "title": "MatchReasonCategory",
+      "type": "string"
+    },
+    "MissingSkill": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "items": {
+            "maxLength": 180,
+            "minLength": 3,
+            "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "evidence_status": {
+          "$ref": "#/$defs/RequirementEvidenceStatus"
+        },
+        "priority": {
+          "$ref": "#/$defs/RequirementPriority"
+        },
+        "requirement_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Requirement Id",
+          "type": "string"
+        },
+        "requirement_text": {
+          "maxLength": 240,
+          "minLength": 5,
+          "title": "Requirement Text",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "partial",
+            "missing"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "requirement_id",
+        "requirement_text",
+        "priority",
+        "status",
+        "evidence_status",
+        "evidence_refs"
+      ],
+      "title": "MissingSkill",
+      "type": "object"
+    },
+    "ProfileRewriteSuggestion": {
+      "additionalProperties": false,
+      "properties": {
+        "operations": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "clarify_evidence_status": "#/$defs/ClarifyEvidenceStatus",
+                "link_skill_to_project": "#/$defs/LinkSkillToProject",
+                "reorder_existing_claim": "#/$defs/ReorderExistingClaim",
+                "state_gap_explicitly": "#/$defs/StateGapExplicitly",
+                "surface_existing_skill": "#/$defs/SurfaceExistingSkill"
+              },
+              "propertyName": "operation"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/SurfaceExistingSkill"
+              },
+              {
+                "$ref": "#/$defs/LinkSkillToProject"
+              },
+              {
+                "$ref": "#/$defs/ClarifyEvidenceStatus"
+              },
+              {
+                "$ref": "#/$defs/ReorderExistingClaim"
+              },
+              {
+                "$ref": "#/$defs/StateGapExplicitly"
+              }
+            ]
+          },
+          "maxItems": 3,
+          "minItems": 1,
+          "title": "Operations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "operations"
+      ],
+      "title": "ProfileRewriteSuggestion",
+      "type": "object"
+    },
+    "ReorderExistingClaim": {
+      "additionalProperties": false,
+      "properties": {
+        "claim_evidence_id": {
+          "anyOf": [
+            {
+              "pattern": "^candidate:[1-9][0-9]*:skill:[a-f0-9]{32,64}$",
+              "type": "string"
+            },
+            {
+              "pattern": "^candidate:[1-9][0-9]*:project:[A-Za-z0-9_.-]{1,100}$",
+              "type": "string"
+            },
+            {
+              "pattern": "^candidate:[1-9][0-9]*:project_evidence:[A-Za-z0-9_.-]{1,100}$",
+              "type": "string"
+            }
+          ],
+          "title": "Claim Evidence Id"
+        },
+        "evidence_refs": {
+          "items": {
+            "maxLength": 180,
+            "minLength": 3,
+            "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "operation": {
+          "const": "reorder_existing_claim",
+          "title": "Operation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "claim_evidence_id",
+        "evidence_refs"
+      ],
+      "title": "ReorderExistingClaim",
+      "type": "object"
+    },
+    "RequirementEvidenceStatus": {
+      "enum": [
+        "available_evidence",
+        "claim_only",
+        "absent",
+        "not_assessed"
+      ],
+      "title": "RequirementEvidenceStatus",
+      "type": "string"
+    },
+    "RequirementPriority": {
+      "enum": [
+        "must_have",
+        "nice_to_have"
+      ],
+      "title": "RequirementPriority",
+      "type": "string"
+    },
+    "RiskCategory": {
+      "enum": [
+        "missing_requirement",
+        "weak_evidence",
+        "role_direction_mismatch",
+        "location_mismatch",
+        "seniority_mismatch",
+        "overclaim_signal",
+        "ranking_comparison"
+      ],
+      "title": "RiskCategory",
+      "type": "string"
+    },
+    "RiskPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "$ref": "#/$defs/RiskCategory"
+        },
+        "evidence_refs": {
+          "items": {
+            "maxLength": 180,
+            "minLength": 3,
+            "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "text": {
+          "maxLength": 400,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "category",
+        "text",
+        "evidence_refs"
+      ],
+      "title": "RiskPoint",
+      "type": "object"
+    },
+    "StateGapExplicitly": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "items": {
+            "maxLength": 180,
+            "minLength": 3,
+            "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "operation": {
+          "const": "state_gap_explicitly",
+          "title": "Operation",
+          "type": "string"
+        },
+        "requirement_evidence_id": {
+          "pattern": "^job_requirement:[A-Za-z0-9_.-]{1,100}$",
+          "title": "Requirement Evidence Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "requirement_evidence_id",
+        "evidence_refs"
+      ],
+      "title": "StateGapExplicitly",
+      "type": "object"
+    },
+    "SurfaceExistingSkill": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "items": {
+            "maxLength": 180,
+            "minLength": 3,
+            "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "operation": {
+          "const": "surface_existing_skill",
+          "title": "Operation",
+          "type": "string"
+        },
+        "skill_evidence_id": {
+          "pattern": "^candidate:[1-9][0-9]*:skill:[a-f0-9]{32,64}$",
+          "title": "Skill Evidence Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "skill_evidence_id",
+        "evidence_refs"
+      ],
+      "title": "SurfaceExistingSkill",
+      "type": "object"
+    },
+    "WhyNotTop1": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "const": "ranking_comparison",
+          "title": "Category",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "maxLength": 180,
+            "minLength": 3,
+            "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "text": {
+          "maxLength": 400,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "category",
+        "text",
+        "evidence_refs"
+      ],
+      "title": "WhyNotTop1",
+      "type": "object"
+    }
+  },
+  "$id": "urn:peoplematch:explanation_output_v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "candidates": {
+      "items": {
+        "$ref": "#/$defs/CandidateExplanationOutput"
+      },
+      "maxItems": 10,
+      "minItems": 1,
+      "title": "Candidates",
+      "type": "array"
+    },
+    "contract_version": {
+      "const": "explanation_output_v1",
+      "title": "Contract Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "contract_version",
+    "candidates"
+  ],
+  "title": "ExplanationOutputV1",
+  "type": "object",
+  "x-contract-version": "explanation_output_v1",
+  "x-runtime-model": "app.schemas.explanations.ExplanationOutputV1"
+}

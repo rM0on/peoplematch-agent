@@ -1,0 +1,880 @@
+{
+  "$defs": {
+    "CandidateEvidenceRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "maxLength": 180,
+          "minLength": 3,
+          "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "evidence_type": {
+          "$ref": "#/$defs/EvidenceType"
+        },
+        "project_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Project Id",
+          "type": "string"
+        },
+        "source_evidence_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Source Evidence Id",
+          "type": "string"
+        },
+        "supports_skills": {
+          "items": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 50,
+          "title": "Supports Skills",
+          "type": "array"
+        },
+        "verification_status": {
+          "$ref": "#/$defs/VerificationStatus"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "source_evidence_id",
+        "project_id",
+        "supports_skills",
+        "verification_status",
+        "evidence_type"
+      ],
+      "title": "CandidateEvidenceRecord",
+      "type": "object"
+    },
+    "CandidateLocationEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "cities": {
+          "items": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 4,
+          "title": "Cities",
+          "type": "array"
+        },
+        "relocation_open": {
+          "title": "Relocation Open",
+          "type": "boolean"
+        },
+        "remote_policy": {
+          "$ref": "#/$defs/RemotePolicy"
+        }
+      },
+      "required": [
+        "cities",
+        "remote_policy",
+        "relocation_open"
+      ],
+      "title": "CandidateLocationEvidence",
+      "type": "object"
+    },
+    "CandidateOverclaimEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "level": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RiskLevel"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "reason_count": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Reason Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "reason_count"
+      ],
+      "title": "CandidateOverclaimEvidence",
+      "type": "object"
+    },
+    "CandidateProjectEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "maxLength": 180,
+          "minLength": 3,
+          "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "project_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Project Id",
+          "type": "string"
+        },
+        "skills_demonstrated": {
+          "items": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 50,
+          "title": "Skills Demonstrated",
+          "type": "array"
+        },
+        "technologies": {
+          "items": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 50,
+          "title": "Technologies",
+          "type": "array"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "project_id",
+        "technologies",
+        "skills_demonstrated"
+      ],
+      "title": "CandidateProjectEvidence",
+      "type": "object"
+    },
+    "CandidateSkillEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "$ref": "#/$defs/SkillCategory"
+        },
+        "evidence_id": {
+          "maxLength": 180,
+          "minLength": 3,
+          "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "name",
+        "category"
+      ],
+      "title": "CandidateSkillEvidence",
+      "type": "object"
+    },
+    "CrossEncoderRuntimeProvenance": {
+      "additionalProperties": false,
+      "properties": {
+        "calibration": {
+          "title": "Calibration",
+          "type": "boolean"
+        },
+        "model_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Model Id",
+          "type": "string"
+        },
+        "model_revision": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Model Revision",
+          "type": "string"
+        },
+        "pair_order": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Pair Order",
+          "type": "string"
+        },
+        "reranker_version": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Reranker Version",
+          "type": "string"
+        },
+        "score_direction": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Score Direction",
+          "type": "string"
+        },
+        "score_type": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Score Type",
+          "type": "string"
+        },
+        "snapshot_fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Snapshot Fingerprint",
+          "type": "string"
+        },
+        "text_contract_fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Text Contract Fingerprint",
+          "type": "string"
+        },
+        "text_schema_version": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Text Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reranker_version",
+        "model_id",
+        "model_revision",
+        "snapshot_fingerprint",
+        "text_schema_version",
+        "text_contract_fingerprint",
+        "pair_order",
+        "score_type",
+        "score_direction",
+        "calibration"
+      ],
+      "title": "CrossEncoderRuntimeProvenance",
+      "type": "object"
+    },
+    "EvidenceFact": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "comparison_candidate_id": {
+          "anyOf": [
+            {
+              "maxLength": 80,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Comparison Candidate Id"
+        },
+        "evidence_id": {
+          "maxLength": 180,
+          "minLength": 3,
+          "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/EvidenceFactKind"
+        },
+        "name": {
+          "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+          "title": "Name",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "maxLength": 500,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "items": {
+                "maxLength": 120,
+                "minLength": 1,
+                "type": "string"
+              },
+              "maxItems": 100,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "kind",
+        "candidate_id",
+        "name",
+        "value"
+      ],
+      "title": "EvidenceFact",
+      "type": "object"
+    },
+    "EvidenceFactKind": {
+      "enum": [
+        "ranking",
+        "retrieval",
+        "feature",
+        "diagnostic",
+        "comparison"
+      ],
+      "title": "EvidenceFactKind",
+      "type": "string"
+    },
+    "EvidenceType": {
+      "enum": [
+        "code",
+        "tests",
+        "evaluation_report",
+        "architecture_doc",
+        "readme",
+        "workflow_trace",
+        "dataset",
+        "demo",
+        "experiment_report"
+      ],
+      "title": "EvidenceType",
+      "type": "string"
+    },
+    "HistoricalCandidateEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "ai_tools": {
+          "items": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 100,
+          "title": "Ai Tools",
+          "type": "array"
+        },
+        "candidate_id": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "facts": {
+          "items": {
+            "$ref": "#/$defs/EvidenceFact"
+          },
+          "maxItems": 100,
+          "minItems": 1,
+          "title": "Facts",
+          "type": "array"
+        },
+        "overclaim_risk": {
+          "$ref": "#/$defs/CandidateOverclaimEvidence"
+        },
+        "preferred_locations": {
+          "$ref": "#/$defs/CandidateLocationEvidence"
+        },
+        "project_evidence": {
+          "items": {
+            "$ref": "#/$defs/CandidateEvidenceRecord"
+          },
+          "maxItems": 200,
+          "title": "Project Evidence",
+          "type": "array"
+        },
+        "projects": {
+          "items": {
+            "$ref": "#/$defs/CandidateProjectEvidence"
+          },
+          "maxItems": 100,
+          "title": "Projects",
+          "type": "array"
+        },
+        "result_rank": {
+          "maximum": 50,
+          "minimum": 1,
+          "title": "Result Rank",
+          "type": "integer"
+        },
+        "seniority": {
+          "$ref": "#/$defs/Seniority"
+        },
+        "skills": {
+          "items": {
+            "$ref": "#/$defs/CandidateSkillEvidence"
+          },
+          "maxItems": 200,
+          "title": "Skills",
+          "type": "array"
+        },
+        "target_roles": {
+          "items": {
+            "maxLength": 160,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 30,
+          "title": "Target Roles",
+          "type": "array"
+        },
+        "team_stage_preference": {
+          "items": {
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 20,
+          "title": "Team Stage Preference",
+          "type": "array"
+        }
+      },
+      "required": [
+        "candidate_id",
+        "result_rank",
+        "target_roles",
+        "skills",
+        "projects",
+        "project_evidence",
+        "ai_tools",
+        "preferred_locations",
+        "seniority",
+        "team_stage_preference",
+        "overclaim_risk",
+        "facts"
+      ],
+      "title": "HistoricalCandidateEvidence",
+      "type": "object"
+    },
+    "HistoricalJobEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "job_id": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Job Id",
+          "type": "string"
+        },
+        "location": {
+          "$ref": "#/$defs/HistoricalJobLocation"
+        },
+        "product_stage": {
+          "$ref": "#/$defs/ProductStage"
+        },
+        "requirements": {
+          "items": {
+            "$ref": "#/$defs/HistoricalRequirementEvidence"
+          },
+          "maxItems": 100,
+          "minItems": 1,
+          "title": "Requirements",
+          "type": "array"
+        },
+        "role_direction": {
+          "items": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 20,
+          "title": "Role Direction",
+          "type": "array"
+        },
+        "role_title": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Role Title",
+          "type": "string"
+        },
+        "seniority_requirement": {
+          "items": {
+            "$ref": "#/$defs/Seniority"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "title": "Seniority Requirement",
+          "type": "array"
+        }
+      },
+      "required": [
+        "requirements",
+        "location",
+        "seniority_requirement",
+        "product_stage",
+        "job_id",
+        "role_title",
+        "role_direction"
+      ],
+      "title": "HistoricalJobEvidence",
+      "type": "object"
+    },
+    "HistoricalJobLocation": {
+      "additionalProperties": false,
+      "properties": {
+        "cities": {
+          "items": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 4,
+          "title": "Cities",
+          "type": "array"
+        },
+        "relocation_supported": {
+          "title": "Relocation Supported",
+          "type": "boolean"
+        },
+        "remote_policy": {
+          "$ref": "#/$defs/RemotePolicy"
+        }
+      },
+      "required": [
+        "remote_policy",
+        "relocation_supported",
+        "cities"
+      ],
+      "title": "HistoricalJobLocation",
+      "type": "object"
+    },
+    "HistoricalRequirementEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "$ref": "#/$defs/RequirementCategory"
+        },
+        "evidence_expectation": {
+          "maxLength": 400,
+          "minLength": 1,
+          "title": "Evidence Expectation",
+          "type": "string"
+        },
+        "evidence_id": {
+          "pattern": "^job_requirement:[A-Za-z0-9_.-]{1,100}$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "priority": {
+          "$ref": "#/$defs/RequirementPriority"
+        },
+        "requirement_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,99}$",
+          "title": "Requirement Id",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 400,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "requirement_id",
+        "priority",
+        "category",
+        "text",
+        "evidence_expectation"
+      ],
+      "title": "HistoricalRequirementEvidence",
+      "type": "object"
+    },
+    "MatchRunEvidenceSource": {
+      "additionalProperties": false,
+      "properties": {
+        "match_run_id": {
+          "maxLength": 36,
+          "minLength": 1,
+          "title": "Match Run Id",
+          "type": "string"
+        },
+        "ranking_input_fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Ranking Input Fingerprint",
+          "type": "string"
+        },
+        "ranking_variant": {
+          "enum": [
+            "ltr",
+            "cross_encoder_experiment"
+          ],
+          "title": "Ranking Variant",
+          "type": "string"
+        },
+        "result_fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Result Fingerprint",
+          "type": "string"
+        },
+        "workflow_fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Workflow Fingerprint",
+          "type": "string"
+        },
+        "workflow_version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Workflow Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "match_run_id",
+        "ranking_variant",
+        "workflow_version",
+        "workflow_fingerprint",
+        "ranking_input_fingerprint",
+        "result_fingerprint"
+      ],
+      "title": "MatchRunEvidenceSource",
+      "type": "object"
+    },
+    "ProductStage": {
+      "enum": [
+        "zero_to_one",
+        "growth",
+        "mature"
+      ],
+      "title": "ProductStage",
+      "type": "string"
+    },
+    "RemotePolicy": {
+      "enum": [
+        "remote",
+        "hybrid",
+        "onsite",
+        "flexible"
+      ],
+      "title": "RemotePolicy",
+      "type": "string"
+    },
+    "RequirementCategory": {
+      "enum": [
+        "skill",
+        "project_evidence",
+        "experience",
+        "role_direction",
+        "location",
+        "seniority",
+        "work_style",
+        "ai_tooling"
+      ],
+      "title": "RequirementCategory",
+      "type": "string"
+    },
+    "RequirementPriority": {
+      "enum": [
+        "must_have",
+        "nice_to_have"
+      ],
+      "title": "RequirementPriority",
+      "type": "string"
+    },
+    "RiskLevel": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "title": "RiskLevel",
+      "type": "string"
+    },
+    "RuntimeProvenance": {
+      "additionalProperties": false,
+      "properties": {
+        "cross_encoder": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CrossEncoderRuntimeProvenance"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "feature_fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Feature Fingerprint",
+          "type": "string"
+        },
+        "feature_version": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Feature Version",
+          "type": "string"
+        },
+        "ranker_model_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Ranker Model Sha256",
+          "type": "string"
+        },
+        "ranker_version": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Ranker Version",
+          "type": "string"
+        },
+        "retrieval_configuration_fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Retrieval Configuration Fingerprint",
+          "type": "string"
+        },
+        "retrieval_document_version": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Retrieval Document Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "retrieval_document_version",
+        "retrieval_configuration_fingerprint",
+        "feature_version",
+        "feature_fingerprint",
+        "ranker_version",
+        "ranker_model_sha256",
+        "cross_encoder"
+      ],
+      "title": "RuntimeProvenance",
+      "type": "object"
+    },
+    "Seniority": {
+      "enum": [
+        "early_career",
+        "mid",
+        "senior",
+        "staff"
+      ],
+      "title": "Seniority",
+      "type": "string"
+    },
+    "SkillCategory": {
+      "enum": [
+        "llm_application",
+        "recommendation",
+        "retrieval_search",
+        "ml_infra",
+        "model_algorithm",
+        "security",
+        "backend",
+        "data",
+        "frontend",
+        "product_delivery",
+        "evaluation",
+        "ai_tooling"
+      ],
+      "title": "SkillCategory",
+      "type": "string"
+    },
+    "VerificationStatus": {
+      "enum": [
+        "available",
+        "described",
+        "missing"
+      ],
+      "title": "VerificationStatus",
+      "type": "string"
+    },
+    "WorkflowTraceItem": {
+      "additionalProperties": false,
+      "properties": {
+        "sequence": {
+          "maximum": 100,
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "status": {
+          "const": "COMPLETED",
+          "title": "Status",
+          "type": "string"
+        },
+        "step_name": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Step Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sequence",
+        "step_name",
+        "status"
+      ],
+      "title": "WorkflowTraceItem",
+      "type": "object"
+    }
+  },
+  "$id": "urn:peoplematch:evidence_bundle_v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "candidates": {
+      "items": {
+        "$ref": "#/$defs/HistoricalCandidateEvidence"
+      },
+      "maxItems": 10,
+      "minItems": 1,
+      "title": "Candidates",
+      "type": "array"
+    },
+    "contract_version": {
+      "const": "evidence_bundle_v1",
+      "title": "Contract Version",
+      "type": "string"
+    },
+    "job": {
+      "$ref": "#/$defs/HistoricalJobEvidence"
+    },
+    "runtime_provenance": {
+      "$ref": "#/$defs/RuntimeProvenance"
+    },
+    "source": {
+      "$ref": "#/$defs/MatchRunEvidenceSource"
+    },
+    "workflow_trace": {
+      "items": {
+        "$ref": "#/$defs/WorkflowTraceItem"
+      },
+      "maxItems": 20,
+      "minItems": 1,
+      "title": "Workflow Trace",
+      "type": "array"
+    }
+  },
+  "required": [
+    "contract_version",
+    "source",
+    "job",
+    "runtime_provenance",
+    "workflow_trace",
+    "candidates"
+  ],
+  "title": "InternalEvidenceBundleV1",
+  "type": "object",
+  "x-contract-version": "evidence_bundle_v1",
+  "x-runtime-model": "app.schemas.explanations.InternalEvidenceBundleV1"
+}
