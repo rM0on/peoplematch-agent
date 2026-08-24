@@ -2,8 +2,11 @@
 
 **Phase 9 status:** In Progress
 
-**Phase 9.1 status:** Persistence and contracts are implemented in the dirty
-working tree and are not frozen or committed.
+**Phase 9.1 status:** Persistence and contracts are frozen.
+
+**Phase 9.2 status:** Deterministic historical Evidence Bundle and fact-engine
+hardening is in progress. Phase 9 remains in progress; provider-backed
+natural-language explanation is planned for Phase 9.3.
 
 ## Current Boundary
 
@@ -29,6 +32,22 @@ records permit incomplete evidence and provider provenance. `COMPLETED`
 requires complete evidence, provider, prompt, output, count, timestamp, and
 result-fingerprint fields.
 
+Phase 9.2 does not change that persistence lifecycle. Its
+`EvidenceBundleBuilder` accepts only a completed historical MatchRun aggregate,
+validates the frozen snapshot versions and fingerprints, reconstructs the exact
+Phase 8 result fingerprint from persisted MatchResult values and provenance,
+and rejects unsupported diagnostics versions before building evidence. It then
+orders persisted history canonically and emits deterministic
+`evidence_facts_v1` records. It does not call repositories, Qdrant, retrieval,
+feature, ranking, Cross-Encoder, or any model provider.
+
+Structured evidence labels use the versioned
+`evidence_label_normalization_v1` identity contract: Unicode NFKC
+normalization, collapsed whitespace, trimming, and case-folding occur before
+hashing, sorting, deduplication, or ownership comparison. This normalization
+applies only to structured historical labels; it does not turn raw source prose
+into provider-safe evidence.
+
 ## Versioned Contracts
 
 - `evidence_bundle_v1` is the internal historical audit payload. It may carry
@@ -42,6 +61,16 @@ result-fingerprint fields.
   explicitly. It has no generic name/value, metadata, attributes, or payload
   channel and excludes request IDs, RunSteps, internal workflow and model
   fingerprints, errors, and secret configuration.
+- `evidence_facts_v1` is the internal deterministic fact substrate. Its
+  checked-in JSON Schema closes statement keys, comparison dimensions, ranks,
+  and object properties. Runtime validation additionally requires exact
+  Candidate coverage and resolves every reference and semantic fact mapping
+  against the source Evidence Bundle. Semantic match reasons cite only
+  structured source evidence such as Candidate skills, projects, project
+  evidence, matched Job requirements, or exact persisted relation diagnostics.
+  Feature and ranking values are isolated in typed `ranking_context` records or
+  top-1 comparisons; they cannot directly support semantic match reasons. When
+  required source evidence is unavailable, the semantic reason is omitted.
 - `explanation_output_v1` defines bounded Candidate explanation output with
   evidence references and structured rewrite operations. It contains no
   writable ranking, score, probability, confidence, or final-match field.
@@ -51,6 +80,12 @@ stored when available. Candidate and result fingerprints use the same
 canonical JSON and SHA-256 convention as Phase 8. Timestamps, request IDs,
 provider response IDs, credentials, and transaction identifiers are not
 inputs to explanation content fingerprints.
+
+`evidence_facts_v1` retains two distinct bindings. `bundle_fingerprint` binds
+facts to the exact audit bundle, including immutable MatchRun/result identity.
+`normalized_content_fingerprint` fingerprints the canonical provider-safe
+projection, so equivalent normalized structured labels have one semantic
+content identity without discarding the Phase 8 audit fingerprint.
 
 Candidate IDs and ranks are unique and stored in contiguous ascending rank
 order. Candidate-owned Evidence IDs are bound to that parent rank and
@@ -88,9 +123,10 @@ and rank ownership, and kind compatibility. These are narrowly defined
 data-minimization and grounding contracts, not claims of general semantic
 redaction or complete privacy/security enforcement.
 
-## Not Implemented In Phase 9.1
+## Not Implemented In Phase 9.2
 
-Evidence construction, missing-requirement and top-1 comparison builders,
-provider integration, prompts, parsing/repair, LLM grounding/repair
+Provider integration, prompts, parsing/repair, LLM grounding/repair
 orchestration, HTTP routes, frontend integration, feedback, and offline
-explanation-quality evaluation remain later Phase 9, 10, or 11 work.
+explanation-quality evaluation remain later Phase 9, 10, or 11 work. The
+Phase 9.2 fact layer is deterministic and evidence-backed but intentionally
+does not produce natural-language or causal explanations.

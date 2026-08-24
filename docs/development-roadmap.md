@@ -94,10 +94,10 @@ Only the phase explicitly requested by the user may be implemented. Status value
 
 ## Phase 9 — Evidence-grounded Explanation
 
-**Status:** Planned / NEXT
+**Status:** In Progress — Phase 9.2 deterministic evidence-engine hardening; Phase 9.3 provider-backed explanation remains planned
 
-- **Objective:** Explain an existing rank using cited evidence and explicit gaps.
-- **Primary deliverables:** Explanation input contract, grounded prompt/service, evidence citations, uncertainty/gap handling, hallucination tests.
+- **Objective:** Build deterministic, historical-only evidence facts for an existing rank using cited evidence and explicit gaps; later Phase 9.3 will render provider-backed explanations.
+- **Primary deliverables:** Frozen explanation persistence/contracts, historical Evidence Bundle builder, typed deterministic match-reason/risk/missing-requirement/top-1 comparison facts, evidence ownership validation, and regression tests. Provider integration, prompts, grounding/repair, and explanation APIs remain Phase 9.3 work.
 - **Dependency:** Phase 8 traceable runs and ranking evidence.
 - **Quality gate:** Explanations cannot alter rank; every positive claim maps to source evidence; unsupported claims fail tests.
 

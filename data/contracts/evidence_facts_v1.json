@@ -1,0 +1,410 @@
+{
+  "$defs": {
+    "CandidateFactSet": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "comparison": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Top1ComparisonFact"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "match_reasons": {
+          "items": {
+            "$ref": "#/$defs/MatchReasonFact"
+          },
+          "maxItems": 20,
+          "title": "Match Reasons",
+          "type": "array"
+        },
+        "missing_requirements": {
+          "items": {
+            "$ref": "#/$defs/MissingRequirementFact"
+          },
+          "maxItems": 100,
+          "title": "Missing Requirements",
+          "type": "array"
+        },
+        "ranking_context": {
+          "items": {
+            "$ref": "#/$defs/RankingContextFact"
+          },
+          "maxItems": 20,
+          "title": "Ranking Context",
+          "type": "array"
+        },
+        "result_rank": {
+          "maximum": 50,
+          "minimum": 1,
+          "title": "Result Rank",
+          "type": "integer"
+        },
+        "risks": {
+          "items": {
+            "$ref": "#/$defs/RiskFact"
+          },
+          "maxItems": 20,
+          "title": "Risks",
+          "type": "array"
+        }
+      },
+      "required": [
+        "candidate_id",
+        "result_rank",
+        "match_reasons",
+        "ranking_context",
+        "risks",
+        "missing_requirements"
+      ],
+      "title": "CandidateFactSet",
+      "type": "object"
+    },
+    "ComparisonItem": {
+      "additionalProperties": false,
+      "properties": {
+        "dimension": {
+          "enum": [
+            "retrieval_rank",
+            "skill_fit_score",
+            "project_evidence_score",
+            "role_direction_score",
+            "ai_tool_score",
+            "location_score",
+            "seniority_score",
+            "ltr_rank",
+            "ltr_score_raw",
+            "cross_encoder_rank",
+            "cross_encoder_score_raw",
+            "requirement_evidence_coverage"
+          ],
+          "title": "Dimension",
+          "type": "string"
+        },
+        "direction": {
+          "enum": [
+            "higher",
+            "lower",
+            "equal",
+            "unavailable"
+          ],
+          "title": "Direction",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "maxLength": 180,
+            "minLength": 3,
+            "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "dimension",
+        "direction",
+        "evidence_refs"
+      ],
+      "title": "ComparisonItem",
+      "type": "object"
+    },
+    "MatchReasonFact": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "enum": [
+            "skill_fit",
+            "project_evidence",
+            "location",
+            "seniority"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "maxLength": 180,
+            "minLength": 3,
+            "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "statement_key": {
+          "enum": [
+            "skill_fit_recorded",
+            "project_evidence_recorded",
+            "location_recorded",
+            "seniority_recorded"
+          ],
+          "title": "Statement Key",
+          "type": "string"
+        }
+      },
+      "required": [
+        "category",
+        "evidence_refs",
+        "statement_key"
+      ],
+      "title": "MatchReasonFact",
+      "type": "object"
+    },
+    "MissingRequirementFact": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "maxLength": 180,
+            "minLength": 3,
+            "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "evidence_status": {
+          "enum": [
+            "available",
+            "claim_only",
+            "absent",
+            "not_assessed"
+          ],
+          "title": "Evidence Status",
+          "type": "string"
+        },
+        "priority": {
+          "enum": [
+            "must_have",
+            "nice_to_have"
+          ],
+          "title": "Priority",
+          "type": "string"
+        },
+        "requirement_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.-]+$",
+          "title": "Requirement Id",
+          "type": "string"
+        },
+        "result_rank": {
+          "maximum": 50,
+          "minimum": 1,
+          "title": "Result Rank",
+          "type": "integer"
+        },
+        "status": {
+          "enum": [
+            "matched",
+            "partial",
+            "missing",
+            "not_assessed"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "candidate_id",
+        "result_rank",
+        "requirement_id",
+        "priority",
+        "status",
+        "evidence_status",
+        "evidence_refs"
+      ],
+      "title": "MissingRequirementFact",
+      "type": "object"
+    },
+    "RankingContextFact": {
+      "additionalProperties": false,
+      "properties": {
+        "dimension": {
+          "enum": [
+            "semantic_score",
+            "sparse_score",
+            "skill_fit_score",
+            "project_evidence_score",
+            "role_direction_score",
+            "ai_tool_score",
+            "location_score",
+            "seniority_score",
+            "missing_penalty",
+            "overclaim_penalty",
+            "result_rank",
+            "ltr_rank",
+            "ltr_score_raw",
+            "cross_encoder_rank",
+            "cross_encoder_score_raw"
+          ],
+          "title": "Dimension",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "maxLength": 180,
+            "minLength": 3,
+            "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+            "type": "string"
+          },
+          "maxItems": 1,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "dimension",
+        "evidence_refs"
+      ],
+      "title": "RankingContextFact",
+      "type": "object"
+    },
+    "RiskFact": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "enum": [
+            "missing_requirement",
+            "weak_evidence",
+            "overclaim_signal"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "maxLength": 180,
+            "minLength": 3,
+            "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "statement_key": {
+          "enum": [
+            "missing_requirement",
+            "partial_requirement_evidence",
+            "recorded_overclaim_signal"
+          ],
+          "title": "Statement Key",
+          "type": "string"
+        }
+      },
+      "required": [
+        "category",
+        "evidence_refs",
+        "statement_key"
+      ],
+      "title": "RiskFact",
+      "type": "object"
+    },
+    "Top1ComparisonFact": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "comparisons": {
+          "items": {
+            "$ref": "#/$defs/ComparisonItem"
+          },
+          "maxItems": 20,
+          "minItems": 1,
+          "title": "Comparisons",
+          "type": "array"
+        },
+        "result_rank": {
+          "maximum": 50,
+          "minimum": 2,
+          "title": "Result Rank",
+          "type": "integer"
+        },
+        "top1_candidate_id": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Top1 Candidate Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "candidate_id",
+        "result_rank",
+        "top1_candidate_id",
+        "comparisons"
+      ],
+      "title": "Top1ComparisonFact",
+      "type": "object"
+    }
+  },
+  "$id": "urn:peoplematch:evidence_facts_v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "bundle_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Bundle Fingerprint",
+      "type": "string"
+    },
+    "candidates": {
+      "items": {
+        "$ref": "#/$defs/CandidateFactSet"
+      },
+      "maxItems": 10,
+      "minItems": 1,
+      "title": "Candidates",
+      "type": "array"
+    },
+    "contract_version": {
+      "const": "evidence_facts_v1",
+      "title": "Contract Version",
+      "type": "string"
+    },
+    "normalized_content_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Normalized Content Fingerprint",
+      "type": "string"
+    }
+  },
+  "required": [
+    "contract_version",
+    "bundle_fingerprint",
+    "normalized_content_fingerprint",
+    "candidates"
+  ],
+  "title": "EvidenceFactsV1",
+  "type": "object",
+  "x-contract-version": "evidence_facts_v1",
+  "x-runtime-model": "app.services.explanation.evidence.contracts.EvidenceFactsV1"
+}

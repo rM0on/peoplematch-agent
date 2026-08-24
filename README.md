@@ -4,7 +4,7 @@
 
 PeopleMatch Agent is a local-running, evidence-aware, traceable, and deterministically orchestrated candidate/job matching prototype. It is designed to evolve beyond keyword search into a pipeline that can rank AI Builder opportunities, explain why a match is supported by project evidence, review bad cases, and compare later algorithms through sandbox-only offline evaluation.
 
-The repository has completed and frozen **Phase 4 — Hybrid Retrieval**, **Phase 5 — Feature Engineering**, **Phase 6 — Learning-to-Rank**, **Phase 7 — Cross-Encoder Reranking**, and **Phase 8 — Match-run Orchestration & Traceability**. Phase 9 evidence-grounded explanation is planned next. Dataset `1.0.0` provides canonical contracts and synthetic sandbox profiles; Phase 2 provides PostgreSQL profile APIs; Phase 3 adds deterministic structured extraction. There is no real LLM provider, explanation, fine-tuning, final match score, or production hiring claim.
+The repository has completed and frozen **Phase 4 — Hybrid Retrieval**, **Phase 5 — Feature Engineering**, **Phase 6 — Learning-to-Rank**, **Phase 7 — Cross-Encoder Reranking**, and **Phase 8 — Match-run Orchestration & Traceability**. Phase 9.1 persistence/contracts are frozen and Phase 9.2 deterministic historical evidence-engine hardening is in progress. Phase 9.3 provider-backed natural-language explanation remains planned. Dataset `1.0.0` provides canonical contracts and synthetic sandbox profiles; Phase 2 provides PostgreSQL profile APIs; Phase 3 adds deterministic structured extraction. There is no real LLM provider, provider call, explanation API, fine-tuning, final match score, or production hiring claim.
 
 ## Project Overview
 
@@ -37,7 +37,7 @@ PeopleMatch Agent is planned around explicit evidence, separable ranking stages,
 
 ## Matching Pipeline
 
-The current local sequence includes Phase 8 deterministic MatchRun orchestration around the Phase 6 default and explicit optional Phase 7 experiment. Evidence-grounded explanation remains planned for Phase 9.
+The current local sequence includes Phase 8 deterministic MatchRun orchestration around the Phase 6 default and explicit optional Phase 7 experiment. Phase 9.2 converts completed historical MatchRuns into deterministic, auditable evidence facts; provider execution and natural-language rendering remain planned for Phase 9.3.
 
 ```mermaid
 flowchart LR
@@ -158,7 +158,7 @@ Phase 0 completed:
 - Docker Compose definitions for PostgreSQL, Redis, Qdrant, backend, and frontend;
 - an Alembic foundation later extended by the Phase 2 profile migration.
 
-Not implemented: any real LLM provider, general-purpose resume/JD parsing, explanations, feedback workflows, automated run replay/recovery, or a complete product dashboard. Phase 8 does not add a final match score, probability, online experiment, or production hiring claim.
+Not implemented: any real LLM provider, provider call, explanation API or natural-language explanation rendering, general-purpose resume/JD parsing, feedback workflows, automated run replay/recovery, or a complete product dashboard. Phase 8 does not add a final match score, probability, online experiment, or production hiring claim. Phase 9.2 facts are deterministic evidence records, not causal or natural-language explanations.
 
 ## Roadmap
 
@@ -174,7 +174,7 @@ Not implemented: any real LLM provider, general-purpose resume/JD parsing, expla
 | 6 | Learning-to-rank | Completed / Frozen |
 | 7 | Cross-encoder reranking | Completed / Frozen |
 | 8 | Match-run orchestration and traceability | Completed / Frozen |
-| 9 | Evidence-grounded explanations | Planned / NEXT |
+| 9 | Evidence-grounded explanations | In Progress — Phase 9.2 deterministic evidence-engine hardening; Phase 9.3 planned |
 | 10 | Feedback and bad-case review | Planned |
 | 11 | Offline evaluation | Planned |
 | 12 | Local prototype hardening and documented demo | Planned |

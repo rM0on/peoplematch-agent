@@ -12,12 +12,12 @@ PeopleMatch Agent is a local monorepo with these logical areas:
 | Retrieval | Candidate/job first-stage recall and vector search | **CURRENT / PHASE 4 COMPLETED:** versioned documents, local pretrained dense embeddings, Qdrant exact search, BM25, explicit filters, RRF, and offline retrieval evaluation |
 | Feature Engineering | Versioned pair features and diagnostics | **CURRENT / PHASE 5 COMPLETED / FROZEN:** label-free on-demand extraction that preserves retrieval order |
 | Ranking | LTR, final scoring, and reranking | **CURRENT / PHASE 6 FROZEN + PHASE 7 FROZEN:** deterministic LightGBM LambdaMART followed by one pinned frozen Cross-Encoder Job-to-Candidates rerank; no final hiring score |
-| AI Provider | Structured extraction and later grounded explanation | **CURRENT:** provider interface plus deterministic no-network mock; real LLM and explanation **PLANNED** |
+| AI Provider | Structured extraction and later grounded explanation | **CURRENT:** provider interface plus deterministic no-network mock; Phase 9.2 facts are deterministic and provider-free; real LLM explanation **PLANNED** |
 | Cache / ephemeral state | Later caching and coordination | Redis container config **CURRENT**; business usage **PLANNED** |
 
 ## Current Phase Architecture
 
-**CURRENT after Phase 8 closeout:** Next.js still serves the selected Matching Results design mock and does not consume the ranking APIs. FastAPI exposes liveness, profile/extraction/retrieval/feature APIs, the frozen Phase 6 and Phase 7 direct endpoints, and durable MatchRun create/detail/list APIs. Phase 8 uses deterministic, server-controlled MatchRun orchestration around the existing ranking services without changing their algorithms. It records only actual execution boundaries and stores privacy-bounded historical Job/Candidate inputs, stage scores/features, and failure state. Runtime provenance is observed from the actual ranking execution, validated against frozen expected contracts, and persisted only when validation succeeds. Phase 1 JSONL remains frozen and is imported only after hash verification.
+**CURRENT during Phase 9.2 hardening:** Next.js still serves the selected Matching Results design mock and does not consume explanation data. FastAPI exposes liveness, profile/extraction/retrieval/feature APIs, the frozen Phase 6 and Phase 7 direct endpoints, and durable MatchRun create/detail/list APIs. Phase 8 uses deterministic, server-controlled MatchRun orchestration around the existing ranking services without changing their algorithms. Phase 9.2 reads only completed persisted MatchRun history and builds an Evidence Bundle and typed fact layer; it never reruns retrieval, features, ranking, Qdrant, or a current profile lookup. Runtime provenance is observed from the actual ranking execution, validated against frozen expected contracts, and persisted only when validation succeeds. Phase 9.3 will add provider-backed rendering later; no provider call or explanation API exists yet. Phase 1 JSONL remains frozen and is imported only after hash verification.
 
 The liveness route still makes no downstream calls and therefore does not load or download the embedding model. Redis remains infrastructure-only. Qdrant now stores derived Candidate/Job retrieval indexes; it is never the canonical profile source.
 
@@ -60,7 +60,7 @@ The MatchRun request first creates durable `RUNNING` history through an independ
 
 ## Target Architecture
 
-Later phases add a real structured-output provider, explanations, feedback, bad-case review, and broader offline evaluation. Phase 8 now supplies durable historical execution context. Phase 6 remains the stronger/default ranking baseline and Phase 7 is an optional experimental pinned comparison, neither of which is a final match score.
+Later phases add a real structured-output provider, natural-language explanations, feedback, bad-case review, and broader offline evaluation. Phase 9.2 supplies deterministic evidence facts from durable historical execution context; it does not make causal claims or alter ranking. Phase 6 remains the stronger/default ranking baseline and Phase 7 is an optional experimental pinned comparison, neither of which is a final match score.
 
 The target remains a modular monolith unless a measured need justifies a different deployment boundary. Phase 0 does not introduce microservices, Kubernetes, authentication, or distributed infrastructure.
 
@@ -76,7 +76,8 @@ flowchart TD
     LTR --> CrossEncoder["Frozen Cross-encoder\nOPTIONAL"]
     LTR --> History["Persisted MatchRun history"]
     CrossEncoder --> History
-    History --> Explanation["Evidence-grounded explanation\nPLANNED NEXT / PHASE 9"]
+    History --> EvidenceFacts["Phase 9.2 deterministic\nevidence facts"]
+    EvidenceFacts -.-> Explanation["Phase 9.3 provider-backed\nexplanation PLANNED"]
 ```
 
 ## Request and Error Flow
@@ -97,7 +98,7 @@ Owns HTTP routing, transport validation, response codes, response envelopes, and
 
 ### Service Layer
 
-Owns Candidate/Job validation, extraction, retrieval, frozen Phase 5/6/7 behavior, and Phase 8 orchestration. MatchRunService creates a durable RUNNING identity, captures structured inputs, calls the unchanged ranking service through a tracing proxy, and atomically finalizes results. Completed and failed runs are terminal and immutable through the application/repository contract, have no normal mutation path, and are replaced by a new `run_id` when rerun; this is not database-level tamper-proof storage. A dedicated MatchRunRepository owns independent lifecycle transactions so a failed request cannot roll back its audit history. Explanation and feedback remain planned.
+Owns Candidate/Job validation, extraction, retrieval, frozen Phase 5/6/7 behavior, and Phase 8 orchestration. MatchRunService creates a durable RUNNING identity, captures structured inputs, calls the unchanged ranking service through a tracing proxy, and atomically finalizes results. Completed and failed runs are terminal and immutable through the application/repository contract, have no normal mutation path, and are replaced by a new `run_id` when rerun; this is not database-level tamper-proof storage. A dedicated MatchRunRepository owns independent lifecycle transactions so a failed request cannot roll back its audit history. Phase 9.2 evidence generation is a separate historical-only service; provider-backed explanation and feedback remain planned.
 
 ### Repository Layer
 
