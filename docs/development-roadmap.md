@@ -94,12 +94,12 @@ Only the phase explicitly requested by the user may be implemented. Status value
 
 ## Phase 9 — Evidence-grounded Explanation
 
-**Status:** In Progress — Phase 9.2 deterministic evidence-engine hardening; Phase 9.3 provider-backed explanation remains planned
+**Status:** In Progress — Phase 9.1/9.2 frozen; Phase 9.3/9.4 backend implementation ready for review; frontend remains later work
 
-- **Objective:** Build deterministic, historical-only evidence facts for an existing rank using cited evidence and explicit gaps; later Phase 9.3 will render provider-backed explanations.
-- **Primary deliverables:** Frozen explanation persistence/contracts, historical Evidence Bundle builder, typed deterministic match-reason/risk/missing-requirement/top-1 comparison facts, evidence ownership validation, and regression tests. Provider integration, prompts, grounding/repair, and explanation APIs remain Phase 9.3 work.
+- **Objective:** Build historical-only evidence facts and a provider-neutral backend that can produce bounded, cited explanations without allowing an LLM to author facts or alter ranking.
+- **Primary deliverables:** Frozen explanation persistence/contracts and deterministic Evidence Engine; opaque provider-reference projection; versioned structured-plan prompt; deterministic mock and OpenAI-compatible DeepSeek transport; closed reference resolution, semantic grounding, fixed-template rendering, bounded repair/audit persistence, and explanation create/detail/list APIs. Frontend integration remains later work.
 - **Dependency:** Phase 8 traceable runs and ranking evidence.
-- **Quality gate:** Explanations cannot alter rank; every positive claim maps to source evidence; unsupported claims fail tests.
+- **Quality gate:** Explanations cannot alter rank; providers cannot author factual prose; every rendered claim maps to deterministic source evidence; unsupported references or operations fail closed; no provider call holds a database transaction.
 
 ## Phase 10 — Feedback & Bad Case Review
 

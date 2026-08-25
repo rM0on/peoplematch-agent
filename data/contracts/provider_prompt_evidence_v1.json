@@ -1,0 +1,399 @@
+{
+  "$defs": {
+    "ProviderPromptCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_ref": {
+          "pattern": "^candidate_[0-9]{4}$",
+          "title": "Candidate Ref",
+          "type": "string"
+        },
+        "facts": {
+          "$ref": "#/$defs/ProviderPromptFacts"
+        },
+        "result_rank": {
+          "maximum": 10,
+          "minimum": 1,
+          "title": "Result Rank",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "candidate_ref",
+        "result_rank",
+        "facts"
+      ],
+      "title": "ProviderPromptCandidate",
+      "type": "object"
+    },
+    "ProviderPromptComparison": {
+      "additionalProperties": false,
+      "properties": {
+        "dimensions": {
+          "items": {
+            "enum": [
+              "retrieval_rank",
+              "skill_fit_score",
+              "project_evidence_score",
+              "role_direction_score",
+              "ai_tool_score",
+              "location_score",
+              "seniority_score",
+              "ltr_rank",
+              "ltr_score_raw",
+              "cross_encoder_rank",
+              "cross_encoder_score_raw",
+              "requirement_evidence_coverage"
+            ],
+            "type": "string"
+          },
+          "maxItems": 20,
+          "title": "Dimensions",
+          "type": "array"
+        },
+        "evidence_refs": {
+          "items": {
+            "pattern": "^ref_[0-9]{4}$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "top1_candidate_ref": {
+          "pattern": "^candidate_[0-9]{4}$",
+          "title": "Top1 Candidate Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_refs",
+        "top1_candidate_ref",
+        "dimensions"
+      ],
+      "title": "ProviderPromptComparison",
+      "type": "object"
+    },
+    "ProviderPromptFacts": {
+      "additionalProperties": false,
+      "properties": {
+        "comparison": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderPromptComparison"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "match_reasons": {
+          "items": {
+            "$ref": "#/$defs/ProviderPromptMatchReason"
+          },
+          "maxItems": 20,
+          "title": "Match Reasons",
+          "type": "array"
+        },
+        "missing_requirements": {
+          "items": {
+            "$ref": "#/$defs/ProviderPromptMissingRequirement"
+          },
+          "maxItems": 100,
+          "title": "Missing Requirements",
+          "type": "array"
+        },
+        "ranking_context": {
+          "items": {
+            "$ref": "#/$defs/ProviderPromptRankingContext"
+          },
+          "maxItems": 20,
+          "title": "Ranking Context",
+          "type": "array"
+        },
+        "risks": {
+          "items": {
+            "$ref": "#/$defs/ProviderPromptRisk"
+          },
+          "maxItems": 20,
+          "title": "Risks",
+          "type": "array"
+        }
+      },
+      "required": [
+        "match_reasons",
+        "ranking_context",
+        "risks",
+        "missing_requirements"
+      ],
+      "title": "ProviderPromptFacts",
+      "type": "object"
+    },
+    "ProviderPromptJob": {
+      "additionalProperties": false,
+      "properties": {
+        "requirements": {
+          "items": {
+            "$ref": "#/$defs/ProviderPromptRequirement"
+          },
+          "maxItems": 100,
+          "minItems": 1,
+          "title": "Requirements",
+          "type": "array"
+        }
+      },
+      "required": [
+        "requirements"
+      ],
+      "title": "ProviderPromptJob",
+      "type": "object"
+    },
+    "ProviderPromptMatchReason": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "enum": [
+            "skill_fit",
+            "project_evidence",
+            "location",
+            "seniority",
+            "ranking_context"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "pattern": "^ref_[0-9]{4}$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "statement_key": {
+          "enum": [
+            "skill_fit_recorded",
+            "project_evidence_recorded",
+            "location_recorded",
+            "seniority_recorded"
+          ],
+          "title": "Statement Key",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_refs",
+        "category",
+        "statement_key"
+      ],
+      "title": "ProviderPromptMatchReason",
+      "type": "object"
+    },
+    "ProviderPromptMissingRequirement": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "items": {
+            "pattern": "^ref_[0-9]{4}$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "evidence_status": {
+          "enum": [
+            "available",
+            "claim_only",
+            "absent",
+            "not_assessed"
+          ],
+          "title": "Evidence Status",
+          "type": "string"
+        },
+        "priority": {
+          "enum": [
+            "must_have",
+            "nice_to_have"
+          ],
+          "title": "Priority",
+          "type": "string"
+        },
+        "requirement_ref": {
+          "pattern": "^ref_[0-9]{4}$",
+          "title": "Requirement Ref",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "matched",
+            "partial",
+            "missing",
+            "not_assessed"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_refs",
+        "requirement_ref",
+        "priority",
+        "status",
+        "evidence_status"
+      ],
+      "title": "ProviderPromptMissingRequirement",
+      "type": "object"
+    },
+    "ProviderPromptRankingContext": {
+      "additionalProperties": false,
+      "properties": {
+        "dimension": {
+          "enum": [
+            "semantic_score",
+            "sparse_score",
+            "skill_fit_score",
+            "project_evidence_score",
+            "role_direction_score",
+            "ai_tool_score",
+            "location_score",
+            "seniority_score",
+            "missing_penalty",
+            "overclaim_penalty",
+            "result_rank",
+            "ltr_rank",
+            "ltr_score_raw",
+            "cross_encoder_rank",
+            "cross_encoder_score_raw"
+          ],
+          "title": "Dimension",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "pattern": "^ref_[0-9]{4}$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "evidence_refs",
+        "dimension"
+      ],
+      "title": "ProviderPromptRankingContext",
+      "type": "object"
+    },
+    "ProviderPromptRequirement": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "enum": [
+            "skill",
+            "responsibility",
+            "domain",
+            "constraint"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "priority": {
+          "enum": [
+            "must_have",
+            "nice_to_have"
+          ],
+          "title": "Priority",
+          "type": "string"
+        },
+        "requirement_ref": {
+          "pattern": "^ref_[0-9]{4}$",
+          "title": "Requirement Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "requirement_ref",
+        "priority",
+        "category"
+      ],
+      "title": "ProviderPromptRequirement",
+      "type": "object"
+    },
+    "ProviderPromptRisk": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "enum": [
+            "missing_requirement",
+            "weak_evidence",
+            "overclaim_signal"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "pattern": "^ref_[0-9]{4}$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "statement_key": {
+          "enum": [
+            "missing_requirement",
+            "partial_requirement_evidence",
+            "recorded_overclaim_signal"
+          ],
+          "title": "Statement Key",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_refs",
+        "category",
+        "statement_key"
+      ],
+      "title": "ProviderPromptRisk",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "candidates": {
+      "items": {
+        "$ref": "#/$defs/ProviderPromptCandidate"
+      },
+      "maxItems": 10,
+      "minItems": 1,
+      "title": "Candidates",
+      "type": "array"
+    },
+    "contract_version": {
+      "const": "provider_prompt_evidence_v1",
+      "title": "Contract Version",
+      "type": "string"
+    },
+    "job": {
+      "$ref": "#/$defs/ProviderPromptJob"
+    }
+  },
+  "required": [
+    "contract_version",
+    "job",
+    "candidates"
+  ],
+  "title": "ProviderPromptEvidenceV1",
+  "type": "object",
+  "x-contract-version": "provider_prompt_evidence_v1"
+}

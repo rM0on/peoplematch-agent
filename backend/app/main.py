@@ -9,6 +9,7 @@ from app.api.router import api_router
 from app.core.config import get_settings
 from app.core.logging import configure_logging, get_logger
 from app.middleware.request_id import RequestIdMiddleware
+from app.api.dependencies import close_runtime_explanation_provider
 
 
 @asynccontextmanager
@@ -19,8 +20,11 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         "Application starting",
         extra={"environment": settings.app_env, "version": settings.app_version},
     )
-    yield
-    logger.info("Application stopping")
+    try:
+        yield
+    finally:
+        await close_runtime_explanation_provider()
+        logger.info("Application stopping")
 
 
 def create_app() -> FastAPI:
@@ -35,11 +39,14 @@ def create_app() -> FastAPI:
             "hybrid retrieval, and label-free feature inspection plus the Phase 6 "
             "deterministic LambdaMART ranking API and the Phase 7 frozen local "
             "Cross-Encoder reranking endpoint for Job-to-Candidates plus Phase 8 "
-            "durable MatchRun orchestration and historical trace APIs. The ranker is "
+            "durable MatchRun orchestration and historical trace APIs, plus the "
+            "Phase 9 backend explanation planning, grounding, rendering, and history "
+            "APIs. The ranker is "
             "trained only on explicit synthetic Train/Dev judgments, while the "
             "Cross-Encoder uses an immutable pretrained snapshot and raw logits. "
-            "No real LLM, fine-tuning, Test evaluation, calibrated probability, "
-            "explanation, or final production match score is implemented."
+            "Provider output cannot author factual prose or alter ranking. No "
+            "fine-tuning, Test evaluation, calibrated probability, explanation "
+            "frontend, or final production match score is implemented."
         ),
         lifespan=lifespan,
     )

@@ -29,6 +29,15 @@ from app.services.cross_encoder.service import CrossEncoderRerankingService
 from app.repositories.match_run_repository import MatchRunRepository
 from app.services.match_runs.lazy import LazyCrossEncoderRuntime
 from app.services.match_runs.service import MatchRunService
+from app.repositories.explanation_run_repository import ExplanationRunRepository
+from app.repositories.explanation_attempt_repository import ExplanationAttemptRepository
+from app.repositories.explanation_query_repository import ExplanationQueryRepository
+from app.services.explanation.generation.factory import build_explanation_provider
+from app.services.explanation.generation.provider import (
+    ExplanationProviderConfigurationError,
+)
+from app.services.explanation.generation.orchestration import ExplanationGenerationService
+from app.services.explanation.generation.pipeline import ExplanationGenerationPipeline
 
 
 @lru_cache
@@ -216,4 +225,41 @@ def get_match_run_service(
         cross_encoder_service_factory=cross_encoder_service_factory,
         execution_session_factory=get_repeatable_read_session_factory(),
         execution_graph_factory=execution_graph_factory,
+    )
+
+
+@lru_cache
+def get_runtime_explanation_provider():
+    try:
+        return build_explanation_provider(get_settings())
+    except ExplanationProviderConfigurationError:
+        raise ProviderUnavailableError("Explanation provider is unavailable") from None
+
+
+async def close_runtime_explanation_provider() -> None:
+    if get_runtime_explanation_provider.cache_info().currsize == 0:
+        return
+    provider = get_runtime_explanation_provider()
+    try:
+        close = getattr(provider, "aclose", None)
+        if close is not None:
+            await close()
+    finally:
+        get_runtime_explanation_provider.cache_clear()
+
+
+def get_explanation_generation_service() -> ExplanationGenerationService:
+    settings = get_settings()
+    session_factory = get_session_factory()
+    return ExplanationGenerationService(
+        match_run_repository=MatchRunRepository(session_factory),
+        explanation_repository=ExplanationRunRepository(session_factory),
+        attempt_repository=ExplanationAttemptRepository(session_factory),
+        query_repository=ExplanationQueryRepository(session_factory),
+        provider=get_runtime_explanation_provider(),
+        pipeline=ExplanationGenerationPipeline(
+            max_output_tokens=settings.explanation_max_output_tokens,
+            max_prompt_bytes=settings.explanation_max_prompt_bytes,
+        ),
+        max_attempts=settings.explanation_max_attempts,
     )

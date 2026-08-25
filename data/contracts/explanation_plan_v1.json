@@ -1,0 +1,296 @@
+{
+  "$defs": {
+    "ExplanationPlanCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_ref": {
+          "pattern": "^candidate_[0-9]{4}$",
+          "title": "Candidate Ref",
+          "type": "string"
+        },
+        "interview_question_operations": {
+          "items": {
+            "$ref": "#/$defs/PlanInterviewQuestionOperation"
+          },
+          "maxItems": 3,
+          "title": "Interview Question Operations",
+          "type": "array"
+        },
+        "match_reasons": {
+          "items": {
+            "$ref": "#/$defs/PlanMatchReason"
+          },
+          "maxItems": 4,
+          "minItems": 1,
+          "title": "Match Reasons",
+          "type": "array"
+        },
+        "result_rank": {
+          "maximum": 10,
+          "minimum": 1,
+          "title": "Result Rank",
+          "type": "integer"
+        },
+        "rewrite_operations": {
+          "items": {
+            "$ref": "#/$defs/PlanRewriteOperation"
+          },
+          "maxItems": 3,
+          "title": "Rewrite Operations",
+          "type": "array"
+        },
+        "risk_points": {
+          "items": {
+            "$ref": "#/$defs/PlanRiskPoint"
+          },
+          "maxItems": 4,
+          "title": "Risk Points",
+          "type": "array"
+        },
+        "summary": {
+          "$ref": "#/$defs/PlanSummary"
+        },
+        "why_not_top1": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PlanWhyNotTop1"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "candidate_ref",
+        "result_rank",
+        "summary",
+        "match_reasons",
+        "risk_points",
+        "interview_question_operations",
+        "rewrite_operations"
+      ],
+      "title": "ExplanationPlanCandidate",
+      "type": "object"
+    },
+    "PlanInterviewQuestionOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "items": {
+            "pattern": "^ref_[0-9]{4}$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "operation": {
+          "const": "ask_evidence_clarification",
+          "title": "Operation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_refs",
+        "operation"
+      ],
+      "title": "PlanInterviewQuestionOperation",
+      "type": "object"
+    },
+    "PlanMatchReason": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "enum": [
+            "skill_fit",
+            "project_evidence",
+            "location",
+            "seniority",
+            "ranking_context"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "pattern": "^ref_[0-9]{4}$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "template_key": {
+          "enum": [
+            "skill_fit_recorded",
+            "project_evidence_recorded",
+            "location_recorded",
+            "seniority_recorded",
+            "ranking_context_recorded"
+          ],
+          "title": "Template Key",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_refs",
+        "category",
+        "template_key"
+      ],
+      "title": "PlanMatchReason",
+      "type": "object"
+    },
+    "PlanRewriteOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "items": {
+            "pattern": "^ref_[0-9]{4}$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "operation": {
+          "enum": [
+            "surface_existing_skill",
+            "link_skill_to_project",
+            "clarify_evidence_status",
+            "reorder_existing_claim",
+            "state_gap_explicitly"
+          ],
+          "title": "Operation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_refs",
+        "operation"
+      ],
+      "title": "PlanRewriteOperation",
+      "type": "object"
+    },
+    "PlanRiskPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "enum": [
+            "missing_requirement",
+            "weak_evidence",
+            "overclaim_signal"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "pattern": "^ref_[0-9]{4}$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "template_key": {
+          "enum": [
+            "missing_requirement",
+            "partial_requirement_evidence",
+            "recorded_overclaim_signal"
+          ],
+          "title": "Template Key",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_refs",
+        "category",
+        "template_key"
+      ],
+      "title": "PlanRiskPoint",
+      "type": "object"
+    },
+    "PlanSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "items": {
+            "pattern": "^ref_[0-9]{4}$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "template_key": {
+          "const": "recorded_match_summary",
+          "title": "Template Key",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_refs",
+        "template_key"
+      ],
+      "title": "PlanSummary",
+      "type": "object"
+    },
+    "PlanWhyNotTop1": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "items": {
+            "pattern": "^ref_[0-9]{4}$",
+            "type": "string"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "template_key": {
+          "const": "why_not_top1_recorded",
+          "title": "Template Key",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_refs",
+        "template_key"
+      ],
+      "title": "PlanWhyNotTop1",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "candidates": {
+      "items": {
+        "$ref": "#/$defs/ExplanationPlanCandidate"
+      },
+      "maxItems": 10,
+      "minItems": 1,
+      "title": "Candidates",
+      "type": "array"
+    },
+    "contract_version": {
+      "const": "explanation_plan_v1",
+      "title": "Contract Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "contract_version",
+    "candidates"
+  ],
+  "title": "ExplanationPlanV1",
+  "type": "object",
+  "x-contract-version": "explanation_plan_v1"
+}

@@ -11,6 +11,7 @@ from app.models.candidate import CandidateProfileModel  # noqa: F401
 from app.models.job import JobProfileModel  # noqa: F401
 from app.models.match_run import MatchRunModel  # noqa: F401
 from app.models.explanation_run import ExplanationRunModel  # noqa: F401
+from app.models.explanation_attempt import ExplanationGenerationAttemptModel  # noqa: F401
 
 
 config = context.config

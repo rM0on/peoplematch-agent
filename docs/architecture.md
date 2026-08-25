@@ -7,17 +7,17 @@ PeopleMatch Agent is a local monorepo with these logical areas:
 | Area | Responsibility | Current status |
 |---|---|---|
 | Frontend | Product UI and typed API consumption | **CURRENT:** Phase 0.5 Matching Results design mock; Phase 0 health client preserved but not mounted |
-| Backend | HTTP boundary, application configuration, tracing, canonical data contracts | **CURRENT:** FastAPI liveness, profile/extraction/retrieval/feature APIs, frozen Phase 6/7 ranking endpoints, and Phase 8 MatchRun create/detail/list APIs |
-| Storage | Durable candidate/job/match-run data | **CURRENT:** PostgreSQL candidate/job profiles plus Phase 8 MatchRun, MatchResult, and RunStep history |
+| Backend | HTTP boundary, application configuration, tracing, canonical data contracts | **CURRENT:** FastAPI profile/matching APIs plus Phase 9 explanation create/detail/list APIs with deterministic grounding/rendering |
+| Storage | Durable candidate/job/match-run/explanation data | **CURRENT:** PostgreSQL profiles, Phase 8 MatchRun history, Phase 9 explanation history, and bounded generation-attempt audit |
 | Retrieval | Candidate/job first-stage recall and vector search | **CURRENT / PHASE 4 COMPLETED:** versioned documents, local pretrained dense embeddings, Qdrant exact search, BM25, explicit filters, RRF, and offline retrieval evaluation |
 | Feature Engineering | Versioned pair features and diagnostics | **CURRENT / PHASE 5 COMPLETED / FROZEN:** label-free on-demand extraction that preserves retrieval order |
 | Ranking | LTR, final scoring, and reranking | **CURRENT / PHASE 6 FROZEN + PHASE 7 FROZEN:** deterministic LightGBM LambdaMART followed by one pinned frozen Cross-Encoder Job-to-Candidates rerank; no final hiring score |
-| AI Provider | Structured extraction and later grounded explanation | **CURRENT:** provider interface plus deterministic no-network mock; Phase 9.2 facts are deterministic and provider-free; real LLM explanation **PLANNED** |
+| AI Provider | Structured extraction and bounded explanation planning | **CURRENT:** deterministic mock plus provider-neutral OpenAI-compatible transport configured for DeepSeek; providers select opaque references and never author persisted facts or prose |
 | Cache / ephemeral state | Later caching and coordination | Redis container config **CURRENT**; business usage **PLANNED** |
 
 ## Current Phase Architecture
 
-**CURRENT during Phase 9.2 hardening:** Next.js still serves the selected Matching Results design mock and does not consume explanation data. FastAPI exposes liveness, profile/extraction/retrieval/feature APIs, the frozen Phase 6 and Phase 7 direct endpoints, and durable MatchRun create/detail/list APIs. Phase 8 uses deterministic, server-controlled MatchRun orchestration around the existing ranking services without changing their algorithms. Phase 9.2 reads only completed persisted MatchRun history and builds an Evidence Bundle and typed fact layer; it never reruns retrieval, features, ranking, Qdrant, or a current profile lookup. Runtime provenance is observed from the actual ranking execution, validated against frozen expected contracts, and persisted only when validation succeeds. Phase 9.3 will add provider-backed rendering later; no provider call or explanation API exists yet. Phase 1 JSONL remains frozen and is imported only after hash verification.
+**CURRENT during Phase 9.3/9.4 backend review:** Next.js still serves the selected Matching Results design mock and does not consume explanation data. FastAPI retains the frozen matching APIs and adds explanation generation/detail/list routes. A completed historical MatchRun passes through the frozen Phase 9.2 Evidence Bundle and fact engine. An explicit projection replaces internal Evidence IDs with opaque temporary references, a provider selects only closed plan categories/references/operations, and backend validation resolves and grounds the selection before fixed templates produce `explanation_output_v1`. Provider calls and repair attempts run without an open database transaction. No current profile lookup, Qdrant call, retrieval, feature extraction, ranking, or reranking occurs during explanation generation.
 
 The liveness route still makes no downstream calls and therefore does not load or download the embedding model. Redis remains infrastructure-only. Qdrant now stores derived Candidate/Job retrieval indexes; it is never the canonical profile source.
 
@@ -52,6 +52,13 @@ Fusion --> FeatureService["Feature engineering service\nCURRENT / PHASE 5 COMPLE
     Ranker --> Finalize["Historical Candidate snapshots\natomic result finalization"]
     CrossEncoder --> Finalize
     Finalize --> Lifecycle
+    Lifecycle --> Evidence["Phase 9.2 historical Evidence Bundle + facts\nFROZEN"]
+    Evidence --> Projection["Opaque provider-reference projection\nCURRENT"]
+    Projection --> Planner["Provider-neutral structured planner\nmock or OpenAI-compatible"]
+    Planner --> Grounding["Reference resolution + deterministic grounding"]
+    Grounding --> Templates["Backend templates\nexplanation_output_v1"]
+    Templates --> ExplanationLifecycle["Short explanation lifecycle transactions"]
+    ExplanationLifecycle --> PG
     FastAPI -.-> Redis["Redis\nusage planned"]
     FastAPI --> Qdrant["Qdrant derived retrieval indexes\nCURRENT / PHASE 4 COMPLETED"]
 ```
@@ -60,7 +67,7 @@ The MatchRun request first creates durable `RUNNING` history through an independ
 
 ## Target Architecture
 
-Later phases add a real structured-output provider, natural-language explanations, feedback, bad-case review, and broader offline evaluation. Phase 9.2 supplies deterministic evidence facts from durable historical execution context; it does not make causal claims or alter ranking. Phase 6 remains the stronger/default ranking baseline and Phase 7 is an optional experimental pinned comparison, neither of which is a final match score.
+Later phases add frontend explanation consumption, feedback, bad-case review, and broader offline evaluation. Phase 9.2 supplies deterministic evidence facts from durable historical execution context. Phase 9.3/9.4 adds only a constrained provider planning boundary and deterministic backend rendering; it does not make causal claims or alter ranking. Phase 6 remains the stronger/default ranking baseline and Phase 7 is an optional experimental pinned comparison, neither of which is a final match score.
 
 The target remains a modular monolith unless a measured need justifies a different deployment boundary. Phase 0 does not introduce microservices, Kubernetes, authentication, or distributed infrastructure.
 
@@ -77,7 +84,9 @@ flowchart TD
     LTR --> History["Persisted MatchRun history"]
     CrossEncoder --> History
     History --> EvidenceFacts["Phase 9.2 deterministic\nevidence facts"]
-    EvidenceFacts -.-> Explanation["Phase 9.3 provider-backed\nexplanation PLANNED"]
+    EvidenceFacts --> Projection["Opaque provider references\nCURRENT"]
+    Projection --> Plan["explanation_plan_v1\nprovider selection only"]
+    Plan --> Explanation["Grounded backend templates\nCURRENT"]
 ```
 
 ## Request and Error Flow
@@ -98,7 +107,7 @@ Owns HTTP routing, transport validation, response codes, response envelopes, and
 
 ### Service Layer
 
-Owns Candidate/Job validation, extraction, retrieval, frozen Phase 5/6/7 behavior, and Phase 8 orchestration. MatchRunService creates a durable RUNNING identity, captures structured inputs, calls the unchanged ranking service through a tracing proxy, and atomically finalizes results. Completed and failed runs are terminal and immutable through the application/repository contract, have no normal mutation path, and are replaced by a new `run_id` when rerun; this is not database-level tamper-proof storage. A dedicated MatchRunRepository owns independent lifecycle transactions so a failed request cannot roll back its audit history. Phase 9.2 evidence generation is a separate historical-only service; provider-backed explanation and feedback remain planned.
+Owns Candidate/Job validation, extraction, retrieval, frozen Phase 5/6/7 behavior, Phase 8 orchestration, and the additive Phase 9 explanation orchestration. MatchRunService remains unchanged. Explanation generation reads one completed historical aggregate, delegates pure evidence/grounding/rendering work outside transactions, and uses short independent repository transactions for RUNNING, evidence, attempt, and terminal transitions. Provider output never directly reaches persistence. Regeneration creates a new immutable history row.
 
 ### Repository Layer
 
@@ -144,7 +153,7 @@ Clear module boundaries matter before deployment boundaries. A local modular mon
 
 ## Configuration and Secrets
 
-The backend reads environment-backed settings via Pydantic Settings. Compose interpolates the same variable names from root `.env`. `.env.example` contains local-only examples; `.env` is ignored. `EXTRACTION_PROVIDER=mock` is the only implemented Phase 3 provider; attempts are bounded to two and timeout is environment-backed. `LLM_API_KEY` remains optional and unused. Selecting an unimplemented provider fails explicitly rather than falling back to mock.
+The backend reads environment-backed settings via Pydantic Settings. Compose interpolates the same variable names from root `.env`. `.env.example` contains non-secret examples; `.env` is ignored. Extraction remains deterministic mock-only. Explanation generation defaults to the deterministic mock; `EXPLANATION_PROVIDER=deepseek` composes the generic OpenAI-compatible transport with a credential-free HTTPS base URL, bounded timeout/token/prompt sizes, environment-supplied model, and a separately supplied API key. Provider metadata fingerprints exclude the key. Selecting an unsupported or incomplete provider fails explicitly rather than falling back to mock.
 
 ## Data Architecture Boundary
 

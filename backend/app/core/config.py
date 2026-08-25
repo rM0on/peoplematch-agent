@@ -30,6 +30,14 @@ class Settings(BaseSettings):
     extraction_provider: str = "mock"
     extraction_max_attempts: int = Field(default=2, ge=1, le=2)
     extraction_timeout_seconds: float = Field(default=10.0, gt=0, le=120)
+    explanation_provider: str = "mock"
+    explanation_max_attempts: int = Field(default=2, ge=1, le=2)
+    explanation_timeout_seconds: float = Field(default=10.0, gt=0, le=120)
+    explanation_max_output_tokens: int = Field(default=1024, ge=64, le=4096)
+    explanation_max_prompt_bytes: int = Field(default=131072, ge=1024, le=1048576)
+    explanation_deepseek_base_url: Optional[str] = None
+    explanation_deepseek_model: Optional[str] = None
+    explanation_deepseek_api_key: Optional[str] = None
     retrieval_embedding_provider: str = "sentence_transformers"
     retrieval_embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
     retrieval_embedding_dimension: int = Field(default=384, gt=0)

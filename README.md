@@ -4,7 +4,7 @@
 
 PeopleMatch Agent is a local-running, evidence-aware, traceable, and deterministically orchestrated candidate/job matching prototype. It is designed to evolve beyond keyword search into a pipeline that can rank AI Builder opportunities, explain why a match is supported by project evidence, review bad cases, and compare later algorithms through sandbox-only offline evaluation.
 
-The repository has completed and frozen **Phase 4 — Hybrid Retrieval**, **Phase 5 — Feature Engineering**, **Phase 6 — Learning-to-Rank**, **Phase 7 — Cross-Encoder Reranking**, and **Phase 8 — Match-run Orchestration & Traceability**. Phase 9.1 persistence/contracts are frozen and Phase 9.2 deterministic historical evidence-engine hardening is in progress. Phase 9.3 provider-backed natural-language explanation remains planned. Dataset `1.0.0` provides canonical contracts and synthetic sandbox profiles; Phase 2 provides PostgreSQL profile APIs; Phase 3 adds deterministic structured extraction. There is no real LLM provider, provider call, explanation API, fine-tuning, final match score, or production hiring claim.
+The repository has completed and frozen **Phase 4 — Hybrid Retrieval**, **Phase 5 — Feature Engineering**, **Phase 6 — Learning-to-Rank**, **Phase 7 — Cross-Encoder Reranking**, **Phase 8 — Match-run Orchestration & Traceability**, and the Phase 9.1/9.2 persistence and deterministic evidence foundations. Phase 9.3/9.4 backend implementation is in progress: provider-neutral structured planning, an OpenAI-compatible DeepSeek transport adapter, deterministic grounding/template rendering, auditable lifecycle persistence, and explanation create/detail/list APIs are implemented for review. The frontend remains unchanged. The LLM cannot author factual prose or ranking changes, and no production hiring claim is made.
 
 ## Project Overview
 
@@ -37,7 +37,7 @@ PeopleMatch Agent is planned around explicit evidence, separable ranking stages,
 
 ## Matching Pipeline
 
-The current local sequence includes Phase 8 deterministic MatchRun orchestration around the Phase 6 default and explicit optional Phase 7 experiment. Phase 9.2 converts completed historical MatchRuns into deterministic, auditable evidence facts; provider execution and natural-language rendering remain planned for Phase 9.3.
+The current local sequence includes Phase 8 deterministic MatchRun orchestration around the Phase 6 default and explicit optional Phase 7 experiment. Frozen Phase 9.2 converts completed historical MatchRuns into deterministic evidence facts. Phase 9.3/9.4 now projects those facts to opaque provider references, accepts only a closed structured explanation plan, resolves and grounds every selection, renders fixed backend templates, and persists a separate immutable explanation history. Provider-authored factual prose is never accepted.
 
 ```mermaid
 flowchart LR
@@ -59,7 +59,7 @@ Phase 3 implements structured extraction with a deterministic mock only. Phase 4
 ```mermaid
 flowchart LR
     Browser["Browser"] --> Web["Next.js frontend\nCURRENT: Phase 0.5 design mock"]
-    Web -. "frontend integration remains a later phase" .-> API["FastAPI backend\nCURRENT: profile, retrieval, and feature APIs"]
+    Web -. "explanation UI remains a later phase" .-> API["FastAPI backend\nCURRENT: profile, matching, and explanation APIs"]
     API --> Extract["Structured extraction\nCURRENT: deterministic mock"]
     Extract --> Domain["Candidate / Job services and repositories\nCURRENT"]
     API --> Domain
@@ -68,8 +68,12 @@ flowchart LR
     API -.-> Qdrant["Qdrant\nCURRENT: derived retrieval index"]
     API --> Runs["Phase 8 deterministic MatchRun\nCOMPLETED / FROZEN"]
     Runs --> Matching["Phase 6 LTR + optional Phase 7 CE\nFROZEN"]
+    Runs --> Evidence["Phase 9.2 historical evidence\nFROZEN"]
+    Evidence --> Plan["Opaque provider refs + structured plan\nCURRENT"]
+    Plan --> Render["Deterministic grounding + templates\nCURRENT"]
+    Render --> PG
+    Plan --> AI["Mock or OpenAI-compatible transport\nCURRENT backend adapter"]
     Runs --> PG
-    Extract -.-> AI["Real LLM provider\nPLANNED"]
 ```
 
 The health endpoint is liveness-only and intentionally does not fail when infrastructure is unavailable. Dependency readiness will be added separately in a later phase.
@@ -105,6 +109,10 @@ peoplematch-agent/
 ```
 
 ## Current Phase
+
+**Phase 9.3 + 9.4 — Explanation planning and backend integration (In Progress / Ready for Review)**
+
+The explanation backend consumes only completed historical MatchRuns through the frozen Phase 9.2 engine. A provider sees a closed prompt projection with opaque temporary references, never internal Evidence IDs, raw snapshots, workflow provenance, or unrestricted factual text. Its `explanation_plan_v1` response can only select approved categories, references, and bounded operations. Backend grounding resolves the references and deterministic templates render `explanation_output_v1`; provider output is never directly persisted. Generation calls run outside database transactions, retries are bounded to at most one repair, and migration `20260825_0004` stores only bounded attempt status/provider metadata and timestamps. Backend routes are `POST /api/v1/match-runs/{match_run_id}/explanations`, `GET /api/v1/explanation-runs/{id}`, and paginated `GET /api/v1/match-runs/{id}/explanation-runs`. There is no explanation frontend, authentication, queue, feedback, or explanation evaluation framework.
 
 **Phase 8 — Match-run Orchestration & Traceability (Completed / Frozen)**
 
@@ -158,7 +166,7 @@ Phase 0 completed:
 - Docker Compose definitions for PostgreSQL, Redis, Qdrant, backend, and frontend;
 - an Alembic foundation later extended by the Phase 2 profile migration.
 
-Not implemented: any real LLM provider, provider call, explanation API or natural-language explanation rendering, general-purpose resume/JD parsing, feedback workflows, automated run replay/recovery, or a complete product dashboard. Phase 8 does not add a final match score, probability, online experiment, or production hiring claim. Phase 9.2 facts are deterministic evidence records, not causal or natural-language explanations.
+Not implemented: an explanation frontend, authentication/user system, background queue, feedback workflow, explanation-quality evaluation, general-purpose resume/JD parsing, automated run replay/recovery, or a complete product dashboard. The explanation provider is a constrained planner rather than a factual text author; final text comes from deterministic backend templates. Phase 8 does not add a final match score, probability, online experiment, or production hiring claim, and Phase 9 explanations are non-causal descriptions of recorded evidence.
 
 ## Roadmap
 
@@ -174,7 +182,7 @@ Not implemented: any real LLM provider, provider call, explanation API or natura
 | 6 | Learning-to-rank | Completed / Frozen |
 | 7 | Cross-encoder reranking | Completed / Frozen |
 | 8 | Match-run orchestration and traceability | Completed / Frozen |
-| 9 | Evidence-grounded explanations | In Progress — Phase 9.2 deterministic evidence-engine hardening; Phase 9.3 planned |
+| 9 | Evidence-grounded explanations | In Progress — Phase 9.1/9.2 frozen; Phase 9.3/9.4 backend ready for review; frontend not included |
 | 10 | Feedback and bad-case review | Planned |
 | 11 | Offline evaluation | Planned |
 | 12 | Local prototype hardening and documented demo | Planned |

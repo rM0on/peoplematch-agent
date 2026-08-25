@@ -4,9 +4,13 @@
 
 **Phase 9.1 status:** Persistence and contracts are frozen.
 
-**Phase 9.2 status:** Deterministic historical Evidence Bundle and fact-engine
-hardening is in progress. Phase 9 remains in progress; provider-backed
-natural-language explanation is planned for Phase 9.3.
+**Phase 9.2 status:** Deterministic historical Evidence Bundle and fact engine
+are frozen.
+
+**Phase 9.3/9.4 status:** Backend provider planning, grounding, deterministic
+rendering, persistence orchestration, and APIs are implemented and ready for
+review. Phase 9 remains in progress until this backend slice is frozen; no
+frontend explanation UI is included.
 
 ## Current Boundary
 
@@ -31,6 +35,25 @@ evidence construction or provider execution, so early `RUNNING` and `FAILED`
 records permit incomplete evidence and provider provenance. `COMPLETED`
 requires complete evidence, provider, prompt, output, count, timestamp, and
 result-fingerprint fields.
+
+The current backend orchestration is:
+
+```text
+completed historical MatchRun
+  -> frozen EvidenceBundle + EvidenceFacts
+  -> opaque provider-reference projection
+  -> untrusted explanation_plan_v1 selection
+  -> reference resolution + deterministic semantic grounding
+  -> fixed backend template rendering
+  -> explanation_output_v1
+  -> atomic terminal persistence
+```
+
+The provider is not a source of factual claims. It cannot return summary prose,
+missing requirements, rewritten resume text, ranks, scores, or new facts. It can
+only select closed categories, opaque references, and bounded operations already
+present in the prompt projection. Internal Evidence IDs are resolved only after
+the response returns, and provider output is never persisted directly.
 
 Phase 9.2 does not change that persistence lifecycle. Its
 `EvidenceBundleBuilder` accepts only a completed historical MatchRun aggregate,
@@ -74,6 +97,10 @@ into provider-safe evidence.
 - `explanation_output_v1` defines bounded Candidate explanation output with
   evidence references and structured rewrite operations. It contains no
   writable ranking, score, probability, confidence, or final-match field.
+- `explanation_plan_v1` is the provider-output contract. Its checked-in schema
+  permits only canonical top-k Candidate plan entries, closed template keys,
+  opaque `ref_####` selections, and bounded operations. It contains no
+  provider-authored factual text field.
 
 Both evidence payloads and their independent canonical fingerprints are
 stored when available. Candidate and result fingerprints use the same
@@ -101,9 +128,11 @@ consistency rules that JSON Schema does not express.
 
 ## Privacy
 
-The provider contract continues the Phase 8 structured snapshot boundary. Its
-input is an explicit allowlist of closed identifiers, enums, bounded lists of
-requirement Evidence IDs, and finite numeric ranking/feature values. Rich
+The persisted provider contract continues the Phase 8 structured snapshot
+boundary. The actual model prompt is narrower: a deterministic transient
+projection replaces internal Candidate/Evidence identities with opaque
+`candidate_####` and `ref_####` values and includes only closed fact categories,
+enums, and bounded reference lists. Rich
 historical labels, requirement text, target roles, technologies, locations,
 project summaries, outcomes, and evidence-statement prose remain internal and
 are not projected. Provider identifiers use a restricted normalized token
@@ -123,10 +152,37 @@ and rank ownership, and kind compatibility. These are narrowly defined
 data-minimization and grounding contracts, not claims of general semantic
 redaction or complete privacy/security enforcement.
 
-## Not Implemented In Phase 9.2
+## Provider, Repair, and Transaction Boundary
 
-Provider integration, prompts, parsing/repair, LLM grounding/repair
-orchestration, HTTP routes, frontend integration, feedback, and offline
-explanation-quality evaluation remain later Phase 9, 10, or 11 work. The
-Phase 9.2 fact layer is deterministic and evidence-backed but intentionally
-does not produce natural-language or causal explanations.
+`ExplanationProvider` is provider-neutral. The deterministic mock is offline;
+the DeepSeek configuration uses a generic OpenAI-compatible chat-completions
+transport adapter. Provider selection, endpoint, model, timeout, prompt byte
+limit, output-token limit, and maximum one repair are environment controlled;
+requests cannot select a provider or model.
+
+The prompt is versioned and fingerprinted with its evidence and output contract
+fingerprints. A repair request carries only a bounded failure category and a
+fresh copy of the canonical opaque projection; raw prior output is discarded.
+No provider HTTP call or repair attempt holds a database transaction open.
+
+Migration `20260825_0004` adds only bounded generation-attempt audit metadata:
+attempt number/status, bounded error category, provider kind/name/model and
+configuration fingerprint, and timestamps. It does not store prompts, provider
+responses, evidence payloads, credentials, authorization headers, or stack
+traces. Phase 9.1 terminal transition locking and atomic child persistence remain
+the authority for completion/failure.
+
+The backend exposes:
+
+- `POST /api/v1/match-runs/{match_run_id}/explanations`;
+- `GET /api/v1/explanation-runs/{explanation_run_id}`;
+- `GET /api/v1/match-runs/{match_run_id}/explanation-runs`.
+
+## Not Implemented
+
+Frontend explanation integration, authentication/users, distributed queues,
+Redis/Celery business usage, feedback, and offline explanation-quality
+evaluation are not implemented. The provider does not generate final prose;
+backend templates render non-causal descriptions of recorded evidence. These
+controls reduce the accepted output surface but are not a claim of perfect
+hallucination prevention, privacy, or production hiring effectiveness.
