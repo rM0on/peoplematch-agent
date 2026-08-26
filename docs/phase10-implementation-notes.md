@@ -93,13 +93,15 @@ Feedback create requests are discriminated by `feedback_type` (`ranking`, `expla
 - [x] Run persistence contract tests and model/schema parity checks.
 - [x] Review that no Phase 8/9 table or column is altered and no raw provider/snapshot/evaluation payload column exists.
 
-## Task 3 — Immutable Feedback Service
+## Task 3 — Repository and Transaction Foundation
 
-- [ ] Add RED tests for create/get, non-terminal or missing MatchRun, invalid result ownership, cross-run pairwise targets, non-top1 target, explanation ownership, unknown/cross-owner evidence reference, profile target mismatch, and immutable supersession rules.
-- [ ] Confirm RED failures reach missing Phase 10 service behavior.
-- [ ] Implement repository historical reads and immutable insert/get transactions.
+- [x] Add RED tests for create/get, invalid result ownership, cross-run pairwise targets, non-top1 target, explanation ownership, unknown/cross-owner evidence reference, historical profile resolution, and immutable supersession rules.
+- [x] Confirm RED failures reach missing Phase 10 repository behavior.
+- [x] Implement repository historical reads and immutable insert/get transactions.
+- [x] Implement bounded supersession ancestry, fixed-query BadCase detail loading, append-only child persistence, and row-locked atomic root/transition updates.
+- [x] Verify stale revision rejection and deterministic two-session PostgreSQL lock contention without timing sleeps.
 - [ ] Implement service validation that derives Job/Candidate/rank from persisted Phase 8/9 owners.
-- [ ] Rerun focused tests and review that no current Candidate/Job repository or provider is called.
+- [x] Rerun focused tests and review that no current Candidate/Job repository or provider is called.
 
 ## Task 4 — BadCase Aggregate and Lifecycle
 
@@ -146,6 +148,8 @@ The same suite run from `backend/` produced 13 import failures because repositor
 
 ## Phase 10B Status
 
-Tasks 1 and 2 are implemented in the uncommitted working tree. Their targeted contract and persistence tests, schema-artifact parity checks, and the full backend regression pass. PostgreSQL 16.14 verification passed against a disposable database: the real `20260825_0004` to `20260826_0005` upgrade, Alembic head/current/check, ORM/migration/database parity, high-value constraint attacks, delete safety, and the frozen PostgreSQL regression suites all passed. Task 3 repository and service implementation has not started.
+Tasks 1 and 2 are frozen at checkpoint `d10fe9d695b78693061156170a9b796fa92dd87c`. The Task 3 repository and transaction foundation is implemented in the uncommitted working tree; business services and APIs have not started. Feedback persistence is append-only, supersession ancestry is bounded, historical Job/Candidate/rank/explanation/evidence owners are resolved only from Phase 8/9 records, and BadCase root status/revision plus transition history update atomically under a row lock. Repository methods own a short transaction when called independently and accept an already-active caller transaction without committing it, so Task 4 can compose historical resolution, append-only writes, and a lifecycle transition into one atomic unit. Caller rollback was verified to remove every Phase 10 write while preserving frozen source history. Bounded BadCase details explicitly identify any truncated child collections rather than presenting a partial history as complete. A deterministic PostgreSQL two-session race proves that one conflicting transition wins, the losing backend is blocked specifically by the winner backend, and the stale writer receives a typed concurrency error.
+
+Task 3 hardening verification used PostgreSQL 16.14 in the disposable `peoplematch_task3_review_a01425` database. The Task 3 PostgreSQL repository/concurrency module passed `15 passed, 0 failed, 0 skipped`, including caller-owned transaction rollback and explicit bounded-projection tests; the frozen PostgreSQL regression modules passed `31 passed, 0 failed, 0 skipped`; Task 1/2 plus Task 3 contract tests passed `51 passed`; and the separated-process full backend suite passed `740 passed, 0 failed, 47 skipped`. Alembic head/current were both `20260826_0005` and `alembic check` reported no drift. Task 4 must still enforce business compatibility for feedback supersession, case symptom/source selection, supported/confirmed root-cause evidence, action semantics, and complete lifecycle orchestration using these repository primitives.
 
 The PostgreSQL suites and the standard full backend regression remain separate pytest processes. Running in-process Alembic PostgreSQL execution before the full suite changes process-global logger state and causes one frozen extraction log-capture assertion to miss otherwise emitted completion records. That frozen test passes independently and with its adjacent module; the standard backend regression and the PostgreSQL suites also pass independently. This is a test-runner composition limitation, not a Phase 10 persistence correctness failure, and the frozen extraction implementation is unchanged.
