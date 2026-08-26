@@ -1,0 +1,670 @@
+{
+  "$defs": {
+    "ExplanationFeedbackRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "feedback_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+          "title": "Feedback Id",
+          "type": "string"
+        },
+        "contract_version": {
+          "const": "feedback_record_v1",
+          "default": "feedback_record_v1",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "origin": {
+          "const": "human",
+          "default": "human",
+          "title": "Origin",
+          "type": "string"
+        },
+        "job_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+          "title": "Job Id",
+          "type": "string"
+        },
+        "candidate_id": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Candidate Id"
+        },
+        "result_rank": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result Rank"
+        },
+        "comparison_candidate_id": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Comparison Candidate Id"
+        },
+        "comparison_result_rank": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Comparison Result Rank"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "match_run_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+          "title": "Match Run Id",
+          "type": "string"
+        },
+        "comment": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Comment"
+        },
+        "supersedes_feedback_id": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Supersedes Feedback Id"
+        },
+        "feedback_type": {
+          "const": "explanation",
+          "title": "Feedback Type",
+          "type": "string"
+        },
+        "explanation_run_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+          "title": "Explanation Run Id",
+          "type": "string"
+        },
+        "match_explanation_id": {
+          "exclusiveMinimum": 0,
+          "title": "Match Explanation Id",
+          "type": "integer"
+        },
+        "target_type": {
+          "$ref": "#/$defs/ExplanationTargetType"
+        },
+        "value": {
+          "$ref": "#/$defs/ExplanationVerdict"
+        },
+        "evidence_reference": {
+          "anyOf": [
+            {
+              "maxLength": 180,
+              "minLength": 3,
+              "pattern": "^(?:job_requirement:[A-Za-z0-9_.-]{1,100}|candidate:[1-9][0-9]*:(?:skill:[a-f0-9]{32,64}|project:[A-Za-z0-9_.-]{1,100}|project_evidence:[A-Za-z0-9_.-]{1,100})|(?:feature|ranking|retrieval|diagnostic):[1-9][0-9]*:[a-z][a-z0-9_.-]{0,79}|comparison:[1-9][0-9]*:top1:[a-z][a-z0-9_.-]{0,79})$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Reference"
+        }
+      },
+      "required": [
+        "feedback_id",
+        "job_id",
+        "created_at",
+        "match_run_id",
+        "feedback_type",
+        "explanation_run_id",
+        "match_explanation_id",
+        "target_type",
+        "value"
+      ],
+      "title": "ExplanationFeedbackRecord",
+      "type": "object"
+    },
+    "ExplanationTargetType": {
+      "enum": [
+        "summary",
+        "match_reason",
+        "risk",
+        "missing_requirement",
+        "interview_question",
+        "top1_comparison",
+        "rewrite_operation"
+      ],
+      "title": "ExplanationTargetType",
+      "type": "string"
+    },
+    "ExplanationVerdict": {
+      "enum": [
+        "grounded",
+        "unsupported",
+        "misleading",
+        "incomplete"
+      ],
+      "title": "ExplanationVerdict",
+      "type": "string"
+    },
+    "ProfileDataFeedbackRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "feedback_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+          "title": "Feedback Id",
+          "type": "string"
+        },
+        "contract_version": {
+          "const": "feedback_record_v1",
+          "default": "feedback_record_v1",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "origin": {
+          "const": "human",
+          "default": "human",
+          "title": "Origin",
+          "type": "string"
+        },
+        "job_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+          "title": "Job Id",
+          "type": "string"
+        },
+        "candidate_id": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Candidate Id"
+        },
+        "result_rank": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result Rank"
+        },
+        "comparison_candidate_id": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Comparison Candidate Id"
+        },
+        "comparison_result_rank": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Comparison Result Rank"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "match_run_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+          "title": "Match Run Id",
+          "type": "string"
+        },
+        "comment": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Comment"
+        },
+        "supersedes_feedback_id": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Supersedes Feedback Id"
+        },
+        "feedback_type": {
+          "const": "profile_data",
+          "title": "Feedback Type",
+          "type": "string"
+        },
+        "target_type": {
+          "$ref": "#/$defs/ProfileTargetType"
+        },
+        "subject_match_result_id": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subject Match Result Id"
+        },
+        "value": {
+          "$ref": "#/$defs/ProfileDataIssue"
+        },
+        "field_locator": {
+          "$ref": "#/$defs/ProfileFieldLocator"
+        }
+      },
+      "required": [
+        "feedback_id",
+        "job_id",
+        "created_at",
+        "match_run_id",
+        "feedback_type",
+        "target_type",
+        "value",
+        "field_locator"
+      ],
+      "title": "ProfileDataFeedbackRecord",
+      "type": "object"
+    },
+    "ProfileDataIssue": {
+      "enum": [
+        "missing_skill",
+        "incorrect_skill",
+        "missing_project_evidence",
+        "incorrect_project_evidence_status",
+        "incorrect_seniority",
+        "incorrect_location",
+        "incorrect_role_direction",
+        "unclear_requirement",
+        "missing_requirement",
+        "incorrect_requirement_priority",
+        "incorrect_seniority_requirement",
+        "incorrect_location_constraint",
+        "missing_expectation"
+      ],
+      "title": "ProfileDataIssue",
+      "type": "string"
+    },
+    "ProfileFieldLocator": {
+      "enum": [
+        "candidate.skills",
+        "candidate.project_evidence",
+        "candidate.seniority",
+        "candidate.location",
+        "candidate.role_direction",
+        "job.requirements",
+        "job.requirement_priority",
+        "job.seniority",
+        "job.location",
+        "job.expectations"
+      ],
+      "title": "ProfileFieldLocator",
+      "type": "string"
+    },
+    "ProfileTargetType": {
+      "enum": [
+        "candidate_profile",
+        "job_profile"
+      ],
+      "title": "ProfileTargetType",
+      "type": "string"
+    },
+    "RankingFeedbackRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "feedback_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+          "title": "Feedback Id",
+          "type": "string"
+        },
+        "contract_version": {
+          "const": "feedback_record_v1",
+          "default": "feedback_record_v1",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "origin": {
+          "const": "human",
+          "default": "human",
+          "title": "Origin",
+          "type": "string"
+        },
+        "job_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+          "title": "Job Id",
+          "type": "string"
+        },
+        "candidate_id": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Candidate Id"
+        },
+        "result_rank": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result Rank"
+        },
+        "comparison_candidate_id": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Comparison Candidate Id"
+        },
+        "comparison_result_rank": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Comparison Result Rank"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "match_run_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+          "title": "Match Run Id",
+          "type": "string"
+        },
+        "comment": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Comment"
+        },
+        "supersedes_feedback_id": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Supersedes Feedback Id"
+        },
+        "feedback_type": {
+          "const": "ranking",
+          "title": "Feedback Type",
+          "type": "string"
+        },
+        "target_type": {
+          "$ref": "#/$defs/RankingTargetType"
+        },
+        "subject_match_result_id": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subject Match Result Id"
+        },
+        "comparison_match_result_id": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Comparison Match Result Id"
+        },
+        "expected_candidate_reference": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 20,
+              "pattern": "^expected_candidate:[A-Za-z0-9][A-Za-z0-9._:-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Candidate Reference"
+        },
+        "value": {
+          "$ref": "#/$defs/RankingVerdict"
+        },
+        "reason_code": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RankingReasonCode"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "feedback_id",
+        "job_id",
+        "created_at",
+        "match_run_id",
+        "feedback_type",
+        "target_type",
+        "value"
+      ],
+      "title": "RankingFeedbackRecord",
+      "type": "object"
+    },
+    "RankingReasonCode": {
+      "enum": [
+        "wrong_top1",
+        "ranking_inversion",
+        "false_positive",
+        "false_negative",
+        "constraint_conflict",
+        "evidence_coverage_disagreement"
+      ],
+      "title": "RankingReasonCode",
+      "type": "string"
+    },
+    "RankingTargetType": {
+      "enum": [
+        "overall_ranking",
+        "top1",
+        "candidate_result",
+        "pairwise",
+        "expected_candidate"
+      ],
+      "title": "RankingTargetType",
+      "type": "string"
+    },
+    "RankingVerdict": {
+      "enum": [
+        "correct",
+        "wrong",
+        "uncertain",
+        "insufficient_evidence"
+      ],
+      "title": "RankingVerdict",
+      "type": "string"
+    }
+  },
+  "discriminator": {
+    "mapping": {
+      "explanation": "#/$defs/ExplanationFeedbackRecord",
+      "profile_data": "#/$defs/ProfileDataFeedbackRecord",
+      "ranking": "#/$defs/RankingFeedbackRecord"
+    },
+    "propertyName": "feedback_type"
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/RankingFeedbackRecord"
+    },
+    {
+      "$ref": "#/$defs/ExplanationFeedbackRecord"
+    },
+    {
+      "$ref": "#/$defs/ProfileDataFeedbackRecord"
+    }
+  ]
+}

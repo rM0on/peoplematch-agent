@@ -1,0 +1,680 @@
+{
+  "$defs": {
+    "AnalysisAssessment": {
+      "enum": [
+        "suspected",
+        "supported",
+        "confirmed",
+        "rejected"
+      ],
+      "title": "AnalysisAssessment",
+      "type": "string"
+    },
+    "BadCaseAnalysisResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "assessment": {
+          "$ref": "#/$defs/AnalysisAssessment"
+        },
+        "root_cause_type": {
+          "$ref": "#/$defs/RootCauseType"
+        },
+        "root_cause_code": {
+          "$ref": "#/$defs/RootCauseCode"
+        },
+        "description": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "supporting_evidence_link_id": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Supporting Evidence Link Id"
+        },
+        "analysis_id": {
+          "exclusiveMinimum": 0,
+          "title": "Analysis Id",
+          "type": "integer"
+        },
+        "revision_number": {
+          "exclusiveMinimum": 0,
+          "title": "Revision Number",
+          "type": "integer"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "assessment",
+        "root_cause_type",
+        "root_cause_code",
+        "description",
+        "analysis_id",
+        "revision_number",
+        "created_at"
+      ],
+      "title": "BadCaseAnalysisResponse",
+      "type": "object"
+    },
+    "BadCaseCategory": {
+      "enum": [
+        "wrong_top1",
+        "ranking_inversion",
+        "false_positive",
+        "false_negative",
+        "constraint_conflict",
+        "uncertain_order",
+        "expected_candidate_not_recalled",
+        "irrelevant_candidate_recalled",
+        "filter_exclusion_disagreement",
+        "pool_truncation_concern",
+        "missing_support",
+        "incorrect_support_status",
+        "project_skill_link_disagreement",
+        "requirement_coverage_disagreement",
+        "unsupported_explanation",
+        "misleading_explanation",
+        "incomplete_explanation",
+        "incorrect_gap_statement",
+        "incorrect_top1_comparison",
+        "candidate_snapshot_issue",
+        "job_snapshot_issue",
+        "requirement_issue",
+        "constraint_issue",
+        "history_integrity_failure",
+        "ownership_failure",
+        "lifecycle_failure",
+        "provider_attempt_failure"
+      ],
+      "title": "BadCaseCategory",
+      "type": "string"
+    },
+    "BadCaseSeverity": {
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "title": "BadCaseSeverity",
+      "type": "string"
+    },
+    "BadCaseSourceResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "source_type": {
+          "$ref": "#/$defs/BadCaseSourceType"
+        },
+        "feedback_id": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Feedback Id"
+        },
+        "system_signal_id": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "System Signal Id"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_type",
+        "created_at"
+      ],
+      "title": "BadCaseSourceResponse",
+      "type": "object"
+    },
+    "BadCaseSourceType": {
+      "enum": [
+        "feedback",
+        "system_signal"
+      ],
+      "title": "BadCaseSourceType",
+      "type": "string"
+    },
+    "BadCaseStatus": {
+      "enum": [
+        "CREATED",
+        "REVIEWED",
+        "ROOT_CAUSE_IDENTIFIED",
+        "ACTION_PLANNED",
+        "RESOLVED",
+        "VERIFIED",
+        "DISMISSED",
+        "DUPLICATE"
+      ],
+      "title": "BadCaseStatus",
+      "type": "string"
+    },
+    "BadCaseTransitionResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "transition_id": {
+          "exclusiveMinimum": 0,
+          "title": "Transition Id",
+          "type": "integer"
+        },
+        "from_status": {
+          "$ref": "#/$defs/BadCaseStatus"
+        },
+        "to_status": {
+          "$ref": "#/$defs/BadCaseStatus"
+        },
+        "reason": {
+          "$ref": "#/$defs/TransitionReason"
+        },
+        "origin": {
+          "enum": [
+            "manual_review",
+            "system_rule"
+          ],
+          "title": "Origin",
+          "type": "string"
+        },
+        "previous_revision": {
+          "minimum": 0,
+          "title": "Previous Revision",
+          "type": "integer"
+        },
+        "new_revision": {
+          "minimum": 0,
+          "title": "New Revision",
+          "type": "integer"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "transition_id",
+        "from_status",
+        "to_status",
+        "reason",
+        "origin",
+        "previous_revision",
+        "new_revision",
+        "created_at"
+      ],
+      "title": "BadCaseTransitionResponse",
+      "type": "object"
+    },
+    "ResolutionActionResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "action_type": {
+          "$ref": "#/$defs/ResolutionActionType"
+        },
+        "description": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/ResolutionActionStatus",
+          "default": "planned"
+        },
+        "supersedes_action_id": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Supersedes Action Id"
+        },
+        "safe_change_reference": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Safe Change Reference"
+        },
+        "action_id": {
+          "exclusiveMinimum": 0,
+          "title": "Action Id",
+          "type": "integer"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "completed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Completed At"
+        }
+      },
+      "required": [
+        "action_type",
+        "description",
+        "action_id",
+        "created_at"
+      ],
+      "title": "ResolutionActionResponse",
+      "type": "object"
+    },
+    "ResolutionActionStatus": {
+      "enum": [
+        "planned",
+        "in_progress",
+        "completed",
+        "cancelled",
+        "superseded"
+      ],
+      "title": "ResolutionActionStatus",
+      "type": "string"
+    },
+    "ResolutionActionType": {
+      "enum": [
+        "data_correction_proposal",
+        "retrieval_change_hypothesis",
+        "filter_policy_hypothesis",
+        "fusion_policy_hypothesis",
+        "pool_policy_hypothesis",
+        "feature_rule_hypothesis",
+        "feature_contract_hypothesis",
+        "ranking_change_hypothesis",
+        "ranking_contract_hypothesis",
+        "constraint_policy_hypothesis",
+        "data_integrity_action",
+        "evidence_rule_hypothesis",
+        "evidence_integrity_action",
+        "planning_policy_hypothesis",
+        "template_change_hypothesis",
+        "grounding_integrity_action",
+        "integrity_repair_action",
+        "documentation_action",
+        "no_change"
+      ],
+      "title": "ResolutionActionType",
+      "type": "string"
+    },
+    "RootCauseCode": {
+      "enum": [
+        "ranking_wrong_top1",
+        "ranking_pairwise_inversion",
+        "ranking_false_positive",
+        "ranking_false_negative",
+        "ranking_tie_break_issue",
+        "ranking_constraint_policy_issue",
+        "retrieval_recall_miss",
+        "retrieval_filter_exclusion",
+        "retrieval_dense_coverage_gap",
+        "retrieval_sparse_coverage_gap",
+        "retrieval_fusion_issue",
+        "retrieval_pool_truncation",
+        "retrieval_index_integrity",
+        "feature_semantic_score_issue",
+        "feature_sparse_score_issue",
+        "feature_skill_fit_issue",
+        "feature_project_evidence_issue",
+        "feature_role_direction_issue",
+        "feature_location_issue",
+        "feature_seniority_issue",
+        "feature_missing_penalty_issue",
+        "feature_overclaim_penalty_issue",
+        "feature_availability_issue",
+        "evidence_missing_project_support",
+        "evidence_status_incorrect",
+        "evidence_skill_project_link_incorrect",
+        "evidence_requirement_alignment_incorrect",
+        "evidence_claim_promoted_without_support",
+        "evidence_owner_mismatch",
+        "explanation_unsupported_claim",
+        "explanation_misleading_template",
+        "explanation_incomplete_selection",
+        "explanation_incorrect_gap",
+        "explanation_comparison_mismatch",
+        "explanation_reference_ownership",
+        "explanation_clarity_issue",
+        "data_candidate_skill_missing",
+        "data_candidate_skill_incorrect",
+        "data_project_evidence_missing",
+        "data_candidate_seniority_incorrect",
+        "data_candidate_location_incorrect",
+        "data_job_requirement_unclear",
+        "data_job_requirement_missing",
+        "data_job_requirement_priority_incorrect",
+        "data_job_level_incorrect",
+        "data_job_expectation_missing",
+        "integrity_snapshot_fingerprint",
+        "integrity_result_fingerprint",
+        "integrity_cross_owner_reference",
+        "integrity_terminal_overwrite",
+        "integrity_attempt_audit"
+      ],
+      "title": "RootCauseCode",
+      "type": "string"
+    },
+    "RootCauseType": {
+      "enum": [
+        "ranking",
+        "retrieval",
+        "feature",
+        "evidence",
+        "explanation",
+        "data_quality",
+        "integrity"
+      ],
+      "title": "RootCauseType",
+      "type": "string"
+    },
+    "SymptomFamily": {
+      "enum": [
+        "RANKING",
+        "RETRIEVAL",
+        "EVIDENCE",
+        "EXPLANATION",
+        "DATA_QUALITY",
+        "INTEGRITY_OPERATIONS"
+      ],
+      "title": "SymptomFamily",
+      "type": "string"
+    },
+    "TransitionReason": {
+      "enum": [
+        "review_completed",
+        "root_cause_supported",
+        "action_created",
+        "actions_completed",
+        "verification_linked",
+        "case_dismissed",
+        "duplicate_linked",
+        "case_reopened"
+      ],
+      "title": "TransitionReason",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "bad_case_id": {
+      "maxLength": 160,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+      "title": "Bad Case Id",
+      "type": "string"
+    },
+    "case_contract_version": {
+      "const": "bad_case_v1",
+      "title": "Case Contract Version",
+      "type": "string"
+    },
+    "taxonomy_version": {
+      "const": "bad_case_taxonomy_v1",
+      "title": "Taxonomy Version",
+      "type": "string"
+    },
+    "primary_match_run_id": {
+      "maxLength": 160,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+      "title": "Primary Match Run Id",
+      "type": "string"
+    },
+    "primary_match_result_id": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Primary Match Result Id"
+    },
+    "historical_job_id": {
+      "maxLength": 160,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+      "title": "Historical Job Id",
+      "type": "string"
+    },
+    "historical_candidate_id": {
+      "anyOf": [
+        {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Historical Candidate Id"
+    },
+    "result_rank": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Result Rank"
+    },
+    "primary_explanation_run_id": {
+      "anyOf": [
+        {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Primary Explanation Run Id"
+    },
+    "primary_match_explanation_id": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Primary Match Explanation Id"
+    },
+    "symptom_code": {
+      "$ref": "#/$defs/BadCaseCategory"
+    },
+    "symptom_family": {
+      "$ref": "#/$defs/SymptomFamily"
+    },
+    "severity": {
+      "$ref": "#/$defs/BadCaseSeverity"
+    },
+    "status": {
+      "$ref": "#/$defs/BadCaseStatus"
+    },
+    "revision": {
+      "minimum": 0,
+      "title": "Revision",
+      "type": "integer"
+    },
+    "duplicate_of_bad_case_id": {
+      "anyOf": [
+        {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Duplicate Of Bad Case Id"
+    },
+    "related_case_id": {
+      "anyOf": [
+        {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Related Case Id"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    },
+    "sources": {
+      "items": {
+        "$ref": "#/$defs/BadCaseSourceResponse"
+      },
+      "maxItems": 20,
+      "title": "Sources",
+      "type": "array"
+    },
+    "analysis": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/BadCaseAnalysisResponse"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "resolution": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ResolutionActionResponse"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "analyses": {
+      "items": {
+        "$ref": "#/$defs/BadCaseAnalysisResponse"
+      },
+      "maxItems": 100,
+      "title": "Analyses",
+      "type": "array"
+    },
+    "resolution_actions": {
+      "items": {
+        "$ref": "#/$defs/ResolutionActionResponse"
+      },
+      "maxItems": 100,
+      "title": "Resolution Actions",
+      "type": "array"
+    },
+    "transitions": {
+      "items": {
+        "$ref": "#/$defs/BadCaseTransitionResponse"
+      },
+      "maxItems": 100,
+      "title": "Transitions",
+      "type": "array"
+    }
+  },
+  "required": [
+    "bad_case_id",
+    "case_contract_version",
+    "taxonomy_version",
+    "primary_match_run_id",
+    "historical_job_id",
+    "symptom_code",
+    "symptom_family",
+    "severity",
+    "status",
+    "revision",
+    "created_at",
+    "updated_at"
+  ],
+  "title": "BadCaseDetailResponse",
+  "type": "object"
+}

@@ -12,6 +12,15 @@ from app.models.job import JobProfileModel  # noqa: F401
 from app.models.match_run import MatchRunModel  # noqa: F401
 from app.models.explanation_run import ExplanationRunModel  # noqa: F401
 from app.models.explanation_attempt import ExplanationGenerationAttemptModel  # noqa: F401
+from app.models.feedback import FeedbackRecordModel, SystemSignalModel  # noqa: F401
+from app.models.bad_case import (  # noqa: F401
+    BadCaseAnalysisModel,
+    BadCaseModel,
+    BadCaseSourceLinkModel,
+    BadCaseTransitionModel,
+    FeedbackEvidenceLinkModel,
+    ResolutionActionModel,
+)
 
 
 config = context.config
