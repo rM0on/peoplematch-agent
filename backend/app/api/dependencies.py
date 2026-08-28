@@ -38,6 +38,8 @@ from app.services.explanation.generation.provider import (
 )
 from app.services.explanation.generation.orchestration import ExplanationGenerationService
 from app.services.explanation.generation.pipeline import ExplanationGenerationPipeline
+from app.services.feedback.service import FeedbackService
+from app.services.bad_cases.service import BadCaseReviewService
 
 
 @lru_cache
@@ -263,3 +265,11 @@ def get_explanation_generation_service() -> ExplanationGenerationService:
         ),
         max_attempts=settings.explanation_max_attempts,
     )
+
+
+def get_feedback_service() -> FeedbackService:
+    return FeedbackService(get_session_factory())
+
+
+def get_bad_case_review_service() -> BadCaseReviewService:
+    return BadCaseReviewService(get_session_factory())

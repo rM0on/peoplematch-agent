@@ -32,45 +32,53 @@
 - `backend/app/schemas/bad_cases.py` — closed taxonomy, lifecycle, PATCH operations, list/detail responses.
 - `backend/app/repositories/feedback_repository.py` — historical lookup plus immutable feedback persistence.
 - `backend/app/repositories/bad_case_repository.py` — atomic create, detail/list, and row-locked update transactions.
+- `backend/app/repositories/system_signal_repository.py` — read-only deterministic SystemSignal lookup.
 - `backend/app/services/feedback/contracts.py` — feedback contract version and semantic mappings.
+- `backend/app/services/feedback/errors.py` — bounded service/API error model.
 - `backend/app/services/feedback/service.py` — target ownership validation and server-owned identity derivation.
+- `backend/app/services/feedback/transaction.py` — standalone or caller-owned short transaction scope.
 - `backend/app/services/bad_cases/taxonomy.py` — symptom/root-cause/action compatibility maps.
+- `backend/app/services/bad_cases/compatibility.py` — Task 4 semantic compatibility policy.
+- `backend/app/services/bad_cases/projections.py` — bounded API and Phase 11-safe export projections.
 - `backend/app/services/bad_cases/service.py` — case creation and constrained lifecycle orchestration.
-- `backend/app/api/routes/feedback.py` — create/detail endpoints using `ApiResponse`.
-- `backend/app/api/routes/bad_cases.py` — create/list/detail/PATCH endpoints using `ApiResponse`.
+- `backend/app/schemas/phase10.py` — closed API detail, source-link command, and review-export contracts.
+- `backend/app/api/routes/phase10.py` — thin feedback and BadCase command/query endpoints using `ApiResponse`.
 - `backend/alembic/versions/20260826_0005_feedback_bad_case_management.py` — additive Phase 10 tables only.
-- `data/contracts/feedback_record_v1.json` and `data/contracts/bad_case_v1.json` — checked-in strict schemas.
+- `data/contracts/feedback_record_v1.json`, `data/contracts/bad_case_v1.json`, and `data/contracts/phase10_review_export_v1.json` — checked-in strict schemas.
 
 ### Minimal existing-file changes
 
 - `backend/app/api/dependencies.py` — construct Phase 10 services from the existing session factory.
 - `backend/app/api/router.py` — register Phase 10 routes under `/api/v1`.
-- `backend/app/exceptions.py` — typed feedback/BadCase errors.
 - `backend/alembic/env.py` — import new metadata only.
-- `README.md` and `docs/development-roadmap.md` — mark Phase 10B backend implementation accurately.
 
 ### New tests
 
 - `backend/tests/test_feedback_contracts.py`
 - `backend/tests/test_bad_case_contracts.py`
-- `backend/tests/test_feedback_service.py`
-- `backend/tests/test_bad_case_service.py`
-- `backend/tests/test_feedback_bad_case_api.py`
 - `backend/tests/test_feedback_bad_case_persistence_contract.py`
-- `backend/tests/test_feedback_bad_case_postgres.py`
+- `backend/tests/test_feedback_bad_case_repository_contract.py`
+- `backend/tests/test_feedback_bad_case_repository_postgres.py`
+- `backend/tests/test_phase10_business_services.py`
+- `backend/tests/test_phase10_api.py`
+- `backend/tests/test_phase10_api_postgres.py`
+- `backend/tests/test_phase10_export_contract.py`
+- `backend/tests/test_phase10_services_postgres.py`
 
 ## Public Interfaces
 
 ```python
 class FeedbackService:
-    async def create(self, request: FeedbackCreateRequest) -> FeedbackResponse: ...
-    async def get(self, feedback_id: str) -> FeedbackResponse: ...
+    async def create(self, request: FeedbackCreateRequest) -> FeedbackRecordV1: ...
+    async def get(self, feedback_id: str) -> FeedbackRecordV1: ...
 
-class BadCaseService:
-    async def create(self, request: BadCaseCreateRequest) -> BadCaseDetailResponse: ...
-    async def get(self, bad_case_id: str) -> BadCaseDetailResponse: ...
-    async def list(self, *, limit: int, offset: int, status=None, severity=None, category=None): ...
-    async def update(self, bad_case_id: str, request: BadCaseUpdateRequest) -> BadCaseDetailResponse: ...
+class BadCaseReviewService:
+    async def create_detail(self, request: BadCaseCreateRequest) -> BadCaseApiDetailResponse: ...
+    async def get_detail(self, bad_case_id: str, *, child_limit: int = 100) -> BadCaseApiDetailResponse: ...
+    async def list_summaries(self, *, limit: int, offset: int): ...
+    async def link_source_detail(self, bad_case_id: str, request: BadCaseLinkSourceRequest) -> BadCaseApiDetailResponse: ...
+    async def review_detail(self, bad_case_id: str, request: BadCaseUpdateRequest) -> BadCaseApiDetailResponse: ...
+    async def export_review(self, bad_case_id: str) -> Phase10ReviewExportV1: ...
 ```
 
 Feedback create requests are discriminated by `feedback_type` (`ranking`, `explanation`, `profile_data`). BadCase update accepts only `expected_status`, `expected_revision`, a valid next `status`, optional append-only `analysis`, optional append-only `resolution`, and transition/verification data. Extra and immutable fields fail Pydantic validation.
@@ -148,8 +156,12 @@ The same suite run from `backend/` produced 13 import failures because repositor
 
 ## Phase 10B Status
 
-Tasks 1 and 2 are frozen at checkpoint `d10fe9d695b78693061156170a9b796fa92dd87c`. The Task 3 repository and transaction foundation is implemented in the uncommitted working tree; business services and APIs have not started. Feedback persistence is append-only, supersession ancestry is bounded, historical Job/Candidate/rank/explanation/evidence owners are resolved only from Phase 8/9 records, and BadCase root status/revision plus transition history update atomically under a row lock. Repository methods own a short transaction when called independently and accept an already-active caller transaction without committing it, so Task 4 can compose historical resolution, append-only writes, and a lifecycle transition into one atomic unit. Caller rollback was verified to remove every Phase 10 write while preserving frozen source history. Bounded BadCase details explicitly identify any truncated child collections rather than presenting a partial history as complete. A deterministic PostgreSQL two-session race proves that one conflicting transition wins, the losing backend is blocked specifically by the winner backend, and the stale writer receives a typed concurrency error.
+Tasks 1–3 are frozen through checkpoint `2a6a05c70e920aeab02d43f976d0ae04169786c8`. Task 4 business services and the Task 5 backend API/export boundary are implemented in the uncommitted working tree and remain pending independent actual-code review. Feedback creation derives historical Job/Candidate/rank/explanation/evidence ownership from frozen Phase 8/9 records, preserves absent-result references as opaque human observations, and composes through caller-owned short transactions. BadCase review keeps symptom, root cause, action, and verification semantics separate; supported/confirmed analysis requires a compatible historical evidence link; lifecycle transitions use the Task 3 row-lock/revision primitive; and case-specific immutable verification remains distinct from Phase 11 aggregate effectiveness.
 
-Task 3 hardening verification used PostgreSQL 16.14 in the disposable `peoplematch_task3_review_a01425` database. The Task 3 PostgreSQL repository/concurrency module passed `15 passed, 0 failed, 0 skipped`, including caller-owned transaction rollback and explicit bounded-projection tests; the frozen PostgreSQL regression modules passed `31 passed, 0 failed, 0 skipped`; Task 1/2 plus Task 3 contract tests passed `51 passed`; and the separated-process full backend suite passed `740 passed, 0 failed, 47 skipped`. Alembic head/current were both `20260826_0005` and `alembic check` reported no drift. Task 4 must still enforce business compatibility for feedback supersession, case symptom/source selection, supported/confirmed root-cause evidence, action semantics, and complete lifecycle orchestration using these repository primitives.
+The Phase 10 API is a thin `API → Service → Repository` boundary. Implemented routes are `POST /api/v1/feedback`, `GET /api/v1/feedback/{id}`, `POST /api/v1/bad-cases`, paginated `GET /api/v1/bad-cases`, bounded `GET /api/v1/bad-cases/{id}`, append-only `POST /api/v1/bad-cases/{id}/sources`, and typed `POST /api/v1/bad-cases/{id}/review`. BadCase create/source requests discriminate on `source_type`; review requests discriminate on `command` (`transition`, `analysis`, or `resolution`) and then reuse the frozen service contract. The source command lets multiple compatible immutable FeedbackRecords or deterministic SystemSignals support one existing BadCase; it validates historical ownership and symptom compatibility in one short transaction and does not change root status/revision or infer a root cause, verification, or evaluation label. There is no generic mutable BadCase PATCH. BadCase detail responses include `child_limit` and `truncated_collections`; stale revisions map to a typed conflict; all responses reuse the existing request-ID envelope. `phase10_review_export_v1` is an internal, deterministic, versioned projection with closed symptom/root-cause/action fields and the immutable case-specific verification reference for `VERIFIED` cases; it has no free-form notes, raw profiles, provider data, metrics, evaluation splits, or current mutable state. It is not a Phase 11 evaluation implementation and has no public export endpoint.
+
+Task 3 hardening verification used PostgreSQL 16.14 in the disposable `peoplematch_task3_review_a01425` database. The Task 3 PostgreSQL repository/concurrency module passed `15 passed, 0 failed, 0 skipped`, including caller-owned transaction rollback and explicit bounded-projection tests; the frozen PostgreSQL regression modules passed `31 passed, 0 failed, 0 skipped`; Task 1/2 plus Task 3 contract tests passed `51 passed`; and the separated-process full backend suite passed `740 passed, 0 failed, 47 skipped`. Alembic head/current were both `20260826_0005` and `alembic check` reported no drift. Task 4 subsequently implemented the deferred business compatibility for feedback supersession, case symptom/source selection, supported/confirmed root-cause evidence, action semantics, and lifecycle orchestration using these frozen repository primitives.
+
+The Task 4+5 actual-code hardening gate used PostgreSQL 16.14 in the disposable `peoplematch_task45_review_20260828` database. It closed generic API command shapes, stale append-only review writes, obsolete supported analyses remaining current after a rejected revision, missing verification provenance in the export artifact, and concurrent duplicate source-link behavior. Fresh verification passed Task 4+5 PostgreSQL integration (`10 passed, 0 failed, 0 skipped`), Task 3 repository/concurrency (`15 passed, 0 failed, 0 skipped`), relevant frozen Phase 8/9 PostgreSQL modules (`19 passed, 0 failed, 0 skipped`), Phase 10 unit/contract targets (`76 passed`), and the separated-process full backend suite (`765 passed, 0 failed, 57 skipped`). The source-link PostgreSQL attack tests cover valid append-only linking, missing and cross-run Feedback, incompatible symptoms, duplicate conflicts, rollback, immutable Feedback/source history, unchanged BadCase status/revision, and two-session duplicate attachment with one typed loser. Alembic head/current were `20260826_0005` and `alembic check` reported no drift. The real API/service/repository scenario includes lifecycle review, stale revision conflict, duplicate/reopen audit, bounded detail, privacy-safe export, and compatible multi-source case attribution. Task 4+5 remains pending its separate final freeze review; Phase 10/10B is not complete and frontend work remains deferred.
 
 The PostgreSQL suites and the standard full backend regression remain separate pytest processes. Running in-process Alembic PostgreSQL execution before the full suite changes process-global logger state and causes one frozen extraction log-capture assertion to miss otherwise emitted completion records. That frozen test passes independently and with its adjacent module; the standard backend regression and the PostgreSQL suites also pass independently. This is a test-runner composition limitation, not a Phase 10 persistence correctness failure, and the frozen extraction implementation is unchanged.

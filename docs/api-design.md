@@ -39,12 +39,18 @@
 | POST | `/api/v1/match/score` | **Planned** | Compute versioned evidence-aware features |
 | POST | `/api/v1/match/rerank` | **Planned** | Apply later ranking/reranking stages |
 | POST | `/api/v1/match/explain` | **Planned** | Generate an explanation grounded in an existing ranking result |
-| POST | `/api/v1/feedback` | **Planned** | Record explicit feedback linked to a terminal MatchRun protected by the application/repository contract |
-| GET | `/api/v1/bad-cases` | **Planned** | List bad cases and failure categories |
-| GET | `/api/v1/bad-cases/{id}` | **Planned** | Inspect one attributed bad case |
+| POST | `/api/v1/feedback` | **Implemented / Phase 10B review** | Append typed human feedback after resolving immutable MatchRun/MatchResult/Explanation ownership server-side |
+| GET | `/api/v1/feedback/{id}` | **Implemented / Phase 10B review** | Read one immutable feedback record |
+| POST | `/api/v1/bad-cases` | **Implemented / Phase 10B review** | Create an auditable case from one compatible FeedbackRecord or deterministic SystemSignal |
+| GET | `/api/v1/bad-cases` | **Implemented / Phase 10B review** | List lightweight bad-case projections with bounded pagination |
+| GET | `/api/v1/bad-cases/{id}` | **Implemented / Phase 10B review** | Inspect a bounded aggregate projection with explicit truncation metadata |
+| POST | `/api/v1/bad-cases/{id}/sources` | **Implemented / Phase 10B review** | Append another compatible immutable FeedbackRecord or deterministic SystemSignal source without changing workflow state |
+| POST | `/api/v1/bad-cases/{id}/review` | **Implemented / Phase 10B review** | Append a typed review operation and optional audited lifecycle transition with optimistic revision checking |
 | POST | `/api/v1/eval/run` | **Planned** | Start a sandbox offline evaluation |
 | GET | `/api/v1/eval/runs` | **Planned** | List offline evaluation runs |
 | GET | `/api/v1/eval/runs/{id}` | **Planned** | Read one run's documented configuration and results |
+
+Phase 10 mutation bodies are closed discriminated commands. BadCase creation and source attachment discriminate on `source_type`; review commands discriminate on `command` (`transition`, `analysis`, or `resolution`). Workflow commands that mutate root status require `expected_status` and `expected_revision`; there is no generic mutable BadCase PATCH. The internal `phase10_review_export_v1` is not exposed as an HTTP endpoint and includes the case-specific immutable verification reference only for `VERIFIED` cases.
 
 ## Implemented Health Response
 
