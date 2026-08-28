@@ -80,6 +80,7 @@ MatchRunRequest = Annotated[
 
 
 class MatchResultResponse(ContractModel):
+    match_result_id: int = Field(gt=0)
     candidate_id: str
     result_rank: int
     candidate_input_fingerprint: str
@@ -192,9 +193,11 @@ def match_run_detail_from_model(model: Any) -> MatchRunDetailResponse:
         error_detail_safe=model.error_detail_safe,
         results=[
             MatchResultResponse(
+                match_result_id=result.id,
                 **{
                     field: getattr(result, field)
                     for field in MatchResultResponse.model_fields
+                    if field != "match_result_id"
                 }
             )
             for result in model.results

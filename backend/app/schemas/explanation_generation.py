@@ -43,6 +43,12 @@ class ExplanationRunSummaryResponse(BaseModel):
     completed_at: Optional[datetime] = None
 
 
+class MatchExplanationResponse(CandidateExplanationOutput):
+    """Public historical explanation projection with its immutable locator."""
+
+    match_explanation_id: Annotated[StrictInt, Field(gt=0)]
+
+
 class ExplanationRunDetailResponse(ExplanationRunSummaryResponse):
     error_detail_safe: Optional[
         Annotated[
@@ -50,7 +56,7 @@ class ExplanationRunDetailResponse(ExplanationRunSummaryResponse):
             StringConstraints(min_length=1, max_length=500),
         ]
     ] = None
-    explanations: list[CandidateExplanationOutput] = Field(default_factory=list)
+    explanations: list[MatchExplanationResponse] = Field(default_factory=list)
 
 
 def explanation_summary_from_model(model) -> ExplanationRunSummaryResponse:
@@ -69,6 +75,7 @@ def explanation_detail_from_model(model) -> ExplanationRunDetailResponse:
     }
     values["error_detail_safe"] = model.error_detail_safe
     try:
+        persisted_outputs = []
         outputs = []
         for item in model.explanations:
             output = CandidateExplanationOutput.model_validate(
@@ -83,7 +90,13 @@ def explanation_detail_from_model(model) -> ExplanationRunDetailResponse:
                 != candidate_output_fingerprint(output)
             ):
                 raise ValueError("persisted child columns diverge from output")
-            outputs.append(output)
+            persisted_outputs.append(output)
+            outputs.append(
+                MatchExplanationResponse(
+                    **output.model_dump(mode="python"),
+                    match_explanation_id=item.id,
+                )
+            )
         if model.status == "COMPLETED":
             ranks = [item.result_rank for item in outputs]
             candidate_ids = [item.candidate_id for item in outputs]
@@ -97,7 +110,7 @@ def explanation_detail_from_model(model) -> ExplanationRunDetailResponse:
                 or (
                     getattr(model, "result_fingerprint", None) is not None
                     and model.result_fingerprint
-                    != explanation_result_fingerprint(outputs)
+                    != explanation_result_fingerprint(persisted_outputs)
                 )
             ):
                 raise ValueError("persisted explanation aggregate is inconsistent")
@@ -111,6 +124,7 @@ __all__ = [
     "ExplanationGenerationRequest",
     "ExplanationRunDetailResponse",
     "ExplanationRunSummaryResponse",
+    "MatchExplanationResponse",
     "explanation_detail_from_model",
     "explanation_summary_from_model",
 ]

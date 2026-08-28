@@ -13,6 +13,7 @@ from app.main import create_app
 def _completed_run(variant: str = "ltr"):
     now = datetime(2026, 8, 18, 10, 0, tzinfo=timezone.utc)
     result = SimpleNamespace(
+        id=41,
         candidate_id="cand_001",
         result_rank=1,
         candidate_input_fingerprint="a" * 64,
@@ -172,6 +173,15 @@ def test_get_reads_persisted_run_and_never_executes_ranking() -> None:
     assert service.get_calls == [service.run.run_id]
     assert service.execute_calls == []
     assert response.json()["data"]["results"][0]["ltr_score_raw"] == 0.3125
+
+
+def test_get_exposes_the_persisted_match_result_feedback_locator() -> None:
+    service = FakeMatchRunService()
+    with _client(service) as client:
+        response = client.get(f"/api/v1/match-runs/{service.run.run_id}")
+
+    assert response.status_code == 200
+    assert response.json()["data"]["results"][0]["match_result_id"] == 41
 
 
 def test_history_routes_do_not_construct_any_ranking_runtime(monkeypatch) -> None:

@@ -269,3 +269,48 @@ def test_detail_rejects_persisted_child_column_json_divergence(
 
     with pytest.raises(ExplanationPersistenceIntegrityError):
         explanation_detail_from_model(run)
+
+
+def test_detail_exposes_the_persisted_match_explanation_feedback_locator() -> None:
+    from app.schemas.explanation_generation import explanation_detail_from_model
+    from app.schemas.explanations import CandidateExplanationOutput
+    from app.services.explanation.contracts import (
+        candidate_output_fingerprint,
+        explanation_result_fingerprint,
+    )
+
+    output = CandidateExplanationOutput.model_validate(_persisted_candidate_output())
+    child = SimpleNamespace(
+        id=71,
+        candidate_id=output.candidate_id,
+        result_rank=output.result_rank,
+        output_schema_version=output.output_schema_version,
+        validated_output_json=output.model_dump(mode="json", exclude_none=False),
+        candidate_output_fingerprint=candidate_output_fingerprint(output),
+    )
+    run = SimpleNamespace(
+        explanation_run_id=EXPLANATION_RUN_ID,
+        match_run_id=MATCH_RUN_ID,
+        status="COMPLETED",
+        requested_top_k=1,
+        effective_top_k=1,
+        explanation_count=1,
+        provider_kind="llm",
+        provider_name="mock",
+        configured_model="deterministic-mock-v1",
+        observed_model="deterministic-mock-v1",
+        prompt_version="explanation_prompt_v1",
+        attempt_count=1,
+        repaired=False,
+        error_code=None,
+        error_detail_safe=None,
+        created_at=None,
+        completed_at=None,
+        explanations=[child],
+        output_schema_version="explanation_output_v1",
+        result_fingerprint=explanation_result_fingerprint([output]),
+    )
+
+    detail = explanation_detail_from_model(run)
+
+    assert detail.explanations[0].match_explanation_id == 71

@@ -354,6 +354,19 @@ def test_phase10_openapi_closes_feedback_union_and_documents_conflict(app) -> No
     assert not any("export" in path for path in schema["paths"])
 
 
+def test_openapi_exposes_required_contextual_feedback_target_locators(app) -> None:
+    schema = app.openapi()
+    match_result = schema["components"]["schemas"]["MatchResultResponse"]
+    explanation = schema["components"]["schemas"]["MatchExplanationResponse"]
+
+    assert "match_result_id" in match_result["properties"]
+    assert "match_result_id" in match_result["required"]
+    assert match_result["properties"]["match_result_id"]["type"] == "integer"
+    assert "match_explanation_id" in explanation["properties"]
+    assert "match_explanation_id" in explanation["required"]
+    assert explanation["properties"]["match_explanation_id"]["type"] == "integer"
+
+
 def test_bad_case_api_rejects_untyped_review_and_ambiguous_source_commands(app, client) -> None:
     service = _BadCaseApiService()
     app.dependency_overrides[get_bad_case_review_service] = lambda: service
