@@ -103,10 +103,10 @@ Only the phase explicitly requested by the user may be implemented. Status value
 
 ## Phase 10 — Feedback & Bad Case Review
 
-**Status:** In Progress — backend and Task 6 product integration frozen; final integration/freeze pending
+**Status:** Completed / Frozen
 
 - **Objective:** Capture explicit feedback and attribute bad recommendations to pipeline/data categories.
-- **Primary deliverables:** Frozen Feedback/BadCase contracts, persistence, repositories, business/API boundary, privacy-safe Phase 11 export projection, and in-progress Evidence-first product integration.
+- **Primary deliverables:** Frozen Feedback/BadCase contracts, persistence, repositories, business/API boundary, privacy-safe Phase 11 export projection, and Evidence-first product integration.
 - **Dependency:** Phase 9 explanations and Phase 8 match runs.
 - **Quality gate:** Feedback never mutates historical runs; review writes remain append-only and concurrency-safe; the UI consumes server-derived historical context, handles stale revisions explicitly, and passes privacy, accessibility, responsive, and real PostgreSQL E2E review before Phase 10 freeze.
 

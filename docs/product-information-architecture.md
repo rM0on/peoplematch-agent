@@ -2,7 +2,7 @@
 
 ## Status and Boundary
 
-This document defines the **planned product architecture** established in Phase 0.5A. It is not a database schema or API contract. Phase 0.5B implemented only the Matching Results design mock; the other described pages and all matching capabilities remain planned.
+This document preserves the **planned product architecture** established in Phase 0.5A; it is not a database schema or API contract. Phase 0.5B implemented the Matching Results design mock, and frozen Phase 10 later added persisted-history Feedback plus bounded Bad Case list/detail review within the same information architecture. Candidate Profile, Agent Run, and Evaluation UI remain planned unless another current phase document states otherwise.
 
 ## Product Model
 

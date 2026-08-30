@@ -3,10 +3,12 @@
 ## Document Status
 
 - **Phase:** 10A — Architecture Review
-- **Status:** Proposed; waiting for Phase 10B implementation approval
+- **Status:** Historical architecture baseline; implemented and frozen by Phase 10B
 - **Baseline:** `6d363574b10627fd232e499fc38b5461899c85fd`
 - **Scope:** BadCase definition, taxonomy, entities, review workflow, root-cause analysis, and resolution design
-- **No implementation:** this document creates no table, migration, endpoint, UI, metric, benchmark, or automated remediation
+- **Document boundary:** this design review creates no implementation; the frozen implementation is recorded in `docs/phase10-implementation-notes.md`
+
+> Temporal `Proposed` / `future` language below preserves the original Phase 10A design review. The frozen code and Phase 10B implementation notes are authoritative for current repository behavior. Metrics, benchmarks, automated remediation, and Phase 11 evaluation remain outside Phase 10.
 
 ## Bad Case Definition
 

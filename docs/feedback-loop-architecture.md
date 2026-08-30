@@ -3,10 +3,12 @@
 ## Document Status
 
 - **Phase:** 10A — Architecture Review
-- **Status:** Proposed; waiting for Phase 10B implementation approval
+- **Status:** Historical architecture baseline; implemented and frozen by Phase 10B
 - **Baseline:** `6d363574b10627fd232e499fc38b5461899c85fd`
 - **Scope:** Feedback collection, historical binding, review lifecycle, and improvement tracking design only
-- **Not implemented here:** database models, migrations, APIs, frontend, authentication, evaluation, retraining, or model changes
+- **Document boundary:** this architecture review creates no implementation; the frozen implementation is recorded in `docs/phase10-implementation-notes.md`
+
+> Temporal `Proposed` / `future` language below preserves the original Phase 10A design review. The frozen code and Phase 10B implementation notes are authoritative for current repository behavior. Authentication, evaluation, retraining, and model changes remain outside Phase 10.
 
 ## Goals
 

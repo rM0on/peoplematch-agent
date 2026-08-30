@@ -4,7 +4,7 @@
 
 PeopleMatch Agent is a local-running, evidence-aware, traceable, and deterministically orchestrated candidate/job matching prototype. It is designed to evolve beyond keyword search into a pipeline that can rank AI Builder opportunities, explain why a match is supported by project evidence, review bad cases, and compare later algorithms through sandbox-only offline evaluation.
 
-The repository has completed and frozen **Phase 4 — Hybrid Retrieval**, **Phase 5 — Feature Engineering**, **Phase 6 — Learning-to-Rank**, **Phase 7 — Cross-Encoder Reranking**, **Phase 8 — Match-run Orchestration & Traceability**, **Phase 9 — Evidence-grounded Explanation**, and the Phase 10 backend review foundation. The Evidence-first Phase 10 product integration is frozen at its Task 6 checkpoint: Matching Results consumes immutable historical locators for structured feedback and provides bounded Bad Case review surfaces against the frozen backend contracts. Canonical Phase 10 remains in progress pending its final integration/freeze review. The LLM cannot author factual prose or ranking changes, and no production hiring claim is made.
+The repository has completed and frozen **Phase 4 — Hybrid Retrieval**, **Phase 5 — Feature Engineering**, **Phase 6 — Learning-to-Rank**, **Phase 7 — Cross-Encoder Reranking**, **Phase 8 — Match-run Orchestration & Traceability**, **Phase 9 — Evidence-grounded Explanation**, and **Phase 10 — Feedback & Bad Case Review**. Phase 10 preserves immutable historical matching/explanation records while adding structured Feedback, append-only Bad Case investigation, case-specific verification, and the Evidence-first review UI. The LLM cannot author factual prose or ranking changes, and no production hiring claim is made.
 
 ## Project Overview
 
@@ -110,9 +110,9 @@ peoplematch-agent/
 
 ## Current Phase
 
-**Phase 10 — Feedback & Bad Case Review (In Progress — Task 6 frozen; final integration/freeze pending)**
+**Phase 10 — Feedback & Bad Case Review (Completed / Frozen)**
 
-The frozen Phase 10 backend stores append-only Feedback and Bad Case review history against immutable Phase 8/9 resources. The in-progress Task 6 frontend obtains only opaque historical result/explanation locators from contextual reads; the server re-resolves ownership for every write. Matching Results provides structured review entry, while `/bad-cases` and `/bad-cases/{id}` provide bounded queue/investigation views, closed review commands, stale-revision recovery, and case-specific verification provenance. The illustrative Phase 0.5 ranking canvas remains explicitly separate from persisted synthetic review context. There is no authentication, background queue, Phase 11 evaluation implementation, or production hiring claim.
+The frozen Phase 10 backend stores append-only Feedback and Bad Case review history against immutable Phase 8/9 resources. The frozen Task 6 frontend obtains only opaque historical result/explanation locators from contextual reads; the server re-resolves ownership for every write. Matching Results provides structured review entry, while `/bad-cases` and `/bad-cases/{id}` provide bounded queue/investigation views, closed review commands, stale-revision recovery, and case-specific verification provenance. The illustrative Phase 0.5 ranking canvas remains explicitly separate from persisted synthetic review context. There is no authentication, background queue, Phase 11 evaluation implementation, or production hiring claim.
 
 **Phase 8 — Match-run Orchestration & Traceability (Completed / Frozen)**
 
@@ -166,7 +166,7 @@ Phase 0 completed:
 - Docker Compose definitions for PostgreSQL, Redis, Qdrant, backend, and frontend;
 - an Alembic foundation later extended by the Phase 2 profile migration.
 
-Not implemented: authentication/user system, background queue, Phase 11 evaluation, general-purpose resume/JD parsing, automated run replay/recovery, or a complete production dashboard. Task 6 feedback and Bad Case product integration is frozen; canonical Phase 10 still requires its final integration/freeze review. The explanation provider is a constrained planner rather than a factual text author; final text comes from deterministic backend templates. Phase 8 does not add a final match score, probability, online experiment, or production hiring claim, and Phase 9 explanations are non-causal descriptions of recorded evidence.
+Not implemented: authentication/user system, background queue, Phase 11 evaluation, general-purpose resume/JD parsing, automated run replay/recovery, or a complete production dashboard. Phase 10 feedback and Bad Case review is frozen as a local synthetic/sandbox workflow. The explanation provider is a constrained planner rather than a factual text author; final text comes from deterministic backend templates. Phase 8 does not add a final match score, probability, online experiment, or production hiring claim, and Phase 9 explanations are non-causal descriptions of recorded evidence.
 
 ## Roadmap
 
@@ -183,7 +183,7 @@ Not implemented: authentication/user system, background queue, Phase 11 evaluati
 | 7 | Cross-encoder reranking | Completed / Frozen |
 | 8 | Match-run orchestration and traceability | Completed / Frozen |
 | 9 | Evidence-grounded explanations | Completed / Frozen |
-| 10 | Feedback and bad-case review | In Progress — backend and Task 6 product integration frozen; final integration/freeze pending |
+| 10 | Feedback and bad-case review | Completed / Frozen |
 | 11 | Offline evaluation | Planned |
 | 12 | Local prototype hardening and documented demo | Planned |
 
@@ -318,7 +318,7 @@ $env:NEXT_PUBLIC_API_BASE_URL = "http://localhost:8000"
 npm run dev
 ```
 
-The Phase 0.5B root screen is a frontend-only `Design Mock` and does not call the backend. Backend liveness remains independently available at <http://localhost:8000/health>; the Phase 0 health client/status component is preserved but is not mounted in the selected Matching Results screen.
+The Phase 0.5B ranking canvas remains an illustrative `Design Mock`. Its Phase 10 `Review persisted history` entry calls the configured backend to load synthetic historical MatchRun/Explanation context and submit real review commands. Backend liveness remains independently available at <http://localhost:8000/health>; the Phase 0 health client/status component is preserved but is not mounted in the selected Matching Results screen.
 
 ## Testing
 
