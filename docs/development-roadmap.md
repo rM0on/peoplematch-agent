@@ -112,12 +112,12 @@ Only the phase explicitly requested by the user may be implemented. Status value
 
 ## Phase 11 — Offline Evaluation
 
-**Status:** Planned
+**Status:** In Progress — architecture/protocol frozen; implementation not started
 
-- **Objective:** Compare retrieval/ranking configurations through reproducible local evaluation.
-- **Primary deliverables:** Dataset/version manifest, label guidance, Recall/NDCG/MRR implementations, run comparison, bad-case slices.
+- **Objective:** Compare retrieval/ranking configurations through reproducible, leakage-aware local evaluation without treating unjudged pairs or Phase 10 review state as ground truth.
+- **Primary deliverables:** Frozen `phase11_eval_protocol_v1`, dataset/split and Test-seal policy, stage-aware comparable strategy cohorts, exact Recall/NDCG/MRR/pairwise semantics, explanation/review/latency diagnostics, immutable evaluation manifests, and later RED-first runner/reports.
 - **Dependency:** Phase 10 review signals and earlier stage implementations.
-- **Quality gate:** Metric implementations have reference tests; reports identify split/config/code version; results make no online or commercial claims.
+- **Quality gate:** The architecture in `docs/offline-evaluation.md` is frozen before implementation; metric implementations have independent reference and adversarial unjudged tests; candidate-pool comparability, provenance, immutability, and the explicit Test guard are enforced; Dev precedes formal Test; reports identify split/config/code/artifact versions and preserve the Phase 4 post-exposure caveat; no online, commercial, hiring-accuracy, or production claim is made.
 
 ## Phase 12 — Local Prototype Hardening & Demo
 

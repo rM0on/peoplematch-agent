@@ -13,11 +13,14 @@ PeopleMatch Agent is a local monorepo with these logical areas:
 | Feature Engineering | Versioned pair features and diagnostics | **CURRENT / PHASE 5 COMPLETED / FROZEN:** label-free on-demand extraction that preserves retrieval order |
 | Ranking | LTR, final scoring, and reranking | **CURRENT / PHASE 6 FROZEN + PHASE 7 FROZEN:** deterministic LightGBM LambdaMART followed by one pinned frozen Cross-Encoder Job-to-Candidates rerank; no final hiring score |
 | AI Provider | Structured extraction and bounded explanation planning | **CURRENT:** deterministic mock plus provider-neutral OpenAI-compatible transport configured for DeepSeek; providers select opaque references and never author persisted facts or prose |
+| Evaluation | Stage-aware local offline evaluation | **PHASE 11 DESIGN FROZEN / IMPLEMENTATION NOT STARTED:** full-corpus retrieval, common-pool judged-condensed ranking, separate explanation/review/latency diagnostics, and immutable artifacts |
 | Cache / ephemeral state | Later caching and coordination | Redis container config **CURRENT**; business usage **PLANNED** |
 
 ## Current Phase Architecture
 
-**CURRENT / PHASE 10 FROZEN:** Next.js preserves the selected Phase 0.5 Evidence-first shell while contextual MatchRun/Explanation reads supply opaque historical locators to structured Feedback forms. The browser never supplies Candidate/rank truth; the frozen service layer re-resolves persisted ownership. Bad Case queue/detail pages consume bounded privacy-safe projections and send only closed append-only review commands with expected revisions. PostgreSQL remains the source of immutable historical execution and review workflow truth. Phase 11 evaluation has not started and remains outside this architecture.
+**CURRENT / PHASE 11 ARCHITECTURE FROZEN:** Phase 10 production behavior remains completed and frozen. The `phase11_eval_protocol_v1` design adds no runtime path: it specifies independent full-corpus retrieval, common-pool judged-condensed ranking, explicit pairwise, explanation/review diagnostic, and local-latency tracks that will consume frozen stage interfaces/artifacts. Candidate-pool and artifact fingerprints, Dev-only selection, an explicit Test seal, append-only evaluation runs, and claim-safe reporting are required. Phase 11 executable implementation and formal results have not started. See `docs/offline-evaluation.md`.
+
+Next.js continues to preserve the selected Phase 0.5 Evidence-first shell while contextual MatchRun/Explanation reads supply opaque historical locators to structured Feedback forms. The browser never supplies Candidate/rank truth; the frozen service layer re-resolves persisted ownership. Bad Case queue/detail pages consume bounded privacy-safe projections and send only closed append-only review commands with expected revisions. PostgreSQL remains the source of immutable historical execution and review workflow truth.
 
 The liveness route still makes no downstream calls and therefore does not load or download the embedding model. Redis remains infrastructure-only. Qdrant now stores derived Candidate/Job retrieval indexes; it is never the canonical profile source.
 
@@ -67,7 +70,7 @@ The MatchRun request first creates durable `RUNNING` history through an independ
 
 ## Target Architecture
 
-Phase 10 adds frozen bounded frontend Feedback and Bad Case review on top of the immutable historical and service boundaries. Phase 11 later adds broader offline evaluation and has not started. Phase 9.2 supplies deterministic evidence facts from durable historical execution context, while Phase 9.3/9.4 provides only a constrained provider planning boundary and deterministic backend rendering; it does not make causal claims or alter ranking. Phase 6 remains the stronger/default ranking baseline and Phase 7 is an optional experimental pinned comparison, neither of which is a final match score.
+Phase 10 adds frozen bounded frontend Feedback and Bad Case review on top of the immutable historical and service boundaries. Phase 11's offline-evaluation architecture is frozen, but its runner and results are not implemented. Its future module remains separate from APIs and runtime ranking and must preserve incomplete-judgment, common-pool, Test-seal, provenance, immutability, and claim-boundary rules. Phase 9.2 supplies deterministic evidence facts from durable historical execution context, while Phase 9.3/9.4 provides only a constrained provider planning boundary and deterministic backend rendering; it does not make causal claims or alter ranking. Phase 6 remains the stronger/default ranking baseline and Phase 7 is an optional experimental pinned comparison, neither of which is a final match score.
 
 The target remains a modular monolith unless a measured need justifies a different deployment boundary. Phase 0 does not introduce microservices, Kubernetes, authentication, or distributed infrastructure.
 
