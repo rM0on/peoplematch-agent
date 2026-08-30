@@ -4,7 +4,7 @@
 
 PeopleMatch Agent is a local-running, evidence-aware, traceable, and deterministically orchestrated candidate/job matching prototype. It is designed to evolve beyond keyword search into a pipeline that can rank AI Builder opportunities, explain why a match is supported by project evidence, review bad cases, and compare later algorithms through sandbox-only offline evaluation.
 
-The repository has completed and frozen **Phase 4 — Hybrid Retrieval**, **Phase 5 — Feature Engineering**, **Phase 6 — Learning-to-Rank**, **Phase 7 — Cross-Encoder Reranking**, **Phase 8 — Match-run Orchestration & Traceability**, and the Phase 9.1/9.2 persistence and deterministic evidence foundations. Phase 9.3/9.4 backend implementation is in progress: provider-neutral structured planning, an OpenAI-compatible DeepSeek transport adapter, deterministic grounding/template rendering, auditable lifecycle persistence, and explanation create/detail/list APIs are implemented for review. The frontend remains unchanged. The LLM cannot author factual prose or ranking changes, and no production hiring claim is made.
+The repository has completed and frozen **Phase 4 — Hybrid Retrieval**, **Phase 5 — Feature Engineering**, **Phase 6 — Learning-to-Rank**, **Phase 7 — Cross-Encoder Reranking**, **Phase 8 — Match-run Orchestration & Traceability**, **Phase 9 — Evidence-grounded Explanation**, and the Phase 10 backend review foundation. The Evidence-first Phase 10 product integration is frozen at its Task 6 checkpoint: Matching Results consumes immutable historical locators for structured feedback and provides bounded Bad Case review surfaces against the frozen backend contracts. Canonical Phase 10 remains in progress pending its final integration/freeze review. The LLM cannot author factual prose or ranking changes, and no production hiring claim is made.
 
 ## Project Overview
 
@@ -58,8 +58,8 @@ Phase 3 implements structured extraction with a deterministic mock only. Phase 4
 
 ```mermaid
 flowchart LR
-    Browser["Browser"] --> Web["Next.js frontend\nCURRENT: Phase 0.5 design mock"]
-    Web -. "explanation UI remains a later phase" .-> API["FastAPI backend\nCURRENT: profile, matching, and explanation APIs"]
+    Browser["Browser"] --> Web["Next.js frontend\nCURRENT: Phase 0.5 shell + Phase 10 review integration"]
+    Web --> API["FastAPI backend\nCURRENT: profile, matching, explanation, and review APIs"]
     API --> Extract["Structured extraction\nCURRENT: deterministic mock"]
     Extract --> Domain["Candidate / Job services and repositories\nCURRENT"]
     API --> Domain
@@ -110,9 +110,9 @@ peoplematch-agent/
 
 ## Current Phase
 
-**Phase 9.3 + 9.4 — Explanation planning and backend integration (In Progress / Ready for Review)**
+**Phase 10 — Feedback & Bad Case Review (In Progress — Task 6 frozen; final integration/freeze pending)**
 
-The explanation backend consumes only completed historical MatchRuns through the frozen Phase 9.2 engine. A provider sees a closed prompt projection with opaque temporary references, never internal Evidence IDs, raw snapshots, workflow provenance, or unrestricted factual text. Its `explanation_plan_v1` response can only select approved categories, references, and bounded operations. Backend grounding resolves the references and deterministic templates render `explanation_output_v1`; provider output is never directly persisted. Generation calls run outside database transactions, retries are bounded to at most one repair, and migration `20260825_0004` stores only bounded attempt status/provider metadata and timestamps. Backend routes are `POST /api/v1/match-runs/{match_run_id}/explanations`, `GET /api/v1/explanation-runs/{id}`, and paginated `GET /api/v1/match-runs/{id}/explanation-runs`. There is no explanation frontend, authentication, queue, feedback, or explanation evaluation framework.
+The frozen Phase 10 backend stores append-only Feedback and Bad Case review history against immutable Phase 8/9 resources. The in-progress Task 6 frontend obtains only opaque historical result/explanation locators from contextual reads; the server re-resolves ownership for every write. Matching Results provides structured review entry, while `/bad-cases` and `/bad-cases/{id}` provide bounded queue/investigation views, closed review commands, stale-revision recovery, and case-specific verification provenance. The illustrative Phase 0.5 ranking canvas remains explicitly separate from persisted synthetic review context. There is no authentication, background queue, Phase 11 evaluation implementation, or production hiring claim.
 
 **Phase 8 — Match-run Orchestration & Traceability (Completed / Frozen)**
 
@@ -166,7 +166,7 @@ Phase 0 completed:
 - Docker Compose definitions for PostgreSQL, Redis, Qdrant, backend, and frontend;
 - an Alembic foundation later extended by the Phase 2 profile migration.
 
-Not implemented: an explanation frontend, authentication/user system, background queue, feedback workflow, explanation-quality evaluation, general-purpose resume/JD parsing, automated run replay/recovery, or a complete product dashboard. The explanation provider is a constrained planner rather than a factual text author; final text comes from deterministic backend templates. Phase 8 does not add a final match score, probability, online experiment, or production hiring claim, and Phase 9 explanations are non-causal descriptions of recorded evidence.
+Not implemented: authentication/user system, background queue, Phase 11 evaluation, general-purpose resume/JD parsing, automated run replay/recovery, or a complete production dashboard. Task 6 feedback and Bad Case product integration is frozen; canonical Phase 10 still requires its final integration/freeze review. The explanation provider is a constrained planner rather than a factual text author; final text comes from deterministic backend templates. Phase 8 does not add a final match score, probability, online experiment, or production hiring claim, and Phase 9 explanations are non-causal descriptions of recorded evidence.
 
 ## Roadmap
 
@@ -182,8 +182,8 @@ Not implemented: an explanation frontend, authentication/user system, background
 | 6 | Learning-to-rank | Completed / Frozen |
 | 7 | Cross-encoder reranking | Completed / Frozen |
 | 8 | Match-run orchestration and traceability | Completed / Frozen |
-| 9 | Evidence-grounded explanations | In Progress — Phase 9.1/9.2 frozen; Phase 9.3/9.4 backend ready for review; frontend not included |
-| 10 | Feedback and bad-case review | Planned |
+| 9 | Evidence-grounded explanations | Completed / Frozen |
+| 10 | Feedback and bad-case review | In Progress — backend and Task 6 product integration frozen; final integration/freeze pending |
 | 11 | Offline evaluation | Planned |
 | 12 | Local prototype hardening and documented demo | Planned |
 

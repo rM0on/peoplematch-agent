@@ -94,21 +94,21 @@ Only the phase explicitly requested by the user may be implemented. Status value
 
 ## Phase 9 — Evidence-grounded Explanation
 
-**Status:** In Progress — Phase 9.1/9.2 frozen; Phase 9.3/9.4 backend implementation ready for review; frontend remains later work
+**Status:** Completed / Frozen
 
 - **Objective:** Build historical-only evidence facts and a provider-neutral backend that can produce bounded, cited explanations without allowing an LLM to author facts or alter ranking.
-- **Primary deliverables:** Frozen explanation persistence/contracts and deterministic Evidence Engine; opaque provider-reference projection; versioned structured-plan prompt; deterministic mock and OpenAI-compatible DeepSeek transport; closed reference resolution, semantic grounding, fixed-template rendering, bounded repair/audit persistence, and explanation create/detail/list APIs. Frontend integration remains later work.
+- **Primary deliverables:** Frozen explanation persistence/contracts and deterministic Evidence Engine; opaque provider-reference projection; versioned structured-plan prompt; deterministic mock and OpenAI-compatible DeepSeek transport; closed reference resolution, semantic grounding, fixed-template rendering, bounded repair/audit persistence, and explanation create/detail/list APIs.
 - **Dependency:** Phase 8 traceable runs and ranking evidence.
 - **Quality gate:** Explanations cannot alter rank; providers cannot author factual prose; every rendered claim maps to deterministic source evidence; unsupported references or operations fail closed; no provider call holds a database transaction.
 
 ## Phase 10 — Feedback & Bad Case Review
 
-**Status:** Planned
+**Status:** In Progress — backend and Task 6 product integration frozen; final integration/freeze pending
 
 - **Objective:** Capture explicit feedback and attribute bad recommendations to pipeline/data categories.
-- **Primary deliverables:** Feedback schema/API, immutable run links, bad-case taxonomy, review workflow, exportable review records.
+- **Primary deliverables:** Frozen Feedback/BadCase contracts, persistence, repositories, business/API boundary, privacy-safe Phase 11 export projection, and in-progress Evidence-first product integration.
 - **Dependency:** Phase 9 explanations and Phase 8 match runs.
-- **Quality gate:** Feedback never mutates historical runs; taxonomy is documented; privacy review passes for sandbox data.
+- **Quality gate:** Feedback never mutates historical runs; review writes remain append-only and concurrency-safe; the UI consumes server-derived historical context, handles stale revisions explicitly, and passes privacy, accessibility, responsive, and real PostgreSQL E2E review before Phase 10 freeze.
 
 ## Phase 11 — Offline Evaluation
 

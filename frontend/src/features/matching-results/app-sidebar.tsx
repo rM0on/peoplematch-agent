@@ -1,3 +1,5 @@
+"use client";
+
 import { BriefcaseIcon } from "@phosphor-icons/react/dist/csr/Briefcase";
 import { ChartBarIcon } from "@phosphor-icons/react/dist/csr/ChartBar";
 import { CirclesThreePlusIcon } from "@phosphor-icons/react/dist/csr/CirclesThreePlus";
@@ -8,6 +10,7 @@ import { SparkleIcon } from "@phosphor-icons/react/dist/csr/Sparkle";
 import { TargetIcon } from "@phosphor-icons/react/dist/csr/Target";
 import { UsersThreeIcon } from "@phosphor-icons/react/dist/csr/UsersThree";
 import { WarningCircleIcon } from "@phosphor-icons/react/dist/csr/WarningCircle";
+import Link from "next/link";
 
 import styles from "./matching-results.module.css";
 
@@ -19,15 +22,15 @@ const plannedNavigation = [
 ];
 
 const reviewNavigation = [
-  { label: "Runs", icon: GitBranchIcon },
-  { label: "Bad Cases", icon: WarningCircleIcon },
-  { label: "Evaluation", icon: ListChecksIcon },
+  { label: "Runs", icon: GitBranchIcon, href: null },
+  { label: "Bad Cases", icon: WarningCircleIcon, href: "/bad-cases" },
+  { label: "Evaluation", icon: ListChecksIcon, href: null },
 ];
 
-export function AppSidebar() {
+export function AppSidebar({ active = "matching" }: { active?: "matching" | "bad-cases" }) {
   return (
     <aside className={styles.sidebar} aria-label="Primary navigation">
-      <a className={styles.brand} href="#matching-results" aria-label="PeopleMatch Agent home">
+      <Link className={styles.brand} href="/" aria-label="PeopleMatch Agent home">
         <span className={styles.brandMark} aria-hidden="true">
           <SparkleIcon size={18} weight="fill" />
         </span>
@@ -35,7 +38,7 @@ export function AppSidebar() {
           <strong>PeopleMatch</strong>
           <small>Agent</small>
         </span>
-      </a>
+      </Link>
 
       <nav className={styles.sidebarNav}>
         <div className={styles.navGroup}>
@@ -50,15 +53,17 @@ export function AppSidebar() {
 
         <div className={styles.navGroup}>
           <p className={styles.navLabel}>Decisioning</p>
-          <a className={`${styles.navItem} ${styles.navItemActive}`} href="#matching-results">
+          <Link className={`${styles.navItem} ${active === "matching" ? styles.navItemActive : ""}`} href="/">
             <TargetIcon size={17} weight="bold" />
             <span>Matching</span>
-          </a>
-          {reviewNavigation.map(({ label, icon: Icon }) => (
-            <button className={styles.navItem} key={label} type="button" disabled>
+          </Link>
+          {reviewNavigation.map(({ label, icon: Icon, href }) => href ? (
+            <Link className={`${styles.navItem} ${active === "bad-cases" ? styles.navItemActive : ""}`} href={href} key={label}>
               <Icon size={17} />
               <span>{label}</span>
-            </button>
+            </Link>
+          ) : (
+            <button className={styles.navItem} key={label} type="button" disabled><Icon size={17} /><span>{label}</span></button>
           ))}
         </div>
       </nav>
@@ -69,10 +74,10 @@ export function AppSidebar() {
           <span>Design Mock</span>
         </div>
         <p>Illustrative data only</p>
-        <a href="#project-evidence">
+        <Link href={active === "matching" ? "#project-evidence" : "/#project-evidence"}>
           <FolderOpenIcon size={15} />
           Evidence view
-        </a>
+        </Link>
       </div>
     </aside>
   );

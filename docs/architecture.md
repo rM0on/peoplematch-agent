@@ -6,9 +6,9 @@ PeopleMatch Agent is a local monorepo with these logical areas:
 
 | Area | Responsibility | Current status |
 |---|---|---|
-| Frontend | Product UI and typed API consumption | **CURRENT:** Phase 0.5 Matching Results design mock; Phase 0 health client preserved but not mounted |
-| Backend | HTTP boundary, application configuration, tracing, canonical data contracts | **CURRENT:** FastAPI profile/matching APIs plus Phase 9 explanation create/detail/list APIs with deterministic grounding/rendering |
-| Storage | Durable candidate/job/match-run/explanation data | **CURRENT:** PostgreSQL profiles, Phase 8 MatchRun history, Phase 9 explanation history, and bounded generation-attempt audit |
+| Frontend | Product UI and typed API consumption | **CURRENT:** Phase 0.5 Evidence-first shell plus in-progress Phase 10 Feedback and Bad Case product integration |
+| Backend | HTTP boundary, application configuration, tracing, canonical data contracts | **CURRENT:** FastAPI profile/matching/explanation APIs plus frozen Phase 10 review services and typed API commands |
+| Storage | Durable profile, historical execution, explanation, and review data | **CURRENT:** PostgreSQL profiles, immutable Phase 8/9 history, and append-only Phase 10 Feedback/BadCase audit |
 | Retrieval | Candidate/job first-stage recall and vector search | **CURRENT / PHASE 4 COMPLETED:** versioned documents, local pretrained dense embeddings, Qdrant exact search, BM25, explicit filters, RRF, and offline retrieval evaluation |
 | Feature Engineering | Versioned pair features and diagnostics | **CURRENT / PHASE 5 COMPLETED / FROZEN:** label-free on-demand extraction that preserves retrieval order |
 | Ranking | LTR, final scoring, and reranking | **CURRENT / PHASE 6 FROZEN + PHASE 7 FROZEN:** deterministic LightGBM LambdaMART followed by one pinned frozen Cross-Encoder Job-to-Candidates rerank; no final hiring score |
@@ -17,7 +17,7 @@ PeopleMatch Agent is a local monorepo with these logical areas:
 
 ## Current Phase Architecture
 
-**CURRENT during Phase 9.3/9.4 backend review:** Next.js still serves the selected Matching Results design mock and does not consume explanation data. FastAPI retains the frozen matching APIs and adds explanation generation/detail/list routes. A completed historical MatchRun passes through the frozen Phase 9.2 Evidence Bundle and fact engine. An explicit projection replaces internal Evidence IDs with opaque temporary references, a provider selects only closed plan categories/references/operations, and backend validation resolves and grounds the selection before fixed templates produce `explanation_output_v1`. Provider calls and repair attempts run without an open database transaction. No current profile lookup, Qdrant call, retrieval, feature extraction, ranking, or reranking occurs during explanation generation.
+**CURRENT after the Phase 10 Task 6 checkpoint:** Next.js preserves the selected Phase 0.5 Evidence-first shell while contextual MatchRun/Explanation reads supply opaque historical locators to structured Feedback forms. The browser never supplies Candidate/rank truth; the frozen service layer re-resolves persisted ownership. Bad Case queue/detail pages consume bounded privacy-safe projections and send only closed append-only review commands with expected revisions. PostgreSQL remains the source of immutable historical execution and mutable review workflow truth. Canonical Phase 10 still awaits its final integration/freeze review, and Phase 11 evaluation remains outside this architecture.
 
 The liveness route still makes no downstream calls and therefore does not load or download the embedding model. Redis remains infrastructure-only. Qdrant now stores derived Candidate/Job retrieval indexes; it is never the canonical profile source.
 
@@ -25,8 +25,8 @@ The liveness route still makes no downstream calls and therefore does not load o
 
 ```mermaid
 flowchart TD
-    Browser["Browser"] --> Next["Next.js 16 frontend\nCURRENT: design mock"]
-    Next -. "health client preserved; not mounted in selected mock" .-> FastAPI["FastAPI backend\nCURRENT: health + profile APIs"]
+    Browser["Browser"] --> Next["Next.js 16 frontend\nCURRENT: Evidence-first review integration"]
+    Next --> FastAPI["FastAPI backend\nCURRENT: profile + historical + review APIs"]
     FastAPI --> Extraction["Profile extraction service\nCURRENT: strict JSON + mock"]
     Extraction --> Service["Candidate / Job services\nCURRENT"]
     FastAPI --> Service
@@ -67,7 +67,7 @@ The MatchRun request first creates durable `RUNNING` history through an independ
 
 ## Target Architecture
 
-Later phases add frontend explanation consumption, feedback, bad-case review, and broader offline evaluation. Phase 9.2 supplies deterministic evidence facts from durable historical execution context. Phase 9.3/9.4 adds only a constrained provider planning boundary and deterministic backend rendering; it does not make causal claims or alter ranking. Phase 6 remains the stronger/default ranking baseline and Phase 7 is an optional experimental pinned comparison, neither of which is a final match score.
+Phase 10 now adds bounded frontend Feedback and Bad Case review on top of the frozen historical and service boundaries; Task 6 product integration is frozen at its dedicated checkpoint while the canonical Phase 10 final integration/freeze review remains pending. Phase 11 later adds broader offline evaluation. Phase 9.2 supplies deterministic evidence facts from durable historical execution context, while Phase 9.3/9.4 provides only a constrained provider planning boundary and deterministic backend rendering; it does not make causal claims or alter ranking. Phase 6 remains the stronger/default ranking baseline and Phase 7 is an optional experimental pinned comparison, neither of which is a final match score.
 
 The target remains a modular monolith unless a measured need justifies a different deployment boundary. Phase 0 does not introduce microservices, Kubernetes, authentication, or distributed infrastructure.
 

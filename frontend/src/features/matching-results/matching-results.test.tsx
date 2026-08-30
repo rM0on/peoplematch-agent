@@ -112,4 +112,20 @@ describe("MatchingResultsScreen", () => {
 
     expect(document.body.textContent).not.toMatch(/production|high-scale|10x|p95|traffic growth/i);
   });
+
+  it("contains focus in the feedback dialog and restores the trigger on Escape", async () => {
+    const user = userEvent.setup();
+    render(<MatchingResultsScreen />);
+    const trigger = screen.getByRole("button", { name: "Review persisted history" });
+    trigger.focus();
+
+    await user.click(trigger);
+    const dialog = screen.getByRole("dialog");
+    expect(within(dialog).getByText(/illustrative matching canvas is not the feedback target/i)).toBeTruthy();
+    expect(dialog.contains(document.activeElement)).toBe(true);
+    await user.keyboard("{Escape}");
+
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(document.activeElement).toBe(trigger);
+  });
 });

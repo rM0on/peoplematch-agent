@@ -322,3 +322,11 @@ Empty states explain both why the page is empty and the next valid action. `Noth
 - Tooltips are supplemental. Critical score, evidence, and risk meaning remains visible without hover.
 - Charts provide a textual/table alternative and do not rely on color alone.
 - Respect reduced motion; trace progress does not require animation to communicate status.
+
+## Phase 10 Task 6 Product Integration
+
+Task 6 extends the frozen Phase 0.5B Evidence-first Talent Intelligence shell without replacing its navigation, typography, spacing, radius, score, or card language. Matching Results now offers a progressive `Review persisted history` dialog backed by persisted MatchRun and Explanation reads. The interface explicitly separates that persisted synthetic review context from the illustrative Phase 0.5 canvas. Opaque `match_result_id` and `match_explanation_id` locators remain internal component state; the interface shows historical Candidate/rank/evidence context and never asks a reviewer to enter database identifiers.
+
+Implemented Bad Case surfaces are the bounded `/bad-cases` queue and `/bad-cases/{id}` investigation workspace. Detail groups immutable sources, frozen evidence references, append-only analysis and resolution histories, current lifecycle state, and transition audit. A truncated child collection is labelled partial and cannot drive current-analysis/current-action UI or new dependent review commands. Review mutations use closed command forms rather than a status dropdown. Stale revision responses stop the attempted mutation and present `Refresh latest case`; semantic rejections stay with the active command and display only the backend's safe message. Completed work remains visually distinct from case-specific verification.
+
+The generic source-link picker is intentionally not exposed because the backend has no safe compatible-source discovery API. The product does not fall back to handwritten UUID input. Phase 10 UI uses only synthetic sandbox history, contains no Phase 11 metrics or evaluation behavior, and is frozen at the Task 6 product-integration checkpoint while canonical Phase 10 final integration/freeze remains pending.

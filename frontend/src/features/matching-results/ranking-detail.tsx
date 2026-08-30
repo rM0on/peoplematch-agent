@@ -18,6 +18,7 @@ type RankingDetailProps = {
   comparisonCandidate: CandidateMatch;
   comparisonOpen: boolean;
   onComparisonToggle: () => void;
+  onReview: () => void;
 };
 
 const evidenceCopy: Record<EvidenceLevel, string> = {
@@ -57,6 +58,7 @@ export function RankingDetail({
   comparisonCandidate,
   comparisonOpen,
   onComparisonToggle,
+  onReview,
 }: RankingDetailProps) {
   const higherRankedCandidate =
     candidate.rank < comparisonCandidate.rank ? candidate : comparisonCandidate;
@@ -230,6 +232,9 @@ export function RankingDetail({
       </div>
 
       <footer className={styles.detailActions}>
+        <button className={styles.secondaryAction} type="button" onClick={onReview}>
+          Review persisted history
+        </button>
         <a className={styles.secondaryAction} href="#decision-trace">
           Open decision trace
         </a>

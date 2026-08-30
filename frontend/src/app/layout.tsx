@@ -5,14 +5,14 @@ import "./globals.css";
 
 
 export const metadata: Metadata = {
-  title: "Matching Results | PeopleMatch Agent",
-  description: "Evidence-first matching results design mock for PeopleMatch Agent",
+  title: "PeopleMatch Agent | Evidence-first Talent Intelligence",
+  description: "Evidence-first matching decisions and auditable quality review",
 };
 
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body>{children}</body>
     </html>
   );
