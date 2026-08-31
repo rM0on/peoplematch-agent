@@ -112,16 +112,16 @@ Only the phase explicitly requested by the user may be implemented. Status value
 
 ## Phase 11 — Offline Evaluation
 
-**Status:** In Progress — implementation and Dev evidence frozen; formal Test sealed / not run
+**Status:** Completed / Frozen
 
 - **Objective:** Compare retrieval/ranking configurations through reproducible, leakage-aware local evaluation without treating unjudged pairs or Phase 10 review state as ground truth.
-- **Primary deliverables:** Frozen `phase11_eval_protocol_v1`, dataset/split and Test-seal policy, stage-aware comparable strategy cohorts, exact Recall/NDCG/MRR/pairwise semantics, explanation/review/latency diagnostics, immutable evaluation manifests, RED-first runner, and reproducible Dev report. Formal Test remains the closure gate.
+- **Primary deliverables:** Frozen `phase11_eval_protocol_v1`, dataset/split and Test-seal policy, stage-aware comparable strategy cohorts, exact Recall/NDCG/MRR/pairwise semantics, explanation/review/latency diagnostics, immutable evaluation manifests, RED-first runner, reproducible Dev report, and the corrected final post-exposure Test artifact.
 - **Dependency:** Phase 10 review signals and earlier stage implementations.
-- **Quality gate:** The architecture in `docs/offline-evaluation.md` was frozen before implementation; metric implementations have independent reference and adversarial unjudged tests; candidate-pool comparability, vector-state provenance, immutability, and the explicit Test guard are enforced; two identical Dev runs reproduce the quality fingerprint; formal Test remains sealed and must run only after this implementation freeze; reports identify split/config/code/artifact versions and preserve the Phase 4 post-exposure caveat; no online, commercial, hiring-accuracy, or production claim is made.
+- **Quality gate:** The architecture in `docs/offline-evaluation.md` was frozen before implementation; metric implementations have independent reference and adversarial unjudged tests; candidate-pool comparability, vector-state provenance, immutability, explicit Test authorization/audit provenance, and Dev-leader preservation are enforced; two identical Dev runs reproduced the quality fingerprint; the corrected final Test ran once from clean checkpoint `d98a16fa6c2e38d4d03f059eb892d64149535da5`; reports preserve the Phase 4 post-exposure caveat; no online, commercial, hiring-accuracy, production, or pristine-generalization claim is made.
 
 ## Phase 12 — Local Prototype Hardening & Demo
 
-**Status:** Planned
+**Status:** NEXT / Planned
 
 - **Objective:** Consolidate a reliable local demonstration and developer handoff without claiming production readiness.
 - **Primary deliverables:** End-to-end sandbox demo, operational runbook, failure-mode documentation, performance observations, final architecture reconciliation.

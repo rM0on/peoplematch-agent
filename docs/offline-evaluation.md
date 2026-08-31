@@ -3,8 +3,8 @@
 ## Document Status
 
 - **Phase:** Phase 11 — Offline Evaluation
-- **Architecture status:** Frozen for implementation
-- **Implementation status:** Dev-frozen; formal Test sealed / not run
+- **Architecture status:** Frozen
+- **Implementation status:** Completed / Frozen
 - **Protocol:** `phase11_eval_protocol_v1`
 - **Metric semantics:** `phase11_metric_semantics_v1`
 - **Architecture baseline:** `f45f7e34800ae7b1d48e55763737cdaca73ce289`
@@ -14,16 +14,16 @@ This document is the Phase 11 source of truth for evaluation questions,
 judgment semantics, split usage, comparable strategy cohorts, metric semantics,
 artifact provenance, leakage prevention, claim boundaries, and implementation
 acceptance gates. The repository now implements the file-backed evaluator and
-records a reproducible Dev artifact; formal Test remains sealed for a separate
-closure run. No evaluation API, model change, dataset change, or runtime-default
-change was introduced.
+records reproducible Dev evidence and one selected corrected final Test artifact.
+No evaluation API, model change, dataset change, or runtime-default change was
+introduced.
 
 Current disk and Git state, `AGENTS.md`, the dataset freeze manifest, and the
 frozen phase contracts remain authoritative. Historical Phase 4, 6, and 7
 reports remain immutable stage evidence; this protocol does not rewrite or
 reinterpret them as Phase 11 results.
 
-## Implementation and Dev Freeze Status
+## Implementation, Dev, and Formal Test Freeze Status
 
 The implementation is isolated under `backend/app/services/evaluation/` with a
 PowerShell-compatible entry point at `scripts/run_offline_evaluation.py` and a
@@ -52,6 +52,33 @@ complete local `all-MiniLM-L6-v2` snapshot in explicit offline mode and
 reproduces the frozen Phase 4 R1 Dev Recall values. The historical Phase 4
 report remains unchanged and retains its original protocol and exposure caveat.
 
+The selected corrected formal Test artifact is
+`data/eval/phase11/runs/20260831T173246Z_test_corrected_final/`. It ran from the
+clean executable checkpoint `d98a16fa6c2e38d4d03f059eb892d64149535da5`
+with explicit `allow_test=true`, access reason `final`, a positive freeze-gate
+attestation, the independent frozen seal fingerprints, and explicit Phase 4
+exposure acknowledgement. The earlier immutable attempt
+`20260831T171600Z_test_final` was rejected during artifact review because its
+report labeled Test-derived ordering as a leader instead of preserving the
+already selected Dev leader. It remains an unselected historical local attempt;
+the protocol-preserving report-boundary repair was RED-tested, fully regressed,
+and committed before the corrected final execution.
+
+The corrected five-Job Test results are:
+
+| Cohort | Strategy | Primary Test metrics |
+|---|---|---|
+| R1 | Dense V4 | Recall@5 `0.42`; Recall@10 `0.42`; Recall@20 `0.70` |
+| R1 | Sparse BM25 V4 | Recall@5 `0.67`; Recall@10 `0.80`; Recall@20 `0.95` |
+| R1 | Hybrid RRF V4 | Recall@5 `0.47`; Recall@10 `0.66`; Recall@20 `0.90` |
+| R2 | Hybrid RRF V4 | NDCG@5 `0.792028`; NDCG@10 `0.834257`; MRR@10 `0.90`; pairwise `0.80` |
+| R2 | LTR V1 | NDCG@5 `0.959290`; NDCG@10 `0.959723`; MRR@10 `1.00`; pairwise `1.00` |
+| R2 | CE experiment | NDCG@5 `0.899127`; NDCG@10 `0.921153`; MRR@10 `1.00`; pairwise `0.90` |
+
+Sparse and LTR remain the predeclared Dev leaders. They also led the observed
+Test ordering under the frozen rules, but Test did not reselect them. CE remains
+experiment-only and the runtime default remains unchanged.
+
 Explanation-run evaluation and the 50-observation-per-stage latency campaign
 are `NOT RUN`: no frozen persisted Dev ExplanationRun input set was registered,
 and the full latency campaign was disproportionate to this quality freeze.
@@ -60,24 +87,29 @@ run service timings are not substituted into quality results. Phase 10 review
 exports were also not supplied and therefore were not converted into truth or
 metrics.
 
-Formal Phase 11 Test evaluation is `SEALED — NOT RUN`. Test Jobs remain absent
-from implementation evaluation output. The next authorized step is the single
-formal Test closure run under this frozen implementation and exact Test seal.
+Formal Phase 11 Test evaluation is `COMPLETED / FROZEN`. Phase 4 previously
+exposed these Test queries, so this result is a post-exposure fixed synthetic
+sandbox evaluation—not a pristine held-out, unseen-query, selection-independent,
+real-world, or hiring-accuracy estimate. The judgment matrix contains 288 of
+1,152 possible pairs (25%), and unjudged pairs remain unknown rather than
+negative.
 
 Fresh freeze verification from the repository root used:
 
 ```powershell
-backend/.venv/Scripts/python.exe -m pytest backend/tests/test_phase11_evaluation_artifacts.py backend/tests/test_phase11_evaluation_diagnostics.py backend/tests/test_phase11_evaluation_integrity.py backend/tests/test_phase11_evaluation_metrics.py backend/tests/test_phase11_evaluation_runner.py backend/tests/test_phase11_evaluation_slices.py -q
+backend/.venv/Scripts/python.exe -m pytest backend/tests/test_phase11_evaluation_artifacts.py backend/tests/test_phase11_evaluation_diagnostics.py backend/tests/test_phase11_evaluation_integrity.py backend/tests/test_phase11_evaluation_metrics.py backend/tests/test_phase11_evaluation_runner.py backend/tests/test_phase11_evaluation_slices.py backend/tests/test_phase11_test_audit.py -q
 backend/.venv/Scripts/python.exe -m pytest backend/tests -q
 backend/.venv/Scripts/python.exe scripts/run_offline_evaluation.py --split dev --include-r3 --output-root <artifact-root> --run-id <new-run-id>
 ```
 
-The final focused result is 24 passed. The fresh full backend result is 792
-passed and 58 environment-gated skips; required adapter integration had already
+The final post-correction focused result is 35 passed. The fresh full backend
+result is 803 passed and 58 environment-gated skips; required adapter integration had already
 passed 13 tests with zero skips against explicitly disposable PostgreSQL and
 Qdrant state, and the later formatting-only writer change did not touch adapter
 semantics. Those exact disposable resources were removed after the final Dev
-runs. No Test evaluation command was executed.
+runs. The corrected final Test artifact subsequently passed Pydantic/schema,
+file-hash, manifest-fingerprint, split-purity, 48-Candidate same-pool, privacy,
+claim-boundary, and Dev-leader-preservation audits.
 
 ## Source-of-Truth Basis
 
@@ -1180,6 +1212,7 @@ The design was reviewed against these failure modes:
 | Can a failure look like zero or success? | Explicit `FAILED`/`INVALID`; required metric and eligible-query gates. |
 | Can the report imply production evidence? | Metric-to-claim matrix and mandatory limitations. |
 
-No architecture blocker remains. The protocol is ready for a separately
-authorized RED-first implementation phase. No Phase 11 executable behavior or
-formal evaluation is authorized by this document alone.
+No Phase 11 blocker remains. The protocol, implementation, reproducible Dev
+evidence, corrected final Test evidence, and claim boundary are frozen. Any new
+evaluation protocol, model iteration, or Test reproduction requires a separate
+explicitly authorized scope; Phase 12 is the next planned canonical phase.

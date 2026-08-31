@@ -4,7 +4,7 @@
 
 PeopleMatch Agent is a local-running, evidence-aware, traceable, and deterministically orchestrated candidate/job matching prototype. It is designed to evolve beyond keyword search into a pipeline that can rank AI Builder opportunities, explain why a match is supported by project evidence, review bad cases, and compare later algorithms through sandbox-only offline evaluation.
 
-The repository has completed and frozen **Phase 4 — Hybrid Retrieval**, **Phase 5 — Feature Engineering**, **Phase 6 — Learning-to-Rank**, **Phase 7 — Cross-Encoder Reranking**, **Phase 8 — Match-run Orchestration & Traceability**, **Phase 9 — Evidence-grounded Explanation**, and **Phase 10 — Feedback & Bad Case Review**. Phase 10 preserves immutable historical matching/explanation records while adding structured Feedback, append-only Bad Case investigation, case-specific verification, and the Evidence-first review UI. Phase 11's offline-evaluation implementation and reproducible Dev evidence are frozen; formal Test remains sealed and has not run. The LLM cannot author factual prose or ranking changes, and no production hiring claim is made.
+The repository has completed and frozen **Phase 4 — Hybrid Retrieval**, **Phase 5 — Feature Engineering**, **Phase 6 — Learning-to-Rank**, **Phase 7 — Cross-Encoder Reranking**, **Phase 8 — Match-run Orchestration & Traceability**, **Phase 9 — Evidence-grounded Explanation**, **Phase 10 — Feedback & Bad Case Review**, and **Phase 11 — Offline Evaluation**. Phase 10 preserves immutable historical matching/explanation records while adding structured Feedback, append-only Bad Case investigation, case-specific verification, and the Evidence-first review UI. Phase 11 preserves incomplete-judgment semantics, frozen Dev selection, a sealed post-exposure Test evaluation, and immutable provenance. The LLM cannot author factual prose or ranking changes, and no production hiring claim is made.
 
 ## Project Overview
 
@@ -110,9 +110,9 @@ peoplematch-agent/
 
 ## Current Phase
 
-**Phase 11 — Offline Evaluation (Implementation / Dev Frozen; Formal Test Sealed)**
+**Phase 11 — Offline Evaluation (Completed / Frozen)**
 
-The frozen `phase11_eval_protocol_v1` implementation separates full-corpus retrieval recall, common-pool judged-condensed ranking, explicit pairwise evidence, deterministic explanation/review diagnostics, and local latency observations. It preserves `unjudged != negative`, rejects standard Precision@K for the incomplete judgment matrix, requires candidate-pool and vector-index fingerprints, seals Test behind a predeclared Dev/freeze gate, and retains the Phase 4 post-exposure limitation. The implementation is file-backed and offline; it adds no API, database migration, frontend, model tuning, dataset mutation, formal Test result, or runtime-default change. Two Dev runs reproduced the same quality fingerprint; Sparse led R1 and frozen LTR led R2 under the predeclared rules, while CE remained weaker and experiment-only. See `docs/offline-evaluation.md`.
+The frozen `phase11_eval_protocol_v1` implementation separates full-corpus retrieval recall, common-pool judged-condensed ranking, explicit pairwise evidence, deterministic explanation/review diagnostics, and local latency observations. It preserves `unjudged != negative`, rejects standard Precision@K for the incomplete judgment matrix, requires candidate-pool and vector-index fingerprints, and retains the Phase 4 post-exposure limitation. The corrected final Test run `20260831T173246Z_test_corrected_final`, executed from clean commit `d98a16fa6c2e38d4d03f059eb892d64149535da5`, kept the predeclared Dev leaders: Sparse for R1 and frozen LTR for R2. Test Recall@5/10/20 was Dense `0.42/0.42/0.70`, Sparse `0.67/0.80/0.95`, and Hybrid `0.47/0.66/0.90`; Test NDCG@5/10, MRR@10, and pairwise accuracy were Hybrid `0.792028/0.834257/0.90/0.80`, LTR `0.959290/0.959723/1.00/1.00`, and optional CE `0.899127/0.921153/1.00/0.90`. These five synthetic Test Jobs were previously exposed during Phase 4, cover an incomplete 25% judgment matrix, and support only descriptive post-exposure sandbox claims—not pristine held-out, production, real-world, or hiring-accuracy claims. Explanation evaluation and the full latency campaign remained `NOT RUN`. See `docs/offline-evaluation.md`.
 
 **Phase 10 — Feedback & Bad Case Review (Completed / Frozen)**
 
@@ -188,8 +188,8 @@ Not implemented: authentication/user system, background queue, formal Phase 11 T
 | 8 | Match-run orchestration and traceability | Completed / Frozen |
 | 9 | Evidence-grounded explanations | Completed / Frozen |
 | 10 | Feedback and bad-case review | Completed / Frozen |
-| 11 | Offline evaluation | In Progress — implementation/Dev frozen; formal Test sealed |
-| 12 | Local prototype hardening and documented demo | Planned |
+| 11 | Offline evaluation | Completed / Frozen |
+| 12 | Local prototype hardening and documented demo | NEXT / Planned |
 
 See [development-roadmap.md](docs/development-roadmap.md) for dependencies and quality gates.
 
