@@ -63,15 +63,23 @@ def test_phase10_objects_cannot_become_evaluation_truth() -> None:
 
 
 def test_test_guard_uses_fake_ids_and_requires_all_frozen_fingerprints() -> None:
+    from app.services.evaluation.contracts import PHASE4_TEST_EXPOSURE_CAVEAT
     from app.services.evaluation.guard import TestSeal, validate_split_request
 
     seal = TestSeal(protocol="p", metrics="m", strategies="s", slices="z", report="r")
     memberships = {"fixture_test_query": "test", "fixture_dev": "dev", "fixture_test": "test"}
+    test_audit = {
+        "access_reason": "final",
+        "protocol_git_commit": "a" * 40,
+        "freeze_gate_attested": True,
+        "phase4_exposure_acknowledged": True,
+        "phase4_exposure_caveat": PHASE4_TEST_EXPOSURE_CAVEAT,
+    }
     with pytest.raises(ValueError, match="allow-test"):
         validate_split_request("test", ["fixture_test_query"], allow_test=False, expected=seal, actual=seal, split_by_query=memberships)
     with pytest.raises(ValueError, match="fingerprint"):
-        validate_split_request("test", ["fixture_test_query"], allow_test=True, expected=seal, actual=seal.model_copy(update={"metrics": "changed"}), split_by_query=memberships)
+        validate_split_request("test", ["fixture_test_query"], allow_test=True, expected=seal, actual=seal.model_copy(update={"metrics": "changed"}), split_by_query=memberships, **test_audit)
     with pytest.raises(ValueError, match="mixed"):
         validate_split_request("dev", ["fixture_dev", "fixture_test"], allow_test=False, expected=seal, actual=seal, split_by_query=memberships)
     with pytest.raises(ValueError, match="clean frozen"):
-        validate_split_request("test", ["fixture_test_query"], allow_test=True, expected=seal, actual=seal, split_by_query=memberships, source_dirty=True)
+        validate_split_request("test", ["fixture_test_query"], allow_test=True, expected=seal, actual=seal, split_by_query=memberships, source_dirty=True, **test_audit)

@@ -40,10 +40,43 @@
     "dataset_contract": {"type": ["object", "null"]},
     "source_state": {"type": ["object", "null"]},
     "test_seal": {"type": ["object", "null"]},
+    "test_execution_audit": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": [
+        "allow_test", "access_reason", "protocol_git_commit",
+        "freeze_gate_attested", "phase4_test_exposure_acknowledged",
+        "phase4_test_exposure_caveat", "prior_final_run_id",
+        "prior_final_input_fingerprint"
+      ],
+      "properties": {
+        "allow_test": {"const": true},
+        "access_reason": {"enum": ["final", "reproduction"]},
+        "protocol_git_commit": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+        "freeze_gate_attested": {"const": true},
+        "phase4_test_exposure_acknowledged": {"const": true},
+        "phase4_test_exposure_caveat": {"const": "post_exposure_fixed_synthetic_sandbox_evaluation"},
+        "prior_final_run_id": {"type": ["string", "null"]},
+        "prior_final_input_fingerprint": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
     "phase4_test_exposure": {"type": ["string", "null"]},
     "quality_result_fingerprint": {"type": ["string", "null"]},
     "file_sha256": {"type": ["object", "null"]},
     "warnings": {"type": ["array", "null"], "items": {"type": "string"}},
     "failure_reason": {"type": ["string", "null"]}
-  }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"split": {"const": "test"}}, "required": ["split"]},
+      "then": {
+        "required": ["test_seal", "test_execution_audit", "phase4_test_exposure"],
+        "properties": {
+          "test_seal": {"type": "object"},
+          "test_execution_audit": {"type": "object"},
+          "phase4_test_exposure": {"const": "post_exposure_fixed_synthetic_sandbox_benchmark"}
+        }
+      }
+    }
+  ]
 }

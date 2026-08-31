@@ -23,8 +23,13 @@ from app.services.cross_encoder.model import load_cross_encoder_model  # noqa: E
 from app.services.cross_encoder.service import CrossEncoderRerankingService  # noqa: E402
 from app.services.evaluation import METRIC_SEMANTICS_VERSION, PROTOCOL_VERSION  # noqa: E402
 from app.services.evaluation.artifacts import ArtifactWriter  # noqa: E402
+from app.services.evaluation.contracts import PHASE4_TEST_EXPOSURE_CAVEAT  # noqa: E402
 from app.services.evaluation.errors import EvaluationIntegrityError  # noqa: E402
-from app.services.evaluation.guard import TestSeal, validate_split_request  # noqa: E402
+from app.services.evaluation.guard import (  # noqa: E402
+    TestSeal,
+    validate_reproduction_input,
+    validate_split_request,
+)
 from app.services.evaluation.judgments import load_frozen_judgments  # noqa: E402
 from app.services.evaluation.runner import evaluate_queries  # noqa: E402
 from app.services.evaluation.slices import evaluate_predeclared_slices  # noqa: E402
@@ -71,7 +76,14 @@ def _source_tree_fingerprint() -> str:
     return digest.hexdigest()
 
 
-def _report(quality: dict[str, Any], split: str) -> str:
+def _report(
+    quality: dict[str, Any],
+    split: str,
+    *,
+    test_access_reason: str | None = None,
+) -> str:
+    if split == "test" and test_access_reason not in {"final", "reproduction"}:
+        raise ValueError("Test report requires the closed access reason")
     lines = [
         "# Phase 11 Offline Evaluation — " + split.title(), "",
         f"Protocol: `{PROTOCOL_VERSION}`",
@@ -84,7 +96,21 @@ def _report(quality: dict[str, Any], split: str) -> str:
     lines += ["", f"Leader by frozen rule: {', '.join(quality['r1']['leader']['strategy_ids'])}", "", "## R2 Controlled Ranking", ""]
     for strategy, metrics in quality["r2"]["strategies"].items():
         lines.append(f"- {strategy}: NDCG@5={metrics['judged_condensed_ndcg_at_5']['mean']:.6f}, NDCG@10={metrics['judged_condensed_ndcg_at_10']['mean']:.6f}, MRR@10={metrics['judged_condensed_mrr_at_10']['mean']:.6f}, pairwise={metrics['explicit_pairwise_accuracy']['mean']:.6f}")
-    lines += ["", f"Leader by frozen rule: {', '.join(quality['r2']['leader']['strategy_ids'])}", "", "## Boundaries", "", "- Standard Precision@K: rejected under incomplete judgments.", "- Explanation diagnostics: NOT RUN; no frozen persisted Dev ExplanationRun input set is registered.", "- Phase 10 review diagnostics: NOT RUN; review exports are diagnostic-only and not relevance truth.", "- Formal Test: SEALED / NOT RUN.", "- Phase 4 Test is already exposed and can only support a post-exposure fixed synthetic sandbox benchmark.", ""]
+    formal_test_line = (
+        f"- Formal Test: EXECUTED under frozen seal; access reason={test_access_reason}."
+        if split == "test"
+        else "- Formal Test: SEALED / NOT RUN."
+    )
+    lines += [
+        "", f"Leader by frozen rule: {', '.join(quality['r2']['leader']['strategy_ids'])}",
+        "", "## Boundaries", "",
+        "- Standard Precision@K: rejected under incomplete judgments.",
+        f"- Explanation diagnostics: NOT RUN; no frozen persisted {split.title()} ExplanationRun input set is registered.",
+        "- Phase 10 review diagnostics: NOT RUN; review exports are diagnostic-only and not relevance truth.",
+        formal_test_line,
+        "- Phase 4 Test queries were previously exposed; this is a post-exposure fixed synthetic sandbox evaluation, not a pristine held-out, unseen-query generalization, selection-independent, or real-world validation claim.",
+        "",
+    ]
     return "\n".join(lines)
 
 
@@ -93,12 +119,24 @@ async def _run(args: argparse.Namespace) -> int:
     query_ids = bundle.splits[args.split]
     split_by_query = {query_id: split for split, ids in bundle.splits.items() for query_id in ids}
     source_dirty = bool(_git("status --porcelain"))
+    current_commit = _git("rev-parse HEAD")
     seal_payload = json.loads((ROOT / "data/contracts/phase11_test_seal_v1.json").read_text(encoding="utf-8"))
     expected_test_seal = TestSeal.model_validate({key: seal_payload[key] for key in TestSeal.model_fields})
-    validate_split_request(
+    test_execution_audit = validate_split_request(
         args.split, query_ids, allow_test=args.allow_test,
         expected=expected_test_seal, actual=FROZEN_TEST_SEAL,
         split_by_query=split_by_query, source_dirty=source_dirty,
+        access_reason=args.test_access_reason,
+        protocol_git_commit=current_commit,
+        freeze_gate_attested=args.freeze_gate_attested,
+        phase4_exposure_acknowledged=args.acknowledge_phase4_test_exposure,
+        phase4_exposure_caveat=(
+            PHASE4_TEST_EXPOSURE_CAVEAT
+            if args.acknowledge_phase4_test_exposure
+            else None
+        ),
+        prior_final_run_id=args.prior_final_run_id,
+        prior_final_input_fingerprint=args.prior_final_input_fingerprint,
     )
     settings = get_settings()
     store = QdrantDenseVectorStore(url=settings.qdrant_url)
@@ -108,6 +146,9 @@ async def _run(args: argparse.Namespace) -> int:
     )
     dataset_manifest = json.loads((ROOT / "data/eval/dataset_freeze_manifest.json").read_text(encoding="utf-8"))
     source_tree_fingerprint = args.source_tree_fingerprint or _source_tree_fingerprint()
+    source_commit_sha = args.source_commit_sha or current_commit
+    if args.split == "test" and source_commit_sha != current_commit:
+        raise ValueError("Formal Test source commit override must equal the clean current Git commit")
     identity = {
         "protocol_version": PROTOCOL_VERSION,
         "metric_semantics_version": METRIC_SEMANTICS_VERSION,
@@ -115,7 +156,7 @@ async def _run(args: argparse.Namespace) -> int:
         "dataset_fingerprint": bundle.dataset_fingerprint,
         "split": args.split,
         "query_ids": list(query_ids),
-        "source_commit_sha": args.source_commit_sha or _git("rev-parse HEAD"),
+        "source_commit_sha": source_commit_sha,
         "source_tree_fingerprint": source_tree_fingerprint,
         "source_state": {
             "dirty": source_dirty,
@@ -153,11 +194,21 @@ async def _run(args: argparse.Namespace) -> int:
         "random_seed": None,
         "claim_limitations": ["synthetic_sandbox", "synthetic_curated", "incomplete_judgments", "descriptive_only", "no_production_or_hiring_accuracy_claim"],
         "test_seal": FROZEN_TEST_SEAL.model_dump(mode="json"),
+        "test_execution_audit": (
+            test_execution_audit.model_dump(mode="json")
+            if test_execution_audit is not None
+            else None
+        ),
         "phase4_test_exposure": "post_exposure_fixed_synthetic_sandbox_benchmark",
     }
     identity["evaluation_input_fingerprint"] = canonical_fingerprint(
-        {key: value for key, value in identity.items() if key not in {"source_state"}}
+        {
+            key: value
+            for key, value in identity.items()
+            if key not in {"source_state", "test_execution_audit"}
+        }
     )
+    validate_reproduction_input(test_execution_audit, identity["evaluation_input_fingerprint"])
     writer = ArtifactWriter(Path(args.output_root), args.run_id, identity)
     writer.start()
     try:
@@ -210,7 +261,10 @@ async def _run(args: argparse.Namespace) -> int:
                     if candidate.overclaim_risk.level.value == "high"
                 },
             )
-            quality["explanation"] = {"status": "NOT_RUN", "reason": "no frozen persisted Dev ExplanationRun evaluation input set is registered"}
+            quality["explanation"] = {
+                "status": "NOT_RUN",
+                "reason": f"no frozen persisted {args.split.title()} ExplanationRun evaluation input set is registered",
+            }
         writer.complete(
             quality=quality,
             diagnostics={
@@ -218,8 +272,24 @@ async def _run(args: argparse.Namespace) -> int:
                 "phase10_review": {"status": "NOT_RUN", "reason": "no explicit Phase10 review export input was supplied"},
                 "limitations": ["synthetic curated judgments", "incomplete judgment matrix", "descriptive only", "latency excluded from quality fingerprint"],
             },
-            warnings=["unjudged candidates are not negatives", "CE remains experiment-only", "formal Test was not run"],
-            report=_report(quality, args.split),
+            warnings=[
+                "unjudged candidates are not negatives",
+                "CE remains experiment-only",
+                (
+                    "formal Test executed once under the frozen final seal"
+                    if args.split == "test"
+                    else "formal Test was not run"
+                ),
+            ],
+            report=_report(
+                quality,
+                args.split,
+                test_access_reason=(
+                    test_execution_audit.access_reason.value
+                    if test_execution_audit is not None
+                    else None
+                ),
+            ),
         )
         print(f"Phase 11 {args.split} evaluation COMPLETED: {writer.final}")
         return 0
@@ -245,6 +315,11 @@ def main() -> int:
     parser.add_argument("--source-commit-sha")
     parser.add_argument("--source-tree-fingerprint")
     parser.add_argument("--allow-test", action="store_true", help="Explicit Test safety rail; do not use during implementation.")
+    parser.add_argument("--test-access-reason", choices=("final", "reproduction"))
+    parser.add_argument("--freeze-gate-attested", action="store_true")
+    parser.add_argument("--acknowledge-phase4-test-exposure", action="store_true")
+    parser.add_argument("--prior-final-run-id")
+    parser.add_argument("--prior-final-input-fingerprint")
     args = parser.parse_args()
     return asyncio.run(_run(args))
 
