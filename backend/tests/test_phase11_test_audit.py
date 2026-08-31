@@ -148,7 +148,7 @@ def test_dev_manifest_does_not_require_test_authorization() -> None:
 
 
 def test_test_report_discloses_execution_and_phase4_exposure() -> None:
-    from scripts.run_offline_evaluation import _report
+    from scripts.run_offline_evaluation import _apply_split_selection_context, _report
 
     metric = {"mean": 0.5}
     quality = {
@@ -175,9 +175,18 @@ def test_test_report_discloses_execution_and_phase4_exposure() -> None:
         },
     }
 
-    report = _report(quality, "test", test_access_reason="final")
+    quality["r1"]["leader"] = {"strategy_ids": ["dense_v4"]}
+    quality["r2"]["leader"] = {"strategy_ids": ["cross_encoder_experiment"]}
+    bounded = _apply_split_selection_context(quality, "test")
+    report = _report(bounded, "test", test_access_reason="final")
 
     assert "Formal Test: EXECUTED" in report
     assert "post-exposure fixed synthetic sandbox evaluation" in report
     assert "pristine held-out" in report
     assert "SEALED / NOT RUN" not in report
+    assert "Predeclared Dev leader: sparse_bm25_v4" in report
+    assert "Predeclared Dev leader: ltr_ranker_v1" in report
+    assert "Observed Test ordering: dense_v4" in report
+    assert "Observed Test ordering: cross_encoder_experiment" in report
+    assert "leader" not in bounded["r1"]
+    assert "leader" not in bounded["r2"]

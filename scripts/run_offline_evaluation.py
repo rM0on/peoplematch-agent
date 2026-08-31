@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+from copy import deepcopy
 import hashlib
 import json
 from pathlib import Path
@@ -53,6 +54,11 @@ FROZEN_TEST_SEAL = TestSeal(
     report=canonical_fingerprint({"report": "phase11_report_v1"}),
 )
 
+PREDECLARED_DEV_LEADERS = {
+    "r1": ("sparse_bm25_v4",),
+    "r2": ("ltr_ranker_v1",),
+}
+
 
 def _git(command: str) -> str:
     return subprocess.run(["git", *command.split()], cwd=ROOT, check=True, capture_output=True, text=True).stdout.strip()
@@ -76,6 +82,21 @@ def _source_tree_fingerprint() -> str:
     return digest.hexdigest()
 
 
+def _apply_split_selection_context(quality: dict[str, Any], split: str) -> dict[str, Any]:
+    if split != "test":
+        return quality
+    bounded = deepcopy(quality)
+    for cohort in ("r1", "r2"):
+        observed = bounded[cohort].pop("leader")
+        bounded[cohort]["observed_test_ordering"] = observed
+        bounded[cohort]["predeclared_dev_leader"] = {
+            "strategy_ids": list(PREDECLARED_DEV_LEADERS[cohort]),
+            "selection_split": "dev",
+            "reselection_allowed": False,
+        }
+    return bounded
+
+
 def _report(
     quality: dict[str, Any],
     split: str,
@@ -93,7 +114,14 @@ def _report(
     ]
     for strategy, metrics in quality["r1"]["strategies"].items():
         lines.append(f"- {strategy}: Recall@5={metrics['retrieval_recall_at_5']['mean']:.6f}, Recall@10={metrics['retrieval_recall_at_10']['mean']:.6f}, Recall@20={metrics['retrieval_recall_at_20']['mean']:.6f}")
-    lines += ["", f"Leader by frozen rule: {', '.join(quality['r1']['leader']['strategy_ids'])}", "", "## R2 Controlled Ranking", ""]
+    if split == "test":
+        lines += [
+            "", f"Predeclared Dev leader: {', '.join(quality['r1']['predeclared_dev_leader']['strategy_ids'])}",
+            f"Observed Test ordering: {', '.join(quality['r1']['observed_test_ordering']['strategy_ids'])}; no reselection.",
+            "", "## R2 Controlled Ranking", "",
+        ]
+    else:
+        lines += ["", f"Leader by frozen rule: {', '.join(quality['r1']['leader']['strategy_ids'])}", "", "## R2 Controlled Ranking", ""]
     for strategy, metrics in quality["r2"]["strategies"].items():
         lines.append(f"- {strategy}: NDCG@5={metrics['judged_condensed_ndcg_at_5']['mean']:.6f}, NDCG@10={metrics['judged_condensed_ndcg_at_10']['mean']:.6f}, MRR@10={metrics['judged_condensed_mrr_at_10']['mean']:.6f}, pairwise={metrics['explicit_pairwise_accuracy']['mean']:.6f}")
     formal_test_line = (
@@ -101,8 +129,15 @@ def _report(
         if split == "test"
         else "- Formal Test: SEALED / NOT RUN."
     )
-    lines += [
-        "", f"Leader by frozen rule: {', '.join(quality['r2']['leader']['strategy_ids'])}",
+    selection_lines = (
+        [
+            "", f"Predeclared Dev leader: {', '.join(quality['r2']['predeclared_dev_leader']['strategy_ids'])}",
+            f"Observed Test ordering: {', '.join(quality['r2']['observed_test_ordering']['strategy_ids'])}; no reselection.",
+        ]
+        if split == "test"
+        else ["", f"Leader by frozen rule: {', '.join(quality['r2']['leader']['strategy_ids'])}"]
+    )
+    lines += selection_lines + [
         "", "## Boundaries", "",
         "- Standard Precision@K: rejected under incomplete judgments.",
         f"- Explanation diagnostics: NOT RUN; no frozen persisted {split.title()} ExplanationRun input set is registered.",
@@ -265,6 +300,7 @@ async def _run(args: argparse.Namespace) -> int:
                 "status": "NOT_RUN",
                 "reason": f"no frozen persisted {args.split.title()} ExplanationRun evaluation input set is registered",
             }
+            quality = _apply_split_selection_context(quality, args.split)
         writer.complete(
             quality=quality,
             diagnostics={
