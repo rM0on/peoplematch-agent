@@ -4,7 +4,7 @@
 
 PeopleMatch Agent is a local-running, evidence-aware, traceable, and deterministically orchestrated candidate/job matching prototype. It is designed to evolve beyond keyword search into a pipeline that can rank AI Builder opportunities, explain why a match is supported by project evidence, review bad cases, and compare later algorithms through sandbox-only offline evaluation.
 
-The repository has completed and frozen **Phase 4 — Hybrid Retrieval**, **Phase 5 — Feature Engineering**, **Phase 6 — Learning-to-Rank**, **Phase 7 — Cross-Encoder Reranking**, **Phase 8 — Match-run Orchestration & Traceability**, **Phase 9 — Evidence-grounded Explanation**, and **Phase 10 — Feedback & Bad Case Review**. Phase 10 preserves immutable historical matching/explanation records while adding structured Feedback, append-only Bad Case investigation, case-specific verification, and the Evidence-first review UI. Phase 11's offline-evaluation architecture and protocol are now frozen for implementation; no Phase 11 runner or result exists yet. The LLM cannot author factual prose or ranking changes, and no production hiring claim is made.
+The repository has completed and frozen **Phase 4 — Hybrid Retrieval**, **Phase 5 — Feature Engineering**, **Phase 6 — Learning-to-Rank**, **Phase 7 — Cross-Encoder Reranking**, **Phase 8 — Match-run Orchestration & Traceability**, **Phase 9 — Evidence-grounded Explanation**, and **Phase 10 — Feedback & Bad Case Review**. Phase 10 preserves immutable historical matching/explanation records while adding structured Feedback, append-only Bad Case investigation, case-specific verification, and the Evidence-first review UI. Phase 11's offline-evaluation implementation and reproducible Dev evidence are frozen; formal Test remains sealed and has not run. The LLM cannot author factual prose or ranking changes, and no production hiring claim is made.
 
 ## Project Overview
 
@@ -110,13 +110,13 @@ peoplematch-agent/
 
 ## Current Phase
 
-**Phase 11 — Offline Evaluation (Architecture / Protocol Frozen; Implementation Not Started)**
+**Phase 11 — Offline Evaluation (Implementation / Dev Frozen; Formal Test Sealed)**
 
-The frozen `phase11_eval_protocol_v1` design separates full-corpus retrieval recall, common-pool judged-condensed ranking, explicit pairwise evidence, deterministic explanation/review diagnostics, and local latency observations. It preserves `unjudged != negative`, rejects standard Precision@K for the incomplete judgment matrix, requires candidate-pool fingerprints, seals Test behind a predeclared Dev/freeze gate, and retains the Phase 4 post-exposure limitation. The future implementation is file-backed and offline; it adds no API, database migration, frontend, model tuning, dataset mutation, formal result, or runtime-default change. See `docs/offline-evaluation.md`.
+The frozen `phase11_eval_protocol_v1` implementation separates full-corpus retrieval recall, common-pool judged-condensed ranking, explicit pairwise evidence, deterministic explanation/review diagnostics, and local latency observations. It preserves `unjudged != negative`, rejects standard Precision@K for the incomplete judgment matrix, requires candidate-pool and vector-index fingerprints, seals Test behind a predeclared Dev/freeze gate, and retains the Phase 4 post-exposure limitation. The implementation is file-backed and offline; it adds no API, database migration, frontend, model tuning, dataset mutation, formal Test result, or runtime-default change. Two Dev runs reproduced the same quality fingerprint; Sparse led R1 and frozen LTR led R2 under the predeclared rules, while CE remained weaker and experiment-only. See `docs/offline-evaluation.md`.
 
 **Phase 10 — Feedback & Bad Case Review (Completed / Frozen)**
 
-The frozen Phase 10 backend stores append-only Feedback and Bad Case review history against immutable Phase 8/9 resources. The frozen Task 6 frontend obtains only opaque historical result/explanation locators from contextual reads; the server re-resolves ownership for every write. Matching Results provides structured review entry, while `/bad-cases` and `/bad-cases/{id}` provide bounded queue/investigation views, closed review commands, stale-revision recovery, and case-specific verification provenance. The illustrative Phase 0.5 ranking canvas remains explicitly separate from persisted synthetic review context. There is no authentication, background queue, Phase 11 evaluation implementation, or production hiring claim.
+The frozen Phase 10 backend stores append-only Feedback and Bad Case review history against immutable Phase 8/9 resources. The frozen Task 6 frontend obtains only opaque historical result/explanation locators from contextual reads; the server re-resolves ownership for every write. Matching Results provides structured review entry, while `/bad-cases` and `/bad-cases/{id}` provide bounded queue/investigation views, closed review commands, stale-revision recovery, and case-specific verification provenance. The illustrative Phase 0.5 ranking canvas remains explicitly separate from persisted synthetic review context. There is no authentication, background queue, Phase 11 evaluation API, or production hiring claim.
 
 **Phase 8 — Match-run Orchestration & Traceability (Completed / Frozen)**
 
@@ -170,7 +170,7 @@ Phase 0 completed:
 - Docker Compose definitions for PostgreSQL, Redis, Qdrant, backend, and frontend;
 - an Alembic foundation later extended by the Phase 2 profile migration.
 
-Not implemented: authentication/user system, background queue, Phase 11 evaluation runner/results, general-purpose resume/JD parsing, automated run replay/recovery, or a complete production dashboard. Phase 10 feedback and Bad Case review is frozen as a local synthetic/sandbox workflow, and only Phase 11's architecture/protocol is frozen. The explanation provider is a constrained planner rather than a factual text author; final text comes from deterministic backend templates. Phase 8 does not add a final match score, probability, online experiment, or production hiring claim, and Phase 9 explanations are non-causal descriptions of recorded evidence.
+Not implemented: authentication/user system, background queue, formal Phase 11 Test evaluation, general-purpose resume/JD parsing, automated run replay/recovery, or a complete production dashboard. Phase 10 feedback and Bad Case review is frozen as a local synthetic/sandbox workflow, and Phase 11 remains open only for its sealed formal Test closure. The explanation provider is a constrained planner rather than a factual text author; final text comes from deterministic backend templates. Phase 8 does not add a final match score, probability, online experiment, or production hiring claim, and Phase 9 explanations are non-causal descriptions of recorded evidence.
 
 ## Roadmap
 
@@ -188,7 +188,7 @@ Not implemented: authentication/user system, background queue, Phase 11 evaluati
 | 8 | Match-run orchestration and traceability | Completed / Frozen |
 | 9 | Evidence-grounded explanations | Completed / Frozen |
 | 10 | Feedback and bad-case review | Completed / Frozen |
-| 11 | Offline evaluation | In Progress — architecture/protocol frozen; implementation not started |
+| 11 | Offline evaluation | In Progress — implementation/Dev frozen; formal Test sealed |
 | 12 | Local prototype hardening and documented demo | Planned |
 
 See [development-roadmap.md](docs/development-roadmap.md) for dependencies and quality gates.

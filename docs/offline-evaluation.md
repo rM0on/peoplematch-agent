@@ -4,7 +4,7 @@
 
 - **Phase:** Phase 11 — Offline Evaluation
 - **Architecture status:** Frozen for implementation
-- **Implementation status:** Not started
+- **Implementation status:** Dev-frozen; formal Test sealed / not run
 - **Protocol:** `phase11_eval_protocol_v1`
 - **Metric semantics:** `phase11_metric_semantics_v1`
 - **Architecture baseline:** `f45f7e34800ae7b1d48e55763737cdaca73ce289`
@@ -13,13 +13,71 @@
 This document is the Phase 11 source of truth for evaluation questions,
 judgment semantics, split usage, comparable strategy cohorts, metric semantics,
 artifact provenance, leakage prevention, claim boundaries, and implementation
-acceptance gates. It freezes design only. It does not implement a runner,
-service, API, metric, model change, dataset change, or evaluation result.
+acceptance gates. The repository now implements the file-backed evaluator and
+records a reproducible Dev artifact; formal Test remains sealed for a separate
+closure run. No evaluation API, model change, dataset change, or runtime-default
+change was introduced.
 
 Current disk and Git state, `AGENTS.md`, the dataset freeze manifest, and the
 frozen phase contracts remain authoritative. Historical Phase 4, 6, and 7
 reports remain immutable stage evidence; this protocol does not rewrite or
 reinterpret them as Phase 11 results.
+
+## Implementation and Dev Freeze Status
+
+The implementation is isolated under `backend/app/services/evaluation/` with a
+PowerShell-compatible entry point at `scripts/run_offline_evaluation.py` and a
+closed `phase11_evaluation_manifest_v1` contract. It provides strict frozen
+judgment loading, pure Recall/NDCG/MRR/pairwise metrics, standard-Precision
+rejection, R1/R2/R3 adapters over frozen services, full-pool comparability,
+Qdrant vector-state fingerprints, predeclared slice diagnostics, Phase 10 truth
+guards, deterministic explanation-integrity checks, immutable atomic artifacts,
+and the explicit Test seal.
+
+The Dev-only run uses Jobs `job_015`–`job_019`, the full 48-Candidate universe,
+and the named derived Qdrant index state recorded in its manifest. Two fresh
+runs from identical source, dataset, model, strategy, and index inputs produced
+byte-identical report quality content and the same
+`quality_result_fingerprint`. The selected immutable Dev artifact is stored
+under `data/eval/phase11/runs/`; its manifest and report are the evidence source
+for exact fingerprints, per-query orders, exclusions, and metrics. Exact run
+identity stays in the immutable manifest rather than creating a self-reference
+from this protocol document into the source-tree fingerprint.
+
+The predeclared Dev leaders are Sparse for R1 and frozen LTR for R2. The optional
+CE experiment remains weaker than LTR and remains experiment-only. These are
+descriptive synthetic Dev findings, not a production winner or hiring-accuracy
+claim. The selected Phase 11 vector-state fingerprint was rebuilt from the
+complete local `all-MiniLM-L6-v2` snapshot in explicit offline mode and
+reproduces the frozen Phase 4 R1 Dev Recall values. The historical Phase 4
+report remains unchanged and retains its original protocol and exposure caveat.
+
+Explanation-run evaluation and the 50-observation-per-stage latency campaign
+are `NOT RUN`: no frozen persisted Dev ExplanationRun input set was registered,
+and the full latency campaign was disproportionate to this quality freeze.
+Their deterministic validators/summarizers are implemented and tested; single
+run service timings are not substituted into quality results. Phase 10 review
+exports were also not supplied and therefore were not converted into truth or
+metrics.
+
+Formal Phase 11 Test evaluation is `SEALED — NOT RUN`. Test Jobs remain absent
+from implementation evaluation output. The next authorized step is the single
+formal Test closure run under this frozen implementation and exact Test seal.
+
+Fresh freeze verification from the repository root used:
+
+```powershell
+backend/.venv/Scripts/python.exe -m pytest backend/tests/test_phase11_evaluation_artifacts.py backend/tests/test_phase11_evaluation_diagnostics.py backend/tests/test_phase11_evaluation_integrity.py backend/tests/test_phase11_evaluation_metrics.py backend/tests/test_phase11_evaluation_runner.py backend/tests/test_phase11_evaluation_slices.py -q
+backend/.venv/Scripts/python.exe -m pytest backend/tests -q
+backend/.venv/Scripts/python.exe scripts/run_offline_evaluation.py --split dev --include-r3 --output-root <artifact-root> --run-id <new-run-id>
+```
+
+The final focused result is 24 passed. The fresh full backend result is 792
+passed and 58 environment-gated skips; required adapter integration had already
+passed 13 tests with zero skips against explicitly disposable PostgreSQL and
+Qdrant state, and the later formatting-only writer change did not touch adapter
+semantics. Those exact disposable resources were removed after the final Dev
+runs. No Test evaluation command was executed.
 
 ## Source-of-Truth Basis
 

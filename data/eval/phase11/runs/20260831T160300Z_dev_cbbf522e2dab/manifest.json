@@ -1,0 +1,120 @@
+{
+  "candidate_pool_config": {
+    "filters": [],
+    "r2_condensed_judged_count": 12,
+    "universe": "all_48_candidates"
+  },
+  "claim_limitations": [
+    "synthetic_sandbox",
+    "synthetic_curated",
+    "incomplete_judgments",
+    "descriptive_only",
+    "no_production_or_hiring_accuracy_claim"
+  ],
+  "contract_version": "phase11_evaluation_manifest_v1",
+  "dataset_contract": {
+    "annotation_source": "synthetic_curated",
+    "candidate_count": 48,
+    "canonical_file_sha256": {
+      "data/eval/pairwise_preferences.jsonl": "ba0842b705bc4ea1ecc639ec8ed169d215c18486b8a93181c90c179b09394a63",
+      "data/eval/query_splits.json": "79724cf33f6198bf776233947b777b4a183ae4c94022be3b425d27a509f42772",
+      "data/samples/candidates.jsonl": "de171393cbda7c5380debecba182e45c3212a5cab0af8b22691b69519e75e92c",
+      "data/samples/jobs.jsonl": "52ecce61fba9cb4d6e8f7919b67d836f1ef3372244c0981aeb2856b924bfee75",
+      "data/samples/labels.jsonl": "21eca7b4de67681f84904b16512ba074711d3957b21441fa184fd35f5a56a1d3"
+    },
+    "graded_judgment_count": 288,
+    "job_count": 24,
+    "origin": "synthetic_sandbox",
+    "pairwise_count": 48,
+    "schema_version": "1.0"
+  },
+  "dataset_fingerprint": "a2300d7de103e861f7321f600ba959cbcde21c90e8d78f6d42e8de54ce0cceb2",
+  "dataset_version": "1.0.0",
+  "ended_at": "2026-08-31T16:03:24.748988+00:00",
+  "evaluation_input_fingerprint": "968d9eb8ed7ae8dbd0eff3f5c43455a12f05bf32fcb4cbdfe9666077ee3611fd",
+  "evaluation_run_id": "20260831T160300Z_dev_cbbf522e2dab",
+  "feature_fingerprint": "dc85c7237c6c67785199d221c919ae48c31c9a6323857070e6399d3eae365e42",
+  "file_sha256": {
+    "per_query.json": "51506f7d7e65cab64299b9b75e3b0d1bacd107dadb337f0185a49f20ad519053",
+    "report.json": "0d5eb577f86826972eaed77614a6ec8a9a6e7fa07eacc911ce7888d5ae9bb19c",
+    "report.md": "5a428b3844f2bc5395e98d13fbd5c5ee305926ef2eccd14c12e42023b7fcf960"
+  },
+  "judgment_policy": {
+    "aggregation": "macro_arithmetic_mean",
+    "diagnostic_threshold": "strong_relevance_v1:grade==3",
+    "gain_by_grade": [
+      0,
+      1,
+      3,
+      7
+    ],
+    "missing_judgment": "unjudged_is_not_negative",
+    "primary_threshold": "broad_relevance_v1:grade>=2"
+  },
+  "manifest_fingerprint": "fa9eaf355e895286d3b02643e2a2e2327436edf63769368a7e5226f36302ad0f",
+  "metric_semantics_version": "phase11_metric_semantics_v1",
+  "metric_specs": {
+    "r1": [
+      "retrieval_recall_at_5",
+      "retrieval_recall_at_10",
+      "retrieval_recall_at_20"
+    ],
+    "r2": [
+      "judged_condensed_ndcg_at_5",
+      "judged_condensed_ndcg_at_10",
+      "judged_condensed_mrr_at_10",
+      "explicit_pairwise_accuracy"
+    ],
+    "standard_precision_at_k": "REJECTED"
+  },
+  "model_artifacts": {
+    "ce_snapshot_fingerprint": "013355448b38f6190a4d7250b1d062f76caddd8a5f1cabc47bdc716490a60236",
+    "ltr_model_sha256": "c8f235ebd95dce611f892394859f9f0251f43f8822a39bd316c404d9ff75a000"
+  },
+  "phase4_test_exposure": "post_exposure_fixed_synthetic_sandbox_benchmark",
+  "protocol_version": "phase11_eval_protocol_v1",
+  "quality_result_fingerprint": "cbbf522e2dab29b21392bc0acc7b4ef6340d1d4abff4e968f242643f36e2febc",
+  "query_ids": [
+    "job_015",
+    "job_016",
+    "job_017",
+    "job_018",
+    "job_019"
+  ],
+  "random_seed": null,
+  "recorded_at": "2026-08-31T16:03:24.748988+00:00",
+  "retrieval_config_fingerprint": "b004bc52c33f3e15bf38dba1777305039909bb5229261dcf1851b289e7c8f2e7",
+  "retrieval_document_version": "retrieval_doc_v4",
+  "retrieval_index_fingerprint": "916d597c9e061e54991355743a4d5ca45b54192c6ab291d086ab35189cf87b5e",
+  "source_commit_sha": "a56341aa2b2984d7e17906132500170ee525c12d",
+  "source_state": {
+    "command": "scripts/run_offline_evaluation.py --split <split> --include-r3 --output-root <path> --run-id <id>",
+    "dirty": true,
+    "implementation_package": "backend.app.services.evaluation"
+  },
+  "source_tree_fingerprint": "e06181a9b86fc2147d34c419071780b7aaf94ad9f8f63e249942e3538b984307",
+  "split": "dev",
+  "started_at": "2026-08-31T16:02:59.860566+00:00",
+  "status": "COMPLETED",
+  "strategy_config": {
+    "r1": [
+      "dense_v4",
+      "sparse_bm25_v4",
+      "hybrid_rrf_v4"
+    ],
+    "r2_pool_depth": 48,
+    "r3": true
+  },
+  "test_seal": {
+    "metrics": "069dafaa87c0114516dc216297893a2b9c18bbb9bec2bcd9f61a5cc3beefc094",
+    "protocol": "2e01df9ffccf1fdbeb5b04f25b53fa4081e4e63d86b1751d37936fe8043de4c8",
+    "report": "18562cf6954daf3dc94c56181ceee9d4837e8a2f57880c92f207f533a4c516ca",
+    "slices": "f2ba6b4412d430539bc15d3e4ed0b6438e578741b7ccbeb3f7a08cb2ed513e0f",
+    "strategies": "de09b06fa787e411bc814a8bfb89ebd8d3efdaa35850c8d2b7ef52b73ebc8509"
+  },
+  "warnings": [
+    "unjudged candidates are not negatives",
+    "CE remains experiment-only",
+    "formal Test was not run"
+  ]
+}
