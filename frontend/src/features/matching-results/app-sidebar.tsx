@@ -42,7 +42,7 @@ export function AppSidebar({ active = "matching" }: { active?: "matching" | "bad
 
       <nav className={styles.sidebarNav}>
         <div className={styles.navGroup}>
-          <p className={styles.navLabel}>Workspace</p>
+          <p className={styles.navLabel}>工作区</p>
           {plannedNavigation.map(({ label, icon: Icon }) => (
             <button className={styles.navItem} key={label} type="button" disabled>
               <Icon size={17} />
@@ -52,10 +52,10 @@ export function AppSidebar({ active = "matching" }: { active?: "matching" | "bad
         </div>
 
         <div className={styles.navGroup}>
-          <p className={styles.navLabel}>Decisioning</p>
+          <p className={styles.navLabel}>决策与复核</p>
           <Link className={`${styles.navItem} ${active === "matching" ? styles.navItemActive : ""}`} href="/">
             <TargetIcon size={17} weight="bold" />
-            <span>Matching</span>
+            <span>人岗匹配</span>
           </Link>
           {reviewNavigation.map(({ label, icon: Icon, href }) => href ? (
             <Link className={`${styles.navItem} ${active === "bad-cases" ? styles.navItemActive : ""}`} href={href} key={label}>
@@ -71,12 +71,12 @@ export function AppSidebar({ active = "matching" }: { active?: "matching" | "bad
       <div className={styles.sidebarFooter}>
         <div className={styles.mockBadge}>
           <CirclesThreePlusIcon size={16} weight="bold" />
-          <span>Design Mock</span>
+          <span>Local Prototype</span>
         </div>
-        <p>Illustrative data only</p>
-        <Link href={active === "matching" ? "#project-evidence" : "/#project-evidence"}>
+        <p>Synthetic demo · Evidence first</p>
+        <Link href={active === "matching" ? "#matching-results" : "/#matching-results"}>
           <FolderOpenIcon size={15} />
-          Evidence view
+          匹配工作区
         </Link>
       </div>
     </aside>

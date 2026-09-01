@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   createFeedback,
   getBadCase,
+  getExplanationRun,
   listExplanationRuns,
   listBadCases,
   reviewBadCase,
@@ -303,6 +304,46 @@ describe("Phase 10 API client", () => {
       code: "invalid_response",
       requestId: "request-unknown-explanation-status",
     });
+  });
+
+  it("accepts the frozen Phase 9 missing-requirement projection in historical explanations", async () => {
+    vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "http://localhost:8000");
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      success: true,
+      data: {
+        explanation_run_id: "explanation-run-1",
+        match_run_id: "run-1",
+        status: "COMPLETED",
+        explanation_count: 1,
+        created_at: "2026-09-01T00:00:00Z",
+        completed_at: "2026-09-01T00:00:01Z",
+        explanations: [{
+          match_explanation_id: 51,
+          output_schema_version: "explanation_output_v1",
+          candidate_id: "candidate-1",
+          result_rank: 1,
+          summary: { text: "Grounded summary", evidence_refs: ["candidate:1:ranking:result_rank"] },
+          match_reasons: [],
+          risk_points: [],
+          missing_skills: [{
+            requirement_id: "requirement-1",
+            requirement_text: "Provide incident response evidence",
+            priority: "nice_to_have",
+            status: "missing",
+            evidence_status: "absent",
+            evidence_refs: ["job_requirement:requirement-1"],
+          }],
+          interview_questions: [],
+          why_not_top1: null,
+        }],
+      },
+      error: null,
+      request_id: "request-explanation",
+    }), { status: 200, headers: { "Content-Type": "application/json" } })));
+
+    const response = await getExplanationRun("explanation-run-1");
+
+    expect(response.data.explanations[0].missing_skills[0].requirement_text).toBe("Provide incident response evidence");
   });
 
   it("represents nullable server-owned feedback fields without request-shape casts", () => {

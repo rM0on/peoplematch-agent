@@ -15,9 +15,8 @@ from app.services.candidate_service import CandidateService
 from app.services.job_service import JobService
 from app.core.config import get_settings
 from app.exceptions import ProviderUnavailableError
-from app.services.profile_extraction.mock_provider import MockStructuredOutputProvider
 from app.services.profile_extraction.parser import ProfileExtractionService
-from app.services.profile_extraction.provider import MOCK_PROVIDER_DESCRIPTOR
+from app.services.profile_extraction.factory import build_profile_extraction_provider
 from app.services.features.service import FeatureEngineeringService
 from app.services.retrieval.embedding import SentenceTransformerEmbeddingProvider
 from app.services.retrieval.service import RetrievalService
@@ -40,6 +39,7 @@ from app.services.explanation.generation.orchestration import ExplanationGenerat
 from app.services.explanation.generation.pipeline import ExplanationGenerationPipeline
 from app.services.feedback.service import FeedbackService
 from app.services.bad_cases.service import BadCaseReviewService
+from app.services.demo.indexes import DemoIndexService
 
 
 @lru_cache
@@ -66,21 +66,39 @@ def get_job_service(session: AsyncSession = Depends(get_db_session)) -> JobServi
     return JobService(session, JobRepository(session))
 
 
+@lru_cache
+def get_runtime_extraction_provider():
+    fixture_root = (
+        Path(__file__).resolve().parents[3] / "data" / "samples" / "extraction"
+    )
+    try:
+        return build_profile_extraction_provider(
+            get_settings(), fixture_root=fixture_root
+        )
+    except ExplanationProviderConfigurationError as exc:
+        raise ProviderUnavailableError(str(exc)) from None
+
+
+async def close_runtime_extraction_provider() -> None:
+    if get_runtime_extraction_provider.cache_info().currsize == 0:
+        return
+    provider, _descriptor = get_runtime_extraction_provider()
+    try:
+        close = getattr(provider, "aclose", None)
+        if close is not None:
+            await close()
+    finally:
+        get_runtime_extraction_provider.cache_clear()
+
+
 def get_profile_extraction_service(
     session: AsyncSession = Depends(get_db_session),
 ) -> ProfileExtractionService:
     settings = get_settings()
-    if settings.extraction_provider != "mock":
-        raise ProviderUnavailableError(
-            f"Extraction provider '{settings.extraction_provider}' is not implemented"
-        )
-    fixture_root = (
-        Path(__file__).resolve().parents[3] / "data" / "samples" / "extraction"
-    )
-    provider = MockStructuredOutputProvider.from_fixture_directory(fixture_root)
+    provider, descriptor = get_runtime_extraction_provider()
     return ProfileExtractionService(
         provider,
-        MOCK_PROVIDER_DESCRIPTOR,
+        descriptor,
         max_attempts=settings.extraction_max_attempts,
         timeout_seconds=settings.extraction_timeout_seconds,
         candidate_service=CandidateService(session, CandidateRepository(session)),
@@ -113,6 +131,12 @@ def get_retrieval_service(
         pool_minimum=settings.retrieval_pool_minimum,
         pool_multiplier=settings.retrieval_pool_multiplier,
     )
+
+
+def get_demo_index_service(
+    retrieval_service: RetrievalService = Depends(get_retrieval_service),
+) -> DemoIndexService:
+    return DemoIndexService(retrieval_service)
 
 
 def get_feature_engineering_service(

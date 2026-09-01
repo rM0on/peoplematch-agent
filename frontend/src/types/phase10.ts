@@ -208,7 +208,14 @@ export type MatchExplanation = {
   summary: { text: string; evidence_refs: string[] };
   match_reasons: Array<{ category: string; text: string; evidence_refs: string[] }>;
   risk_points: Array<{ text: string; evidence_refs: string[] }>;
-  missing_skills: Array<{ skill: string; evidence_refs: string[] }>;
+  missing_skills: Array<{
+    requirement_id: string;
+    requirement_text: string;
+    priority: "must_have" | "nice_to_have";
+    status: "partial" | "missing";
+    evidence_status: "available" | "claim_only" | "absent" | "not_assessed";
+    evidence_refs: string[];
+  }>;
   interview_questions: Array<{ question: string; evidence_refs: string[] }>;
   why_not_top1: unknown | null;
 };

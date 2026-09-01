@@ -6,19 +6,21 @@ PeopleMatch Agent is a local monorepo with these logical areas:
 
 | Area | Responsibility | Current status |
 |---|---|---|
-| Frontend | Product UI and typed API consumption | **CURRENT / PHASE 10 FROZEN:** Phase 0.5 Evidence-first shell plus Feedback and Bad Case product integration |
+| Frontend | Product UI and typed API consumption | **PHASE 12 COMPLETED / FROZEN:** Evidence-first Resume/JD workbench plus frozen Feedback and Bad Case product integration |
 | Backend | HTTP boundary, application configuration, tracing, canonical data contracts | **CURRENT:** FastAPI profile/matching/explanation APIs plus frozen Phase 10 review services and typed API commands |
 | Storage | Durable profile, historical execution, explanation, and review data | **CURRENT:** PostgreSQL profiles, immutable Phase 8/9 history, and append-only Phase 10 Feedback/BadCase audit |
 | Retrieval | Candidate/job first-stage recall and vector search | **CURRENT / PHASE 4 COMPLETED:** versioned documents, local pretrained dense embeddings, Qdrant exact search, BM25, explicit filters, RRF, and offline retrieval evaluation |
 | Feature Engineering | Versioned pair features and diagnostics | **CURRENT / PHASE 5 COMPLETED / FROZEN:** label-free on-demand extraction that preserves retrieval order |
 | Ranking | LTR, final scoring, and reranking | **CURRENT / PHASE 6 FROZEN + PHASE 7 FROZEN:** deterministic LightGBM LambdaMART followed by one pinned frozen Cross-Encoder Job-to-Candidates rerank; no final hiring score |
-| AI Provider | Structured extraction and bounded explanation planning | **CURRENT:** deterministic mock plus provider-neutral OpenAI-compatible transport configured for DeepSeek; providers select opaque references and never author persisted facts or prose |
+| AI Provider | Structured extraction and bounded explanation planning | **PHASE 12 COMPLETED / FROZEN:** deterministic mock plus one shared OpenAI-compatible transport for schema-first extraction and grounded explanation; providers never own ranking or persisted facts |
 | Evaluation | Stage-aware local offline evaluation | **PHASE 11 COMPLETED / FROZEN:** full-corpus retrieval, common-pool judged-condensed ranking, explicit pairwise evidence, sealed post-exposure Test evaluation, separate explanation/review/latency diagnostics, and immutable artifacts |
 | Cache / ephemeral state | Later caching and coordination | Redis container config **CURRENT**; business usage **PLANNED** |
 
 ## Current Phase Architecture
 
-**CURRENT / PHASE 11 COMPLETED / FROZEN:** Phase 10 production behavior remains completed and frozen. The file-backed `phase11_eval_protocol_v1` evaluator implements independent full-corpus retrieval, common-pool judged-condensed ranking, explicit pairwise, explanation/review guards, slice diagnostics, and separate local-latency contracts over frozen stage interfaces/artifacts. Candidate-pool, vector-index, model, artifact, clean-source, and Test-audit fingerprints are enforced. The corrected formal run `20260831T173246Z_test_corrected_final` preserves Sparse and LTR as the predeclared Dev leaders and reports all frozen baselines without Test reselection. Its five synthetic Test Jobs are a post-exposure fixed sandbox evaluation because Phase 4 previously exposed them; they do not establish pristine held-out or real-world generalization. See `docs/offline-evaluation.md`.
+**CURRENT / PHASE 12 COMPLETED / FROZEN:** The local interactive Resume/JD path runs through the existing extraction, retrieval, ranking, historical explanation, and review boundaries. Real structured extraction composes the frozen Phase 9 OpenAI-compatible transport rather than adding a parallel client; deterministic mock remains the default for tests and offline demos. The browser uses typed runtime-validated contracts and exposes raw LTR margin, Evidence refs, and immutable trace without inventing a probability or hiring score. The external live-provider smoke is not claimed because no local credential was configured.
+
+The frozen file-backed `phase11_eval_protocol_v1` evaluator and selected artifacts are read-only Phase 12 evidence. The corrected formal run `20260831T173246Z_test_corrected_final` preserves Sparse and LTR as predeclared Dev leaders. Its five synthetic Test Jobs remain a post-exposure fixed sandbox evaluation, not pristine held-out or real-world generalization. See `docs/offline-evaluation.md`.
 
 Next.js continues to preserve the selected Phase 0.5 Evidence-first shell while contextual MatchRun/Explanation reads supply opaque historical locators to structured Feedback forms. The browser never supplies Candidate/rank truth; the frozen service layer re-resolves persisted ownership. Bad Case queue/detail pages consume bounded privacy-safe projections and send only closed append-only review commands with expected revisions. PostgreSQL remains the source of immutable historical execution and review workflow truth.
 
@@ -28,9 +30,9 @@ The liveness route still makes no downstream calls and therefore does not load o
 
 ```mermaid
 flowchart TD
-    Browser["Browser"] --> Next["Next.js 16 frontend\nCURRENT: Evidence-first review integration"]
-    Next --> FastAPI["FastAPI backend\nCURRENT: profile + historical + review APIs"]
-    FastAPI --> Extraction["Profile extraction service\nCURRENT: strict JSON + mock"]
+    Browser["Browser"] --> Next["Next.js 16 frontend\nEvidence-first demo + review"]
+    Next --> FastAPI["FastAPI backend\nprofile + matching + review APIs"]
+    FastAPI --> Extraction["Profile extraction service\nstrict JSON + mock / OpenAI-compatible"]
     Extraction --> Service["Candidate / Job services\nCURRENT"]
     FastAPI --> Service
     Service --> Repository["Repositories\nCURRENT"]
@@ -68,17 +70,17 @@ Fusion --> FeatureService["Feature engineering service\nCURRENT / PHASE 5 COMPLE
 
 The MatchRun request first creates durable `RUNNING` history through an independent lifecycle transaction. One dedicated PostgreSQL `REPEATABLE READ` execution session then resolves canonical inputs and flows through the frozen Phase 4/5/6 graph plus the explicit optional Phase 7 service. Returned Candidate snapshots, results, `persist_results` completion, and terminal `COMPLETED` state are finalized atomically. PostgreSQL snapshot isolation stabilizes canonical profile reads for that execution; it does not transactionally freeze Qdrant. Qdrant remains derived external retrieval state whose freshness and configuration provenance are recorded. The dotted Redis arrow shows configured infrastructure with no business integration.
 
-## Target Architecture
+## Final Local Prototype Architecture
 
 Phase 10 adds frozen bounded frontend Feedback and Bad Case review on top of the immutable historical and service boundaries. Phase 11's completed offline evaluator remains separate from APIs and runtime ranking and preserves incomplete-judgment, common-pool, Test-seal, provenance, immutability, and claim-boundary rules. Its Dev and post-exposure Test artifacts are descriptive synthetic evidence only. Phase 9.2 supplies deterministic evidence facts from durable historical execution context, while Phase 9.3/9.4 provides only a constrained provider planning boundary and deterministic backend rendering; it does not make causal claims or alter ranking. Phase 6 remains the stronger/default ranking baseline and Phase 7 is an optional experimental pinned comparison, neither of which is a final match score.
 
 The target remains a modular monolith unless a measured need justifies a different deployment boundary. Phase 0 does not introduce microservices, Kubernetes, authentication, or distributed infrastructure.
 
-### Future Matching Flow
+### Frozen Matching Flow
 
 ```mermaid
 flowchart TD
-    Input["Candidate / Job"] --> Parser["Structured extraction\nCURRENT: deterministic mock"]
+    Input["Candidate / Job"] --> Parser["Structured extraction\nmock / OpenAI-compatible"]
     Parser --> MatchRun["Deterministic MatchRun\nCURRENT / PHASE 8 FROZEN"]
     MatchRun --> Retrieval["Hybrid retrieval\nCURRENT / PHASE 4 COMPLETED"]
     Retrieval --> Features["Feature engineering\nCURRENT / PHASE 5 COMPLETED / FROZEN"]

@@ -26,9 +26,9 @@ The provider proposes business fields. Pydantic validates them. The extraction s
 
 `StructuredOutputProvider` is asynchronous and receives the task, clearly delimited source, exact draft JSON Schema, attempt number, and optional compact validation feedback. It returns raw text only. Provider name, kind, and `DataOrigin` come from the immutable descriptor selected by trusted dependency wiring, never from the provider response. The parser accepts only a complete JSON document through `json.loads`; Markdown fences, prose, substring extraction, `eval`, and permissive coercion are not accepted.
 
-Phase 3 implements only `MockStructuredOutputProvider`. It maps SHA-256 fingerprints of four registered synthetic fixtures to deterministic JSON, performs no network or tool call, requires no secret, and returns `mock_input_not_supported` for unknown input. Tests can inject isolated response or exception sequences without global mutable state.
+The frozen Phase 3 baseline implements `MockStructuredOutputProvider`. It maps SHA-256 fingerprints of registered synthetic fixtures to deterministic JSON, performs no network or tool call, requires no secret, and returns `mock_input_not_supported` for unknown input.
 
-No real LLM provider is implemented in Phase 3. A future real provider must implement the same boundary; configuration never silently falls back to mock when an unknown provider is selected.
+Phase 12 adds `OpenAICompatibleStructuredOutputProvider` behind the same contract. It composes the existing Phase 9 transport, supplies the exact Pydantic JSON Schema, and accepts only a complete structured object. The runtime factory is closed: `mock` remains deterministic and `deepseek` selects the configured OpenAI-compatible path; missing credentials, unknown providers, timeout, transport failure, or invalid output fail explicitly without fallback success. Provider configuration and keys remain environment-backed and are never included in fingerprints, errors, artifacts, or logs.
 
 ## Server-owned Fields
 
@@ -48,7 +48,7 @@ When persistence is requested, the server injects the original request text byte
 | `synthetic_sandbox` | Frozen Phase 1 dataset record | `None`, `sandbox://`, or HTTP(S) with exact host `example.invalid` | No |
 | `user_created` | Manual Phase 2 API creation | `None` or valid HTTP(S) | Yes |
 | `mock_parsed` | Phase 3 deterministic mock extraction | Same restricted synthetic policy as the sandbox | Yes |
-| `llm_parsed` | Reserved for a future real provider | `None` or valid HTTP(S) | Yes |
+| `llm_parsed` | Phase 12 validated real-provider extraction | `None` or valid HTTP(S) | Yes |
 
 Mock dependency wiring uses the trusted `mock` / `mock_parsed` descriptor. Provider output cannot override this selection, so mock output is never labeled `llm_parsed`. Extending this Python enum does not require a migration because PostgreSQL stores `data_origin` in a string column.
 

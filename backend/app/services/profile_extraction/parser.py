@@ -187,6 +187,23 @@ class ProfileExtractionService:
                     attempt,
                 )
                 raise ProviderTimeoutError("Structured output provider timed out") from exc
+            except (
+                ProviderTimeoutError,
+                ProviderUnavailableError,
+                ProviderOutputInvalidError,
+            ) as exc:
+                logger.warning(
+                    "Structured extraction failed request_id=%s "
+                    "input_fingerprint=%s provider=%s task=%s attempt=%s "
+                    "error_type=%s",
+                    request_id,
+                    fingerprint,
+                    self.provider_descriptor.name,
+                    task.value,
+                    attempt,
+                    exc.code,
+                )
+                raise
             except Exception as exc:
                 logger.warning(
                     "Structured extraction failed request_id=%s "
@@ -208,10 +225,8 @@ class ProfileExtractionService:
                 continue
             try:
                 validation_context = None
-                if schema is CandidateExtractionDraft:
-                    validation_context = {
-                        "data_origin": self.provider_descriptor.data_origin
-                    }
+                if schema in {CandidateExtractionDraft, JobExtractionDraft}:
+                    validation_context = {"data_origin": self.provider_descriptor.data_origin}
                 draft = schema.model_validate(decoded, context=validation_context)
             except ValidationError as exc:
                 feedback = _compact_validation_feedback(exc)

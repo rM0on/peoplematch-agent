@@ -1,401 +1,242 @@
 # PeopleMatch Agent
 
-**PeopleMatch Agent：AI Builder 人岗匹配与推荐解释系统**
+> 一个面向人岗匹配场景的 **Evidence-aware AI Matching & Ranking** 本地原型：用混合召回、显式特征、LambdaMART 排序和证据约束的大模型解释，生成可追踪、可复核的候选人推荐。
 
-PeopleMatch Agent is a local-running, evidence-aware, traceable, and deterministically orchestrated candidate/job matching prototype. It is designed to evolve beyond keyword search into a pipeline that can rank AI Builder opportunities, explain why a match is supported by project evidence, review bad cases, and compare later algorithms through sandbox-only offline evaluation.
+PeopleMatch Agent 不是“把简历和 JD 发给 LLM，让它给一个分数”的 Demo。系统把候选人理解、召回、排序、解释、人工复核与离线评测拆成独立阶段：**LLM 负责结构化与解释，但不拥有最终排名**。默认排序由冻结的 Hybrid Retrieval → Feature Engineering → LambdaMART 流水线产生。
 
-The repository has completed and frozen **Phase 4 — Hybrid Retrieval**, **Phase 5 — Feature Engineering**, **Phase 6 — Learning-to-Rank**, **Phase 7 — Cross-Encoder Reranking**, **Phase 8 — Match-run Orchestration & Traceability**, **Phase 9 — Evidence-grounded Explanation**, **Phase 10 — Feedback & Bad Case Review**, and **Phase 11 — Offline Evaluation**. Phase 10 preserves immutable historical matching/explanation records while adding structured Feedback, append-only Bad Case investigation, case-specific verification, and the Evidence-first review UI. Phase 11 preserves incomplete-judgment semantics, frozen Dev selection, a sealed post-exposure Test evaluation, and immutable provenance. The LLM cannot author factual prose or ranking changes, and no production hiring claim is made.
+[3 分钟演示指南](docs/demo-guide.md) · [Quick Start](#quick-startwindows-powershell) · [架构文档](docs/architecture.md) · [离线评测协议](docs/offline-evaluation.md)
 
-## Project Overview
+![PeopleMatch Agent 匹配结果、证据解释与 MatchRun 轨迹](screenshots/phase12-hero-matching-results-1440x1280.png)
 
-The intended product answers more than “do these texts contain similar skills?” It separates a claimed skill from evidence that a person used it, distinguishes semantic similarity from role-direction fit, keeps constraints such as location and seniority visible, and makes each later recommendation traceable to ranking evidence.
+**核心能力**
 
-The complete product direction covers:
+- Resume / JD 文本可交互输入；支持 deterministic mock 与 OpenAI-compatible Provider。
+- Dense + BM25 Sparse + RRF Hybrid 召回，显式区分“声称能力”和“项目证据”。
+- LightGBM LambdaMART 是默认 ranking baseline；Cross-Encoder 仅保留为可选实验。
+- MatchRun、Evidence Facts、ExplanationRun 与 Feedback / BadCase 历史不可变且可审计。
+- 冻结的离线评测协议明确处理 incomplete judgments、同候选池可比性和 Test seal。
 
-- evidence-aware candidate and job profiles;
-- retrieval, scoring, ranking, and reranking;
-- recommendation explanations grounded in ranking evidence;
-- feedback and bad-case review without silently changing prior results;
-- reproducible offline evaluation on local sandbox datasets.
+[查看输入工作台截图](screenshots/phase12-input-workbench-1440x1024.png) · [作品集证据](docs/portfolio-evidence.md)
 
-## Problem Statement
+## 为什么做这个项目
 
-Conventional keyword matching is an incomplete basis for AI hiring decisions:
+人岗匹配不是关键词检索问题。一个可解释的推荐至少需要回答：候选人是否进入候选池、哪些事实支持匹配、模型为何改变顺序、解释是否只引用已有证据、人工反馈是否被误当成 ground truth，以及离线数字能支持什么结论。
 
-- A skill keyword is not proof of project experience or delivery depth.
-- Semantic similarity does not guarantee the same role direction or day-to-day work.
-- Strong technical similarity can still conflict with location, seniority, or team-stage constraints.
-- A recommendation score alone does not reveal why a bad case occurred or which pipeline stage caused it.
+本项目因此将系统拆成可验证的阶段，而不是把职责交给单次 Prompt。
 
-PeopleMatch Agent is planned around explicit evidence, separable ranking stages, and evaluation traceability so later improvements can be compared rather than asserted.
+## 系统架构
 
-## Product Users
+```mermaid
+flowchart LR
+  UI[Next.js 产品工作台] --> API[FastAPI]
+  API --> Extract[结构化 Profile<br/>Mock / OpenAI-compatible LLM]
+  Extract --> PG[(PostgreSQL)]
+  PG --> Docs[Versioned retrieval documents]
+  Docs --> Q[(Qdrant derived index)]
+  Q --> Dense[Dense Retrieval]
+  PG --> Sparse[BM25 Sparse]
+  Dense --> Hybrid[RRF Hybrid Pool]
+  Sparse --> Hybrid
+  Hybrid --> Features[Explicit Features]
+  Features --> LTR[LambdaMART LTR<br/>默认排序]
+  LTR -. 可选实验 .-> CE[Cross-Encoder]
+  LTR --> Run[Immutable MatchRun]
+  CE --> Run
+  Run --> Facts[Evidence Facts]
+  Facts --> Explain[Grounded LLM Plan<br/>+ deterministic rendering]
+  Explain --> Review[Feedback / BadCase Review]
+  Run --> Eval[Offline Evaluation]
+```
 
-- **Candidate / AI Builder:** understands how experience maps to a role and which evidence supports or weakens a fit.
-- **Recruiter / Founder / Hiring Team:** reviews ranked matches, constraints, and grounded reasons without treating semantic similarity as the final decision.
-- **Platform Operator:** traces match runs, investigates bad cases, manages sandbox labels, and compares offline evaluation runs.
+运行时依赖方向保持为 `API → Service → Repository → PostgreSQL`。Qdrant 是可重建的检索状态；PostgreSQL 是 Profile 和历史记录的事实源。
 
 ## Matching Pipeline
 
-The current local sequence includes Phase 8 deterministic MatchRun orchestration around the Phase 6 default and explicit optional Phase 7 experiment. Frozen Phase 9.2 converts completed historical MatchRuns into deterministic evidence facts. Phase 9.3/9.4 now projects those facts to opaque provider references, accepts only a closed structured explanation plan, resolves and grounds every selection, renders fixed backend templates, and persists a separate immutable explanation history. Provider-authored factual prose is never accepted.
+1. **Structured Profile**：Resume / JD → Pydantic schema；未知信息保持 missing，不让模型补写项目、年限或证明。
+2. **Retrieval**：Dense、Sparse、equal-weight RRF Hybrid 只负责 first-stage recall。
+3. **Feature Engineering**：固定 10 个模型特征，项目证据与自述能力分开。
+4. **LTR**：冻结的 `ltr_ranker_v1` 产生 raw model margin；它不是概率，也不是最终招聘分。
+5. **Optional CE**：只对 shortlist rerank；因冻结证据未证明优于 LTR，未被提升为默认策略。
+6. **Explanation**：Provider 只能返回闭合结构计划；Evidence Facts 与最终文案由后端控制。
+7. **Review**：Feedback 是观察，BadCase 是调查；都不会自动成为训练标签。
 
-```mermaid
-flowchart LR
-    A["Candidate / Job raw input"] --> B["Structured extraction"]
-    B --> C["Hybrid retrieval"]
-    C --> D["Feature engineering"]
-    D --> E["Learning-to-rank"]
-    E --> F["Cross-encoder rerank"]
-    F --> G["Evidence-grounded explanation"]
-    G --> H["Feedback and bad-case review"]
-    H --> I["Offline evaluation"]
-    I -. "documented iteration" .-> D
+## LLM 在哪里使用
+
+LLM 可以做：
+
+- 将真实风格 Resume / JD 文本解析成受约束的 CandidateProfile / JobProfile；
+- 在对应历史 MatchRun 的 Evidence Bundle 上规划 explanation。
+
+LLM 不可以做：
+
+- 直接决定候选人顺序或覆盖 LTR score；
+- 生成不存在的技能、项目、结果或 Evidence Fact；
+- 修改 MatchRun、离线评测结果或 Feedback 历史。
+
+默认 mock 模式不需要网络，适合测试与可复现演示。Real mode 复用 Phase 9 的 OpenAI-compatible transport、timeout、retry、错误映射与 secret redaction，不引入第二套 LLM client。
+
+## 离线评测结果
+
+以下数字来自冻结 Test artifact：[`20260831T173246Z_test_corrected_final`](data/eval/phase11/runs/20260831T173246Z_test_corrected_final/report.md)。Sparse 与 LTR 是在 Dev 上按预声明规则选出的 leader；Test 结果不用于重新选择策略。
+
+### R1 Retrieval — Recall@K
+
+| Strategy | Recall@5 | Recall@10 | Recall@20 |
+| --- | ---: | ---: | ---: |
+| Dense V4 | 0.42 | 0.42 | 0.70 |
+| Sparse BM25 V4 | **0.67** | **0.80** | **0.95** |
+| Hybrid RRF V4 | 0.47 | 0.66 | 0.90 |
+
+### R2 Controlled Ranking — 同一 48-Candidate pool
+
+| Strategy | NDCG@5 | NDCG@10 | MRR@10 | Explicit Pairwise |
+| --- | ---: | ---: | ---: | ---: |
+| Hybrid RRF V4 | 0.7920 | 0.8343 | 0.90 | 0.80 |
+| LambdaMART LTR | **0.9593** | **0.9597** | **1.00** | **1.00** |
+| Cross-Encoder experiment | 0.8991 | 0.9212 | **1.00** | 0.90 |
+
+> **评测边界：**数据为 `synthetic_curated`；48 Candidates × 24 Jobs 中只有 288 个显式 graded judgments（25% coverage）；Test 仅 5 个 Jobs；Phase 4 构建期间 Test queries 曾被查看。因此它是 **post-exposure fixed synthetic sandbox evaluation**，不是 pristine held-out、真实招聘准确率或现实市场泛化证据。
+
+标准 Precision@K 被拒绝：judgment matrix 不完整，`unjudged != negative`。协议使用 Recall、judged-condensed NDCG/MRR 与独立显式 pairwise preferences，避免把未知候选人静默计为负例。
+
+## 几个关键工程决策
+
+- **为什么不让 LLM 排序？** 排序需要可复现的候选池、特征和模型 provenance；自然语言解释不应反向改变分数。
+- **为什么 Sparse 能超过 Hybrid？** 这是当前固定 synthetic sandbox 上的观察，不是一般规律；项目保留真实结果，没有为美化报告重调权重。
+- **为什么 CE 不是默认？** 它是 MS-MARCO 域模型且未 fine-tune；冻结 Dev 证据未证明它优于 LTR。
+- **为什么历史 artifact 不可变？** 解释、复核和后续评测必须能回到当时的输入、顺序和 Evidence snapshot。
+- **为什么 Test 先 seal？** metric、策略、slice、report 与 source fingerprint 在 Test 前冻结，防止看结果后改规则。
+
+## Quick Start（Windows PowerShell）
+
+### 前置条件
+
+- Python 3.12 与 `backend/.venv`
+- **Node.js 22 LTS**、npm 10+
+- Docker Desktop、Docker Compose v2
+- 本地已有冻结的 LTR 与 CE artifacts；二者被 `.gitignore` 排除，fresh clone 需按下文准备
+
+先运行只读 doctor：
+
+```powershell
+backend/.venv/Scripts/python.exe scripts/demo_doctor.py
 ```
 
-Phase 3 implements structured extraction with a deterministic mock only. Phase 4 implements completed Hybrid Retrieval. Phase 5 Feature Engineering and Phase 6 LambdaMART are completed and frozen. Phase 7 implements one frozen pretrained Cross-Encoder for sequential Job-to-Candidates reranking; it is not fine-tuned and does not generate explanations. See `docs/cross-encoder-reranking.md`.
-
-## Architecture Overview
-
-```mermaid
-flowchart LR
-    Browser["Browser"] --> Web["Next.js frontend\nCURRENT: Phase 0.5 shell + Phase 10 review integration"]
-    Web --> API["FastAPI backend\nCURRENT: profile, matching, explanation, and review APIs"]
-    API --> Extract["Structured extraction\nCURRENT: deterministic mock"]
-    Extract --> Domain["Candidate / Job services and repositories\nCURRENT"]
-    API --> Domain
-    Domain --> PG["PostgreSQL\nCURRENT: canonical profile store"]
-    API -.-> Redis["Redis\nCURRENT: infrastructure only"]
-    API -.-> Qdrant["Qdrant\nCURRENT: derived retrieval index"]
-    API --> Runs["Phase 8 deterministic MatchRun\nCOMPLETED / FROZEN"]
-    Runs --> Matching["Phase 6 LTR + optional Phase 7 CE\nFROZEN"]
-    Runs --> Evidence["Phase 9.2 historical evidence\nFROZEN"]
-    Evidence --> Plan["Opaque provider refs + structured plan\nCURRENT"]
-    Plan --> Render["Deterministic grounding + templates\nCURRENT"]
-    Render --> PG
-    Plan --> AI["Mock or OpenAI-compatible transport\nCURRENT backend adapter"]
-    Runs --> PG
-```
-
-The health endpoint is liveness-only and intentionally does not fail when infrastructure is unavailable. Dependency readiness will be added separately in a later phase.
-
-## Repository Structure
-
-```text
-peoplematch-agent/
-├── backend/                  # FastAPI app, domain persistence, Alembic, tests
-│   ├── app/
-│   │   ├── api/              # Routers, routes, unified error handlers
-│   │   ├── core/             # Settings and standard logging
-│   │   ├── middleware/       # Request ID tracing
-│   │   ├── models/           # Normalized SQLAlchemy candidate/job models
-│   │   ├── repositories/     # Async persistence mechanics
-│   │   ├── schemas/          # Canonical records, mutations, API envelopes
-│   │   └── services/         # Profile rules, transactions, frozen seed
-│   ├── alembic/              # PostgreSQL profile-domain migration
-│   └── tests/                # Unit, API, and PostgreSQL integration tests
-├── frontend/                 # Next.js App Router frontend
-│   └── src/
-│       ├── app/              # Layout, page, and global styles
-│       ├── components/       # Reusable presentational components
-│       ├── features/         # Feature-oriented system status integration
-│       ├── lib/              # Typed backend client
-│       └── types/            # Shared frontend API types
-├── data/                     # Phase 1 sandbox profiles, labels, schemas, split, and manifest
-├── docs/                     # PRD, architecture, API plan, roadmap
-├── infra/docker/             # Docker-specific notes and future assets
-├── postman/                  # Future API collections
-├── scripts/                  # Dataset validation, frozen seed, DB verification
-└── screenshots/              # Future verified product captures
-```
-
-## Current Phase
-
-**Phase 11 — Offline Evaluation (Completed / Frozen)**
-
-The frozen `phase11_eval_protocol_v1` implementation separates full-corpus retrieval recall, common-pool judged-condensed ranking, explicit pairwise evidence, deterministic explanation/review diagnostics, and local latency observations. It preserves `unjudged != negative`, rejects standard Precision@K for the incomplete judgment matrix, requires candidate-pool and vector-index fingerprints, and retains the Phase 4 post-exposure limitation. The corrected final Test run `20260831T173246Z_test_corrected_final`, executed from clean commit `d98a16fa6c2e38d4d03f059eb892d64149535da5`, kept the predeclared Dev leaders: Sparse for R1 and frozen LTR for R2. Test Recall@5/10/20 was Dense `0.42/0.42/0.70`, Sparse `0.67/0.80/0.95`, and Hybrid `0.47/0.66/0.90`; Test NDCG@5/10, MRR@10, and pairwise accuracy were Hybrid `0.792028/0.834257/0.90/0.80`, LTR `0.959290/0.959723/1.00/1.00`, and optional CE `0.899127/0.921153/1.00/0.90`. These five synthetic Test Jobs were previously exposed during Phase 4, cover an incomplete 25% judgment matrix, and support only descriptive post-exposure sandbox claims—not pristine held-out, production, real-world, or hiring-accuracy claims. Explanation evaluation and the full latency campaign remained `NOT RUN`. See `docs/offline-evaluation.md`.
-
-**Phase 10 — Feedback & Bad Case Review (Completed / Frozen)**
-
-The frozen Phase 10 backend stores append-only Feedback and Bad Case review history against immutable Phase 8/9 resources. The frozen Task 6 frontend obtains only opaque historical result/explanation locators from contextual reads; the server re-resolves ownership for every write. Matching Results provides structured review entry, while `/bad-cases` and `/bad-cases/{id}` provide bounded queue/investigation views, closed review commands, stale-revision recovery, and case-specific verification provenance. The illustrative Phase 0.5 ranking canvas remains explicitly separate from persisted synthetic review context. There is no authentication, background queue, Phase 11 evaluation API, or production hiring claim.
-
-**Phase 8 — Match-run Orchestration & Traceability (Completed / Frozen)**
-
-Phase 8 persists `MatchRun`, `MatchResult`, and `RunStep` history. Completed and failed runs are terminal and immutable through the application/repository contract; every rerun receives a new `run_id`. `ltr` remains the default and reuses the frozen Phase 6 service; `cross_encoder_experiment` must be requested explicitly and reuses the frozen Phase 7 service. Runtime provenance is observed from the actual ranking execution, validated against frozen expected contracts, and persisted only when validation succeeds. The APIs are `POST /api/v1/match-runs`, `GET /api/v1/match-runs/{run_id}`, and paginated `GET /api/v1/match-runs`. Historical reads never rerank. Structured snapshots exclude raw resumes/JDs, names, URLs, labels, splits, and explanation content. See `docs/match-run-orchestration.md`.
-
-**Phase 7 — Cross-Encoder Reranking (PASS / FROZEN)**
-
-Phase 7 uses `cross-encoder/ms-marco-MiniLM-L6-v2` at immutable revision
-`233902d25c440f23af6f7d6e94d2946bac0bee0a` with local-only inference and a
-versioned `cross_encoder_text_v1` Job/Candidate text contract. The endpoint
-`POST /api/v1/reranking/jobs/{job_id}/candidates` defaults to retrieval pool 20,
-CE shortlist 10, and top 5, reusing the frozen Phase 6 service and sorting by
-raw CE logit with deterministic upstream tie-breakers. The MS MARCO domain
-mismatch, synthetic judged-set Dev scope, no-Test policy, and local CPU latency
-limitations are documented; no fine-tuning or production accuracy claim is made.
-On the accepted 60-pair synthetic Dev judged set, Phase 6 LambdaMART remains
-the stronger current ranking baseline (NDCG@5 `0.9704922899797717` versus the
-Cross-Encoder `0.7405691758421714`). Phase 7 is an optional, experimental
-frozen semantic reranker retained for comparison, not a replacement for Phase
-6. See `docs/cross-encoder-reranking.md`.
-
-**Phase 6 — Learning-to-Rank (Completed / Frozen)**
-
-Phase 6 uses `lightgbm==4.6.0` on Python 3.9.13, objective `lambdarank`, graded labels `0/1/2/3`, and label gain `[0, 1, 3, 7]`. It trains only on 168 explicit Train judgments in 14 Job groups and evaluates only 60 explicit Dev judgments in 5 Job groups. The derived dataset excludes unjudged pairs and all Test rows. Runtime reranks one Hybrid candidate pool with the exact Phase 5 feature order and exposes a raw model margin through `POST /api/v1/ranking/jobs/{job_id}/candidates`; it supports Job-to-Candidates only. See `docs/ltr-ranking.md`. This is a synthetic judged-set sandbox implementation approved for Phase 6 closeout, not a production accuracy claim.
-
-**Phase 5 — Feature Engineering (Completed / Frozen)**
-
-Phase 5 defines `feature_schema_v1`, a deterministic feature registry/fingerprint, ten ordered nullable model features, and separate non-model diagnostics. Bidirectional inspection APIs enrich existing Phase 4 results while preserving their exact order. Runtime feature extraction is label-free and uses only allowlisted structured profile fields plus unchanged dense/BM25 channel scores. The train/dev-only feature audit is descriptive rather than a ranking evaluation; Phase 5 has no final match score, learned weights, Cross-Encoder, or Test tuning. The implementation passed independent source review and is frozen. See `docs/feature-engineering.md`.
-
-**Phase 4 baseline — Hybrid Retrieval (Completed / Frozen)**
-
-Phase 4 constructs versioned, label-free semantic documents from canonical PostgreSQL Candidate/Job records. Dense retrieval uses the real local pretrained `sentence-transformers/all-MiniLM-L6-v2` model with exact cosine search in Qdrant; sparse retrieval uses in-process BM25; equal-weight Reciprocal Rank Fusion combines ranks for a deterministic first-stage Top-K. Explicit city/seniority filters only reduce eligibility and never add a match score. Qdrant is derived state rebuilt explicitly from PostgreSQL and every dense/hybrid request checks sandbox-scale document freshness.
-
-The completed Phase 4 report compares Dense, Sparse, and Hybrid as a post-exposure fixed synthetic sandbox benchmark. It reports judged-relevant Recall@K, HitRate@K, and diagnostic MRR@20 with a v4-internal sealed configuration. Earlier v1-v3 experiments exposed the same test queries before construction-artifact remediation, so v4 is not a pristine held-out estimate and is not evidence of unseen-query generalization, real hiring accuracy, production recall, or business lift. Phase 5 does not rerun or reinterpret that test benchmark.
-
-**Phase 3 baseline — Structured Profile Extraction (Completed)**
-
-Phase 3 accepts registered synthetic resume/JD fixtures through Candidate and Job parse endpoints. A provider interface isolates structured-output generation; the only implementation is a deterministic, no-network mock. Strict JSON decoding, canonical Pydantic validation, at most one repair attempt, source fingerprinting, server-owned identity/provenance, and optional atomic persistence are implemented. This verifies architecture and failure behavior, not real-world extraction accuracy.
-
-Phase 0.5A completed the information architecture, user flows, page hierarchy, design-system direction, screenshot planning, and three-way visual exploration. Phase 0.5B implemented the user-selected Evidence-first fusion for the Matching Results hero screen. Its shortlist values, score breakdowns, evidence records, risk labels, and trace remain marked `Design Mock`; they do not come from the Phase 1 dataset or a matching engine.
-
-Phase 0 completed:
-
-- product definition, PRD, architecture, API inventory, and Phase 0–12 roadmap;
-- FastAPI application factory, environment settings, CORS, logging, and Swagger docs;
-- `GET /health` with a typed API envelope and generated/propagated `X-Request-ID`;
-- consistent 404, validation, and application-error response envelopes;
-- deterministic backend API tests with no external-service dependency;
-- minimal responsive Next.js shell with a real backend health request;
-- frontend loading, healthy, unavailable, and retry states;
-- Docker Compose definitions for PostgreSQL, Redis, Qdrant, backend, and frontend;
-- an Alembic foundation later extended by the Phase 2 profile migration.
-
-Not implemented: authentication/user system, background queue, formal Phase 11 Test evaluation, general-purpose resume/JD parsing, automated run replay/recovery, or a complete production dashboard. Phase 10 feedback and Bad Case review is frozen as a local synthetic/sandbox workflow, and Phase 11 remains open only for its sealed formal Test closure. The explanation provider is a constrained planner rather than a factual text author; final text comes from deterministic backend templates. Phase 8 does not add a final match score, probability, online experiment, or production hiring claim, and Phase 9 explanations are non-causal descriptions of recorded evidence.
-
-## Roadmap
-
-| Phase | Direction | Status |
-|---|---|---|
-| 0 | Product definition and engineering bootstrap | Completed |
-| 0.5 | Product design and UI system | Completed |
-| 1 | Sandbox dataset, canonical contracts, and ranking labels | Completed |
-| 2 | Candidate/job persistence and migrations | Completed |
-| 3 | Structured profile extraction with deterministic mock | Completed |
-| 4 | Hybrid retrieval | Completed |
-| 5 | Versioned, label-free feature engineering | Completed / Frozen |
-| 6 | Learning-to-rank | Completed / Frozen |
-| 7 | Cross-encoder reranking | Completed / Frozen |
-| 8 | Match-run orchestration and traceability | Completed / Frozen |
-| 9 | Evidence-grounded explanations | Completed / Frozen |
-| 10 | Feedback and bad-case review | Completed / Frozen |
-| 11 | Offline evaluation | Completed / Frozen |
-| 12 | Local prototype hardening and documented demo | NEXT / Planned |
-
-See [development-roadmap.md](docs/development-roadmap.md) for dependencies and quality gates.
-
-## Local Development
-
-### Prerequisites
-
-- Docker Desktop with Docker Compose v2 for the full environment
-- Python 3.9+ for native backend development (the backend image uses Python 3.11)
-- Node.js 22 LTS and npm 10+ for native frontend development
-
-### Full environment with Docker Compose (PowerShell)
-
-From the repository root:
+### 1. 配置并启动基础设施
 
 ```powershell
 Copy-Item .env.example .env
-docker compose up --build
+docker compose up -d postgres redis qdrant
 ```
 
-Open:
-
-- Frontend: <http://localhost:3000>
-- API: <http://localhost:8000>
-- FastAPI docs: <http://localhost:8000/docs>
-- Qdrant HTTP API: <http://localhost:6333>
-
-Verify the backend in another PowerShell window:
+### 2. 准备数据库、数据与索引
 
 ```powershell
-Invoke-RestMethod -Uri http://localhost:8000/health
+$env:DATABASE_URL='postgresql+asyncpg://peoplematch:peoplematch_local@127.0.0.1:5432/peoplematch'
+$env:QDRANT_URL='http://127.0.0.1:6333'
+Push-Location backend
+.venv/Scripts/python.exe -m alembic upgrade head
+Pop-Location
+backend/.venv/Scripts/python.exe scripts/seed_database.py
+backend/.venv/Scripts/python.exe scripts/build_retrieval_index.py
 ```
 
-Import the frozen candidate/job fixtures after the containers are healthy. `.env.example` uses the Docker-internal hostname, so first override the URL for commands executed on the Windows host. The script verifies the dataset freeze manifest before writing and is safe to repeat:
+### 3. 启动 Backend 与 Frontend
 
 ```powershell
-$env:DATABASE_URL = "postgresql+asyncpg://peoplematch:peoplematch_local@localhost:5432/peoplematch"
-& .\backend\.venv\Scripts\python.exe scripts\freeze_dataset.py --check
-& .\backend\.venv\Scripts\python.exe scripts\seed_database.py
-& .\backend\.venv\Scripts\python.exe scripts\verify_seeded_database.py
-```
-
-Stop the environment without deleting named volumes:
-
-```powershell
-docker compose down
-```
-
-### Backend without Docker (PowerShell)
-
-Liveness can run without infrastructure, but profile APIs require a migrated PostgreSQL database:
-
-```powershell
-python -m venv backend\.venv
-& .\backend\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt
+# Terminal A
 Set-Location backend
-& .\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
+$env:DATABASE_URL='postgresql+asyncpg://peoplematch:peoplematch_local@127.0.0.1:5432/peoplematch'
+$env:QDRANT_URL='http://127.0.0.1:6333'
+.venv/Scripts/python.exe -m uvicorn app.main:app --reload
 
-Before starting Uvicorn for profile work:
-
-```powershell
-$env:DATABASE_URL = "postgresql+asyncpg://peoplematch:peoplematch_local@localhost:5432/peoplematch"
-Set-Location backend
-& .\.venv\Scripts\alembic.exe upgrade head
-Set-Location ..
-& .\backend\.venv\Scripts\python.exe scripts\seed_database.py
-```
-
-Phase 6 ranking requires the locally generated, gitignored native model before
-the final Docker runtime is ready. From the repository root, build the tracked
-Train/Dev artifact through the current Feature API, train the local model, run
-the strict artifact check, and then start/rebuild Compose:
-
-```powershell
-& .\backend\.venv\Scripts\python.exe scripts\build_ltr_dataset.py --api-url http://127.0.0.1:8000 --write
-& .\backend\.venv\Scripts\python.exe scripts\train_ltr.py --write
-& .\backend\.venv\Scripts\python.exe scripts\check_ltr_artifacts.py
-docker compose up --build -d
-```
-
-Compose passes explicit container ranking paths and mounts the generated
-`artifacts` directory plus tracked `data/eval/phase6` metadata read-only. A
-fresh clone before the training step must not be described as ranking-runtime
-ready.
-
-Phase 7 requires one additional explicit preparation step for the ignored
-Cross-Encoder snapshot. It must be resolved at the immutable revision before
-any accepted Dev scoring:
-
-```powershell
-& .\backend\.venv\Scripts\python.exe scripts\prepare_cross_encoder_model.py
-& .\backend\.venv\Scripts\python.exe scripts\check_cross_encoder_model.py
-& .\backend\.venv\Scripts\python.exe scripts\evaluate_cross_encoder.py --write
-& .\backend\.venv\Scripts\python.exe scripts\benchmark_cross_encoder_latency.py --write
-docker compose up --build -d
-```
-
-The snapshot remains ignored and is mounted read-only through `./artifacts`;
-the tracked Phase 7 manifest, text contract, Dev report, and latency report are
-metadata/evaluation artifacts only. Without the snapshot, the backend may
-serve non-ranking routes and the frozen Phase 6 ranking route, while the Phase 7
-route returns `503 cross_encoder_model_unavailable`. Normal Phase 7 inference
-uses `local_files_only=true` and has no runtime network dependency.
-
-### Structured extraction demo (PowerShell)
-
-Phase 3 supports only the repository's deterministic synthetic fixtures. It requires no API key and is not a real LLM extraction demonstration. With the backend running, preview a Candidate and Job without writing to PostgreSQL:
-
-```powershell
-$candidateText = [System.IO.File]::ReadAllText((Resolve-Path data\samples\extraction\candidate_matching_resume.txt))
-$candidateBody = @{ text = $candidateText; persist = $false } | ConvertTo-Json
-Invoke-RestMethod -Method Post -Uri http://localhost:8000/api/v1/candidates/parse -ContentType application/json -Body $candidateBody
-
-$jobText = [System.IO.File]::ReadAllText((Resolve-Path data\samples\extraction\job_matching_engineer.txt))
-$jobBody = @{ text = $jobText; persist = $false } | ConvertTo-Json
-Invoke-RestMethod -Method Post -Uri http://localhost:8000/api/v1/jobs/parse -ContentType application/json -Body $jobBody
-```
-
-Set `persist = $true` to create a mutable `mock_parsed` record. The response returns its server-generated `cand_parse_<uuid>` or `job_parse_<uuid>` for use with the existing GET and DELETE endpoints. Unknown text returns `mock_input_not_supported`; the mock never fabricates an arbitrary profile.
-
-### Frontend without Docker (PowerShell)
-
-Run this in a separate PowerShell window:
-
-```powershell
+# Terminal B
 Set-Location frontend
-npm ci
-$env:NEXT_PUBLIC_API_BASE_URL = "http://localhost:8000"
+$env:NEXT_PUBLIC_API_BASE_URL='http://localhost:8000'
+npm install
 npm run dev
 ```
 
-The Phase 0.5B ranking canvas remains an illustrative `Design Mock`. Its Phase 10 `Review persisted history` entry calls the configured backend to load synthetic historical MatchRun/Explanation context and submit real review commands. Backend liveness remains independently available at <http://localhost:8000/health>; the Phase 0 health client/status component is preserved but is not mounted in the selected Matching Results screen.
+打开 `http://localhost:3000`，点击“加载安全示例”后运行完整匹配。
 
-## Testing
+### Model artifact 准备
 
-Backend tests from the repository root:
-
-```powershell
-$env:PYTEST_DISABLE_PLUGIN_AUTOLOAD = "1"
-$env:TEST_DATABASE_URL = "postgresql+asyncpg://peoplematch:peoplematch_local@localhost:5432/peoplematch_test"
-& .\backend\.venv\Scripts\python.exe -m pytest backend\tests -v
-```
-
-Tests that require PostgreSQL are skipped when `TEST_DATABASE_URL` is not set. Use a dedicated database because the integration suite truncates profile tables for isolation.
-
-Phase 1 data checks from the repository root:
+Artifact 不提交到 Git。使用固定 metadata 与校验脚本：
 
 ```powershell
-& .\backend\.venv\Scripts\python.exe scripts\export_json_schemas.py
-& .\backend\.venv\Scripts\python.exe scripts\validate_dataset.py
-& .\backend\.venv\Scripts\python.exe scripts\dataset_stats.py
-& .\backend\.venv\Scripts\python.exe scripts\prepare_seed_bundle.py
-& .\backend\.venv\Scripts\python.exe scripts\freeze_dataset.py --check
+backend/.venv/Scripts/python.exe scripts/check_ltr_artifacts.py
+backend/.venv/Scripts/python.exe scripts/prepare_cross_encoder_model.py
+backend/.venv/Scripts/python.exe scripts/check_cross_encoder_model.py
 ```
 
-Frontend checks:
+LTR fresh generation 涉及训练，只应遵循 [Phase 6 文档](docs/ltr-ranking.md)；不要为了 Demo 或 Test 结果重训。
+
+## Demo Mode 与 Real LLM Mode
+
+Mock 默认值：
+
+```dotenv
+EXTRACTION_PROVIDER=mock
+EXPLANATION_PROVIDER=mock
+```
+
+Real mode 在本地 `.env` 填写，不要把 Key 发到 issue、聊天或 Git：
+
+```dotenv
+EXTRACTION_PROVIDER=deepseek
+EXPLANATION_PROVIDER=deepseek
+EXPLANATION_DEEPSEEK_BASE_URL=https://api.deepseek.com
+EXPLANATION_DEEPSEEK_MODEL=deepseek-chat
+EXPLANATION_DEEPSEEK_API_KEY=
+```
+
+这是一条 OpenAI-compatible compatibility path。未完成 live smoke 的 Provider 不会被宣称为已验证。原始 Resume / JD 不进入 Phase 11 artifact；正式演示使用 repository 内 synthetic fixture。
+
+> **Live Provider 验证状态：** `NOT RUN — LOCAL PROVIDER CREDENTIAL REQUIRED`。OpenAI-compatible transport、structured output、timeout/retry/error redaction 已通过 mock transport 测试，但仓库不会把未实际调用的外部 Provider 写成 live PASS。
+
+停止本地服务：
 
 ```powershell
-Set-Location frontend
-npm test
-npm run lint
-npm run typecheck
-npm run build
+docker compose stop
 ```
 
-Compose validation:
+## 项目结构
 
-```powershell
-docker compose config
+```text
+backend/app/services/
+  profile_extraction/   # schema-first mock / real provider parsing
+  retrieval/            # Dense / BM25 / RRF
+  ranking/              # feature + LTR + optional CE
+  match_runs/           # immutable execution history
+  explanation/          # Evidence Bundle and grounded output
+  feedback/             # Feedback / BadCase review
+  evaluation/           # Phase 11 offline evaluator
+frontend/src/           # Next.js product and review UI
+data/                   # synthetic dataset, contracts, frozen evidence
+docs/                   # architecture, protocol, demo and portfolio evidence
+scripts/                # data, model, evaluation and readiness entrypoints
 ```
 
-## API Liveness Contract
+## 测试与工程证据
 
-`GET /health` returns HTTP 200 without checking downstream readiness:
+- Backend：pytest 单元、契约、PostgreSQL/Qdrant integration；
+- Frontend：Vitest、TypeScript、ESLint、Next.js production build；
+- Browser E2E：disposable PostgreSQL + isolated Qdrant，稳定 mock provider，不依赖外部 API；
+- Offline evaluation：immutable manifest、file hashes、pool/order fingerprint、Test seal 与 claim limitations。
 
-```json
-{
-  "success": true,
-  "data": {
-    "status": "ok",
-    "service": "peoplematch-backend",
-    "version": "0.1.0",
-    "environment": "development"
-  },
-  "error": null,
-  "request_id": "generated-or-propagated-id"
-}
-```
+- Backend Phase 12 focused：`80 passed`；全量 backend：`822 passed, 58 skipped`（条件性 integration skip 不计为 PASS）。
+- Frontend（Node `22.23.2`）：`49 passed`，typecheck / ESLint / production build 均 PASS。
+- Browser E2E：`2 passed`；使用独立 disposable PostgreSQL + Qdrant，覆盖主链路、ranking invariance、历史复核与 Provider 错误恢复。
+- Real-provider live smoke：`NOT RUN — LOCAL PROVIDER CREDENTIAL REQUIRED`。
 
-Supply `X-Request-ID` to propagate a caller trace identifier. Otherwise, the backend generates a UUID and returns it in both the response header and body.
+## 当前边界
 
-## Data & Privacy
+这是可独立运行的本地产品原型，不是 production SaaS。当前没有真实用户、客户、招聘结果、在线 A/B、流量、QPS、业务提升、ATS / Bonjour 集成或真实市场代表性。认证、团队权限、后台队列与云部署也不在 canonical scope。
 
-This independent project is limited to:
+## 项目状态
 
-- synthetic or sandbox data;
-- public job-description examples;
-- curated synthetic labels for small local evaluation datasets.
+Phase 0–12 已 **Completed / Frozen**。当前交付是可本地运行、可复现、可审计的产品原型，不是 production deployment。详见 [Development Roadmap](docs/development-roadmap.md)。
 
-It does not ingest private candidate data or claim integration with recruitment platforms, employers, or ATS products.
+---
 
-## Evaluation Policy
-
-Future Recall, NDCG, MRR, or related measurements may only come from reproducible local sandbox offline evaluation. Each result must identify its dataset, labels, split, configuration, and limitations. Offline results must never be described as online user or business impact.
-
-## Project Status
-
-Local prototype foundation under active development. This repository is not a production deployment, recruitment marketplace, or production-hardened service. There are no claims of users, traffic, commercial impact, online experiments, or production performance.
+**English abstract.** PeopleMatch Agent is a local, evidence-aware talent matching prototype combining hybrid retrieval, explicit features, LambdaMART ranking, grounded LLM explanations, immutable review history, and leakage-aware offline evaluation. The LLM never owns the final ranking.

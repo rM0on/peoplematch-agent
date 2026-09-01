@@ -121,9 +121,9 @@ Only the phase explicitly requested by the user may be implemented. Status value
 
 ## Phase 12 — Local Prototype Hardening & Demo
 
-**Status:** NEXT / Planned
+**Status:** Completed / Frozen
 
 - **Objective:** Consolidate a reliable local demonstration and developer handoff without claiming production readiness.
-- **Primary deliverables:** End-to-end sandbox demo, operational runbook, failure-mode documentation, performance observations, final architecture reconciliation.
+- **Primary deliverables:** Interactive Resume/JD demo, shared OpenAI-compatible extraction/explanation boundary, deterministic mock fallback, operational doctor/runbook, browser E2E, Chinese-first GitHub landing page, demo/portfolio evidence, final architecture reconciliation.
 - **Dependency:** Phase 11 evaluation complete.
-- **Quality gate:** Clean-machine local setup is reproducible; end-to-end checks pass; all capabilities/limitations are accurately documented; no production claim is introduced.
+- **Quality gate:** The Node 22 frontend test/typecheck/lint/build gates pass; the focused and full backend regressions pass; a real browser E2E completes extraction, disposable PostgreSQL/Qdrant indexing, frozen LTR MatchRun, grounded explanation, immutable ranking verification, and persisted review while separately exercising a recoverable Provider error. The Chinese-first README, actual screenshots, demo guide, portfolio evidence, doctor, secret/privacy audit, and Phase 11 protection audit are frozen. Real-provider live smoke remains explicitly not run because no local credential was configured; no production, business-impact, real-hiring-accuracy, or real-world-generalization claim is introduced.

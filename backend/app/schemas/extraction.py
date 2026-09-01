@@ -64,14 +64,18 @@ class JobExtractionDraft(ContractModel):
     evaluation_focus: List[str] = Field(min_length=1)
 
     @model_validator(mode="after")
-    def reuse_job_domain_validation(self) -> "JobExtractionDraft":
+    def reuse_job_domain_validation(
+        self, info: ValidationInfo
+    ) -> "JobExtractionDraft":
+        context = info.context if isinstance(info.context, dict) else {}
+        data_origin = context.get("data_origin", DataOrigin.MOCK_PARSED)
         JobRecord.model_validate(
             {
                 "job_id": "job_parse_validation",
                 "raw_jd": "Server-owned extraction validation source text placeholder for job descriptions.",
                 **self.model_dump(mode="json"),
                 "archetype": None,
-                "data_origin": DataOrigin.MOCK_PARSED,
+                "data_origin": data_origin,
                 "schema_version": "1.0",
                 "dataset_version": None,
             }

@@ -296,14 +296,7 @@
       "additionalProperties": false,
       "properties": {
         "category": {
-          "enum": [
-            "skill",
-            "responsibility",
-            "domain",
-            "constraint"
-          ],
-          "title": "Category",
-          "type": "string"
+          "$ref": "#/$defs/RequirementCategory"
         },
         "priority": {
           "enum": [
@@ -366,6 +359,20 @@
       ],
       "title": "ProviderPromptRisk",
       "type": "object"
+    },
+    "RequirementCategory": {
+      "enum": [
+        "skill",
+        "project_evidence",
+        "experience",
+        "role_direction",
+        "location",
+        "seniority",
+        "work_style",
+        "ai_tooling"
+      ],
+      "title": "RequirementCategory",
+      "type": "string"
     }
   },
   "additionalProperties": false,

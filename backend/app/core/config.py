@@ -30,6 +30,7 @@ class Settings(BaseSettings):
     extraction_provider: str = "mock"
     extraction_max_attempts: int = Field(default=2, ge=1, le=2)
     extraction_timeout_seconds: float = Field(default=10.0, gt=0, le=120)
+    extraction_max_output_tokens: int = Field(default=2048, ge=256, le=4096)
     explanation_provider: str = "mock"
     explanation_max_attempts: int = Field(default=2, ge=1, le=2)
     explanation_timeout_seconds: float = Field(default=10.0, gt=0, le=120)

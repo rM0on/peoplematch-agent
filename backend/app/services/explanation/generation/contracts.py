@@ -13,6 +13,7 @@ from pydantic import (
 )
 
 from app.schemas.explanations import EvidenceId
+from app.schemas.job import RequirementCategory
 from app.schemas.shared import ContractModel
 
 
@@ -70,12 +71,7 @@ RewriteOperation = Literal[
 class ProviderPromptRequirement(GenerationContractModel):
     requirement_ref: ProviderReference
     priority: Literal["must_have", "nice_to_have"]
-    category: Literal[
-        "skill",
-        "responsibility",
-        "domain",
-        "constraint",
-    ]
+    category: RequirementCategory
 
 
 class ProviderPromptJob(GenerationContractModel):

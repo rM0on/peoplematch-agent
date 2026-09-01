@@ -9,7 +9,10 @@ from app.api.router import api_router
 from app.core.config import get_settings
 from app.core.logging import configure_logging, get_logger
 from app.middleware.request_id import RequestIdMiddleware
-from app.api.dependencies import close_runtime_explanation_provider
+from app.api.dependencies import (
+    close_runtime_explanation_provider,
+    close_runtime_extraction_provider,
+)
 
 
 @asynccontextmanager
@@ -23,6 +26,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     try:
         yield
     finally:
+        await close_runtime_extraction_provider()
         await close_runtime_explanation_provider()
         logger.info("Application stopping")
 

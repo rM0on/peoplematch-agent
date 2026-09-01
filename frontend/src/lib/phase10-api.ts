@@ -183,6 +183,16 @@ function isExplanationRunSummary(value: unknown): value is ExplanationRunSummary
     && isNullableString(value.completed_at);
 }
 
+function isMissingRequirement(value: unknown) {
+  return isObject(value)
+    && isString(value.requirement_id)
+    && isString(value.requirement_text)
+    && (value.priority === "must_have" || value.priority === "nice_to_have")
+    && (value.status === "partial" || value.status === "missing")
+    && ["available", "claim_only", "absent", "not_assessed"].includes(String(value.evidence_status))
+    && isStringArray(value.evidence_refs);
+}
+
 function isMatchExplanation(value: unknown) {
   return isObject(value)
     && isInteger(value.match_explanation_id)
@@ -195,7 +205,7 @@ function isMatchExplanation(value: unknown) {
     && Array.isArray(value.risk_points)
     && value.risk_points.every((item) => isEvidenceText(item, "text"))
     && Array.isArray(value.missing_skills)
-    && value.missing_skills.every((item) => isEvidenceText(item, "skill"))
+    && value.missing_skills.every(isMissingRequirement)
     && Array.isArray(value.interview_questions)
     && value.interview_questions.every((item) => isEvidenceText(item, "question"));
 }
