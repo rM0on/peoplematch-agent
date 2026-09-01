@@ -182,3 +182,10 @@ def test_provider_prompt_evidence_artifact_matches_runtime_schema_exactly() -> N
     for schema in object_schemas:
         if schema.get("type") == "object":
             assert schema.get("additionalProperties") is False
+
+
+def test_backend_image_copies_explanation_contract_to_runtime_repository_root() -> None:
+    root = Path(__file__).resolve().parents[2]
+    dockerfile = (root / "backend" / "Dockerfile").read_text(encoding="utf-8")
+
+    assert "COPY data/contracts /data/contracts" in dockerfile

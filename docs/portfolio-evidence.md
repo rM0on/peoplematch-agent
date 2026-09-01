@@ -6,10 +6,10 @@
 | --- | --- | --- | --- | --- |
 | Hybrid Retrieval | `backend/app/services/retrieval/`、Phase 4 docs | MatchRun retrieval step、R1 table | 实现 Dense/BM25/RRF 检索与可复现对比 | 检索普遍优于其他方案 |
 | Explicit Features | `backend/app/services/features/`、`feature_schema_v1` | feature cards | 将技能、项目证据、方向、地点等显式特征化 | 特征等同真实招聘因果信号 |
-| LambdaMART LTR | `data/eval/phase6/ltr_model_metadata_v1.json`、ignored native artifact | raw LTR margin、R2 table | 构建并冻结 LambdaMART ranking baseline | 95.93% 招聘准确率 |
+| LambdaMART LTR | `data/eval/phase6/ltr_model_metadata_v1.json`、ignored native artifact | LTR Score 边界说明、R2 table | 构建并冻结 LambdaMART ranking baseline | 95.93% 招聘准确率 |
 | Optional CE | Phase 7 manifest/report | R2 CE row | 评估 pinned Cross-Encoder 并基于证据保留为实验 | 使用 CE 所以更先进/更准 |
 | MatchRun trace | Phase 8 services/contracts | Run ID、steps、fingerprint | 实现不可变排名历史与可追踪 provenance | 支持生产级审计合规 |
-| Grounded Explanation | Phase 9 Evidence Bundle/provider/rendering | Evidence refs、Why this rank | 让 LLM 在闭合证据计划上生成可校验解释 | LLM 自主发现事实或决定排名 |
+| Grounded Explanation | Phase 9 Evidence Bundle/provider/rendering | Evidence refs、为什么推荐该候选人 | 让 LLM 在闭合证据计划上生成可校验解释 | LLM 自主发现事实或决定排名 |
 | Feedback / BadCase | Phase 10 services/API/UI | 历史复核与 BadCase 页面 | 实现 append-only review loop 与并发保护 | 已形成线上持续学习闭环 |
 | Offline Evaluation | `docs/offline-evaluation.md`、final Test artifact | R1/R2 tables | 设计 incomplete-judgment、common-pool、Test-seal evaluator | 证明真实世界泛化或业务提升 |
 | Real LLM boundary | Phase 12 extraction adapter + Phase 9 transport | Real mode config / mock E2E | 支持 OpenAI-compatible Provider 与 deterministic mock | 已验证所有 Provider 或已生产接入 DeepSeek |
@@ -22,7 +22,7 @@
 
 > 复用 OpenAI-compatible transport 接入真实 LLM extraction/explanation boundary，同时保留 deterministic mock，验证 Provider 错误脱敏与 ranking invariance。
 
-Phase 12 最终证据：backend `822 passed, 58 skipped`，Node 22 frontend `49 passed` 并通过 typecheck/lint/build，browser E2E `2 passed`。没有 live credential，因此只能说 OpenAI-compatible 边界与 mock transport 已验证，不能说外部 Provider live smoke 已通过。
+Phase 12 当前验证证据：backend `823 passed, 58 skipped`，Node 22 frontend `49 passed` 并通过 typecheck/lint/build，browser E2E `2 passed`。没有 live credential，因此只能说 OpenAI-compatible 边界与 mock transport 已验证，不能说外部 Provider live smoke 已通过。
 
 ## 高频面试问题
 

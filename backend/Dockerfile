@@ -20,7 +20,7 @@ RUN apt-get update && \
 COPY backend/app ./app
 COPY backend/alembic.ini ./alembic.ini
 COPY backend/alembic ./alembic
-COPY data/contracts ./data/contracts
+COPY data/contracts /data/contracts
 COPY data/samples/extraction /data/samples/extraction
 
 RUN useradd --create-home --uid 10001 appuser && chown -R appuser:appuser /app

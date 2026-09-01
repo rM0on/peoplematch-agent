@@ -1,22 +1,80 @@
 # PeopleMatch Agent
 
-> 一个面向人岗匹配场景的 **Evidence-aware AI Matching & Ranking** 本地原型：用混合召回、显式特征、LambdaMART 排序和证据约束的大模型解释，生成可追踪、可复核的候选人推荐。
+**AI-powered Talent Matching & Recommendation System**
 
-PeopleMatch Agent 不是“把简历和 JD 发给 LLM，让它给一个分数”的 Demo。系统把候选人理解、召回、排序、解释、人工复核与离线评测拆成独立阶段：**LLM 负责结构化与解释，但不拥有最终排名**。默认排序由冻结的 Hybrid Retrieval → Feature Engineering → LambdaMART 流水线产生。
+一个面向 AI 人才推荐场景的本地算法原型：以岗位为 Query，通过混合检索（Hybrid Retrieval）、显式特征工程、学习排序（Learning To Rank, LambdaMART）和证据约束解释（Evidence-grounded Explanation），从候选池生成可追踪、可复核的 Top-K 推荐列表。
+
+它不是“把一份简历和 JD 发给 LLM，让模型给出匹配百分比”的 Demo。**岗位需求驱动候选人召回与排序；LLM 只负责结构化理解和解释，不拥有最终排名。**
 
 [3 分钟演示指南](docs/demo-guide.md) · [Quick Start](#quick-startwindows-powershell) · [架构文档](docs/architecture.md) · [离线评测协议](docs/offline-evaluation.md)
 
-![PeopleMatch Agent 匹配结果、证据解释与 MatchRun 轨迹](screenshots/phase12-hero-matching-results-1440x1280.png)
+![PeopleMatch Agent 岗位候选池 Top-K 排序结果](screenshots/phase12-top-k-ranking-1440x1280.png)
 
 **核心能力**
 
-- Resume / JD 文本可交互输入；支持 deterministic mock 与 OpenAI-compatible Provider。
-- Dense + BM25 Sparse + RRF Hybrid 召回，显式区分“声称能力”和“项目证据”。
-- LightGBM LambdaMART 是默认 ranking baseline；Cross-Encoder 仅保留为可选实验。
-- MatchRun、Evidence Facts、ExplanationRun 与 Feedback / BadCase 历史不可变且可审计。
-- 冻结的离线评测协议明确处理 incomplete judgments、同候选池可比性和 Test seal。
+- **Retrieval**：Dense Embedding + BM25 Sparse + RRF Hybrid 构建候选池。
+- **Ranking**：10 个显式特征进入 LightGBM LambdaMART，输出可复现候选顺序。
+- **LLM Application**：结构化 Profile；基于 Evidence Bundle 生成解释，不直接打分或重排。
+- **Evaluation & Review**：Offline Evaluation、MatchRun、Feedback 与 Bad Case Analysis 形成可审计证据链。
 
-[查看输入工作台截图](screenshots/phase12-input-workbench-1440x1024.png) · [作品集证据](docs/portfolio-evidence.md)
+[查看产品首页](screenshots/phase12-product-home-1440x1024.png) · [查看算法工作台](screenshots/phase12-algorithm-workbench-1440x1024.png) · [查看 Evidence 解释](screenshots/phase12-evidence-explanation-1440x1024.png) · [作品集证据](docs/portfolio-evidence.md)
+
+## 推荐系统如何工作
+
+交互区允许粘贴一份 Resume 和一份 JD，是为了演示“新增候选人 + 新岗位 Query”的完整链路。系统并不是拿这两个文本直接输出一个分数：
+
+1. Resume 被解析并加入本地候选池；
+2. JD 被解析为岗位 Query；
+3. 系统从整个候选池执行召回、特征计算和排序；
+4. 最终返回该岗位下的 Top-K 候选人推荐，其中会标出本次输入的候选人。
+
+这让 Demo 保留真实推荐系统语义，而不是退化成一对一文本相似度工具。
+
+## Algorithm Pipeline
+
+```mermaid
+flowchart LR
+  Input[Resume / JD 输入] --> Extract[结构化信息抽取]
+  Extract --> Representation[Candidate / Job Representation]
+  Representation --> Retrieval[Hybrid Retrieval<br/>Dense + Sparse + RRF]
+  Retrieval --> Features[Feature Engineering<br/>10 个冻结特征]
+  Features --> LTR[LambdaMART Ranking<br/>默认排序所有者]
+  LTR -. optional .-> CE[Cross-Encoder Reranking]
+  LTR --> Evidence[Evidence Bundle]
+  CE --> Evidence
+  Evidence --> Explain[Evidence-grounded Explanation]
+  Explain --> Review[Feedback / Bad Case Analysis]
+  LTR --> Eval[Offline Evaluation]
+```
+
+### Retrieval：先回答“谁有资格进入候选池”
+
+- **Dense Retrieval** 使用 Embedding 捕捉岗位与候选经历之间的语义关联。
+- **Sparse Retrieval** 使用 BM25 保留技能名、工具名和岗位关键词的精确匹配能力。
+- **Hybrid Retrieval** 通过 equal-weight RRF 融合两路排序，作为 first-stage recall，而不是最终排名。
+
+### Ranking：再回答“候选池应该如何排序”
+
+冻结的 `ltr_ranker_v1` 使用 LambdaMART，对每个 Candidate / Job pair 的以下 10 个特征进行排序：
+
+1. `semantic_score`
+2. `sparse_score`
+3. `skill_fit_score`
+4. `project_evidence_score`
+5. `role_direction_score`
+6. `ai_tool_score`
+7. `location_score`
+8. `seniority_score`
+9. `missing_penalty`
+10. `overclaim_penalty`
+
+LTR 输出是模型 margin，只用于候选人相对排序；它不是概率、匹配百分比或录用概率。Cross-Encoder 仅作为冻结的可选 Reranking 实验，没有因为模型更“新”就被提升为默认策略。
+
+### Ranking Ownership
+
+- **LTR 负责排序**：候选池、特征、模型版本和结果 fingerprint 均可追踪。
+- **LLM 负责理解与解释**：解析 Resume/JD，并在已有 Evidence Bundle 上规划解释。
+- Explanation 不能覆盖 LTR Score、改变候选顺序或修改历史 MatchRun。
 
 ## 为什么做这个项目
 
@@ -50,15 +108,15 @@ flowchart LR
 
 运行时依赖方向保持为 `API → Service → Repository → PostgreSQL`。Qdrant 是可重建的检索状态；PostgreSQL 是 Profile 和历史记录的事实源。
 
-## Matching Pipeline
+## 工程阶段与数据边界
 
 1. **Structured Profile**：Resume / JD → Pydantic schema；未知信息保持 missing，不让模型补写项目、年限或证明。
-2. **Retrieval**：Dense、Sparse、equal-weight RRF Hybrid 只负责 first-stage recall。
-3. **Feature Engineering**：固定 10 个模型特征，项目证据与自述能力分开。
-4. **LTR**：冻结的 `ltr_ranker_v1` 产生 raw model margin；它不是概率，也不是最终招聘分。
-5. **Optional CE**：只对 shortlist rerank；因冻结证据未证明优于 LTR，未被提升为默认策略。
-6. **Explanation**：Provider 只能返回闭合结构计划；Evidence Facts 与最终文案由后端控制。
-7. **Review**：Feedback 是观察，BadCase 是调查；都不会自动成为训练标签。
+2. **Candidate / Job Representation**：声明、项目证据和约束保持结构化分离。
+3. **Retrieval & Ranking**：Hybrid 负责候选池，LambdaMART 负责最终默认排序。
+4. **Historical Trace**：MatchRun 固化输入、阶段、候选顺序和 fingerprint。
+5. **Explanation**：Provider 只能返回闭合结构计划；Evidence Facts 与最终文案由后端控制。
+6. **Review**：Feedback 是观察，BadCase 是调查；二者都不会自动成为训练标签。
+7. **Offline Evaluation**：固定协议比较 Retrieval、LTR 与可选 CE，Test 结果不反向改变策略。
 
 ## LLM 在哪里使用
 
@@ -74,6 +132,12 @@ LLM 不可以做：
 - 修改 MatchRun、离线评测结果或 Feedback 历史。
 
 默认 mock 模式不需要网络，适合测试与可复现演示。Real mode 复用 Phase 9 的 OpenAI-compatible transport、timeout、retry、错误映射与 secret redaction，不引入第二套 LLM client。
+
+## Evidence First 与 Evaluation Driven Development
+
+Explanation 的每个关键陈述必须映射到对应 MatchRun 的 Evidence Facts。Provider 不是事实源，无法从证据中确认的信息保持 missing、risk 或待验证，避免把自然语言流畅度误当成事实可靠性。
+
+算法变更也不能依靠单个漂亮案例判断。Phase 11 在固定 dataset、split、候选池和 metric semantics 下保存 immutable evaluation artifact；Phase 10 Feedback 与 `VERIFIED` BadCase 只用于诊断，不会自动变成 relevance ground truth。
 
 ## 离线评测结果
 
@@ -224,7 +288,7 @@ scripts/                # data, model, evaluation and readiness entrypoints
 - Browser E2E：disposable PostgreSQL + isolated Qdrant，稳定 mock provider，不依赖外部 API；
 - Offline evaluation：immutable manifest、file hashes、pool/order fingerprint、Test seal 与 claim limitations。
 
-- Backend Phase 12 focused：`80 passed`；全量 backend：`822 passed, 58 skipped`（条件性 integration skip 不计为 PASS）。
+- Backend Docker explanation contract：`10 passed`；全量 backend：`823 passed, 58 skipped`（条件性 integration skip 不计为 PASS）。
 - Frontend（Node `22.23.2`）：`49 passed`，typecheck / ESLint / production build 均 PASS。
 - Browser E2E：`2 passed`；使用独立 disposable PostgreSQL + Qdrant，覆盖主链路、ranking invariance、历史复核与 Provider 错误恢复。
 - Real-provider live smoke：`NOT RUN — LOCAL PROVIDER CREDENTIAL REQUIRED`。

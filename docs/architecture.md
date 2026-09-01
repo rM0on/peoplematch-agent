@@ -158,7 +158,7 @@ Clear module boundaries matter before deployment boundaries. A local modular mon
 
 ## Configuration and Secrets
 
-The backend reads environment-backed settings via Pydantic Settings. Compose interpolates the same variable names from root `.env`. `.env.example` contains non-secret examples; `.env` is ignored. Extraction remains deterministic mock-only. Explanation generation defaults to the deterministic mock; `EXPLANATION_PROVIDER=deepseek` composes the generic OpenAI-compatible transport with a credential-free HTTPS base URL, bounded timeout/token/prompt sizes, environment-supplied model, and a separately supplied API key. Provider metadata fingerprints exclude the key. Selecting an unsupported or incomplete provider fails explicitly rather than falling back to mock.
+The backend reads environment-backed settings via Pydantic Settings. Compose interpolates the same variable names from root `.env`. `.env.example` contains non-secret examples; `.env` is ignored. Extraction defaults to the deterministic mock and may explicitly select the shared OpenAI-compatible transport for real structured parsing. Explanation generation follows the same mock-by-default boundary; `EXPLANATION_PROVIDER=deepseek` composes the generic transport with a credential-free HTTPS base URL, bounded timeout/token/prompt sizes, environment-supplied model, and a separately supplied API key. Provider metadata fingerprints exclude the key. Selecting an unsupported or incomplete provider fails explicitly rather than falling back to mock.
 
 ## Data Architecture Boundary
 

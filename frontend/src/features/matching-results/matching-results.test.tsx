@@ -88,14 +88,24 @@ afterEach(() => {
 });
 
 describe("MatchingResultsScreen Phase 12 demo", () => {
-  it("opens as a Chinese-first evidence-aware product instead of a score mock", () => {
+  it("opens as a Job-query-driven recommendation system instead of a score mock", () => {
     render(<MatchingResultsScreen />);
-    expect(screen.getByRole("heading", { name: "Evidence-aware 人岗匹配" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "岗位 Query 驱动的候选推荐" })).toBeTruthy();
+    expect(screen.getByText(/JD 是检索 Query/)).toBeTruthy();
+    expect(screen.getByText(/从整个候选池召回、计算特征并返回 Top-K/)).toBeTruthy();
     expect(screen.getByText(/LLM 负责结构化与解释，不直接决定排序/)).toBeTruthy();
+    for (const step of ["结构化解析", "候选召回", "特征计算", "LTR 排序", "Evidence 解释", "MatchRun 复核"]) {
+      expect(screen.getByText(step)).toBeTruthy();
+    }
     expect(screen.getByRole("button", { name: "加载安全示例" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "开始完整匹配" })).toBeTruthy();
     expect(screen.getByLabelText("候选人简历文本")).toBeTruthy();
     expect(screen.getByLabelText("岗位描述文本")).toBeTruthy();
+    expect(screen.getByRole("link", { name: "推荐工作台" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Bad Case 复核" })).toBeTruthy();
+    for (const unavailable of ["Overview", "Candidates", "Jobs", "Runs", "Evaluation"]) {
+      expect(screen.queryByRole("button", { name: unavailable })).toBeNull();
+    }
     expect(screen.getByText("尚未运行匹配")).toBeTruthy();
     expect(document.body.textContent).not.toContain("Design Mock");
     expect(document.body.textContent).not.toContain("Final score");
@@ -122,9 +132,16 @@ describe("MatchingResultsScreen Phase 12 demo", () => {
     fireEvent.change(screen.getByLabelText("岗位描述文本"), { target: { value: "job source ".repeat(10) } });
     await user.click(screen.getByRole("button", { name: "开始完整匹配" }));
     expect(screen.getByRole("heading", { name: "AI Matching Engineer" })).toBeTruthy();
+    expect(screen.getByText("岗位候选池 Top-K")).toBeTruthy();
     expect(screen.getByText("本次输入候选人")).toBeTruthy();
+    expect(screen.getByText("候选人 #2")).toBeTruthy();
+    expect(screen.getByText("Candidate ID · candidate_002")).toBeTruthy();
     expect(screen.getAllByText("1.254321")).toHaveLength(2);
-    expect(screen.getByText("raw LTR margin，不是概率")).toBeTruthy();
+    expect(screen.getAllByText("LTR Score").length).toBeGreaterThanOrEqual(2);
+    expect(screen.getByText("排序模型原始分值；不是概率、匹配百分比或录用概率。")).toBeTruthy();
+    expect(screen.getByText("为什么推荐该候选人")).toBeTruthy();
+    expect(screen.getByText("不可变运行轨迹")).toBeTruthy();
+    expect(screen.getByText("MatchRun 复核").closest("li")?.getAttribute("aria-current")).toBe("step");
     expect(screen.getByText("结构化项目证据支持该候选人的当前排名。")).toBeTruthy();
     expect(screen.getByText("candidate:1:project:1")).toBeTruthy();
     expect(screen.getByText("run-demo")).toBeTruthy();

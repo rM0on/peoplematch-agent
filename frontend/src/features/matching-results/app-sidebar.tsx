@@ -1,31 +1,13 @@
 "use client";
 
-import { BriefcaseIcon } from "@phosphor-icons/react/dist/csr/Briefcase";
-import { ChartBarIcon } from "@phosphor-icons/react/dist/csr/ChartBar";
 import { CirclesThreePlusIcon } from "@phosphor-icons/react/dist/csr/CirclesThreePlus";
 import { FolderOpenIcon } from "@phosphor-icons/react/dist/csr/FolderOpen";
-import { GitBranchIcon } from "@phosphor-icons/react/dist/csr/GitBranch";
-import { ListChecksIcon } from "@phosphor-icons/react/dist/csr/ListChecks";
 import { SparkleIcon } from "@phosphor-icons/react/dist/csr/Sparkle";
 import { TargetIcon } from "@phosphor-icons/react/dist/csr/Target";
-import { UsersThreeIcon } from "@phosphor-icons/react/dist/csr/UsersThree";
 import { WarningCircleIcon } from "@phosphor-icons/react/dist/csr/WarningCircle";
 import Link from "next/link";
 
 import styles from "./matching-results.module.css";
-
-
-const plannedNavigation = [
-  { label: "Overview", icon: ChartBarIcon },
-  { label: "Candidates", icon: UsersThreeIcon },
-  { label: "Jobs", icon: BriefcaseIcon },
-];
-
-const reviewNavigation = [
-  { label: "Runs", icon: GitBranchIcon, href: null },
-  { label: "Bad Cases", icon: WarningCircleIcon, href: "/bad-cases" },
-  { label: "Evaluation", icon: ListChecksIcon, href: null },
-];
 
 export function AppSidebar({ active = "matching" }: { active?: "matching" | "bad-cases" }) {
   return (
@@ -42,29 +24,15 @@ export function AppSidebar({ active = "matching" }: { active?: "matching" | "bad
 
       <nav className={styles.sidebarNav}>
         <div className={styles.navGroup}>
-          <p className={styles.navLabel}>工作区</p>
-          {plannedNavigation.map(({ label, icon: Icon }) => (
-            <button className={styles.navItem} key={label} type="button" disabled>
-              <Icon size={17} />
-              <span>{label}</span>
-            </button>
-          ))}
-        </div>
-
-        <div className={styles.navGroup}>
-          <p className={styles.navLabel}>决策与复核</p>
+          <p className={styles.navLabel}>推荐与复核</p>
           <Link className={`${styles.navItem} ${active === "matching" ? styles.navItemActive : ""}`} href="/">
             <TargetIcon size={17} weight="bold" />
-            <span>人岗匹配</span>
+            <span>推荐工作台</span>
           </Link>
-          {reviewNavigation.map(({ label, icon: Icon, href }) => href ? (
-            <Link className={`${styles.navItem} ${active === "bad-cases" ? styles.navItemActive : ""}`} href={href} key={label}>
-              <Icon size={17} />
-              <span>{label}</span>
-            </Link>
-          ) : (
-            <button className={styles.navItem} key={label} type="button" disabled><Icon size={17} /><span>{label}</span></button>
-          ))}
+          <Link className={`${styles.navItem} ${active === "bad-cases" ? styles.navItemActive : ""}`} href="/bad-cases">
+            <WarningCircleIcon size={17} />
+            <span>Bad Case 复核</span>
+          </Link>
         </div>
       </nav>
 
@@ -76,7 +44,7 @@ export function AppSidebar({ active = "matching" }: { active?: "matching" | "bad
         <p>Synthetic demo · Evidence first</p>
         <Link href={active === "matching" ? "#matching-results" : "/#matching-results"}>
           <FolderOpenIcon size={15} />
-          匹配工作区
+          定位推荐结果
         </Link>
       </div>
     </aside>

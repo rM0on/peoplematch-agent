@@ -97,10 +97,6 @@
   text-align:left;
   text-decoration:none
 }
-.navItem:disabled {
-  cursor:default;
-  opacity:.72
-}
 .navItemActive {
   background:#dfeae5;
   color:#145f57
@@ -189,10 +185,74 @@
   background:#17685f;
   color:#fff
 }
-.inputPanel,.resultsPanel,.emptyPanel,.integrityNote {
+.storyPanel,.inputPanel,.resultsPanel,.emptyPanel,.integrityNote {
   border:1px solid #dcdfd9;
   border-radius:14px;
   background:#fffefa
+}
+.storyPanel {
+  margin-bottom:14px;
+  padding:18px 20px;
+  background:linear-gradient(120deg,#f4f8f5,#fffefa 58%)
+}
+.storyHeader {
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:24px
+}
+.storyHeader h2 {
+  margin:0;
+  color:#172721;
+  font-size:18px;
+  letter-spacing:-.025em
+}
+.storyHeader>p {
+  max-width:510px;
+  margin:0;
+  color:#68766f;
+  font-size:11px;
+  line-height:1.55;
+  text-align:right
+}
+.storySteps {
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:6px;
+  margin:16px 0 0;
+  padding:0;
+  list-style:none
+}
+.storyStep,.storyStepActive,.storyStepComplete {
+  display:grid;
+  gap:4px;
+  min-height:54px;
+  padding:9px 10px;
+  border:1px solid #dfe3df;
+  border-radius:8px;
+  background:#fffefa
+}
+.storyStep span,.storyStepActive span,.storyStepComplete span {
+  color:#84918b;
+  font:9px var(--font-mono),monospace
+}
+.storyStep strong,.storyStepActive strong,.storyStepComplete strong {
+  color:#5f6d66;
+  font-size:10px
+}
+.storyStepActive {
+  border-color:#397e74;
+  background:#e5f0ec
+}
+.storyStepActive span,.storyStepActive strong {
+  color:#155f57
+}
+.storyStepComplete {
+  border-color:#cddbd5;
+  background:#f1f6f3
+}
+.storyStepComplete span,.storyStepComplete strong {
+  color:#35756b
 }
 .inputPanel {
   padding:20px
@@ -208,6 +268,13 @@
   color:#172721;
   font-size:22px;
   letter-spacing:-.035em
+}
+.inputNarrative {
+  max-width:850px;
+  margin:8px 0 0;
+  color:#5c6d65;
+  font-size:12px;
+  line-height:1.55
 }
 .inputGrid {
   display:grid;
@@ -306,6 +373,11 @@
   color:#65736c;
   font-size:12px
 }
+.resultHeader .poolMeta {
+  margin-top:9px;
+  color:#33736a;
+  font-weight:700
+}
 .runIdentity {
   max-width:360px;
   display:grid;
@@ -363,7 +435,35 @@
   color:#75817b;
   font-size:9px
 }
-.resultRow code,.selectedResult code {
+.candidateLabel {
+  min-width:0
+}
+.candidateLabel .candidateDescriptor {
+  margin-top:3px;
+  overflow:hidden;
+  color:#596b63;
+  font-size:10px;
+  text-overflow:ellipsis;
+  white-space:nowrap
+}
+.candidateTechnicalId {
+  margin:3px 0 0;
+  color:#89938e;
+  font:9px var(--font-mono),monospace
+}
+.shortlistModelScore {
+  display:grid;
+  justify-items:end;
+  gap:3px
+}
+.shortlistModelScore small {
+  margin:0;
+  color:#73817b;
+  font-size:9px;
+  letter-spacing:.05em;
+  text-transform:uppercase
+}
+.shortlistModelScore code {
   color:#17685f;
   font:800 15px var(--font-mono),monospace
 }
@@ -379,11 +479,19 @@
   margin:0;
   font-size:19px
 }
-.scoreHeader>div:last-child {
+.scoreMeta {
+  max-width:280px;
   text-align:right
 }
-.scoreHeader code,.scoreHeader small {
+.scoreMeta>span,.scoreHeader code,.scoreHeader small {
   display:block
+}
+.scoreMeta>span {
+  color:#33736a;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase
 }
 .scoreHeader code {
   color:#17685f;
@@ -392,7 +500,8 @@
 .scoreHeader small {
   margin-top:3px;
   color:#7a857f;
-  font-size:9px
+  font-size:10px;
+  line-height:1.4
 }
 .featureGrid {
   display:grid;
@@ -492,7 +601,7 @@
     justify-content:flex-end;
     margin:0
   }
-  .navGroup:first-child,.navLabel,.sidebarFooter,.navGroup:nth-child(2) button {
+  .navLabel,.sidebarFooter {
     display:none
   }
   .navGroup {
@@ -507,13 +616,16 @@
   .resultGrid {
     grid-template-columns:1fr
   }
+  .storySteps {
+    grid-template-columns:repeat(3,1fr)
+  }
   .shortlist {
     border-right:0;
     border-bottom:1px solid #e2e3dd
   }
 }
 @media(max-width:700px) {
-  .hero,.sectionTitle,.inputFooter,.resultHeader,.scoreHeader {
+  .hero,.storyHeader,.sectionTitle,.inputFooter,.resultHeader,.scoreHeader {
     align-items:stretch;
     flex-direction:column
   }
@@ -528,6 +640,16 @@
   }
   .featureGrid {
     grid-template-columns:repeat(2,1fr)
+  }
+  .storyHeader>p {
+    text-align:left
+  }
+  .storySteps {
+    grid-template-columns:1fr 1fr
+  }
+  .scoreMeta {
+    max-width:none;
+    text-align:left
   }
   .historyButton,.secondaryButton,.primaryButton {
     width:100%
