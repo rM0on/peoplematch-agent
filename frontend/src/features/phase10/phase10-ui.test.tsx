@@ -1,5 +1,6 @@
 import { act, cleanup, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { readFileSync } from "node:fs";
 import { StrictMode, useCallback, useState } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -21,6 +22,7 @@ import { BadCaseDetailScreen } from "./bad-case-detail-screen";
 import { BadCaseListScreen } from "./bad-case-list-screen";
 import { FeedbackPanel } from "./feedback-panel";
 import { HistoricalFeedbackEntry } from "./historical-feedback-entry";
+import { ReviewShell } from "./review-shell";
 import { useModalDialog } from "./use-modal-dialog";
 
 
@@ -380,6 +382,25 @@ describe("HistoricalFeedbackEntry", () => {
 });
 
 describe("BadCase screens", () => {
+  it("defines every CSS module class used by the review shell", () => {
+    const css = readFileSync("src/features/matching-results/matching-results.module.css", "utf-8");
+
+    for (const className of ["jobBar", "jobBarLabel", "jobMeta", "jobContextLabel"]) {
+      expect(css).toMatch(new RegExp(`\\.${className}\\b`));
+    }
+  });
+
+  it("renders a styled Chinese-first review shell", () => {
+    const { container } = render(<ReviewShell><div>复核队列内容</div></ReviewShell>);
+    const header = container.querySelector("header");
+
+    expect(header?.className).toBeTruthy();
+    expect(screen.getByText("质量复核")).toBeTruthy();
+    expect(screen.getByText("历史匹配问题调查")).toBeTruthy();
+    expect(screen.getByText("复核队列")).toBeTruthy();
+    expect(screen.queryByText("Quality review")).toBeNull();
+  });
+
   it("renders a lightweight evidence-first list and a helpful empty state", async () => {
     vi.mocked(listBadCases).mockResolvedValueOnce({ success: true, data: { items: [detail], total: 1, limit: 20, offset: 0 }, error: null, request_id: "list-1" });
     const { unmount } = render(<BadCaseListScreen />);
@@ -389,7 +410,8 @@ describe("BadCase screens", () => {
 
     vi.mocked(listBadCases).mockResolvedValueOnce({ success: true, data: { items: [], total: 0, limit: 20, offset: 0 }, error: null, request_id: "list-2" });
     render(<BadCaseListScreen />);
-    expect(await screen.findByText("No bad cases need review")).toBeTruthy();
+    expect(await screen.findByText("暂无 Bad Case 记录")).toBeTruthy();
+    expect(screen.queryByText("No bad cases need review")).toBeNull();
   });
 
   it("recovers the Bad Case queue after a transient API failure", async () => {
@@ -399,8 +421,8 @@ describe("BadCase screens", () => {
     const user = userEvent.setup();
     render(<BadCaseListScreen />);
 
-    expect(await screen.findByText("Review workspace unavailable")).toBeTruthy();
-    await user.click(screen.getByRole("button", { name: "Retry" }));
+    expect(await screen.findByText("Bad Case 复核暂不可用")).toBeTruthy();
+    await user.click(screen.getByRole("button", { name: "重新尝试" }));
 
     expect(await screen.findByRole("link", { name: /unsupported explanation/i })).toBeTruthy();
     expect(listBadCases).toHaveBeenCalledTimes(2);
