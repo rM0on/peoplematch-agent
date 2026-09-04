@@ -8,7 +8,7 @@
 
 [3 分钟演示指南](docs/demo-guide.md) · [Quick Start](#quick-startwindows-powershell) · [架构文档](docs/architecture.md) · [离线评测协议](docs/offline-evaluation.md)
 
-![PeopleMatch Agent 岗位候选池 Top-K 排序结果](screenshots/phase12-top-k-ranking-1440x1280.png)
+![PeopleMatch Agent 岗位候选池 Top-K 排序结果](screenshots/phase13-top-k-ranking-1440x1280.png)
 
 **核心能力**
 
@@ -17,18 +17,18 @@
 - **LLM Application**：结构化 Profile；基于 Evidence Bundle 生成解释，不直接打分或重排。
 - **Evaluation & Review**：Offline Evaluation、MatchRun、Feedback 与 Bad Case Analysis 形成可审计证据链。
 
-[查看产品首页](screenshots/phase12-product-home-1440x1024.png) · [查看算法工作台](screenshots/phase12-algorithm-workbench-1440x1024.png) · [查看 Evidence 解释](screenshots/phase12-evidence-explanation-1440x1024.png) · [作品集证据](docs/portfolio-evidence.md)
+[查看推荐工作台](screenshots/phase13-product-home-1440x1024.png) · [查看中文输入](screenshots/phase13-chinese-input-1440x1024.png) · [查看 Evidence 解释](screenshots/phase13-evidence-explanation.png) · [查看历史复核](screenshots/phase13-historical-review-1440x1024.png) · [作品集证据](docs/portfolio-evidence.md)
 
 ## 推荐系统如何工作
 
 交互区允许粘贴一份 Resume 和一份 JD，是为了演示“新增候选人 + 新岗位 Query”的完整链路。系统并不是拿这两个文本直接输出一个分数：
 
-1. Resume 被解析并加入本地候选池；
+1. Resume 被解析并作为一个可交互候选人加入运行时索引；
 2. JD 被解析为岗位 Query；
 3. 系统从整个候选池执行召回、特征计算和排序；
 4. 最终返回该岗位下的 Top-K 候选人推荐，其中会标出本次输入的候选人。
 
-这让 Demo 保留真实推荐系统语义，而不是退化成一对一文本相似度工具。
+冻结的 48 人 Candidate Pool 不因展示层变化而改变；中文姓名/方向/优势来自独立的前端 presentation metadata，不写回 Candidate Profile，也不参与 Retrieval、Feature Engineering、LambdaMART 或 Evaluation fingerprint。中文 Resume/JD 安全示例同样只服务交互演示，不进入 Phase 11 Offline Evaluation。
 
 ## Algorithm Pipeline
 
@@ -221,7 +221,7 @@ npm install
 npm run dev
 ```
 
-打开 `http://localhost:3000`，点击“加载安全示例”后运行完整匹配。
+打开 `http://localhost:3000`，点击“加载中文安全示例”后运行完整推荐。
 
 ### Model artifact 准备
 
@@ -288,8 +288,8 @@ scripts/                # data, model, evaluation and readiness entrypoints
 - Browser E2E：disposable PostgreSQL + isolated Qdrant，稳定 mock provider，不依赖外部 API；
 - Offline evaluation：immutable manifest、file hashes、pool/order fingerprint、Test seal 与 claim limitations。
 
-- Backend Docker explanation contract：`10 passed`；全量 backend：`823 passed, 58 skipped`（条件性 integration skip 不计为 PASS）。
-- Frontend（Node `22.23.2`）：`49 passed`，typecheck / ESLint / production build 均 PASS。
+- Backend Evidence / extraction focused：`168 passed`；全量 backend：`825 passed, 58 skipped`（条件性 integration skip 不计为 PASS）。
+- Frontend：`55 passed`，typecheck / ESLint / production build 均 PASS；真实 E2E 使用 Node `22.23.2`。
 - Browser E2E：`2 passed`；使用独立 disposable PostgreSQL + Qdrant，覆盖主链路、ranking invariance、历史复核与 Provider 错误恢复。
 - Real-provider live smoke：`NOT RUN — LOCAL PROVIDER CREDENTIAL REQUIRED`。
 
@@ -299,7 +299,7 @@ scripts/                # data, model, evaluation and readiness entrypoints
 
 ## 项目状态
 
-Phase 0–12 已 **Completed / Frozen**。当前交付是可本地运行、可复现、可审计的产品原型，不是 production deployment。详见 [Development Roadmap](docs/development-roadmap.md)。
+Phase 0–13 已 **Completed / Frozen**。Phase 13 只增强中文推荐产品表达、Demo fixtures 与展示 metadata；冻结算法与 Phase 11 评测未改变。当前交付是可本地运行、可复现、可审计的产品原型，不是 production deployment。详见 [Development Roadmap](docs/development-roadmap.md)。
 
 ---
 

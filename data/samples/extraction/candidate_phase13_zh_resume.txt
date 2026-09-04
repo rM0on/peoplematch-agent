@@ -1,0 +1,21 @@
+候选人演示 001（Synthetic Demo）
+
+目标方向：推荐算法工程师、AI 算法工程师（推荐与 LLM 应用）
+工作地点：上海，接受混合办公。
+
+技术能力：
+- 熟练使用 Python、FastAPI、Pydantic 与 PostgreSQL 构建 AI 应用服务；
+- 具备推荐系统 Candidate Retrieval、Embedding 检索、Feature Engineering 与 Learning To Rank 实践；
+- 使用 LambdaMART 完成候选排序实验，理解 raw ranking margin 不是匹配概率；
+- 使用 RAG、LLM Application 与 Evidence-grounded Explanation 构建可审计解释；
+- 能够设计 Recall、NDCG、MRR 与 Pairwise Accuracy 离线评估流程。
+
+项目经历：PeopleMatch 推荐系统沙箱
+作为项目开发者，构建了一个本地人岗推荐原型。系统以岗位 JD 作为 Query，从候选池进行 Dense/Sparse Hybrid Retrieval，计算技能匹配、项目证据、岗位方向与约束特征，并使用 LambdaMART 生成 Top-K 排序。项目包含 FastAPI 接口、PostgreSQL 持久化、Qdrant 派生索引、自动化测试与 Offline Evaluation 报告。LLM 只负责结构化抽取和证据约束解释，不直接决定候选人排名。
+
+可核验项目证据：
+- 测试覆盖 Candidate Retrieval、Feature Engineering 和 Ranking 数据契约；
+- 离线评估文档记录了数据切分、缺失 judgment 处理与指标边界；
+- MatchRun 轨迹记录排序输入、结果 fingerprint 与 Evidence 引用。
+
+未提供：完整工作年限。以上内容仅为 synthetic sandbox 示例，不对应真实个人。

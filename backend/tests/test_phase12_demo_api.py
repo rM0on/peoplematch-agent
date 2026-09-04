@@ -11,7 +11,7 @@ from test_retrieval_service import _service
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def test_demo_samples_are_exact_registered_synthetic_inputs(app) -> None:
+def test_demo_samples_are_exact_registered_chinese_synthetic_inputs(app) -> None:
     with TestClient(app) as client:
         response = client.get(
             "/api/v1/demo/samples", headers={"X-Request-ID": "phase12-samples"}
@@ -23,11 +23,13 @@ def test_demo_samples_are_exact_registered_synthetic_inputs(app) -> None:
     assert payload["success"] is True
     assert payload["data"]["data_origin"] == "synthetic_sandbox"
     assert payload["data"]["candidate_text"] == (
-        ROOT / "data/samples/extraction/candidate_matching_resume.txt"
+        ROOT / "data/samples/extraction/candidate_phase13_zh_resume.txt"
     ).read_text(encoding="utf-8")
     assert payload["data"]["job_text"] == (
-        ROOT / "data/samples/extraction/job_matching_engineer.txt"
+        ROOT / "data/samples/extraction/job_phase13_zh.txt"
     ).read_text(encoding="utf-8")
+    assert "推荐系统" in payload["data"]["candidate_text"]
+    assert "岗位 Query" in payload["data"]["job_text"]
     assert "api_key" not in response.text.lower()
 
 

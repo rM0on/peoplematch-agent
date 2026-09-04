@@ -1,0 +1,50 @@
+{
+  "name": "候选人演示 001",
+  "skills": [
+    {"name": "Python", "category": "backend", "self_reported_level": "advanced"},
+    {"name": "Candidate Retrieval", "category": "retrieval_search", "self_reported_level": "practiced"},
+    {"name": "Embedding", "category": "retrieval_search", "self_reported_level": "practiced"},
+    {"name": "Learning To Rank", "category": "recommendation", "self_reported_level": "practiced"},
+    {"name": "LLM Application", "category": "llm_application", "self_reported_level": "practiced"},
+    {"name": "Offline Evaluation", "category": "evaluation", "self_reported_level": "practiced"}
+  ],
+  "projects": [
+    {
+      "project_id": "prj_phase13_peoplematch",
+      "name": "PeopleMatch 推荐系统沙箱",
+      "summary": "构建以岗位 JD 为 Query 的本地人岗推荐原型，串联混合召回、显式特征、LambdaMART 排序和证据约束解释。",
+      "role": "项目开发者",
+      "technologies": ["Python", "FastAPI", "PostgreSQL", "Qdrant", "LambdaMART"],
+      "outcomes": ["实现可审计的 Top-K 候选排序流水线", "记录离线评估边界与 MatchRun 历史轨迹"],
+      "skills_demonstrated": ["Python", "Candidate Retrieval", "Embedding", "Learning To Rank", "LLM Application", "Offline Evaluation"]
+    }
+  ],
+  "project_evidence": [
+    {
+      "evidence_id": "ev_phase13_tests",
+      "project_id": "prj_phase13_peoplematch",
+      "supports_skills": ["Python", "Candidate Retrieval", "Embedding", "Learning To Rank"],
+      "evidence_type": "tests",
+      "statement": "Synthetic 测试覆盖候选召回、特征构建与排序数据契约，不包含真实业务指标。",
+      "artifact_ref": "sandbox://extraction/candidate/phase13/tests",
+      "verification_status": "available"
+    },
+    {
+      "evidence_id": "ev_phase13_evaluation",
+      "project_id": "prj_phase13_peoplematch",
+      "supports_skills": ["Offline Evaluation", "LLM Application"],
+      "evidence_type": "evaluation_report",
+      "statement": "Synthetic 离线评估文档记录数据切分、缺失 judgment 语义、指标限制与证据约束解释边界。",
+      "artifact_ref": "sandbox://extraction/candidate/phase13/evaluation",
+      "verification_status": "described"
+    }
+  ],
+  "github_url": null,
+  "ai_tools": ["FastAPI", "Pydantic", "Qdrant", "LambdaMART", "RAG"],
+  "target_roles": ["推荐算法工程师", "AI 算法工程师（推荐与 LLM 应用）"],
+  "preferred_locations": {"cities": ["上海"], "remote_policy": "hybrid", "relocation_open": false},
+  "seniority": "mid",
+  "work_style": {"team_stage_preference": ["zero_to_one"], "collaboration_style": "重视算法实验、工程验证与跨团队协作"},
+  "missing_fields": ["years_of_experience"],
+  "overclaim_risk": {"level": "low", "reasons": []}
+}

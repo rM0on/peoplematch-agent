@@ -127,3 +127,12 @@ Only the phase explicitly requested by the user may be implemented. Status value
 - **Primary deliverables:** Interactive Resume/JD demo, shared OpenAI-compatible extraction/explanation boundary, deterministic mock fallback, operational doctor/runbook, browser E2E, Chinese-first GitHub landing page, demo/portfolio evidence, final architecture reconciliation.
 - **Dependency:** Phase 11 evaluation complete.
 - **Quality gate:** The Node 22 frontend test/typecheck/lint/build gates pass; the focused and full backend regressions pass; a real browser E2E completes extraction, disposable PostgreSQL/Qdrant indexing, frozen LTR MatchRun, grounded explanation, immutable ranking verification, and persisted review while separately exercising a recoverable Provider error. The Chinese-first README, actual screenshots, demo guide, portfolio evidence, doctor, secret/privacy audit, and Phase 11 protection audit are frozen. Real-provider live smoke remains explicitly not run because no local credential was configured; no production, business-impact, real-hiring-accuracy, or real-world-generalization claim is introduced.
+
+## Phase 13 — Recommendation Product Experience Enhancement
+
+**Status:** Completed / Frozen
+
+- **Objective:** Make the completed local prototype read clearly as a Job-query-driven Candidate Retrieval + Ranking system for Chinese portfolio review without changing frozen algorithm or evaluation semantics.
+- **Primary deliverables:** Chinese deterministic Demo-only Resume/JD fixtures; presentation-only metadata for all 48 frozen Candidate IDs; seven-step recommendation Story Mode; Chinese-first Top-K, Evidence, MatchRun, Feedback, and Bad Case presentation; real final screenshots.
+- **Dependency:** Phase 12 local prototype complete and Phase 11 evaluation frozen.
+- **Quality gate:** The Chinese fixtures stay outside Offline Evaluation; presentation metadata is never sent to retrieval/ranking; the real browser flow proves the frozen 48-person pool plus one runtime Demo candidate, LambdaMART Top-K, Evidence-grounded Explanation, ranking invariance, and persisted review. Backend, frontend, E2E, screenshot, privacy, and Phase 11 protection audits pass without dataset, split, model, strategy, metric, or artifact mutation.

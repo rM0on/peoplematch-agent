@@ -8,6 +8,30 @@ import type { BadCaseSummary } from "@/types/phase10";
 
 import styles from "./phase10.module.css";
 
+const symptomLabels: Record<string, string> = {
+  wrong_top1: "Top 1 推荐不正确",
+  ranking_inversion: "候选人排序颠倒",
+  false_positive: "候选人误推荐",
+  expected_candidate_not_recalled: "预期候选人未召回",
+  constraint_conflict: "岗位约束冲突",
+  requirement_coverage_disagreement: "岗位要求覆盖有分歧",
+  uncertain_order: "排序结果无法确定",
+  unsupported_explanation: "推荐解释缺少证据",
+  misleading_explanation: "推荐解释可能误导",
+  incomplete_explanation: "推荐解释不完整",
+  candidate_snapshot_issue: "候选人快照问题",
+  job_snapshot_issue: "岗位快照问题",
+};
+const statusLabels: Record<string, string> = {
+  CREATED: "待复核", REVIEWED: "已复核", ROOT_CAUSE_IDENTIFIED: "已识别根因",
+  ACTION_PLANNED: "已规划行动", RESOLVED: "已处理", VERIFIED: "已核验",
+  DISMISSED: "已驳回", DUPLICATE: "重复记录",
+};
+const severityLabels: Record<string, string> = { LOW: "低", MEDIUM: "中", HIGH: "高", CRITICAL: "严重" };
+const familyLabels: Record<string, string> = {
+  RANKING: "排序", RETRIEVAL: "召回", FEATURE: "特征", EXPLANATION: "解释",
+  PROFILE_DATA: "资料数据", INTEGRITY: "完整性",
+};
 
 export function BadCaseListScreen() {
   const [items, setItems] = useState<BadCaseSummary[] | null>(null);
@@ -50,12 +74,12 @@ export function BadCaseListScreen() {
 
   return <section aria-labelledby="bad-case-list-title">
     <div className={styles.listHeader}><div><p className={styles.eyebrow}>AI 匹配质量调查</p><h1 id="bad-case-list-title">Bad Case 复核</h1><p className={styles.muted}>检查不可变观察、历史 Evidence 与可审计复核进度。</p></div><span className={styles.badge}>{total} 条记录</span></div>
-    <div className={styles.caseList}>{items.map((item) => <Link className={styles.caseRow} href={`/bad-cases/${encodeURIComponent(item.bad_case_id)}`} key={item.bad_case_id} aria-label={`${item.symptom_code.replaceAll("_", " ")} · ${item.status}`}>
-      <span><strong>{item.symptom_code.replaceAll("_", " ")}</strong><small>MatchRun {item.primary_match_run_id}</small></span>
-      <span><span className={styles.badge}>{item.status}</span><small>修订 {item.revision}</small></span>
-      <span><span className={styles.severity}>{item.severity}</span><small>{item.symptom_family}</small></span>
+    <div className={styles.caseList}>{items.map((item) => { const symptom = symptomLabels[item.symptom_code] ?? "待分类匹配问题"; return <Link className={styles.caseRow} href={`/bad-cases/${encodeURIComponent(item.bad_case_id)}`} key={item.bad_case_id} aria-label={`${symptom} · ${statusLabels[item.status] ?? item.status}`}>
+      <span><strong>{symptom}</strong><small>MatchRun {item.primary_match_run_id}</small></span>
+      <span><span className={styles.badge}>{statusLabels[item.status] ?? item.status}</span><small>修订 {item.revision}</small></span>
+      <span><span className={styles.severity}>{severityLabels[item.severity] ?? item.severity}</span><small>{familyLabels[item.symptom_family] ?? item.symptom_family}</small></span>
       <span aria-hidden="true">→</span>
-    </Link>)}</div>
+    </Link>; })}</div>
     <div className={styles.formActions}><button className={styles.secondaryButton} type="button" disabled={offset === 0} onClick={() => { setItems(null); setError(null); setOffset(Math.max(0, offset - limit)); }}>上一页</button><button className={styles.secondaryButton} type="button" disabled={offset + limit >= total} onClick={() => { setItems(null); setError(null); setOffset(offset + limit); }}>下一页</button></div>
   </section>;
 }

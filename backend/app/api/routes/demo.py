@@ -22,10 +22,10 @@ _FIXTURE_ROOT = Path(__file__).resolve().parents[4] / "data" / "samples" / "extr
 @router.get("/samples", response_model=ApiResponse[DemoSamplesData])
 async def get_demo_samples(request: Request) -> ApiResponse[DemoSamplesData]:
     data = DemoSamplesData(
-        candidate_text=(_FIXTURE_ROOT / "candidate_matching_resume.txt").read_text(
+        candidate_text=(_FIXTURE_ROOT / "candidate_phase13_zh_resume.txt").read_text(
             encoding="utf-8"
         ),
-        job_text=(_FIXTURE_ROOT / "job_matching_engineer.txt").read_text(
+        job_text=(_FIXTURE_ROOT / "job_phase13_zh.txt").read_text(
             encoding="utf-8"
         ),
     )

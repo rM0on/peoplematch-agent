@@ -264,7 +264,7 @@
 }
 .storySteps {
   display:grid;
-  grid-template-columns:repeat(6,minmax(0,1fr));
+  grid-template-columns:repeat(7,minmax(0,1fr));
   gap:6px;
   margin:16px 0 0;
   padding:0;
@@ -335,6 +335,13 @@
   color:#465851;
   font-size:12px;
   font-weight:800
+}
+.inputGrid label>small {
+  min-height:30px;
+  color:#75817b;
+  font-size:10px;
+  font-weight:500;
+  line-height:1.45
 }
 .inputGrid textarea {
   min-height:180px;
@@ -498,6 +505,21 @@
   color:#89938e;
   font:9px var(--font-mono),monospace
 }
+.candidateStrengths {
+  display:flex;
+  flex-wrap:wrap;
+  gap:4px;
+  margin-top:5px
+}
+.candidateLabel .candidateStrengths small {
+  display:inline-block;
+  margin:0;
+  padding:2px 5px;
+  border-radius:999px;
+  background:#e8f1ed;
+  color:#2f6e64;
+  font-size:8px
+}
 .shortlistModelScore {
   display:grid;
   justify-items:end;
@@ -525,6 +547,26 @@
 .scoreHeader h3 {
   margin:0;
   font-size:19px
+}
+.candidateDirection {
+  margin:4px 0 0;
+  color:#52675e;
+  font-size:11px;
+  font-weight:700
+}
+.detailStrengths {
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-top:8px
+}
+.detailStrengths span {
+  padding:4px 7px;
+  border:1px solid #d4e1dc;
+  border-radius:999px;
+  background:#f2f7f4;
+  color:#316b62;
+  font-size:9px
 }
 .scoreMeta {
   max-width:280px;
@@ -606,6 +648,13 @@
 .explanation .risk {
   color:#94601a
 }
+.explanation .explanationBoundary {
+  padding:8px 10px;
+  border-left:3px solid #5d9388;
+  background:#f2f7f4;
+  color:#45665d;
+  font-size:10px
+}
 .trace ol {
   display:grid;
   gap:5px;
@@ -615,10 +664,19 @@
 }
 .trace li {
   display:flex;
-  justify-content:space-between
+  align-items:center;
+  justify-content:space-between;
+  gap:10px
+}
+.trace li strong {
+  min-width:110px;
+  color:#344e46;
+  font-size:11px
 }
 .trace code {
-  color:#285e55
+  flex:1;
+  color:#657a72;
+  font-size:9px
 }
 .integrityNote {
   margin-top:14px;
@@ -664,7 +722,7 @@
     grid-template-columns:1fr
   }
   .storySteps {
-    grid-template-columns:repeat(3,1fr)
+    grid-template-columns:repeat(4,1fr)
   }
   .shortlist {
     border-right:0;
@@ -702,6 +760,13 @@
   }
   .storySteps {
     grid-template-columns:1fr 1fr
+  }
+  .resultRow,.selectedResult {
+    grid-template-columns:28px minmax(0,1fr)
+  }
+  .shortlistModelScore {
+    grid-column:2;
+    justify-items:start
   }
   .scoreMeta {
     max-width:none;

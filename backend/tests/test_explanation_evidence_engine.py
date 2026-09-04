@@ -344,6 +344,42 @@ def test_bundle_accepts_authentic_phase8_ranking_input_fingerprint() -> None:
     assert bundle.source.ranking_input_fingerprint
 
 
+def test_generation_pipeline_accepts_chinese_historical_labels_and_all_requirement_categories() -> None:
+    from app.schemas.job import RequirementCategory
+    from app.services.explanation.generation.pipeline import (
+        ExplanationGenerationPipeline,
+    )
+
+    run = _run()
+    run.ranking_input_snapshot["location"]["cities"] = ["上海"]
+    run.ranking_input_snapshot["nice_to_have"].extend(
+        {
+            "requirement_id": f"req_category_{category.value}",
+            "category": category.value,
+            "text": f"Requirement for {category.value}",
+            "evidence_expectation": "bounded historical evidence",
+        }
+        for category in RequirementCategory
+    )
+    for result in run.results:
+        result.candidate_input_snapshot["target_roles"] = ["推荐算法工程师"]
+        result.candidate_input_snapshot["preferred_locations"]["cities"] = ["上海"]
+        _refresh_candidate_snapshot_fingerprint(result)
+    _refresh_ranking_snapshot_fingerprint(run)
+    _refresh_result_fingerprint(run)
+
+    prepared = ExplanationGenerationPipeline(
+        max_output_tokens=1024,
+    ).prepare(run, requested_top_k=2)
+
+    assert prepared.evidence_bundle.job.location.cities == ["上海"]
+    assert prepared.evidence_bundle.candidates[0].target_roles == ["推荐算法工程师"]
+    assert {item.category.value for item in prepared.evidence_bundle.job.requirements} == {
+        category.value for category in RequirementCategory
+    }
+    assert prepared.effective_top_k == 2
+
+
 def test_candidate_input_order_does_not_change_canonical_bundle() -> None:
     module = _engine_module()
     builder = module.EvidenceBundleBuilder()

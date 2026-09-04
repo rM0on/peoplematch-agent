@@ -324,3 +324,31 @@ def test_sparse_fixtures_are_supported_without_inventing_missing_fields(
             assert result.draft.company_name == expected_name
 
     asyncio.run(scenario())
+
+
+def test_phase13_chinese_demo_fixtures_use_the_existing_deterministic_contract() -> None:
+    from app.services.profile_extraction.mock_provider import MockStructuredOutputProvider
+
+    async def scenario():
+        service = _service(
+            MockStructuredOutputProvider.from_fixture_directory(FIXTURE_ROOT)
+        )
+        candidate = await service.extract_candidate(
+            _text("candidate_phase13_zh_resume.txt")
+        )
+        job = await service.extract_job(_text("job_phase13_zh.txt"))
+
+        assert candidate.draft.name == "候选人演示 001"
+        assert "推荐算法工程师" in candidate.draft.target_roles
+        assert {skill.name for skill in candidate.draft.skills} >= {
+            "Python",
+            "Learning To Rank",
+            "LLM Application",
+        }
+        assert job.draft.company_name == "星河智能科技（Synthetic）"
+        assert job.draft.role_title == "AI 算法工程师（推荐与 LLM 应用）"
+        assert "recommendation ranking" in job.draft.role_direction
+        assert candidate.extraction.provider == "deterministic_mock"
+        assert job.extraction.provider == "deterministic_mock"
+
+    asyncio.run(scenario())

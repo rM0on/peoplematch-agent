@@ -1,0 +1,22 @@
+星河智能科技（Synthetic）
+岗位：AI 算法工程师（推荐与 LLM 应用）
+地点：上海，混合办公；产品阶段：0 到 1。
+
+岗位 Query：负责智能招聘推荐系统算法研发，以岗位需求为 Query，从候选人才池完成 Candidate Retrieval、Feature Engineering、Learning To Rank 与 Evidence-grounded Explanation。
+
+岗位职责：
+- 设计 Dense Retrieval、Sparse Retrieval 与 Hybrid Retrieval 候选召回策略；
+- 构建 Embedding 检索与候选特征体系，区分技能声明和项目证据；
+- 使用 LambdaMART 等 Learning To Rank 方法优化 Top-K 候选排序；
+- 分析推荐 Bad Case，维护可审计的 MatchRun 与 Feedback Review；
+- 使用 LLM Application 完成结构化信息抽取和证据约束解释，LLM 不直接决定排名；
+- 建立 Recall、NDCG、MRR、Pairwise Accuracy 等 Offline Evaluation 流程。
+
+技术要求：
+- 熟练使用 Python，具备推荐系统、NLP 或搜索相关项目实践；
+- 理解 Embedding、Retrieval、Ranking 与 Reranking；
+- 能展示代码、测试、架构文档或离线评估报告等项目证据。
+
+加分项：FastAPI、PostgreSQL、Qdrant、PyTorch、RAG 或 Agent Workflow 实践。
+
+本岗位为 synthetic sandbox 示例，不代表真实公司招聘信息。

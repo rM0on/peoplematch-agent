@@ -1,0 +1,21 @@
+{
+  "company_name": "星河智能科技（Synthetic）",
+  "role_title": "AI 算法工程师（推荐与 LLM 应用）",
+  "must_have": [
+    {"requirement_id": "req_phase13_retrieval", "text": "设计 Dense、Sparse 与 Hybrid Retrieval 候选召回策略", "category": "skill", "evidence_expectation": "提供检索代码、测试或架构文档"},
+    {"requirement_id": "req_phase13_ranking", "text": "使用 Learning To Rank 构建 Top-K 候选排序", "category": "role_direction", "evidence_expectation": "提供 LambdaMART 或推荐排序项目证据"},
+    {"requirement_id": "req_phase13_features", "text": "构建区分技能声明与项目证据的候选特征", "category": "project_evidence", "evidence_expectation": "提供 Feature Engineering 实现或数据契约"},
+    {"requirement_id": "req_phase13_evaluation", "text": "建立 Recall、NDCG、MRR 或 Pairwise 离线评估流程", "category": "experience", "evidence_expectation": "提供测试、评估报告或实验记录"},
+    {"requirement_id": "req_phase13_python", "text": "使用 Python 开发可验证的算法与服务", "category": "skill", "evidence_expectation": "提供 Python 项目代码或自动化测试"}
+  ],
+  "nice_to_have": [
+    {"requirement_id": "req_phase13_llm", "text": "使用 LLM 完成结构化抽取或证据约束解释", "category": "ai_tooling", "evidence_expectation": "提供 LLM Application 项目、工作流或演示"},
+    {"requirement_id": "req_phase13_stack", "text": "具备 FastAPI、PostgreSQL 或 Qdrant 实践", "category": "ai_tooling", "evidence_expectation": "提供可运行服务、测试或架构说明"}
+  ],
+  "role_direction": ["recommendation ranking", "candidate retrieval", "LLM application"],
+  "team_tags": ["zero_to_one", "evidence_driven", "cross_functional"],
+  "location": {"cities": ["上海"], "remote_policy": "hybrid", "relocation_supported": true},
+  "seniority_requirement": ["mid", "senior"],
+  "product_stage": "zero_to_one",
+  "evaluation_focus": ["推荐系统设计", "项目证据", "离线评估边界"]
+}

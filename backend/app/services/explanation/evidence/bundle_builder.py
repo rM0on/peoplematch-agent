@@ -29,6 +29,7 @@ from app.services.explanation.evidence.historical_integrity import (
 )
 from app.services.explanation.evidence.normalization import (
     NORMALIZER_VERSION,
+    canonicalize_historical_text_labels,
     canonicalize_labels,
     normalize_label,
 )
@@ -173,7 +174,9 @@ def _job_from_snapshot(snapshot: dict[str, Any]) -> HistoricalJobEvidence:
         role_direction=canonicalize_labels(snapshot.get("role_direction", []), "role_direction"),
         requirements=requirements,
         location=HistoricalJobLocation(
-            cities=canonicalize_labels(location.get("cities", []), "job location cities"),
+            cities=canonicalize_historical_text_labels(
+                location.get("cities", []), "job location cities"
+            ),
             remote_policy=location["remote_policy"],
             relocation_supported=location["relocation_supported"],
         ),
@@ -308,13 +311,15 @@ def _candidate_from_result(
     candidate = HistoricalCandidateEvidence(
         candidate_id=candidate_id,
         result_rank=rank,
-        target_roles=canonicalize_labels(snapshot.get("target_roles", []), "target roles"),
+        target_roles=canonicalize_historical_text_labels(
+            snapshot.get("target_roles", []), "target roles"
+        ),
         skills=skills,
         projects=projects,
         project_evidence=project_evidence,
         ai_tools=canonicalize_labels(snapshot.get("ai_tools", []), "AI tools"),
         preferred_locations=CandidateLocationEvidence(
-            cities=canonicalize_labels(
+            cities=canonicalize_historical_text_labels(
                 snapshot["preferred_locations"].get("cities", []),
                 "candidate location cities",
             ),

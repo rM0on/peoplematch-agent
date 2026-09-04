@@ -36,8 +36,10 @@ class MockStructuredOutputProvider:
         pairs = (
             (ExtractionTask.CANDIDATE, "candidate_matching_resume.txt", "candidate_matching_output.json"),
             (ExtractionTask.CANDIDATE, "candidate_sparse_resume.txt", "candidate_sparse_output.json"),
+            (ExtractionTask.CANDIDATE, "candidate_phase13_zh_resume.txt", "candidate_phase13_zh_output.json"),
             (ExtractionTask.JOB, "job_matching_engineer.txt", "job_matching_engineer_output.json"),
             (ExtractionTask.JOB, "job_sparse_ai_role.txt", "job_sparse_ai_role_output.json"),
+            (ExtractionTask.JOB, "job_phase13_zh.txt", "job_phase13_zh_output.json"),
         )
         for task, source_name, output_name in pairs:
             source = (root / source_name).read_text(encoding="utf-8")

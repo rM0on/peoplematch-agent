@@ -46,8 +46,53 @@ const jobIssues = [
   ["missing_expectation", "job.expectations"],
 ] as const satisfies ReadonlyArray<readonly [ProfileDataIssue, ProfileFieldLocator]>;
 
+const reviewLabels: Record<string, string> = {
+  ranking: "排序结果",
+  explanation: "推荐解释",
+  profile_data: "候选人资料",
+  candidate_result: "候选人结果",
+  top1: "Top 1 候选人",
+  pairwise: "候选人两两比较",
+  overall_ranking: "整体排序",
+  expected_candidate: "预期候选人未召回",
+  correct: "正确",
+  wrong: "存在问题",
+  uncertain: "无法确定",
+  insufficient_evidence: "证据不足",
+  wrong_top1: "Top 1 不正确",
+  false_positive: "误推荐",
+  false_negative: "漏召回",
+  ranking_inversion: "排序颠倒",
+  constraint_conflict: "约束冲突",
+  evidence_coverage_disagreement: "证据覆盖有分歧",
+  summary: "解释摘要",
+  match_reason: "推荐原因",
+  risk: "风险项",
+  missing_requirement: "缺失要求",
+  interview_question: "面试问题",
+  top1_comparison: "Top 1 对比",
+  grounded: "证据充分",
+  unsupported: "缺少证据支持",
+  misleading: "可能误导",
+  incomplete: "解释不完整",
+  candidate_profile: "候选人历史快照",
+  job_profile: "岗位历史快照",
+  missing_skill: "缺少技能",
+  incorrect_skill: "技能信息不正确",
+  missing_project_evidence: "缺少项目证据",
+  incorrect_project_evidence_status: "项目证据状态不正确",
+  incorrect_seniority: "资历信息不正确",
+  incorrect_location: "地点信息不正确",
+  incorrect_role_direction: "岗位方向不正确",
+  unclear_requirement: "岗位要求不清晰",
+  incorrect_requirement_priority: "要求优先级不正确",
+  incorrect_seniority_requirement: "资历要求不正确",
+  incorrect_location_constraint: "地点约束不正确",
+  missing_expectation: "缺少评估预期",
+};
+
 function label(value: string) {
-  return value.replaceAll("_", " ").replace(/^\w/, (value) => value.toUpperCase());
+  return reviewLabels[value] ?? value.replaceAll("_", " ");
 }
 
 function isCandidateScopedEvidence(reference: string, resultRank: number) {
@@ -126,7 +171,7 @@ export function FeedbackPanel({
           ...selectors,
         };
       } else if (kind === "explanation") {
-        if (!explanationRun || !selectedExplanation) throw new Error("No persisted explanation is available for this run");
+        if (!explanationRun || !selectedExplanation) throw new Error("当前 MatchRun 没有可复核的持久化解释");
         payload = {
           ...base,
           feedback_type: "explanation",
@@ -149,7 +194,7 @@ export function FeedbackPanel({
       setCreated(response.data);
       onFeedbackCreated?.(response.data);
     } catch (caught) {
-      setError(caught instanceof Phase10ApiError || caught instanceof Error ? caught.message : "Feedback could not be saved");
+      setError(caught instanceof Phase10ApiError || caught instanceof Error ? caught.message : "反馈暂时无法保存");
     } finally {
       setPending(false);
     }
@@ -175,45 +220,45 @@ export function FeedbackPanel({
 
   return (
     <section className={styles.panel} aria-labelledby="feedback-title">
-      <p className={styles.eyebrow}>Structured historical review</p>
-      <h2 id="feedback-title">Review recommendation</h2>
-      <p className={styles.muted}>Your choices refer to persisted run history. Candidate, rank, and ownership are resolved again by the server.</p>
-      <div className={styles.tabs} role="tablist" aria-label="Feedback type">
+      <p className={styles.eyebrow}>结构化历史复核 · Feedback Review</p>
+      <h2 id="feedback-title">复核推荐结果</h2>
+      <p className={styles.muted}>所有选择都绑定已持久化的 MatchRun；Candidate、排名和历史归属会由服务端再次核验。</p>
+      <div className={styles.tabs} role="tablist" aria-label="反馈类型">
         {feedbackKinds.map((item) => (
           <button id={`feedback-tab-${item}`} aria-controls="feedback-tabpanel" key={item} type="button" role="tab" aria-selected={kind === item} tabIndex={kind === item ? 0 : -1} className={`${styles.tab} ${kind === item ? styles.tabActive : ""}`} onClick={() => setKind(item)} onKeyDown={(event) => handleTabKeyDown(event, item)}>
-            {item === "profile_data" ? "Profile / data" : label(item)}
+            {label(item)}
           </button>
         ))}
       </div>
       <form id="feedback-tabpanel" role="tabpanel" aria-labelledby={`feedback-tab-${kind}`} onSubmit={submit}>
         <div className={styles.formGrid}>
           {kind === "ranking" ? <>
-            <label className={styles.field}>Ranking target<select aria-label="Ranking target" value={rankingTarget} onChange={(event) => { const target = event.target.value as RankingTargetType; setRankingTarget(target); setReason(rankingReasons[target][0]); if (target === "pairwise" && comparisonId === subjectId) setComparisonId(String(run.results.find((item) => String(item.match_result_id) !== subjectId)?.match_result_id ?? "")); }}>
-              <option value="candidate_result">Candidate result</option><option value="top1">Top 1</option><option value="pairwise">Pairwise</option><option value="overall_ranking">Overall ranking</option><option value="expected_candidate">Expected candidate absent</option>
+            <label className={styles.field}>复核对象<select aria-label="复核对象" value={rankingTarget} onChange={(event) => { const target = event.target.value as RankingTargetType; setRankingTarget(target); setReason(rankingReasons[target][0]); if (target === "pairwise" && comparisonId === subjectId) setComparisonId(String(run.results.find((item) => String(item.match_result_id) !== subjectId)?.match_result_id ?? "")); }}>
+              {Object.keys(rankingReasons).map((item) => <option key={item} value={item}>{label(item)}</option>)}
             </select></label>
-            {!["overall_ranking", "expected_candidate", "top1"].includes(rankingTarget) ? <label className={styles.field}>Historical result<select value={subjectId} onChange={(event) => { const selected = event.target.value; setSubjectId(selected); if (rankingTarget === "pairwise" && comparisonId === selected) setComparisonId(String(run.results.find((item) => String(item.match_result_id) !== selected)?.match_result_id ?? "")); }}>{run.results.map((item) => <option key={item.match_result_id} value={item.match_result_id}>Rank {item.result_rank} · {item.candidate_id}</option>)}</select></label> : null}
-            {rankingTarget === "pairwise" ? <label className={styles.field}>Compared result<select value={comparisonId} onChange={(event) => setComparisonId(event.target.value)} required>{comparisonOptions.map((item) => <option key={item.match_result_id} value={item.match_result_id}>Rank {item.result_rank} · {item.candidate_id}</option>)}</select></label> : null}
-            {rankingTarget === "expected_candidate" ? <label className={styles.field}>Reviewer reference<input value={expectedReference} onChange={(event) => setExpectedReference(event.target.value)} placeholder="bounded-reference" required /></label> : null}
-            <label className={styles.field}>Verdict<select aria-label="Verdict" value={verdict} onChange={(event) => setVerdict(event.target.value)}><option value="correct">Correct</option><option value="wrong">Wrong</option><option value="uncertain">Uncertain</option><option value="insufficient_evidence">Insufficient evidence</option></select></label>
-            {verdict === "wrong" ? <label className={styles.field}>Reason<select aria-label="Reason" value={reason} onChange={(event) => setReason(event.target.value as RankingReasonCode)}>{rankingReasons[rankingTarget].map((item) => <option value={item} key={item}>{label(item)}</option>)}</select></label> : null}
+            {!["overall_ranking", "expected_candidate", "top1"].includes(rankingTarget) ? <label className={styles.field}>历史排序结果<select value={subjectId} onChange={(event) => { const selected = event.target.value; setSubjectId(selected); if (rankingTarget === "pairwise" && comparisonId === selected) setComparisonId(String(run.results.find((item) => String(item.match_result_id) !== selected)?.match_result_id ?? "")); }}>{run.results.map((item) => <option key={item.match_result_id} value={item.match_result_id}>第 {item.result_rank} 名 · {item.candidate_id}</option>)}</select></label> : null}
+            {rankingTarget === "pairwise" ? <label className={styles.field}>对比结果<select value={comparisonId} onChange={(event) => setComparisonId(event.target.value)} required>{comparisonOptions.map((item) => <option key={item.match_result_id} value={item.match_result_id}>第 {item.result_rank} 名 · {item.candidate_id}</option>)}</select></label> : null}
+            {rankingTarget === "expected_candidate" ? <label className={styles.field}>复核参考<input value={expectedReference} onChange={(event) => setExpectedReference(event.target.value)} placeholder="受限参考标识" required /></label> : null}
+            <label className={styles.field}>评价结果<select aria-label="评价结果" value={verdict} onChange={(event) => setVerdict(event.target.value)}>{["correct", "wrong", "uncertain", "insufficient_evidence"].map((item) => <option key={item} value={item}>{label(item)}</option>)}</select></label>
+            {verdict === "wrong" ? <label className={styles.field}>问题原因<select aria-label="问题原因" value={reason} onChange={(event) => setReason(event.target.value as RankingReasonCode)}>{rankingReasons[rankingTarget].map((item) => <option value={item} key={item}>{label(item)}</option>)}</select></label> : null}
           </> : null}
           {kind === "explanation" ? explanationRun?.explanations.length ? <>
-            <label className={styles.field}>Historical explanation<select value={explanationId} onChange={(event) => { setExplanationId(event.target.value); setExplanationEvidence(""); }}>{explanationRun.explanations.map((item) => <option key={item.match_explanation_id} value={item.match_explanation_id}>Rank {item.result_rank} · {item.candidate_id}</option>)}</select></label>
-            <label className={styles.field}>Explanation section<select value={explanationTarget} onChange={(event) => setExplanationTarget(event.target.value)}><option value="summary">Summary</option><option value="match_reason">Match reason</option><option value="risk">Risk</option><option value="missing_requirement">Missing requirement</option><option value="interview_question">Interview question</option><option value="top1_comparison">Top 1 comparison</option></select></label>
-            <label className={styles.field}>Verdict<select value={explanationVerdict} onChange={(event) => setExplanationVerdict(event.target.value)}><option value="grounded">Grounded</option><option value="unsupported">Unsupported</option><option value="misleading">Misleading</option><option value="incomplete">Incomplete</option></select></label>
-            {explanationEvidenceOptions.length ? <label className={styles.fieldWide}>Historical evidence reference<select value={explanationEvidence} onChange={(event) => setExplanationEvidence(event.target.value)}><option value="">No evidence link</option>{explanationEvidenceOptions.map((reference) => <option value={reference} key={reference}>{reference}</option>)}</select></label> : null}
-          </> : <div className={styles.info}>No completed persisted explanation is available for this run.</div> : null}
+            <label className={styles.field}>历史推荐解释<select value={explanationId} onChange={(event) => { setExplanationId(event.target.value); setExplanationEvidence(""); }}>{explanationRun.explanations.map((item) => <option key={item.match_explanation_id} value={item.match_explanation_id}>第 {item.result_rank} 名 · {item.candidate_id}</option>)}</select></label>
+            <label className={styles.field}>解释部分<select value={explanationTarget} onChange={(event) => setExplanationTarget(event.target.value)}>{["summary", "match_reason", "risk", "missing_requirement", "interview_question", "top1_comparison"].map((item) => <option key={item} value={item}>{label(item)}</option>)}</select></label>
+            <label className={styles.field}>评价结果<select value={explanationVerdict} onChange={(event) => setExplanationVerdict(event.target.value)}>{["grounded", "unsupported", "misleading", "incomplete"].map((item) => <option key={item} value={item}>{label(item)}</option>)}</select></label>
+            {explanationEvidenceOptions.length ? <label className={styles.fieldWide}>历史 Evidence 引用<select value={explanationEvidence} onChange={(event) => setExplanationEvidence(event.target.value)}><option value="">不关联 Evidence</option>{explanationEvidenceOptions.map((reference) => <option value={reference} key={reference}>{reference}</option>)}</select></label> : null}
+          </> : <div className={styles.info}>该 MatchRun 暂无已完成的持久化解释。</div> : null}
           {kind === "profile_data" ? <>
-            <label className={styles.field}>Historical profile<select value={profileTarget} onChange={(event) => { const target = event.target.value as "candidate_profile" | "job_profile"; setProfileTarget(target); setProfileIssue((target === "candidate_profile" ? candidateIssues : jobIssues)[0][0]); }}><option value="candidate_profile">Candidate snapshot</option><option value="job_profile">Job snapshot</option></select></label>
-            {profileTarget === "candidate_profile" ? <label className={styles.field}>Historical result<select value={subjectId} onChange={(event) => setSubjectId(event.target.value)}>{run.results.map((item) => <option key={item.match_result_id} value={item.match_result_id}>Rank {item.result_rank} · {item.candidate_id}</option>)}</select></label> : null}
-            <label className={styles.field}>Observed issue<select value={profileIssue} onChange={(event) => setProfileIssue(event.target.value as ProfileDataIssue)}>{profileOptions.map(([issue]) => <option key={issue} value={issue}>{label(issue)}</option>)}</select></label>
+            <label className={styles.field}>历史资料<select value={profileTarget} onChange={(event) => { const target = event.target.value as "candidate_profile" | "job_profile"; setProfileTarget(target); setProfileIssue((target === "candidate_profile" ? candidateIssues : jobIssues)[0][0]); }}><option value="candidate_profile">候选人快照</option><option value="job_profile">岗位快照</option></select></label>
+            {profileTarget === "candidate_profile" ? <label className={styles.field}>历史排序结果<select value={subjectId} onChange={(event) => setSubjectId(event.target.value)}>{run.results.map((item) => <option key={item.match_result_id} value={item.match_result_id}>第 {item.result_rank} 名 · {item.candidate_id}</option>)}</select></label> : null}
+            <label className={styles.field}>发现的问题<select value={profileIssue} onChange={(event) => setProfileIssue(event.target.value as ProfileDataIssue)}>{profileOptions.map(([issue]) => <option key={issue} value={issue}>{label(issue)}</option>)}</select></label>
           </> : null}
-          <label className={styles.fieldWide}>Optional reviewer note<textarea maxLength={500} value={comment} onChange={(event) => setComment(event.target.value)} placeholder="Bounded context only; do not paste resumes or job descriptions." /></label>
+          <label className={styles.fieldWide}>备注<textarea aria-label="备注" maxLength={500} value={comment} onChange={(event) => setComment(event.target.value)} placeholder="仅填写必要复核信息；请勿粘贴完整简历或岗位描述。" /></label>
         </div>
-        <div className={styles.formActions}><button className={styles.primaryButton} type="submit" disabled={pending || (kind === "explanation" && !selectedExplanation) || (kind === "ranking" && rankingTarget === "pairwise" && (!comparisonId || comparisonId === subjectId))}>{pending ? "Saving…" : "Submit feedback"}</button></div>
+        <div className={styles.formActions}><button className={styles.primaryButton} type="submit" disabled={pending || (kind === "explanation" && !selectedExplanation) || (kind === "ranking" && rankingTarget === "pairwise" && (!comparisonId || comparisonId === subjectId))}>{pending ? "正在保存…" : "提交反馈"}</button></div>
       </form>
       {error ? <div className={styles.error} role="alert">{error}</div> : null}
-      {created ? <div className={styles.success} role="status"><strong>Feedback recorded</strong><br />The persisted observation is immutable. Creating a BadCase remains a separate action.</div> : null}
+      {created ? <div className={styles.success} role="status"><strong>反馈已记录</strong><br />该观察记录不可变；创建 Bad Case 仍是独立的显式操作。</div> : null}
     </section>
   );
 }
