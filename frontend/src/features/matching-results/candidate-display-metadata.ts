@@ -60,7 +60,7 @@ export function getCandidatePresentation(
     .filter(Boolean)
     .slice(0, 3) ?? [];
   return {
-    label: runtimeCandidate?.name.trim() || "本次输入候选人",
+    label: runtimeCandidate?.name.trim() || "人才库候选人",
     direction: targetRole ? `${targetRole}方向` : "候选方向待确认",
     strengths: strengths.length ? strengths : ["已完成结构化解析", "等待项目证据复核"],
   };

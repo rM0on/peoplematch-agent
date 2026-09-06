@@ -1,6 +1,13 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { DemoApiError, fetchDemoSamples, runDemo } from "./demo-api";
+import {
+  addCandidateToPool,
+  DemoApiError,
+  fetchDemoSamples,
+  listCandidates,
+  previewCandidate,
+  runDemo,
+} from "./demo-api";
 
 
 const candidateDraft = {
@@ -138,6 +145,16 @@ const explanationRun = {
   }],
 };
 
+const candidateRecord = {
+  candidate_id: "cand_parse_demo",
+  ...candidateDraft,
+  raw_text: "中文候选人简历内容包含 Python、FastAPI、RAG 与 Embedding 项目经验。",
+  archetype: null,
+  data_origin: "mock_parsed",
+  schema_version: "1.0",
+  dataset_version: null,
+};
+
 
 describe("Phase 12 demo API", () => {
   afterEach(() => {
@@ -160,16 +177,77 @@ describe("Phase 12 demo API", () => {
     });
   });
 
-  it("runs the explicit extraction to grounded explanation pipeline and reports stages", async () => {
+  it("lists the candidate pool through the typed paginated contract", async () => {
+    vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "http://localhost:8000");
+    const fetchMock = vi.fn().mockResolvedValue(envelope({
+      items: [candidateRecord], total: 49, limit: 100, offset: 0,
+    }, "candidate-list"));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(listCandidates()).resolves.toEqual({
+      items: [candidateRecord], total: 49, limit: 100, offset: 0,
+    });
+    expect(fetchMock).toHaveBeenCalledWith(
+      "http://localhost:8000/api/v1/candidates?limit=100&offset=0",
+      expect.objectContaining({ cache: "no-store" }),
+    );
+  });
+
+  it("previews a Resume without persistence or index mutation", async () => {
+    vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "http://localhost:8000");
+    const preview = {
+      ...parseData("candidate"),
+      record: null,
+      extraction: { ...parseData("candidate").extraction, persisted: false },
+    };
+    const fetchMock = vi.fn().mockResolvedValue(envelope(preview, "candidate-preview"));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(previewCandidate("candidate source ".repeat(8))).resolves.toEqual(preview);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0][1]).toEqual(expect.objectContaining({
+      method: "POST",
+      body: JSON.stringify({ text: "candidate source ".repeat(8), persist: false }),
+    }));
+  });
+
+  it("persists a confirmed candidate and refreshes the derived retrieval index", async () => {
+    vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "http://localhost:8000");
+    const persisted = { ...parseData("candidate"), record: candidateRecord };
+    const index = {
+      document_version: "retrieval_doc_v4",
+      candidate_collection: "candidates",
+      job_collection: "jobs",
+      candidate_count: 49,
+      job_count: 24,
+    };
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(envelope(persisted, "candidate-persist"))
+      .mockResolvedValueOnce(envelope(index, "candidate-index"));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(addCandidateToPool("candidate source ".repeat(8))).resolves.toEqual({
+      candidate: persisted,
+      index,
+    });
+    expect(fetchMock.mock.calls.map((call) => call[0])).toEqual([
+      "http://localhost:8000/api/v1/candidates/parse",
+      "http://localhost:8000/api/v1/demo/rebuild-retrieval-index",
+    ]);
+    expect(fetchMock.mock.calls[0][1]).toEqual(expect.objectContaining({
+      body: JSON.stringify({ text: "candidate source ".repeat(8), persist: true }),
+    }));
+  });
+
+  it("runs the JD-only recommendation pipeline without parsing a candidate", async () => {
     vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "http://localhost:8000");
     const fetchMock = vi.fn()
-      .mockResolvedValueOnce(envelope(parseData("candidate"), "candidate", 200))
       .mockResolvedValueOnce(envelope(parseData("job"), "job", 200))
       .mockResolvedValueOnce(envelope({
         document_version: "retrieval_doc_v4",
         candidate_collection: "candidates",
         job_collection: "jobs",
-        candidate_count: 49,
+        candidate_count: 48,
         job_count: 25,
       }, "index"))
       .mockResolvedValueOnce(envelope(matchRun, "match", 201))
@@ -178,19 +256,16 @@ describe("Phase 12 demo API", () => {
     const stages: string[] = [];
 
     const result = await runDemo({
-      candidateText: "candidate source ".repeat(8),
       jobText: "job source ".repeat(10),
       onStage: (stage) => stages.push(stage),
     });
 
-    expect(stages).toEqual(["candidate", "job", "index", "ranking", "explanation", "complete"]);
-    expect(result.candidate.record?.candidate_id).toBe("cand_parse_demo");
+    expect(stages).toEqual(["job", "index", "ranking", "explanation", "complete"]);
     expect(result.job.record?.job_id).toBe("job_parse_demo");
     expect(result.matchRun.result_fingerprint).toBe("b".repeat(64));
     expect(result.explanationRun.explanations[0].summary.text).toContain("结构化项目证据");
     expect(result.explanationRun.explanations[0].missing_skills[0].requirement_text).toBe("Provide incident response evidence");
     expect(fetchMock.mock.calls.map((call) => call[0])).toEqual([
-      "http://localhost:8000/api/v1/candidates/parse",
       "http://localhost:8000/api/v1/jobs/parse",
       "http://localhost:8000/api/v1/demo/rebuild-retrieval-index",
       "http://localhost:8000/api/v1/match-runs",
@@ -198,12 +273,12 @@ describe("Phase 12 demo API", () => {
     ]);
     expect(fetchMock.mock.calls[0][1]).toEqual(expect.objectContaining({
       method: "POST",
-      body: JSON.stringify({ text: "candidate source ".repeat(8), persist: true }),
+      body: JSON.stringify({ text: "job source ".repeat(10), persist: true }),
     }));
-    expect(fetchMock.mock.calls[2][1]).toEqual(expect.objectContaining({
+    expect(fetchMock.mock.calls[1][1]).toEqual(expect.objectContaining({
       body: JSON.stringify({ confirm: true }),
     }));
-    expect(fetchMock.mock.calls[3][1]).toEqual(expect.objectContaining({
+    expect(fetchMock.mock.calls[2][1]).toEqual(expect.objectContaining({
       body: JSON.stringify({ job_id: "job_parse_demo", ranking_variant: "ltr", candidate_pool_k: 20, top_k: 5 }),
     }));
   });
@@ -213,25 +288,8 @@ describe("Phase 12 demo API", () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(envelope({ draft: {} }, "malformed")));
 
     await expect(runDemo({
-      candidateText: "candidate source ".repeat(8),
       jobText: "job source ".repeat(10),
     })).rejects.toMatchObject({ code: "invalid_response", requestId: "malformed" });
-  });
-
-  it("rejects malformed candidate fields that are outside the ranking display projection", async () => {
-    vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "http://localhost:8000");
-    const candidate = parseData("candidate");
-    const malformed = {
-      ...candidate,
-      draft: { ...candidate.draft, ai_tools: [42] },
-      record: { ...candidate.record, ai_tools: [42] },
-    };
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(envelope(malformed, "malformed-candidate")));
-
-    await expect(runDemo({
-      candidateText: "candidate source ".repeat(8),
-      jobText: "job source ".repeat(10),
-    })).rejects.toMatchObject({ code: "invalid_response", requestId: "malformed-candidate" });
   });
 
   it("maps backend failures to a safe recoverable error without leaking details", async () => {
@@ -244,7 +302,6 @@ describe("Phase 12 demo API", () => {
     }), { status: 503, headers: { "Content-Type": "application/json" } })));
 
     const error = await runDemo({
-      candidateText: "candidate source ".repeat(8),
       jobText: "job source ".repeat(10),
     }).catch((caught) => caught);
 

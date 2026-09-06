@@ -1,5 +1,4 @@
 export type DemoStage =
-  | "candidate"
   | "job"
   | "index"
   | "ranking"
@@ -17,7 +16,7 @@ export type ExtractionMetadata = {
 
 export type CandidateDraft = {
   name: string;
-  skills: Array<{ name: string; category: string; self_reported_level: string }>;
+  skills: Array<{ name: string; category: string; self_reported_level: string | null }>;
   projects: Array<{
     project_id: string;
     name: string;
@@ -71,8 +70,29 @@ export type JobDraft = {
 
 export type CandidateParseData = {
   draft: CandidateDraft;
-  record: ({ candidate_id: string } & CandidateDraft) | null;
+  record: CandidateRecord | null;
   extraction: ExtractionMetadata;
+};
+
+export type CandidateRecord = CandidateDraft & {
+  candidate_id: string;
+  archetype: string | null;
+  raw_text: string;
+  data_origin: "synthetic_sandbox" | "user_created" | "mock_parsed" | "llm_parsed";
+  schema_version: "1.0";
+  dataset_version: string | null;
+};
+
+export type CandidatePage = {
+  items: CandidateRecord[];
+  total: number;
+  limit: number;
+  offset: number;
+};
+
+export type CandidatePoolAddition = {
+  candidate: CandidateParseData;
+  index: DemoIndexData;
 };
 
 export type JobParseData = {
@@ -156,7 +176,6 @@ export type DemoExplanationRun = {
 };
 
 export type DemoRun = {
-  candidate: CandidateParseData;
   job: JobParseData;
   index: DemoIndexData;
   matchRun: DemoMatchRun;

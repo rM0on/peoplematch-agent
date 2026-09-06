@@ -14,6 +14,7 @@
 | Offline Evaluation | `docs/offline-evaluation.md`、final Test artifact | R1/R2 tables | 设计 incomplete-judgment、common-pool、Test-seal evaluator | 证明真实世界泛化或业务提升 |
 | Real LLM boundary | Phase 12 extraction adapter + Phase 9 transport | Real mode config / mock E2E | 支持 OpenAI-compatible Provider 与 deterministic mock | 已验证所有 Provider 或已生产接入 DeepSeek |
 | 推荐产品语义 | `candidate-display-metadata.ts`、中文 Demo-only fixtures | 七步 Story、48 人基础池、Top-K 卡片 | 将岗位 Query → Candidate Retrieval → Ranking 链路做成可交互中文 Demo | 中文展示 metadata 改善了模型效果或改变了离线结果 |
+| Candidate Lifecycle | `candidate-pool-screen.tsx`、existing Candidate parse/list/index APIs | Resume 预览确认、人才库列表、JD-only 推荐 | 实现 Resume → Profile → Candidate Pool → 后续岗位推荐的显式本地流程 | 新增 runtime 候选人改变了冻结数据集或 Phase 11 结果 |
 
 ## 简历可用表述
 
@@ -23,7 +24,7 @@
 
 > 复用 OpenAI-compatible transport 接入真实 LLM extraction/explanation boundary，同时保留 deterministic mock，验证 Provider 错误脱敏与 ranking invariance。
 
-Phase 13 最终验证证据：backend Evidence / extraction focused `168 passed`、全量 `825 passed, 58 skipped`；frontend `55 passed` 并通过 typecheck/lint/build；Node 22 browser E2E `2 passed`。没有 live credential，因此只能说 OpenAI-compatible 边界与 mock transport 已验证，不能说外部 Provider live smoke 已通过。
+Phase 14 最终验证证据：backend 全量 `825 passed, 58 skipped`；frontend `62 passed` 并通过 typecheck/lint/build；Node 22 browser E2E `2 passed`。没有 live credential，因此只能说 OpenAI-compatible 边界与 mock transport 已验证，不能说外部 Provider live smoke 已通过。
 
 ## 高频面试问题
 

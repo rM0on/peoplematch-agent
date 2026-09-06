@@ -16,30 +16,6 @@ vi.mock("@/lib/demo-api", async (importOriginal) => ({
   runDemo: apiMocks.runDemo,
 }));
 
-const candidateDraft = {
-  name: "Candidate Parse Demo",
-  skills: [{ name: "Python", category: "backend", self_reported_level: "advanced" }],
-  projects: [{
-    project_id: "project-1", name: "Matching Console Sandbox",
-    summary: "Built a local matching console with deterministic tests.", role: "Project developer",
-    technologies: ["Python", "FastAPI"], outcomes: ["Documented evaluation workflow"],
-    skills_demonstrated: ["Python"],
-  }],
-  project_evidence: [{
-    evidence_id: "evidence-1", project_id: "project-1", supports_skills: ["Python"],
-    evidence_type: "tests", statement: "The synthetic test suite demonstrates matching behavior.",
-    artifact_ref: "sandbox://demo/tests", verification_status: "available",
-  }],
-  github_url: null,
-  ai_tools: ["FastAPI"],
-  target_roles: ["AI Matching Engineer"],
-  preferred_locations: { cities: ["Shanghai"], remote_policy: "hybrid", relocation_open: false },
-  seniority: "mid",
-  work_style: { team_stage_preference: ["zero_to_one"], collaboration_style: "Collaborative" },
-  missing_fields: ["years_of_experience"],
-  overclaim_risk: { level: "low", reasons: [] },
-};
-
 const jobDraft = {
   company_name: "Northstar Sandbox Labs", role_title: "AI Matching Engineer",
   must_have: [{ requirement_id: "requirement-1", text: "Build matching foundations", category: "role_direction", evidence_expectation: "A working project" }],
@@ -49,10 +25,6 @@ const jobDraft = {
 };
 
 const demoRun = {
-  candidate: {
-    draft: candidateDraft, record: { candidate_id: "cand_parse_demo", ...candidateDraft },
-    extraction: { provider: "deterministic_mock", provider_kind: "mock", attempts: 1, repaired: false, persisted: true, input_fingerprint: "a".repeat(64) },
-  },
   job: {
     draft: jobDraft, record: { job_id: "job_parse_demo", ...jobDraft },
     extraction: { provider: "deterministic_mock", provider_kind: "mock", attempts: 1, repaired: false, persisted: true, input_fingerprint: "b".repeat(64) },
@@ -76,7 +48,7 @@ const demoRun = {
     explanation_run_id: "explanation-demo", match_run_id: "run-demo", status: "COMPLETED", explanation_count: 2,
     created_at: "2026-09-01T00:00:01Z", completed_at: "2026-09-01T00:00:02Z",
     explanations: [
-      { match_explanation_id: 51, output_schema_version: "explanation_output_v1", candidate_id: "cand_parse_demo", result_rank: 1, summary: { text: "This explanation uses recorded matching evidence.", evidence_refs: ["candidate:1:project:1"] }, match_reasons: [{ category: "skill_fit", text: "技能与岗位要求有记录内重合。", evidence_refs: ["candidate:1:skill:1"] }], risk_points: [], missing_skills: [{ requirement_id: "requirement-1", requirement_text: "incident response", priority: "nice_to_have", status: "missing", evidence_status: "absent", evidence_refs: ["job_requirement:1"] }], interview_questions: [{ question: "请说明一次排序坏案例复盘。", evidence_refs: ["candidate:1:project:1"] }], why_not_top1: null },
+      { match_explanation_id: 51, output_schema_version: "explanation_output_v1", candidate_id: "cand_parse_demo", result_rank: 1, summary: { text: "This explanation uses recorded matching evidence.", evidence_refs: ["candidate:1:project:1"] }, match_reasons: [{ category: "skill_fit", text: "Recorded candidate and requirement evidence is available.", evidence_refs: ["candidate:1:skill:1"] }], risk_points: [{ text: "A required recorded requirement has no available evidence.", evidence_refs: ["job_requirement:1"] }], missing_skills: [{ requirement_id: "requirement-1", requirement_text: "incident response", priority: "nice_to_have", status: "missing", evidence_status: "absent", evidence_refs: ["job_requirement:1"] }], interview_questions: [{ question: "请说明一次排序坏案例复盘。", evidence_refs: ["candidate:1:project:1"] }], why_not_top1: null },
       { match_explanation_id: 52, output_schema_version: "explanation_output_v1", candidate_id: "cand_005", result_rank: 2, summary: { text: "该候选人保留在第二位。", evidence_refs: ["candidate:2:ranking:1"] }, match_reasons: [], risk_points: [], missing_skills: [], interview_questions: [], why_not_top1: null },
     ],
   },
@@ -91,18 +63,20 @@ afterEach(() => {
 describe("MatchingResultsScreen Phase 12 demo", () => {
   it("opens as a Job-query-driven recommendation system instead of a score mock", () => {
     render(<MatchingResultsScreen />);
-    expect(screen.getByRole("heading", { name: "AI 人岗匹配推荐工作台" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "AI 人才推荐工作台" })).toBeTruthy();
     expect(screen.getByText(/岗位 JD 是推荐查询 Query/)).toBeTruthy();
-    expect(screen.getByText(/从冻结的 48 人候选池召回、计算特征并返回 Top-K/)).toBeTruthy();
+    expect(screen.getAllByText(/从人才库召回候选人/).length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText(/LLM 负责结构化与解释，不直接决定排序/)).toBeTruthy();
     for (const step of ["输入岗位需求", "结构化解析", "候选召回", "特征计算", "LambdaMART 排序", "证据解释", "历史复核"]) {
       expect(screen.getByText(step)).toBeTruthy();
     }
-    expect(screen.getByRole("button", { name: "加载中文安全示例" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "开始完整匹配" })).toBeTruthy();
-    expect(screen.getByLabelText("候选人简历文本")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "加载中文 JD 示例" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "开始推荐" })).toBeTruthy();
+    expect(screen.queryByLabelText("候选人简历文本")).toBeNull();
     expect(screen.getByLabelText("岗位描述文本")).toBeTruthy();
     expect(screen.getByRole("link", { name: "推荐工作台" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "人才库管理" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "推荐记录" })).toBeTruthy();
     expect(screen.getByRole("link", { name: "Bad Case 复核" })).toBeTruthy();
     for (const unavailable of ["Overview", "Candidates", "Jobs", "Runs", "Evaluation"]) {
       expect(screen.queryByRole("button", { name: unavailable })).toBeNull();
@@ -112,12 +86,12 @@ describe("MatchingResultsScreen Phase 12 demo", () => {
     expect(document.body.textContent).not.toContain("Final score");
   });
 
-  it("loads the exact synthetic fixture and keeps it editable", async () => {
+  it("loads only the synthetic JD fixture and keeps it editable", async () => {
     const user = userEvent.setup();
     apiMocks.fetchDemoSamples.mockResolvedValue({ data_origin: "synthetic_sandbox", candidate_text: "Synthetic candidate fixture\n", job_text: "Synthetic job fixture\n" });
     render(<MatchingResultsScreen />);
-    await user.click(screen.getByRole("button", { name: "加载中文安全示例" }));
-    expect((screen.getByLabelText("候选人简历文本") as HTMLTextAreaElement).value).toBe("Synthetic candidate fixture\n");
+    await user.click(screen.getByRole("button", { name: "加载中文 JD 示例" }));
+    expect(screen.queryByLabelText("候选人简历文本")).toBeNull();
     expect((screen.getByLabelText("岗位描述文本") as HTMLTextAreaElement).value).toBe("Synthetic job fixture\n");
     expect(screen.getByText("示例数据为 synthetic sandbox，不包含真实个人信息。")).toBeTruthy();
   });
@@ -125,28 +99,34 @@ describe("MatchingResultsScreen Phase 12 demo", () => {
   it("shows real MatchRun evidence, raw margin, trace, and grounded explanation", async () => {
     const user = userEvent.setup();
     apiMocks.runDemo.mockImplementation(async ({ onStage }) => {
-      for (const stage of ["candidate", "job", "index", "ranking", "explanation", "complete"] as const) onStage?.(stage);
+      for (const stage of ["job", "index", "ranking", "explanation", "complete"] as const) onStage?.(stage);
       return demoRun;
     });
     render(<MatchingResultsScreen />);
-    fireEvent.change(screen.getByLabelText("候选人简历文本"), { target: { value: "candidate source ".repeat(8) } });
     fireEvent.change(screen.getByLabelText("岗位描述文本"), { target: { value: "job source ".repeat(10) } });
-    await user.click(screen.getByRole("button", { name: "开始完整匹配" }));
+    await user.click(screen.getByRole("button", { name: "开始推荐" }));
     expect(screen.getByRole("heading", { name: "AI Matching Engineer" })).toBeTruthy();
     expect(screen.getByText("岗位候选池 Top-K 推荐")).toBeTruthy();
-    expect(screen.getByText(/本次输入候选人/)).toBeTruthy();
     expect(screen.getByText("候选人 005")).toBeTruthy();
     expect(screen.getByText("推荐算法工程方向")).toBeTruthy();
     expect(screen.getByText("Learning To Rank 建模")).toBeTruthy();
     expect(screen.getByText("技术 ID · cand_005")).toBeTruthy();
     expect(screen.getAllByText("1.254321")).toHaveLength(2);
     expect(screen.getAllByText("排序模型分值（LTR Score）").length).toBeGreaterThanOrEqual(2);
+    expect(screen.getAllByText("高度推荐").length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText("该分值仅用于候选人排序，不是匹配概率、录用概率或推荐成功率。")).toBeTruthy();
     expect(screen.getByText("为什么推荐该候选人")).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "推荐优势" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "风险提示" })).toBeTruthy();
+    expect(screen.getByText("技术证据")).toBeTruthy();
     expect(screen.getByText("不可变运行轨迹")).toBeTruthy();
     expect(screen.getByText("历史复核").closest("li")?.getAttribute("aria-current")).toBe("step");
     expect(screen.getByText("该解释使用已记录的人岗匹配证据。")).toBeTruthy();
+    expect(screen.getByText("候选人能力与岗位要求均有已记录证据支持。")).toBeTruthy();
+    expect(screen.getByText("岗位必备要求暂未找到对应证据。")).toBeTruthy();
     expect(document.body.textContent).not.toContain("This explanation uses recorded matching evidence.");
+    expect(document.body.textContent).not.toContain("Recorded candidate and requirement evidence is available.");
+    expect(document.body.textContent).not.toContain("A required recorded requirement has no available evidence.");
     expect(screen.getByText("candidate:1:project:1")).toBeTruthy();
     expect(screen.getByText("run-demo")).toBeTruthy();
     const trace = screen.getByRole("heading", { name: "不可变运行轨迹" }).closest("section");
@@ -159,6 +139,7 @@ describe("MatchingResultsScreen Phase 12 demo", () => {
     expect(document.body.textContent).not.toMatch(/准确率|95\.9%|final score/i);
     await user.click(screen.getByRole("button", { name: /查看第 2 名/ }));
     expect(screen.getAllByText("0.875000")).toHaveLength(2);
+    expect(screen.getAllByText("推荐").length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText("该候选人保留在第二位。")).toBeTruthy();
   });
 
@@ -166,9 +147,8 @@ describe("MatchingResultsScreen Phase 12 demo", () => {
     const user = userEvent.setup();
     apiMocks.runDemo.mockRejectedValue(new DemoApiError("Extraction provider is unavailable", 503, "provider_unavailable", "request-safe"));
     render(<MatchingResultsScreen />);
-    fireEvent.change(screen.getByLabelText("候选人简历文本"), { target: { value: "candidate source ".repeat(8) } });
     fireEvent.change(screen.getByLabelText("岗位描述文本"), { target: { value: "job source ".repeat(10) } });
-    await user.click(screen.getByRole("button", { name: "开始完整匹配" }));
+    await user.click(screen.getByRole("button", { name: "开始推荐" }));
     const alert = screen.getByRole("alert");
     expect(alert.textContent).toContain("模型服务暂不可用");
     expect(alert.textContent).toContain("request-safe");

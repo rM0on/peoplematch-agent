@@ -8,7 +8,7 @@
 
 [3 分钟演示指南](docs/demo-guide.md) · [Quick Start](#quick-startwindows-powershell) · [架构文档](docs/architecture.md) · [离线评测协议](docs/offline-evaluation.md)
 
-![PeopleMatch Agent 岗位候选池 Top-K 排序结果](screenshots/phase13-top-k-ranking-1440x1280.png)
+![PeopleMatch Agent 岗位候选池 Top-K 排序结果](screenshots/phase14-top-k-ranking-1440x1280.png)
 
 **核心能力**
 
@@ -17,26 +17,40 @@
 - **LLM Application**：结构化 Profile；基于 Evidence Bundle 生成解释，不直接打分或重排。
 - **Evaluation & Review**：Offline Evaluation、MatchRun、Feedback 与 Bad Case Analysis 形成可审计证据链。
 
-[查看推荐工作台](screenshots/phase13-product-home-1440x1024.png) · [查看中文输入](screenshots/phase13-chinese-input-1440x1024.png) · [查看 Evidence 解释](screenshots/phase13-evidence-explanation.png) · [查看历史复核](screenshots/phase13-historical-review-1440x1024.png) · [作品集证据](docs/portfolio-evidence.md)
+[查看 JD 推荐工作台](screenshots/phase14-jd-workbench-1440x1024.png) · [查看人才库](screenshots/phase14-talent-library-1440x1024.png) · [查看 Candidate Profile 预览](screenshots/phase14-candidate-preview-1440x1024.png) · [查看 Evidence 解释](screenshots/phase14-evidence-explanation.png) · [查看历史复核](screenshots/phase14-historical-review-1440x1024.png) · [作品集证据](docs/portfolio-evidence.md)
 
 ## 推荐系统如何工作
 
-交互区允许粘贴一份 Resume 和一份 JD，是为了演示“新增候选人 + 新岗位 Query”的完整链路。系统并不是拿这两个文本直接输出一个分数：
+默认入口是岗位推荐：招聘者输入 JD Query，系统从 Candidate Pool 执行 Hybrid Retrieval、显式特征计算与 LambdaMART Ranking，输出该岗位下的 Top-K 候选人。Resume 不再出现在推荐入口；它属于人才库管理，用于新增候选人。
 
-1. Resume 被解析并作为一个可交互候选人加入运行时索引；
-2. JD 被解析为岗位 Query；
-3. 系统从整个候选池执行召回、特征计算和排序；
-4. 最终返回该岗位下的 Top-K 候选人推荐，其中会标出本次输入的候选人。
+### Candidate Lifecycle
 
-冻结的 48 人 Candidate Pool 不因展示层变化而改变；中文姓名/方向/优势来自独立的前端 presentation metadata，不写回 Candidate Profile，也不参与 Retrieval、Feature Engineering、LambdaMART 或 Evaluation fingerprint。中文 Resume/JD 安全示例同样只服务交互演示，不进入 Phase 11 Offline Evaluation。
+```mermaid
+flowchart LR
+  Resume[Resume Text] --> Extract[Structured Profile Extraction]
+  Extract --> Profile[Candidate Profile]
+  Profile --> Pool[Candidate Pool]
+  JD[岗位 JD Query] --> Retrieval[Hybrid Retrieval]
+  Pool --> Retrieval
+  Retrieval --> Ranking[Feature Engineering + LambdaMART]
+  Ranking --> TopK[Top-K Recommendation]
+  TopK --> Explain[Evidence-grounded Explanation]
+  Explain --> Review[Feedback / Bad Case Review]
+```
+
+人才库页面采用“解析预览 → 人工确认 → PostgreSQL 持久化 → 刷新 Qdrant 派生索引”的显式流程。新候选人会参与后续岗位推荐，但不会写入冻结数据集、修改原有 48 人 Candidate Profile 或影响 Phase 11 Evaluation fingerprint。
+
+冻结的 48 人基础 Candidate Pool 不因展示层变化而改变；中文姓名/方向/优势来自独立的前端 presentation metadata，不写回 Candidate Profile，也不参与 Retrieval、Feature Engineering、LambdaMART 或 Evaluation fingerprint。中文 Resume/JD 安全示例只服务交互演示，不进入 Phase 11 Offline Evaluation。
 
 ## Algorithm Pipeline
 
 ```mermaid
 flowchart LR
-  Input[Resume / JD 输入] --> Extract[结构化信息抽取]
-  Extract --> Representation[Candidate / Job Representation]
-  Representation --> Retrieval[Hybrid Retrieval<br/>Dense + Sparse + RRF]
+  Resume[Resume 入库] --> Extract[Candidate Profile 抽取]
+  Extract --> Pool[Candidate Pool]
+  JD[岗位 JD Query] --> Job[Job Representation]
+  Pool --> Retrieval[Hybrid Retrieval<br/>Dense + Sparse + RRF]
+  Job --> Retrieval
   Retrieval --> Features[Feature Engineering<br/>10 个冻结特征]
   Features --> LTR[LambdaMART Ranking<br/>默认排序所有者]
   LTR -. optional .-> CE[Cross-Encoder Reranking]
@@ -221,7 +235,7 @@ npm install
 npm run dev
 ```
 
-打开 `http://localhost:3000`，点击“加载中文安全示例”后运行完整推荐。
+打开 `http://localhost:3000`：在“推荐工作台”点击“加载中文 JD 示例”即可运行岗位驱动的 Top-K 推荐；在“人才库管理”可加载中文 Resume 示例，先预览 Structured Profile，再确认加入本地人才库。
 
 ### Model artifact 准备
 
@@ -268,14 +282,14 @@ docker compose stop
 
 ```text
 backend/app/services/
-  profile_extraction/   # schema-first mock / real provider parsing
+  profile_extraction/   # schema-first Resume/JD parsing
   retrieval/            # Dense / BM25 / RRF
   ranking/              # feature + LTR + optional CE
   match_runs/           # immutable execution history
   explanation/          # Evidence Bundle and grounded output
   feedback/             # Feedback / BadCase review
   evaluation/           # Phase 11 offline evaluator
-frontend/src/           # Next.js product and review UI
+frontend/src/           # JD 推荐、人才库、推荐记录与复核 UI
 data/                   # synthetic dataset, contracts, frozen evidence
 docs/                   # architecture, protocol, demo and portfolio evidence
 scripts/                # data, model, evaluation and readiness entrypoints
@@ -289,7 +303,7 @@ scripts/                # data, model, evaluation and readiness entrypoints
 - Offline evaluation：immutable manifest、file hashes、pool/order fingerprint、Test seal 与 claim limitations。
 
 - Backend Evidence / extraction focused：`168 passed`；全量 backend：`825 passed, 58 skipped`（条件性 integration skip 不计为 PASS）。
-- Frontend：`55 passed`，typecheck / ESLint / production build 均 PASS；真实 E2E 使用 Node `22.23.2`。
+- Frontend：`62 passed`，typecheck / ESLint / production build 均 PASS；真实 E2E 使用 Node `22.23.2`。
 - Browser E2E：`2 passed`；使用独立 disposable PostgreSQL + Qdrant，覆盖主链路、ranking invariance、历史复核与 Provider 错误恢复。
 - Real-provider live smoke：`NOT RUN — LOCAL PROVIDER CREDENTIAL REQUIRED`。
 
@@ -299,7 +313,7 @@ scripts/                # data, model, evaluation and readiness entrypoints
 
 ## 项目状态
 
-Phase 0–13 已 **Completed / Frozen**。Phase 13 只增强中文推荐产品表达、Demo fixtures 与展示 metadata；冻结算法与 Phase 11 评测未改变。当前交付是可本地运行、可复现、可审计的产品原型，不是 production deployment。详见 [Development Roadmap](docs/development-roadmap.md)。
+Phase 0–14 已 **Completed / Frozen**。Phase 14 将 JD 推荐与 Resume 入库拆成两个清晰产品流程；它只复用既有 typed API、Profile 持久化与派生索引刷新，没有改变冻结算法、48 人源数据或 Phase 11 评测。当前交付是可本地运行、可复现、可审计的产品原型，不是 production deployment。详见 [Development Roadmap](docs/development-roadmap.md)。
 
 ---
 

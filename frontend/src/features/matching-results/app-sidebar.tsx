@@ -2,14 +2,16 @@
 
 import { CirclesThreePlusIcon } from "@phosphor-icons/react/dist/csr/CirclesThreePlus";
 import { FolderOpenIcon } from "@phosphor-icons/react/dist/csr/FolderOpen";
+import { ClockCounterClockwiseIcon } from "@phosphor-icons/react/dist/csr/ClockCounterClockwise";
 import { SparkleIcon } from "@phosphor-icons/react/dist/csr/Sparkle";
 import { TargetIcon } from "@phosphor-icons/react/dist/csr/Target";
+import { UsersThreeIcon } from "@phosphor-icons/react/dist/csr/UsersThree";
 import { WarningCircleIcon } from "@phosphor-icons/react/dist/csr/WarningCircle";
 import Link from "next/link";
 
 import styles from "./matching-results.module.css";
 
-export function AppSidebar({ active = "matching" }: { active?: "matching" | "bad-cases" }) {
+export function AppSidebar({ active = "matching" }: { active?: "matching" | "candidates" | "runs" | "bad-cases" }) {
   return (
     <aside className={styles.sidebar} aria-label="Primary navigation">
       <Link className={styles.brand} href="/" aria-label="PeopleMatch Agent home">
@@ -28,6 +30,14 @@ export function AppSidebar({ active = "matching" }: { active?: "matching" | "bad
           <Link className={`${styles.navItem} ${active === "matching" ? styles.navItemActive : ""}`} href="/">
             <TargetIcon size={17} weight="bold" />
             <span>推荐工作台</span>
+          </Link>
+          <Link className={`${styles.navItem} ${active === "candidates" ? styles.navItemActive : ""}`} href="/candidates">
+            <UsersThreeIcon size={17} />
+            <span>人才库管理</span>
+          </Link>
+          <Link className={`${styles.navItem} ${active === "runs" ? styles.navItemActive : ""}`} href="/runs">
+            <ClockCounterClockwiseIcon size={17} />
+            <span>推荐记录</span>
           </Link>
           <Link className={`${styles.navItem} ${active === "bad-cases" ? styles.navItemActive : ""}`} href="/bad-cases">
             <WarningCircleIcon size={17} />

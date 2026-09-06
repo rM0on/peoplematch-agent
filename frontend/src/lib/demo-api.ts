@@ -1,6 +1,6 @@
 import type {
   CandidateDraft,
-  CandidateParseData,
+  CandidatePage,
   DemoExplanation,
   DemoExplanationRun,
   DemoIndexData,
@@ -12,6 +12,9 @@ import type {
   ExtractionMetadata,
   JobDraft,
   JobParseData,
+  CandidateParseData,
+  CandidatePoolAddition,
+  CandidateRecord,
 } from "@/types/demo";
 
 
@@ -76,7 +79,8 @@ function isCandidateDraft(value: unknown): value is CandidateDraft {
   return isObject(value)
     && isString(value.name)
     && Array.isArray(value.skills)
-    && value.skills.every((skill) => isObject(skill) && isString(skill.name) && isString(skill.category) && isString(skill.self_reported_level))
+    && value.skills.every((skill) => isObject(skill) && isString(skill.name) && isString(skill.category)
+      && (skill.self_reported_level === null || isString(skill.self_reported_level)))
     && Array.isArray(value.projects)
     && value.projects.every((project) => isObject(project)
       && isString(project.project_id)
@@ -112,6 +116,33 @@ function isCandidateDraft(value: unknown): value is CandidateDraft {
     && isStringArray(value.overclaim_risk.reasons);
 }
 
+function isCandidateRecord(value: unknown): value is CandidateRecord {
+  return isObject(value)
+    && isString(value.candidate_id)
+    && (value.archetype === null || isString(value.archetype))
+    && isString(value.raw_text)
+    && ["synthetic_sandbox", "user_created", "mock_parsed", "llm_parsed"].includes(String(value.data_origin))
+    && value.schema_version === "1.0"
+    && (value.dataset_version === null || isString(value.dataset_version))
+    && isCandidateDraft(value);
+}
+
+function isCandidateParseData(value: unknown): value is CandidateParseData {
+  return isObject(value)
+    && isCandidateDraft(value.draft)
+    && (value.record === null || isCandidateRecord(value.record))
+    && isExtraction(value.extraction);
+}
+
+function isCandidatePage(value: unknown): value is CandidatePage {
+  return isObject(value)
+    && Array.isArray(value.items)
+    && value.items.every(isCandidateRecord)
+    && isInteger(value.total)
+    && isInteger(value.limit)
+    && isInteger(value.offset);
+}
+
 function isJobDraft(value: unknown): value is JobDraft {
   return isObject(value)
     && isString(value.company_name)
@@ -129,13 +160,6 @@ function isJobDraft(value: unknown): value is JobDraft {
     && isStringArray(value.seniority_requirement)
     && isString(value.product_stage)
     && isStringArray(value.evaluation_focus);
-}
-
-function isCandidateParseData(value: unknown): value is CandidateParseData {
-  return isObject(value)
-    && isCandidateDraft(value.draft)
-    && (value.record === null || (isObject(value.record) && isString(value.record.candidate_id) && isCandidateDraft(value.record)))
-    && isExtraction(value.extraction);
 }
 
 function isJobParseData(value: unknown): value is JobParseData {
@@ -291,24 +315,39 @@ export async function fetchDemoSamples(): Promise<DemoSamples> {
   return request("/api/v1/demo/samples", isDemoSamples);
 }
 
-export async function runDemo({
-  candidateText,
-  jobText,
-  onStage,
-}: {
-  candidateText: string;
-  jobText: string;
-  onStage?: (stage: DemoStage) => void;
-}): Promise<DemoRun> {
-  onStage?.("candidate");
+export async function listCandidates(limit = 100, offset = 0): Promise<CandidatePage> {
+  return request(`/api/v1/candidates?limit=${limit}&offset=${offset}`, isCandidatePage);
+}
+
+export async function previewCandidate(text: string): Promise<CandidateParseData> {
+  return request("/api/v1/candidates/parse", isCandidateParseData, {
+    method: "POST",
+    body: JSON.stringify({ text, persist: false }),
+  });
+}
+
+export async function addCandidateToPool(text: string): Promise<CandidatePoolAddition> {
   const candidate = await request("/api/v1/candidates/parse", isCandidateParseData, {
     method: "POST",
-    body: JSON.stringify({ text: candidateText, persist: true }),
+    body: JSON.stringify({ text, persist: true }),
   });
   if (!candidate.record) {
     throw new DemoApiError("候选人档案未持久化。", 200, "invalid_response", null);
   }
+  const index = await request("/api/v1/demo/rebuild-retrieval-index", isIndex, {
+    method: "POST",
+    body: JSON.stringify({ confirm: true }),
+  });
+  return { candidate, index };
+}
 
+export async function runDemo({
+  jobText,
+  onStage,
+}: {
+  jobText: string;
+  onStage?: (stage: DemoStage) => void;
+}): Promise<DemoRun> {
   onStage?.("job");
   const job = await request("/api/v1/jobs/parse", isJobParseData, {
     method: "POST",
@@ -343,5 +382,5 @@ export async function runDemo({
   );
 
   onStage?.("complete");
-  return { candidate, job, index, matchRun, explanationRun };
+  return { job, index, matchRun, explanationRun };
 }

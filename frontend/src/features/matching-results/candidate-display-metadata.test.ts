@@ -42,4 +42,12 @@ describe("candidate display metadata", () => {
     });
     expect(candidateDisplayCatalog).not.toHaveProperty("cand_parse_runtime");
   });
+
+  it("does not describe an indexed runtime candidate as the current recommendation input", () => {
+    expect(getCandidatePresentation("cand_parse_runtime")).toEqual({
+      label: "人才库候选人",
+      direction: "候选方向待确认",
+      strengths: ["已完成结构化解析", "等待项目证据复核"],
+    });
+  });
 });

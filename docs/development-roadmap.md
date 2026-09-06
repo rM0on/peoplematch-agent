@@ -136,3 +136,12 @@ Only the phase explicitly requested by the user may be implemented. Status value
 - **Primary deliverables:** Chinese deterministic Demo-only Resume/JD fixtures; presentation-only metadata for all 48 frozen Candidate IDs; seven-step recommendation Story Mode; Chinese-first Top-K, Evidence, MatchRun, Feedback, and Bad Case presentation; real final screenshots.
 - **Dependency:** Phase 12 local prototype complete and Phase 11 evaluation frozen.
 - **Quality gate:** The Chinese fixtures stay outside Offline Evaluation; presentation metadata is never sent to retrieval/ranking; the real browser flow proves the frozen 48-person pool plus one runtime Demo candidate, LambdaMART Top-K, Evidence-grounded Explanation, ranking invariance, and persisted review. Backend, frontend, E2E, screenshot, privacy, and Phase 11 protection audits pass without dataset, split, model, strategy, metric, or artifact mutation.
+
+## Phase 14 — Candidate Lifecycle Productization
+
+**Status:** Completed / Frozen
+
+- **Objective:** Separate the recruiter’s JD-driven recommendation workflow from the HR candidate-ingestion workflow without changing the frozen recommendation algorithms or evaluation evidence.
+- **Primary deliverables:** JD-only default recommendation entry; working talent-library and recommendation-history navigation; Resume preview/confirm/persist/index-refresh flow through existing typed APIs; productized Candidate/LTR/Evidence presentation; Candidate Lifecycle documentation; disposable browser E2E and current screenshots.
+- **Dependency:** Phase 13 Chinese recommendation experience complete; Phase 11 artifacts remain frozen.
+- **Quality gate:** A Node 22 browser E2E adds one synthetic runtime Candidate to a disposable PostgreSQL database, refreshes isolated Qdrant collections from 48 to 49 Candidates, then completes JD Query → Hybrid Retrieval → LambdaMART Top-K → grounded explanation and historical review. Full backend and frontend gates pass; dataset, labels, splits, retrieval, features, models, ranking semantics, evaluation contracts/results, and the original 48 Candidate Profiles have zero diff.

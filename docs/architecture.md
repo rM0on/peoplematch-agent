@@ -6,7 +6,7 @@ PeopleMatch Agent is a local monorepo with these logical areas:
 
 | Area | Responsibility | Current status |
 |---|---|---|
-| Frontend | Product UI and typed API consumption | **PHASE 12 COMPLETED / FROZEN:** Evidence-first Resume/JD workbench plus frozen Feedback and Bad Case product integration |
+| Frontend | Product UI and typed API consumption | **PHASE 14 COMPLETED / FROZEN:** JD-first recommendation workbench, explicit Candidate Lifecycle, recommendation history, and frozen Feedback/Bad Case integration |
 | Backend | HTTP boundary, application configuration, tracing, canonical data contracts | **CURRENT:** FastAPI profile/matching/explanation APIs plus frozen Phase 10 review services and typed API commands |
 | Storage | Durable profile, historical execution, explanation, and review data | **CURRENT:** PostgreSQL profiles, immutable Phase 8/9 history, and append-only Phase 10 Feedback/BadCase audit |
 | Retrieval | Candidate/job first-stage recall and vector search | **CURRENT / PHASE 4 COMPLETED:** versioned documents, local pretrained dense embeddings, Qdrant exact search, BM25, explicit filters, RRF, and offline retrieval evaluation |
@@ -18,7 +18,9 @@ PeopleMatch Agent is a local monorepo with these logical areas:
 
 ## Current Phase Architecture
 
-**CURRENT / PHASE 12 COMPLETED / FROZEN:** The local interactive Resume/JD path runs through the existing extraction, retrieval, ranking, historical explanation, and review boundaries. Real structured extraction composes the frozen Phase 9 OpenAI-compatible transport rather than adding a parallel client; deterministic mock remains the default for tests and offline demos. The browser uses typed runtime-validated contracts and exposes raw LTR margin, Evidence refs, and immutable trace without inventing a probability or hiring score. The external live-provider smoke is not claimed because no local credential was configured.
+**CURRENT / PHASE 14 COMPLETED / FROZEN:** Recommendation and ingestion are separate product flows. A Job Description is the default recommendation Query and drives Candidate Retrieval → Feature Engineering → LambdaMART Top-K → Evidence-grounded Explanation. Resume Text belongs to talent-library management: the user previews a schema-validated Candidate Profile, explicitly confirms persistence, and then refreshes the derived Qdrant index. PostgreSQL remains profile truth; runtime candidates do not mutate the frozen 48-person dataset or Phase 11 artifacts.
+
+Real structured extraction continues to compose the frozen Phase 9 OpenAI-compatible transport rather than adding a parallel client; deterministic mock remains the default for tests and offline demos. The browser uses typed runtime-validated contracts and exposes raw LTR margin, Evidence refs, and immutable trace without inventing a probability or hiring score. The external live-provider smoke is not claimed because no local credential was configured.
 
 The frozen file-backed `phase11_eval_protocol_v1` evaluator and selected artifacts are read-only Phase 12 evidence. The corrected formal run `20260831T173246Z_test_corrected_final` preserves Sparse and LTR as predeclared Dev leaders. Its five synthetic Test Jobs remain a post-exposure fixed sandbox evaluation, not pristine held-out or real-world generalization. See `docs/offline-evaluation.md`.
 

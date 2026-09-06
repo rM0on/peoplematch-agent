@@ -325,7 +325,7 @@
 }
 .inputGrid {
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:1fr;
   gap:14px;
   margin-top:18px
 }
@@ -536,6 +536,17 @@
   color:#17685f;
   font:800 15px var(--font-mono),monospace
 }
+.recommendationTier {
+  display:inline-flex;
+  align-items:center;
+  width:max-content;
+  padding:3px 7px;
+  border-radius:999px;
+  background:#dcece6;
+  color:#17685f;
+  font-size:10px;
+  font-weight:800
+}
 .detail {
   min-width:0
 }
@@ -574,6 +585,9 @@
 }
 .scoreMeta>span,.scoreHeader code,.scoreHeader small {
   display:block
+}
+.scoreMeta .recommendationTier {
+  margin:5px 0 10px auto
 }
 .scoreMeta>span {
   color:#33736a;
@@ -639,11 +653,14 @@
   gap:5px
 }
 .refs code {
+  max-width:100%;
   padding:4px 6px;
   border-radius:5px;
   background:#eaf2ef;
   color:#24675e;
-  font-size:9px
+  font-size:9px;
+  overflow-wrap:anywhere;
+  white-space:normal
 }
 .explanation .risk {
   color:#94601a
@@ -654,6 +671,41 @@
   background:#f2f7f4;
   color:#45665d;
   font-size:10px
+}
+.explanationGrid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin:12px 0
+}
+.explanationGrid>div {
+  padding:12px;
+  border:1px solid #e0e5e1;
+  border-radius:8px;
+  background:#fbfcf9
+}
+.explanationGrid h5 {
+  margin:0 0 7px;
+  color:#304c44;
+  font-size:12px
+}
+.explanationGrid ul {
+  display:grid;
+  gap:5px;
+  margin:0;
+  padding-left:18px;
+  color:#5b6b64;
+  font-size:11px;
+  line-height:1.5
+}
+.technicalEvidence summary {
+  cursor:pointer;
+  color:#33736a;
+  font-size:11px;
+  font-weight:800
+}
+.technicalEvidence .refs {
+  margin-top:8px
 }
 .trace ol {
   display:grid;
@@ -730,6 +782,23 @@
   }
 }
 @media(max-width:700px) {
+  .sidebar {
+    grid-template-columns:1fr;
+    gap:10px
+  }
+  .sidebarNav {
+    width:100%;
+    justify-content:stretch
+  }
+  .navGroup {
+    width:100%;
+    display:grid;
+    grid-template-columns:1fr 1fr
+  }
+  .navItem {
+    min-width:0;
+    justify-content:center
+  }
   .hero,.jobBar,.storyHeader,.sectionTitle,.inputFooter,.resultHeader,.scoreHeader {
     align-items:stretch;
     flex-direction:column
@@ -771,6 +840,12 @@
   .scoreMeta {
     max-width:none;
     text-align:left
+  }
+  .scoreMeta .recommendationTier {
+    margin-left:0
+  }
+  .explanationGrid {
+    grid-template-columns:1fr
   }
   .historyButton,.secondaryButton,.primaryButton {
     width:100%

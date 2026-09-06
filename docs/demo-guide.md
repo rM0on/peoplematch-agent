@@ -7,10 +7,10 @@ Phase 12 冻结时的 live-provider smoke 状态为 `NOT RUN — LOCAL PROVIDER 
 ## 3 分钟招聘者演示
 
 1. 打开首页，用一句话定位：这是岗位 Query 驱动的 Candidate Retrieval + Ranking 推荐系统，LLM 不直接给排名。
-2. 指向七阶段流程，说明 JD 是检索 Query；Resume 是一个运行时交互候选人，系统仍从冻结的 48 人基础 Candidate Pool 执行 Top-K 推荐，而不是给输入简历单独打分。
-3. 点击“加载中文安全示例”，指出中文 Resume/JD 只是 Demo-only deterministic fixture，不进入 Phase 11 Offline Evaluation；再点击“开始完整匹配”。
-4. 在结果页指出三件事：`LTR Score` 是排序模型分值，不是概率、匹配百分比、录用概率或推荐成功率；中文候选人展示 metadata 与技术 ID 同时保留；切换候选人时解释来自对应历史结果。
-5. 打开“复核历史结果”，说明 Feedback 是观察、BadCase 是调查，不会自动变成训练标签。
+2. 打开“人才库管理”，说明 Resume 先解析为 Structured Profile；点击“加载中文 Resume 示例”→“解析候选人”，查看预览后再确认加入 Candidate Pool。该 runtime 候选人不进入 Phase 11 数据集。
+3. 回到“推荐工作台”，指出 JD 是检索 Query；点击“加载中文 JD 示例”→“开始推荐”，系统会从整个人才库执行候选召回与 Top-K 排序，不是给单份简历打分。
+4. 在结果页指出三件事：`LTR Score` 是排序模型分值，不是概率、匹配百分比、录用概率或推荐成功率；推荐等级只按当前 Top-K 名次展示；切换候选人时解释来自对应历史结果。
+5. 打开“推荐记录”或“复核历史结果”，说明 Feedback 是观察、BadCase 是调查，不会自动变成训练标签。
 6. 回到 README 指标表：LTR Test NDCG@5 为 0.9593，但只能解释为 5 个已暴露 synthetic Test Jobs 上的描述性结果。
 
 ## 8–10 分钟技术演示
@@ -18,6 +18,7 @@ Phase 12 冻结时的 live-provider smoke 状态为 `NOT RUN — LOCAL PROVIDER 
 ### 1. 输入与结构化
 
 - 说明 mock 模式确保测试与 E2E 可复现；Real mode 复用 OpenAI-compatible transport。
+- Resume 通过“解析预览 → 确认入库 → 刷新派生索引”进入 Candidate Pool；岗位 JD 始终作为推荐 Query。
 - 强调 schema-first validation、长度上限、timeout/retry、错误脱敏；无法确认的信息保持 missing。
 
 ### 2. 召回与排序
