@@ -145,3 +145,12 @@ Only the phase explicitly requested by the user may be implemented. Status value
 - **Primary deliverables:** JD-only default recommendation entry; working talent-library and recommendation-history navigation; Resume preview/confirm/persist/index-refresh flow through existing typed APIs; productized Candidate/LTR/Evidence presentation; Candidate Lifecycle documentation; disposable browser E2E and current screenshots.
 - **Dependency:** Phase 13 Chinese recommendation experience complete; Phase 11 artifacts remain frozen.
 - **Quality gate:** A Node 22 browser E2E adds one synthetic runtime Candidate to a disposable PostgreSQL database, refreshes isolated Qdrant collections from 48 to 49 Candidates, then completes JD Query → Hybrid Retrieval → LambdaMART Top-K → grounded explanation and historical review. Full backend and frontend gates pass; dataset, labels, splits, retrieval, features, models, ranking semantics, evaluation contracts/results, and the original 48 Candidate Profiles have zero diff.
+
+## Phase 15 — Production AI Provider Architecture Upgrade
+
+**Status:** Completed / Frozen
+
+- **Objective:** Accept arbitrary JD text through an explicitly configured OpenAI-compatible extraction path and produce Evidence-grounded explanations without transferring ranking ownership to the LLM.
+- **Primary deliverables:** Independent extraction/explanation task adapters over one shared transport; provider-neutral environment configuration with legacy DeepSeek compatibility; versioned Prompt assets and fingerprints; read-only Provider status; stable safe error mapping; bounded frontend loading/retry states; OpenAI-compatible MockTransport and deterministic mock browser E2E.
+- **Dependency:** Phase 14 JD-first product flow and Candidate Lifecycle complete; Phase 11 evaluation and the frozen retrieval/ranking/evidence contracts remain unchanged.
+- **Quality gate:** Backend and frontend regressions, Node 22 typecheck/lint/build, disposable PostgreSQL/Qdrant browser E2E, ranking invariance, Prompt provenance, doctor, secret/privacy scan, screenshot review, and frozen-path audit pass. Live external Provider smoke remains `NOT RUN — LOCAL PROVIDER CREDENTIAL REQUIRED`; compatibility evidence is not presented as network connectivity or vendor certification.

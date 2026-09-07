@@ -102,7 +102,11 @@ class JobParseRequest(ContractModel):
 class ExtractionMetadata(ContractModel):
     provider: str
     provider_kind: str
-    attempts: int = Field(ge=1)
+    prompt_version: str = Field(
+        pattern=r"^(candidate|job)_extraction_prompt_v1$"
+    )
+    prompt_fingerprint: str = Field(pattern=r"^[a-f0-9]{64}$")
+    attempts: int = Field(ge=1, le=2)
     repaired: bool
     persisted: bool
     input_fingerprint: str = Field(pattern=r"^[a-f0-9]{64}$")

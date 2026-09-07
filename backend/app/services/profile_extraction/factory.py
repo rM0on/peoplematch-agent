@@ -3,9 +3,16 @@ from __future__ import annotations
 from pathlib import Path
 
 from app.schemas.persistence import DataOrigin
-from app.services.explanation.generation.factory import build_explanation_provider
+from app.services.explanation.generation.openai_compatible import (
+    OpenAICompatibleChatProvider,
+)
 from app.services.explanation.generation.provider import (
-    ExplanationProviderConfigurationError,
+    ExplanationProviderDescriptor,
+)
+from app.services.llm.configuration import (
+    ProviderMode,
+    ProviderTask,
+    resolve_provider_selection,
 )
 from app.services.profile_extraction.mock_provider import MockStructuredOutputProvider
 from app.services.profile_extraction.openai_compatible import (
@@ -18,25 +25,25 @@ from app.services.profile_extraction.provider import (
 
 
 def build_profile_extraction_provider(settings, *, fixture_root: Path):
-    if settings.extraction_provider == "mock":
+    selection = resolve_provider_selection(settings, ProviderTask.EXTRACTION)
+    if selection.mode is ProviderMode.MOCK:
         return (
             MockStructuredOutputProvider.from_fixture_directory(fixture_root),
             MOCK_PROVIDER_DESCRIPTOR,
         )
-    if settings.extraction_provider != "deepseek":
-        raise ExplanationProviderConfigurationError(
-            f"Extraction provider '{settings.extraction_provider}' is not implemented"
-        )
-
-    transport_settings = settings.model_copy(
-        update={
-            "explanation_provider": "deepseek",
-            "explanation_timeout_seconds": settings.extraction_timeout_seconds,
-        }
+    transport = OpenAICompatibleChatProvider(
+        descriptor=ExplanationProviderDescriptor(
+            kind="openai_compatible",
+            name=selection.provider_name,
+            configured_model=selection.model,
+            configuration_fingerprint=selection.configuration_fingerprint,
+        ),
+        base_url=selection.base_url,
+        api_key=selection.api_key,
+        timeout_seconds=selection.timeout_seconds,
     )
-    transport = build_explanation_provider(transport_settings)
     descriptor = ProviderDescriptor(
-        name="deepseek",
+        name=selection.provider_name,
         kind="openai_compatible",
         data_origin=DataOrigin.LLM_PARSED,
     )

@@ -80,6 +80,8 @@ function parseData(kind: "candidate" | "job") {
     extraction: {
       provider: "deterministic_mock",
       provider_kind: "mock",
+      prompt_version: `${kind}_extraction_prompt_v1`,
+      prompt_fingerprint: "c".repeat(64),
       attempts: 1,
       repaired: false,
       persisted: true,
@@ -290,6 +292,21 @@ describe("Phase 12 demo API", () => {
     await expect(runDemo({
       jobText: "job source ".repeat(10),
     })).rejects.toMatchObject({ code: "invalid_response", requestId: "malformed" });
+  });
+
+  it("rejects extraction responses without server-owned prompt provenance", async () => {
+    vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "http://localhost:8000");
+    const job = parseData("job");
+    const extractionWithoutPromptFingerprint = { ...job.extraction } as Record<string, unknown>;
+    delete extractionWithoutPromptFingerprint.prompt_fingerprint;
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(envelope({
+      ...job,
+      extraction: extractionWithoutPromptFingerprint,
+    }, "missing-prompt-provenance")));
+
+    await expect(runDemo({
+      jobText: "job source ".repeat(10),
+    })).rejects.toMatchObject({ code: "invalid_response", requestId: "missing-prompt-provenance" });
   });
 
   it("maps backend failures to a safe recoverable error without leaking details", async () => {

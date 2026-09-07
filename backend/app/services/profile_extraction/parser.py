@@ -11,6 +11,7 @@ from app.core.logging import get_logger
 from app.exceptions import (
     MockInputNotSupportedError,
     ProviderOutputInvalidError,
+    ProviderRateLimitError,
     ProviderTimeoutError,
     ProviderUnavailableError,
 )
@@ -153,6 +154,8 @@ class ProfileExtractionService:
             request = ProviderRequest(
                 task=task,
                 source_text=source,
+                prompt_version=prompt.prompt_version,
+                prompt_fingerprint=prompt.prompt_fingerprint,
                 system_message=prompt.system_message,
                 user_message=prompt.user_message,
                 output_contract=prompt.output_contract,
@@ -189,6 +192,7 @@ class ProfileExtractionService:
                 raise ProviderTimeoutError("Structured output provider timed out") from exc
             except (
                 ProviderTimeoutError,
+                ProviderRateLimitError,
                 ProviderUnavailableError,
                 ProviderOutputInvalidError,
             ) as exc:
@@ -255,6 +259,8 @@ class ProfileExtractionService:
             return draft, ExtractionMetadata(
                 provider=self.provider_descriptor.name,
                 provider_kind=self.provider_descriptor.kind,
+                prompt_version=prompt.prompt_version,
+                prompt_fingerprint=prompt.prompt_fingerprint,
                 attempts=attempt,
                 repaired=attempt > 1,
                 persisted=False,

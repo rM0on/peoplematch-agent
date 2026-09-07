@@ -19,10 +19,36 @@ def test_doctor_reports_closed_readiness_checks_without_secret_values(monkeypatc
     assert report["ce_artifact"]["status"] == "ready"
 
 
+def test_doctor_recognizes_generic_provider_credential_without_provider_details(
+    monkeypatch,
+) -> None:
+    from scripts.demo_doctor import collect_readiness
+
+    monkeypatch.setenv("LLM_API_KEY", "generic-provider-secret")
+    monkeypatch.setenv("LLM_BASE_URL", "https://private-provider.example/v1")
+    monkeypatch.setenv("LLM_MODEL", "private-model-id")
+    monkeypatch.delenv("EXPLANATION_DEEPSEEK_API_KEY", raising=False)
+
+    report = collect_readiness(
+        ROOT,
+        command_runner=lambda _command: (0, "v22.14.0"),
+    )
+
+    assert report["provider_credential"] == {
+        "status": "configured",
+        "detail": "local credential configured; value redacted",
+    }
+    rendered = repr(report)
+    assert "generic-provider-secret" not in rendered
+    assert "private-provider.example" not in rendered
+    assert "private-model-id" not in rendered
+
+
 def test_doctor_marks_wrong_node_and_missing_docker_as_blocking(monkeypatch) -> None:
     from scripts.demo_doctor import collect_readiness
 
     monkeypatch.delenv("EXPLANATION_DEEPSEEK_API_KEY", raising=False)
+    monkeypatch.delenv("LLM_API_KEY", raising=False)
 
     def runner(command: list[str]) -> tuple[int, str]:
         if command[0] == "node":

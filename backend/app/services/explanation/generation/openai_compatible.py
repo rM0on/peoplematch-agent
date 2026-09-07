@@ -11,6 +11,7 @@ from app.services.explanation.generation.provider import (
     ExplanationProviderHttpError,
     MAX_PROVIDER_RESPONSE_BYTES,
     ExplanationProviderMalformedResponseError,
+    ExplanationProviderRateLimitError,
     ExplanationProviderRequest,
     ExplanationProviderResponse,
     ExplanationProviderTimeoutError,
@@ -71,6 +72,8 @@ class OpenAICompatibleChatProvider:
                 json=payload,
                 timeout=self._timeout_seconds,
             ) as response:
+                if response.status_code == 429:
+                    raise ExplanationProviderRateLimitError
                 if not response.is_success:
                     raise ExplanationProviderHttpError(response.status_code)
                 body = bytearray()

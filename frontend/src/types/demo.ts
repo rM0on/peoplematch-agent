@@ -8,6 +8,8 @@ export type DemoStage =
 export type ExtractionMetadata = {
   provider: string;
   provider_kind: "mock" | "openai_compatible";
+  prompt_version: "candidate_extraction_prompt_v1" | "job_extraction_prompt_v1";
+  prompt_fingerprint: string;
   attempts: number;
   repaired: boolean;
   persisted: boolean;

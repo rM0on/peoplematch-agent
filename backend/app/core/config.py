@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     qdrant_url: Optional[str] = None
     next_public_api_base_url: Optional[str] = None
     cors_origins: str = "http://localhost:3000"
+    llm_base_url: Optional[str] = None
+    llm_model: Optional[str] = None
     llm_api_key: Optional[str] = None
     extraction_provider: str = "mock"
     extraction_max_attempts: int = Field(default=2, ge=1, le=2)

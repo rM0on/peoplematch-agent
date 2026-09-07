@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { HistoricalFeedbackEntry } from "@/features/phase10/historical-feedback-entry";
 import { useModalDialog } from "@/features/phase10/use-modal-dialog";
+import { ProviderStatusBadge } from "@/features/provider-status/provider-status-badge";
 import { DemoApiError, fetchDemoSamples, runDemo } from "@/lib/demo-api";
 import type { DemoRun, DemoStage } from "@/types/demo";
 import { AppSidebar } from "./app-sidebar";
@@ -11,8 +12,8 @@ import styles from "./matching-results.module.css";
 import reviewStyles from "../phase10/phase10.module.css";
 
 const stageCopy: Record<DemoStage, string> = {
-  job: "正在解析岗位描述", index: "正在刷新派生检索索引",
-  ranking: "正在执行 Hybrid Retrieval + LambdaMART", explanation: "正在生成证据约束解释", complete: "匹配已完成",
+  job: "正在理解岗位需求…", index: "正在准备候选检索…",
+  ranking: "正在召回候选人并计算 LambdaMART 排序…", explanation: "正在生成证据约束解释…", complete: "推荐已完成",
 };
 const featureLabels = { skill_fit_score: "技能匹配", project_evidence_score: "项目证据", role_direction_score: "方向匹配", location_score: "地点约束", seniority_score: "资历匹配" } as const;
 const storySteps = ["输入岗位需求", "结构化解析", "候选召回", "特征计算", "LambdaMART 排序", "证据解释", "历史复核"] as const;
@@ -51,7 +52,8 @@ function recommendationTier(rank: number): "高度推荐" | "推荐" | "待评�
 function safeError(error: unknown): { message: string; requestId: string | null } {
   if (!(error instanceof DemoApiError)) return { message: "请求未完成，请检查本地服务后重试。", requestId: null };
   const messages: Record<string, string> = {
-    provider_unavailable: "模型服务暂不可用，请确认 Provider 配置后重试。", provider_timeout: "模型服务响应超时，请稍后重试。",
+    provider_unavailable: "AI Provider 未配置或暂不可用，请检查本地配置后重试。", provider_timeout: "AI 服务响应超时，请稍后重试。",
+    provider_rate_limited: "AI 服务请求过于频繁，请稍后重试。",
     provider_output_invalid: "模型返回的结构化结果未通过校验，请重试。", network_error: "无法连接后端，请确认本地服务已启动。",
     api_unconfigured: "前端尚未配置后端 API 地址。",
   };
@@ -105,7 +107,7 @@ export function MatchingResultsScreen() {
   return <div className={styles.appShell}>
     <a className={styles.skipLink} href="#matching-results">跳转到匹配工作区</a><AppSidebar />
     <main className={styles.mainSurface} id="matching-results"><div className={styles.contentFrame}>
-      <header className={styles.hero}><div><p className={styles.eyebrow}>AI 人才推荐系统 · Recommendation System</p><h1>AI 人才推荐工作台</h1><p>输入岗位需求，系统从人才库召回候选人，经 Candidate Retrieval、Feature Engineering 与 LambdaMART 生成 Top-K 推荐；LLM 负责结构化与解释，不直接决定排序。</p></div><button className={styles.historyButton} type="button" onClick={() => setReviewOpen(true)}>复核历史结果</button></header>
+      <header className={styles.hero}><div><p className={styles.eyebrow}>AI 人才推荐系统 · Recommendation System</p><h1>AI 人才推荐工作台</h1><p>输入岗位需求，系统从人才库召回候选人，经 Candidate Retrieval、Feature Engineering 与 LambdaMART 生成 Top-K 推荐；LLM 负责结构化与解释，不直接决定排序。</p></div><div className={styles.heroActions}><ProviderStatusBadge className={styles.providerStatus} /><button className={styles.historyButton} type="button" onClick={() => setReviewOpen(true)}>复核历史结果</button></div></header>
       <section className={styles.storyPanel} aria-labelledby="story-title">
         <div className={styles.storyHeader}><div><p className={styles.eyebrow}>3 分钟体验 AI 推荐系统</p><h2 id="story-title">从岗位 Query 到 Top-K 候选人</h2></div><p>输入岗位需求后，系统从候选池召回人才，计算显式特征并使用 LambdaMART 排序，再生成 Evidence 解释与历史复核记录。</p></div>
         <ol className={styles.storySteps}>{storySteps.map((label, index) => <li aria-current={index === activeStoryStep ? "step" : undefined} className={index === activeStoryStep ? styles.storyStepActive : index < activeStoryStep ? styles.storyStepComplete : styles.storyStep} key={label}><span>{String(index + 1).padStart(2, "0")}</span><strong>{label}</strong></li>)}</ol>

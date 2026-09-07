@@ -94,6 +94,13 @@ class ExplanationProviderTransportError(ExplanationProviderError):
         super().__init__("Explanation provider transport failed")
 
 
+class ExplanationProviderRateLimitError(ExplanationProviderError):
+    category = "rate_limited"
+
+    def __init__(self) -> None:
+        super().__init__("Explanation provider request rate limited")
+
+
 class ExplanationProviderHttpError(ExplanationProviderError):
     category = "http_status"
 
@@ -116,6 +123,7 @@ __all__ = [
     "ExplanationProviderError",
     "ExplanationProviderHttpError",
     "ExplanationProviderMalformedResponseError",
+    "ExplanationProviderRateLimitError",
     "ExplanationProviderRequest",
     "ExplanationProviderResponse",
     "ExplanationProviderTimeoutError",

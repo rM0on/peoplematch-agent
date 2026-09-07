@@ -43,6 +43,8 @@ def test_candidate_extraction_is_deterministic_and_strict_json() -> None:
         assert first.draft == second.draft
         assert first.extraction.provider == "deterministic_mock"
         assert first.extraction.provider_kind == "mock"
+        assert first.extraction.prompt_version == "candidate_extraction_prompt_v1"
+        assert len(first.extraction.prompt_fingerprint) == 64
         assert first.extraction.attempts == 1
         assert not first.extraction.repaired
         assert len(first.extraction.input_fingerprint) == 64
@@ -291,6 +293,8 @@ def test_trusted_descriptor_owns_metadata_validation_and_persisted_provenance() 
         assert result.record.data_origin is DataOrigin.MOCK_PARSED
         assert result.extraction.provider == "trusted_mock"
         assert result.extraction.provider_kind == "mock"
+        assert result.extraction.prompt_version == "candidate_extraction_prompt_v1"
+        assert result.extraction.prompt_fingerprint == provider.requests[1].prompt_fingerprint
         assert result.extraction.attempts == 2
         assert result.extraction.repaired is True
         assert "synthetic reference" in provider.requests[1].validation_feedback

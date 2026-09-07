@@ -300,6 +300,7 @@ def test_generation_respects_configured_single_attempt_without_repair() -> None:
     ("failure_factory", "expected_code", "expected_provider_calls"),
     [
         (lambda: "provider_timeout", "provider_timeout", 1),
+        (lambda: "provider_rate_limited", "provider_rate_limited", 1),
         (lambda: "parse_twice", "invalid_output", 2),
         (lambda: "ground_twice", "grounding_failure", 2),
     ],
@@ -313,12 +314,16 @@ def test_generation_failure_is_durable_safe_and_never_attempts_a_third_call(
         ExplanationPlanParseError,
     )
     from app.services.explanation.generation.provider import (
+        ExplanationProviderRateLimitError,
         ExplanationProviderTimeoutError,
     )
 
     failure = failure_factory()
     if failure == "provider_timeout":
         responses = [ExplanationProviderTimeoutError()]
+        outcomes = None
+    elif failure == "provider_rate_limited":
+        responses = [ExplanationProviderRateLimitError()]
         outcomes = None
     elif failure == "parse_twice":
         responses = ["invalid-1", "invalid-2"]

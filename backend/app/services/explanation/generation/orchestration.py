@@ -22,6 +22,7 @@ from app.services.explanation.generation.provider import (
     ExplanationProviderError,
     ExplanationProviderHttpError,
     ExplanationProviderMalformedResponseError,
+    ExplanationProviderRateLimitError,
     ExplanationProviderTimeoutError,
     ExplanationProviderTransportError,
 )
@@ -34,6 +35,7 @@ from app.schemas.explanation_generation import (
 _SAFE_MODEL = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]{0,159}$")
 _SAFE_FAILURE_DETAILS = {
     "provider_timeout": "Explanation provider timed out",
+    "provider_rate_limited": "Explanation provider request rate limited",
     "provider_transport": "Explanation provider transport failed",
     "provider_http_status": "Explanation provider request failed",
     "malformed_response": "Explanation provider response was malformed",
@@ -71,6 +73,8 @@ def _safe_observed_model(value: str | None) -> str | None:
 def _provider_failure_code(error: Exception) -> str:
     if isinstance(error, ExplanationProviderTimeoutError):
         return "provider_timeout"
+    if isinstance(error, ExplanationProviderRateLimitError):
+        return "provider_rate_limited"
     if isinstance(error, ExplanationProviderTransportError):
         return "provider_transport"
     if isinstance(error, ExplanationProviderHttpError):

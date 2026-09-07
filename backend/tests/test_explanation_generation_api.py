@@ -167,7 +167,10 @@ def test_runtime_provider_configuration_failure_maps_to_safe_unavailable_error(
     monkeypatch.setattr(
         dependencies,
         "get_settings",
-        lambda: SimpleNamespace(explanation_provider="unconfigured"),
+        lambda: SimpleNamespace(
+            explanation_provider="unconfigured",
+            explanation_timeout_seconds=10,
+        ),
     )
     try:
         with pytest.raises(ProviderUnavailableError, match="Explanation provider"):

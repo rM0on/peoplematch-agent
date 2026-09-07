@@ -60,7 +60,13 @@ function isExtraction(value: unknown): value is ExtractionMetadata {
   return isObject(value)
     && isString(value.provider)
     && (value.provider_kind === "mock" || value.provider_kind === "openai_compatible")
+    && (value.prompt_version === "candidate_extraction_prompt_v1"
+      || value.prompt_version === "job_extraction_prompt_v1")
+    && isString(value.prompt_fingerprint)
+    && /^[a-f0-9]{64}$/.test(value.prompt_fingerprint)
     && isInteger(value.attempts)
+    && value.attempts >= 1
+    && value.attempts <= 2
     && typeof value.repaired === "boolean"
     && typeof value.persisted === "boolean"
     && isString(value.input_fingerprint)

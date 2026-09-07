@@ -8,7 +8,7 @@
 
 [3 分钟演示指南](docs/demo-guide.md) · [Quick Start](#quick-startwindows-powershell) · [架构文档](docs/architecture.md) · [离线评测协议](docs/offline-evaluation.md)
 
-![PeopleMatch Agent 岗位候选池 Top-K 排序结果](screenshots/phase14-top-k-ranking-1440x1280.png)
+![PeopleMatch Agent 岗位候选池 Top-K 排序结果](screenshots/phase15-top-k-recommendation.png)
 
 **核心能力**
 
@@ -17,7 +17,7 @@
 - **LLM Application**：结构化 Profile；基于 Evidence Bundle 生成解释，不直接打分或重排。
 - **Evaluation & Review**：Offline Evaluation、MatchRun、Feedback 与 Bad Case Analysis 形成可审计证据链。
 
-[查看 JD 推荐工作台](screenshots/phase14-jd-workbench-1440x1024.png) · [查看人才库](screenshots/phase14-talent-library-1440x1024.png) · [查看 Candidate Profile 预览](screenshots/phase14-candidate-preview-1440x1024.png) · [查看 Evidence 解释](screenshots/phase14-evidence-explanation.png) · [查看历史复核](screenshots/phase14-historical-review-1440x1024.png) · [作品集证据](docs/portfolio-evidence.md)
+[查看 JD 与 Provider 状态](screenshots/phase15-jd-provider-status-1440x1024.png) · [查看人才库](screenshots/phase15-talent-library-1440x1024.png) · [查看 Candidate 详情](screenshots/phase15-candidate-detail.png) · [查看 Evidence 解释](screenshots/phase15-evidence-explanation.png) · [查看 MatchRun 轨迹](screenshots/phase15-matchrun-trace.png) · [作品集证据](docs/portfolio-evidence.md)
 
 ## 推荐系统如何工作
 
@@ -147,6 +147,18 @@ LLM 不可以做：
 
 默认 mock 模式不需要网络，适合测试与可复现演示。Real mode 复用 Phase 9 的 OpenAI-compatible transport、timeout、retry、错误映射与 secret redaction，不引入第二套 LLM client。
 
+### AI Provider Architecture
+
+Profile Extraction 与 Explanation 保持两个独立任务边界，共享同一个 OpenAI-compatible Chat Completions transport：
+
+- `EXTRACTION_PROVIDER` 负责 Resume / JD 的 schema-first 结构化；
+- `EXPLANATION_PROVIDER` 只在已持久化 Evidence Bundle 上生成闭合解释计划；
+- 两个任务可独立选择 `mock` 或 `openai_compatible`，不会把 Provider 变成排序所有者；
+- Prompt 使用独立版本与 SHA-256 fingerprint，Provider 状态 API 只投影模式、配置完整性和非敏感模型标识；
+- timeout、rate limit、无效结构输出与缺失配置会映射为稳定错误，前端提供可重试的中文提示，不自动降级到 Mock。
+
+Provider 切换不会改写 Candidate ordering、LTR Score 或 MatchRun result fingerprint。OpenAI-compatible 表示兼容本项目使用的 Chat Completions JSON-object contract，不等于所有厂商都完成了 live smoke。
+
 ## Evidence First 与 Evaluation Driven Development
 
 Explanation 的每个关键陈述必须映射到对应 MatchRun 的 Evidence Facts。Provider 不是事实源，无法从证据中确认的信息保持 missing、risk 或待验证，避免把自然语言流畅度误当成事实可靠性。
@@ -261,14 +273,14 @@ EXPLANATION_PROVIDER=mock
 Real mode 在本地 `.env` 填写，不要把 Key 发到 issue、聊天或 Git：
 
 ```dotenv
-EXTRACTION_PROVIDER=deepseek
-EXPLANATION_PROVIDER=deepseek
-EXPLANATION_DEEPSEEK_BASE_URL=https://api.deepseek.com
-EXPLANATION_DEEPSEEK_MODEL=deepseek-chat
-EXPLANATION_DEEPSEEK_API_KEY=
+EXTRACTION_PROVIDER=openai_compatible
+EXPLANATION_PROVIDER=openai_compatible
+LLM_BASE_URL=https://your-provider.example/v1
+LLM_MODEL=your-model-id
+LLM_API_KEY=
 ```
 
-这是一条 OpenAI-compatible compatibility path。未完成 live smoke 的 Provider 不会被宣称为已验证。原始 Resume / JD 不进入 Phase 11 artifact；正式演示使用 repository 内 synthetic fixture。
+`deepseek` selector 与旧的 `EXPLANATION_DEEPSEEK_*` 环境变量仍作为兼容别名；新配置优先使用上面的 provider-neutral 字段，通用与旧字段冲突时会 fail closed。未完成 live smoke 的 Provider 不会被宣称为已验证。原始 Resume / JD 不进入 Phase 11 artifact；正式演示使用 repository 内 synthetic fixture。
 
 > **Live Provider 验证状态：** `NOT RUN — LOCAL PROVIDER CREDENTIAL REQUIRED`。OpenAI-compatible transport、structured output、timeout/retry/error redaction 已通过 mock transport 测试，但仓库不会把未实际调用的外部 Provider 写成 live PASS。
 
@@ -302,9 +314,9 @@ scripts/                # data, model, evaluation and readiness entrypoints
 - Browser E2E：disposable PostgreSQL + isolated Qdrant，稳定 mock provider，不依赖外部 API；
 - Offline evaluation：immutable manifest、file hashes、pool/order fingerprint、Test seal 与 claim limitations。
 
-- Backend Evidence / extraction focused：`168 passed`；全量 backend：`825 passed, 58 skipped`（条件性 integration skip 不计为 PASS）。
-- Frontend：`62 passed`，typecheck / ESLint / production build 均 PASS；真实 E2E 使用 Node `22.23.2`。
-- Browser E2E：`2 passed`；使用独立 disposable PostgreSQL + Qdrant，覆盖主链路、ranking invariance、历史复核与 Provider 错误恢复。
+- Backend：全量 `865 passed, 58 skipped`；
+- Frontend：`76 passed`，并在 Node `22.23.2` 下通过 typecheck、ESLint 与 production build；
+- Browser E2E：`3 passed`；使用独立 disposable PostgreSQL + Qdrant，分别覆盖 deterministic mock 与本地 MockTransport 驱动的 OpenAI-compatible 任意 JD 主链路、ranking invariance 和 Provider 错误恢复；
 - Real-provider live smoke：`NOT RUN — LOCAL PROVIDER CREDENTIAL REQUIRED`。
 
 ## 当前边界
@@ -313,7 +325,7 @@ scripts/                # data, model, evaluation and readiness entrypoints
 
 ## 项目状态
 
-Phase 0–14 已 **Completed / Frozen**。Phase 14 将 JD 推荐与 Resume 入库拆成两个清晰产品流程；它只复用既有 typed API、Profile 持久化与派生索引刷新，没有改变冻结算法、48 人源数据或 Phase 11 评测。当前交付是可本地运行、可复现、可审计的产品原型，不是 production deployment。详见 [Development Roadmap](docs/development-roadmap.md)。
+Phase 0–15 已 **Completed / Frozen**。Phase 14 将 JD 推荐与 Resume 入库拆成两个清晰产品流程；Phase 15 在不改变冻结算法的前提下加入 provider-neutral 配置、版本化 Prompt、只读 Provider 状态与安全失败映射。当前交付是可本地运行、可复现、可审计的产品原型，不是 production deployment。详见 [Development Roadmap](docs/development-roadmap.md)。
 
 ---
 

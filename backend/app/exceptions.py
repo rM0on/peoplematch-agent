@@ -42,6 +42,14 @@ class ProviderTimeoutError(DomainError):
     status_code = 503
 
 
+class ProviderRateLimitError(DomainError):
+    code = "provider_rate_limited"
+    status_code = 503
+
+    def __init__(self) -> None:
+        super().__init__("AI provider request rate limited")
+
+
 class ProviderOutputInvalidError(DomainError):
     code = "provider_output_invalid"
     status_code = 502

@@ -195,7 +195,7 @@ def test_openai_compatible_transport_maps_network_failures_without_retry(
     assert calls == 1
 
 
-def test_openai_compatible_transport_discards_non_success_provider_body() -> None:
+def test_openai_compatible_transport_discards_rate_limit_provider_body() -> None:
     calls = 0
     private_body = "provider failure body containing raw_resume_private_text"
 
@@ -205,18 +205,44 @@ def test_openai_compatible_transport_discards_non_success_provider_body() -> Non
         return httpx.Response(429, text=private_body)
 
     async def scenario() -> None:
-        from app.services.explanation.generation.provider import ExplanationProviderHttpError
+        from app.services.explanation.generation.provider import (
+            ExplanationProviderRateLimitError,
+        )
 
         async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
-            with pytest.raises(ExplanationProviderHttpError) as exc_info:
+            with pytest.raises(ExplanationProviderRateLimitError) as exc_info:
                 await _provider(client=client).generate(_request())
-        assert exc_info.value.category == "http_status"
-        assert exc_info.value.status_code == 429
+        assert exc_info.value.category == "rate_limited"
         assert private_body not in str(exc_info.value)
         assert "raw_resume_private_text" not in str(exc_info.value)
 
     asyncio.run(scenario())
     assert calls == 1
+
+
+@pytest.mark.parametrize("status_code", [401, 403, 500, 503])
+def test_openai_compatible_transport_discards_generic_http_error_body(
+    status_code: int,
+) -> None:
+    private_body = f"Bearer {_API_KEY} raw_jd_private_text traceback"
+
+    def handler(_request: httpx.Request) -> httpx.Response:
+        return httpx.Response(status_code, text=private_body)
+
+    async def scenario() -> None:
+        from app.services.explanation.generation.provider import (
+            ExplanationProviderHttpError,
+        )
+
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            with pytest.raises(ExplanationProviderHttpError) as exc_info:
+                await _provider(client=client).generate(_request())
+        assert exc_info.value.status_code == status_code
+        assert private_body not in str(exc_info.value)
+        assert _API_KEY not in str(exc_info.value)
+        assert "raw_jd_private_text" not in str(exc_info.value)
+
+    asyncio.run(scenario())
 
 
 @pytest.mark.parametrize(

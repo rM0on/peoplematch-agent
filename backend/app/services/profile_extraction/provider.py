@@ -16,6 +16,8 @@ class ExtractionTask(str, Enum):
 class ProviderRequest:
     task: ExtractionTask
     source_text: str
+    prompt_version: str
+    prompt_fingerprint: str
     system_message: str
     user_message: str
     output_contract: dict[str, Any]

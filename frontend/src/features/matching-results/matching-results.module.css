@@ -214,6 +214,50 @@
   font-size:15px;
   line-height:1.65
 }
+.heroActions {
+  min-width:250px;
+  display:grid;
+  justify-items:end;
+  gap:10px
+}
+.providerStatus {
+  display:grid;
+  grid-template-columns:9px minmax(0,1fr);
+  align-items:center;
+  gap:9px;
+  min-width:250px;
+  padding:10px 12px;
+  border:1px solid #ccd9d4;
+  border-radius:9px;
+  background:rgba(255,254,250,.88)
+}
+.providerStatus>span {
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:#728079;
+  box-shadow:0 0 0 3px rgba(114,128,121,.12)
+}
+.providerStatus[data-tone="ready"]>span {
+  background:#187166;
+  box-shadow:0 0 0 3px rgba(24,113,102,.14)
+}
+.providerStatus[data-tone="warning"]>span,.providerStatus[data-tone="unavailable"]>span {
+  background:#a8671e;
+  box-shadow:0 0 0 3px rgba(168,103,30,.14)
+}
+.providerStatus strong,.providerStatus small {
+  display:block
+}
+.providerStatus strong {
+  color:#294b43;
+  font-size:11px
+}
+.providerStatus small {
+  margin-top:2px;
+  color:#748079;
+  font-size:9px
+}
 .historyButton,.secondaryButton,.primaryButton,.errorPanel button {
   min-height:40px;
   padding:0 15px;
@@ -802,6 +846,13 @@
   .hero,.jobBar,.storyHeader,.sectionTitle,.inputFooter,.resultHeader,.scoreHeader {
     align-items:stretch;
     flex-direction:column
+  }
+  .heroActions,.providerStatus {
+    width:100%;
+    min-width:0
+  }
+  .heroActions {
+    justify-items:stretch
   }
   .jobBar {
     padding:14px 18px

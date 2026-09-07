@@ -2,7 +2,7 @@
 
 本指南只使用 synthetic sandbox 数据。演示前先运行 `backend/.venv/Scripts/python.exe scripts/demo_doctor.py`；任何 `blocked` 项都应先处理。
 
-Phase 12 冻结时的 live-provider smoke 状态为 `NOT RUN — LOCAL PROVIDER CREDENTIAL REQUIRED`。默认 mock 演示与真实 Browser → Next.js → FastAPI → PostgreSQL/Qdrant E2E 已验证；不要把 mock transport PASS 说成外部 Provider live PASS。
+Phase 15 冻结时的 live-provider smoke 状态为 `NOT RUN — LOCAL PROVIDER CREDENTIAL REQUIRED`。默认 mock 演示，以及由本地 MockTransport 驱动的 OpenAI-compatible Browser → Next.js → FastAPI → PostgreSQL/Qdrant E2E 已验证；不要把 transport compatibility PASS 说成外部 Provider live PASS。
 
 ## 3 分钟招聘者演示
 
@@ -17,7 +17,7 @@ Phase 12 冻结时的 live-provider smoke 状态为 `NOT RUN — LOCAL PROVIDER 
 
 ### 1. 输入与结构化
 
-- 说明 mock 模式确保测试与 E2E 可复现；Real mode 复用 OpenAI-compatible transport。
+- 说明 mock 模式确保测试与 E2E 可复现；Real mode 让 extraction/explanation 两个独立任务 adapter 共享 OpenAI-compatible transport。
 - Resume 通过“解析预览 → 确认入库 → 刷新派生索引”进入 Candidate Pool；岗位 JD 始终作为推荐 Query。
 - 强调 schema-first validation、长度上限、timeout/retry、错误脱敏；无法确认的信息保持 missing。
 
@@ -61,14 +61,14 @@ Mock 只识别注册的 synthetic fixture；它不是通用简历解析器。
 仅在本地 `.env` 配置：
 
 ```dotenv
-EXTRACTION_PROVIDER=deepseek
-EXPLANATION_PROVIDER=deepseek
-EXPLANATION_DEEPSEEK_BASE_URL=https://api.deepseek.com
-EXPLANATION_DEEPSEEK_MODEL=deepseek-chat
-EXPLANATION_DEEPSEEK_API_KEY=
+EXTRACTION_PROVIDER=openai_compatible
+EXPLANATION_PROVIDER=openai_compatible
+LLM_BASE_URL=https://your-provider.example/v1
+LLM_MODEL=your-model-id
+LLM_API_KEY=
 ```
 
-不要在演示、截图、日志或聊天中展示 Key。Live smoke 只使用 synthetic 输入；外部 Provider 不可用时切回 mock，不把 fallback 伪装成 real success。
+页面只显示“已配置”，不声称网络已连接。任意 JD 由 extraction task 结构化，解释 task 只读取 Evidence；LambdaMART 始终拥有排序。不要在演示、截图、日志或聊天中展示 Key。Live smoke 只使用 synthetic 输入；若要切回 mock，必须显式修改本地配置，系统不会把自动 fallback 伪装成 real success。
 
 ## 常见故障恢复
 

@@ -1,6 +1,6 @@
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { DemoApiError } from "@/lib/demo-api";
 import type { DemoRun } from "@/types/demo";
@@ -9,12 +9,22 @@ import { MatchingResultsScreen } from "./matching-results-screen";
 
 
 const apiMocks = vi.hoisted(() => ({ fetchDemoSamples: vi.fn(), runDemo: vi.fn() }));
+const providerMocks = vi.hoisted(() => ({ fetchAIProviderStatus: vi.fn() }));
 
 vi.mock("@/lib/demo-api", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/lib/demo-api")>()),
   fetchDemoSamples: apiMocks.fetchDemoSamples,
   runDemo: apiMocks.runDemo,
 }));
+
+vi.mock("@/lib/provider-status-api", () => ({
+  fetchAIProviderStatus: providerMocks.fetchAIProviderStatus,
+}));
+
+const mockProviderStatus = {
+  extraction: { task: "extraction", mode: "mock", configured: true, provider_name: "deterministic_mock", configured_model: null, arbitrary_input_supported: false },
+  explanation: { task: "explanation", mode: "mock", configured: true, provider_name: "deterministic_mock", configured_model: null, arbitrary_input_supported: false },
+};
 
 const jobDraft = {
   company_name: "Northstar Sandbox Labs", role_title: "AI Matching Engineer",
@@ -27,7 +37,7 @@ const jobDraft = {
 const demoRun = {
   job: {
     draft: jobDraft, record: { job_id: "job_parse_demo", ...jobDraft },
-    extraction: { provider: "deterministic_mock", provider_kind: "mock", attempts: 1, repaired: false, persisted: true, input_fingerprint: "b".repeat(64) },
+    extraction: { provider: "deterministic_mock", provider_kind: "mock", prompt_version: "job_extraction_prompt_v1", prompt_fingerprint: "d".repeat(64), attempts: 1, repaired: false, persisted: true, input_fingerprint: "b".repeat(64) },
   },
   index: { document_version: "retrieval_doc_v4", candidate_collection: "candidates", job_collection: "jobs", candidate_count: 49, job_count: 25 },
   matchRun: {
@@ -58,6 +68,11 @@ afterEach(() => {
   cleanup();
   apiMocks.fetchDemoSamples.mockReset();
   apiMocks.runDemo.mockReset();
+  providerMocks.fetchAIProviderStatus.mockReset();
+});
+
+beforeEach(() => {
+  providerMocks.fetchAIProviderStatus.mockResolvedValue(mockProviderStatus);
 });
 
 describe("MatchingResultsScreen Phase 12 demo", () => {
@@ -94,6 +109,58 @@ describe("MatchingResultsScreen Phase 12 demo", () => {
     expect(screen.queryByLabelText("候选人简历文本")).toBeNull();
     expect((screen.getByLabelText("岗位描述文本") as HTMLTextAreaElement).value).toBe("Synthetic job fixture\n");
     expect(screen.getByText("示例数据为 synthetic sandbox，不包含真实个人信息。")).toBeTruthy();
+  });
+
+  it("submits an arbitrary JD without requiring the sample helper", async () => {
+    const user = userEvent.setup();
+    const arbitraryJD = "招聘 AI 应用算法工程师，负责 Python、RAG、Embedding、LLM Agent 与 FastAPI 系统研发，并能完成检索排序链路的工程交付。";
+    apiMocks.runDemo.mockResolvedValue(demoRun);
+    render(<MatchingResultsScreen />);
+
+    await user.type(screen.getByLabelText("岗位描述文本"), arbitraryJD);
+    await user.click(screen.getByRole("button", { name: "开始推荐" }));
+
+    expect(apiMocks.fetchDemoSamples).not.toHaveBeenCalled();
+    expect(apiMocks.runDemo).toHaveBeenCalledWith(expect.objectContaining({
+      jobText: arbitraryJD,
+    }));
+  });
+
+  it("shows only observable recommendation stages and returns to an actionable state", async () => {
+    const user = userEvent.setup();
+    let reportStage: ((stage: "job" | "index" | "ranking" | "explanation" | "complete") => void) | undefined;
+    let completeRun: ((value: DemoRun) => void) | undefined;
+    apiMocks.runDemo.mockImplementation(({ onStage }) => {
+      reportStage = onStage;
+      onStage?.("job");
+      return new Promise<DemoRun>((resolve) => { completeRun = resolve; });
+    });
+    render(<MatchingResultsScreen />);
+    fireEvent.change(screen.getByLabelText("岗位描述文本"), { target: { value: "job source ".repeat(10) } });
+    await user.click(screen.getByRole("button", { name: "开始推荐" }));
+
+    expect(screen.getAllByText("正在理解岗位需求…").length).toBeGreaterThanOrEqual(1);
+    act(() => reportStage?.("index"));
+    expect(screen.getAllByText("正在准备候选检索…").length).toBeGreaterThanOrEqual(1);
+    act(() => reportStage?.("ranking"));
+    expect(screen.getAllByText("正在召回候选人并计算 LambdaMART 排序…").length).toBeGreaterThanOrEqual(1);
+    act(() => reportStage?.("explanation"));
+    expect(screen.getAllByText("正在生成证据约束解释…").length).toBeGreaterThanOrEqual(1);
+    expect(document.body.textContent).not.toMatch(/\d+%/);
+    await act(async () => completeRun?.(demoRun));
+    expect(screen.getByRole("button", { name: "开始推荐" })).not.toHaveProperty("disabled", true);
+  });
+
+  it("keeps recommendation available when read-only Provider status fails", async () => {
+    const user = userEvent.setup();
+    providerMocks.fetchAIProviderStatus.mockRejectedValue(new Error("status offline"));
+    apiMocks.runDemo.mockResolvedValue(demoRun);
+    render(<MatchingResultsScreen />);
+
+    expect(await screen.findByText("Provider 状态不可用")).toBeTruthy();
+    fireEvent.change(screen.getByLabelText("岗位描述文本"), { target: { value: "job source ".repeat(10) } });
+    await user.click(screen.getByRole("button", { name: "开始推荐" }));
+    expect(await screen.findByRole("heading", { name: "AI Matching Engineer" })).toBeTruthy();
   });
 
   it("shows real MatchRun evidence, raw margin, trace, and grounded explanation", async () => {
@@ -150,9 +217,39 @@ describe("MatchingResultsScreen Phase 12 demo", () => {
     fireEvent.change(screen.getByLabelText("岗位描述文本"), { target: { value: "job source ".repeat(10) } });
     await user.click(screen.getByRole("button", { name: "开始推荐" }));
     const alert = screen.getByRole("alert");
-    expect(alert.textContent).toContain("模型服务暂不可用");
+    expect(alert.textContent).toContain("AI Provider 未配置或暂不可用");
     expect(alert.textContent).toContain("request-safe");
     expect(alert.textContent).not.toMatch(/traceback|bearer|api[_-]?key/i);
+    expect(screen.getByRole("button", { name: "重新尝试" })).toBeTruthy();
+  });
+
+  it("renders rate limiting as a friendly retryable state without upstream details", async () => {
+    const user = userEvent.setup();
+    apiMocks.runDemo
+      .mockRejectedValueOnce(new DemoApiError("Bearer secret traceback", 503, "provider_rate_limited", "request-rate"))
+      .mockResolvedValueOnce(demoRun);
+    render(<MatchingResultsScreen />);
+    fireEvent.change(screen.getByLabelText("岗位描述文本"), { target: { value: "job source ".repeat(10) } });
+    await user.click(screen.getByRole("button", { name: "开始推荐" }));
+    const alert = screen.getByRole("alert");
+    expect(alert.textContent).toContain("AI 服务请求过于频繁，请稍后重试。");
+    expect(alert.textContent).not.toMatch(/bearer|secret|traceback/i);
+    await user.click(screen.getByRole("button", { name: "重新尝试" }));
+    expect(await screen.findByRole("heading", { name: "AI Matching Engineer" })).toBeTruthy();
+    expect(apiMocks.runDemo).toHaveBeenCalledTimes(2);
+  });
+
+  it.each([
+    ["provider_timeout", "AI 服务响应超时，请稍后重试。"],
+    ["provider_output_invalid", "模型返回的结构化结果未通过校验，请重试。"],
+  ])("renders %s as a safe recoverable error", async (code, expected) => {
+    const user = userEvent.setup();
+    apiMocks.runDemo.mockRejectedValue(new DemoApiError("private upstream detail", 503, code, "request-error"));
+    render(<MatchingResultsScreen />);
+    fireEvent.change(screen.getByLabelText("岗位描述文本"), { target: { value: "job source ".repeat(10) } });
+    await user.click(screen.getByRole("button", { name: "开始推荐" }));
+    expect(screen.getByRole("alert").textContent).toContain(expected);
+    expect(screen.getByRole("alert").textContent).not.toContain("private upstream detail");
     expect(screen.getByRole("button", { name: "重新尝试" })).toBeTruthy();
   });
 

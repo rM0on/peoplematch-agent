@@ -87,7 +87,8 @@ const preview: CandidateParseData = {
   },
   record: null,
   extraction: {
-    provider: "deterministic_mock", provider_kind: "mock", attempts: 1,
+    provider: "deterministic_mock", provider_kind: "mock",
+    prompt_version: "candidate_extraction_prompt_v1", prompt_fingerprint: "d".repeat(64), attempts: 1,
     repaired: false, persisted: false, input_fingerprint: "a".repeat(64),
   },
 };

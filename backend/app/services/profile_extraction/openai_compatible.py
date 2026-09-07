@@ -4,12 +4,14 @@ import json
 
 from app.exceptions import (
     ProviderOutputInvalidError,
+    ProviderRateLimitError,
     ProviderTimeoutError,
     ProviderUnavailableError,
 )
 from app.services.explanation.generation.provider import (
     ExplanationProviderHttpError,
     ExplanationProviderMalformedResponseError,
+    ExplanationProviderRateLimitError,
     ExplanationProviderRequest,
     ExplanationProviderTimeoutError,
     ExplanationProviderTransportError,
@@ -65,6 +67,8 @@ class OpenAICompatibleStructuredOutputProvider:
             )
         except ExplanationProviderTimeoutError:
             raise ProviderTimeoutError("Structured output provider timed out") from None
+        except ExplanationProviderRateLimitError:
+            raise ProviderRateLimitError from None
         except (ExplanationProviderTransportError, ExplanationProviderHttpError):
             raise ProviderUnavailableError(
                 "Structured output provider is unavailable"

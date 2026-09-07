@@ -28,6 +28,8 @@ def _request(task: ExtractionTask) -> ProviderRequest:
     return ProviderRequest(
         task=task,
         source_text="Synthetic source text with enough bounded content for extraction.",
+        prompt_version=f"{task.value}_extraction_prompt_v1",
+        prompt_fingerprint="d" * 64,
         system_message="Return only source-supported structured JSON.",
         user_message="Extract the delimited synthetic source.",
         output_contract=schema.model_json_schema(),

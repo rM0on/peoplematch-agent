@@ -34,7 +34,10 @@ def collect_readiness(root: Path, *, command_runner: CommandRunner = _run) -> di
     npm_code, npm_output = command_runner([_resolve_command("npm"), "--version"])
     docker_code, _docker_output = command_runner(["docker", "info"])
     node_major = int(node_output.lstrip("v").split(".", 1)[0]) if node_code == 0 and node_output.lstrip("v").split(".", 1)[0].isdigit() else 0
-    credential = bool(os.getenv("EXPLANATION_DEEPSEEK_API_KEY", "").strip())
+    credential = any(
+        os.getenv(name, "").strip()
+        for name in ("LLM_API_KEY", "EXPLANATION_DEEPSEEK_API_KEY")
+    )
     return {
         "node": {"status": "ready" if node_major == 22 else "blocked", "detail": node_output if node_code == 0 else "not available; Node 22 LTS required"},
         "npm": {"status": "ready" if npm_code == 0 else "blocked", "detail": npm_output if npm_code == 0 else "not available"},

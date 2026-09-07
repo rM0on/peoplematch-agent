@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e:phase10": "powershell -ExecutionPolicy Bypass -File e2e/run-phase10-e2e.ps1",
-    "test:e2e:phase12": "powershell -ExecutionPolicy Bypass -File e2e/run-phase12-e2e.ps1"
+    "test:e2e:phase12": "powershell -ExecutionPolicy Bypass -File e2e/run-phase12-e2e.ps1",
+    "test:e2e:phase15": "powershell -ExecutionPolicy Bypass -File e2e/run-phase15-e2e.ps1"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

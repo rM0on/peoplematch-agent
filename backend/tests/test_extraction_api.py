@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-from types import SimpleNamespace
 
 from fastapi.testclient import TestClient
 import pytest
@@ -50,7 +49,10 @@ def test_candidate_and_job_parse_preview_use_mock_and_request_envelope(
             headers={"X-Request-ID": "job-preview"},
         )
 
-    for response, request_id in ((candidate, "candidate-preview"), (job, "job-preview")):
+    for response, request_id, prompt_version in (
+        (candidate, "candidate-preview", "candidate_extraction_prompt_v1"),
+        (job, "job-preview", "job_extraction_prompt_v1"),
+    ):
         assert response.status_code == 200
         assert response.headers["X-Request-ID"] == request_id
         payload = response.json()
@@ -59,6 +61,8 @@ def test_candidate_and_job_parse_preview_use_mock_and_request_envelope(
         assert payload["request_id"] == request_id
         assert payload["data"]["record"] is None
         assert payload["data"]["extraction"]["provider"] == "deterministic_mock"
+        assert payload["data"]["extraction"]["prompt_version"] == prompt_version
+        assert len(payload["data"]["extraction"]["prompt_fingerprint"]) == 64
         assert payload["data"]["extraction"]["persisted"] is False
 
     completion_records = [
@@ -156,12 +160,13 @@ def test_unknown_mock_input_uses_typed_private_error_envelope(app) -> None:
 
 def test_unimplemented_provider_does_not_fall_back_to_mock(monkeypatch) -> None:
     from app.api import dependencies
+    from app.core.config import Settings
     from app.exceptions import ProviderUnavailableError
 
     monkeypatch.setattr(
         dependencies,
         "get_settings",
-        lambda: SimpleNamespace(extraction_provider="unimplemented"),
+        lambda: Settings(_env_file=None, extraction_provider="unimplemented"),
     )
     with pytest.raises(ProviderUnavailableError, match="is not implemented"):
         dependencies.get_profile_extraction_service(session=None)
