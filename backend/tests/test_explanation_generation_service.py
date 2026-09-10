@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
+import json
 from types import SimpleNamespace
 
 import pytest
@@ -147,6 +148,7 @@ class _Pipeline:
         self.outcomes = list(outcomes or ["rendered-output"])
         self.runs = []
         self.repair_categories = []
+        self.validated_contents = []
 
     def prepare(self, historical_run, *, requested_top_k: int):
         assert historical_run.run_id == MATCH_RUN_ID
@@ -164,6 +166,7 @@ class _Pipeline:
         return SimpleNamespace(attempt_number=2, repair_category=error_category)
 
     def validate_and_render(self, content: str, prepared):
+        self.validated_contents.append(content)
         outcome = self.outcomes.pop(0)
         if isinstance(outcome, Exception):
             raise outcome
@@ -271,6 +274,73 @@ def test_generation_repairs_invalid_output_exactly_once_without_open_transaction
     assert tracker.active == 0
     assert tracker.events.count("provider.1") == 1
     assert tracker.events.count("provider.2") == 1
+
+
+def test_generation_repairs_grounding_failure_exactly_once() -> None:
+    from app.services.explanation.generation.errors import ExplanationGroundingError
+
+    service, tracker, _, _, _, provider, pipeline = _service(
+        provider_responses=["schema-valid-but-ungrounded", "grounded-plan"],
+        pipeline_outcomes=[
+            ExplanationGroundingError("private unsupported selection"),
+            "rendered-output",
+        ],
+    )
+
+    result = asyncio.run(
+        service.generate(
+            MATCH_RUN_ID,
+            requested_top_k=1,
+            request_id="request-grounding-repair",
+        )
+    )
+
+    assert len(provider.calls) == 2
+    assert pipeline.repair_categories == ["grounding_failure"]
+    assert result.attempt_count == 2
+    assert result.repaired is True
+    assert tracker.events.count("provider.1") == 1
+    assert tracker.events.count("provider.2") == 1
+
+
+def test_generation_normalizes_reference_order_only_on_repair_attempt() -> None:
+    from app.services.explanation.generation.errors import ExplanationGroundingError
+
+    initial = "schema-valid-but-ungrounded"
+    repair = json.dumps(
+        {
+            "candidates": [
+                {
+                    "summary": {
+                        "evidence_refs": ["ref_0002", "ref_0001", "ref_0002"]
+                    }
+                }
+            ]
+        }
+    )
+    service, _, _, _, _, _, pipeline = _service(
+        provider_responses=[initial, repair],
+        pipeline_outcomes=[
+            ExplanationGroundingError("private unsupported selection"),
+            "rendered-output",
+        ],
+    )
+
+    result = asyncio.run(
+        service.generate(
+            MATCH_RUN_ID,
+            requested_top_k=1,
+            request_id="request-grounding-normalization",
+        )
+    )
+
+    assert result.attempt_count == 2
+    assert pipeline.validated_contents[0] == initial
+    normalized = json.loads(pipeline.validated_contents[1])
+    assert normalized["candidates"][0]["summary"]["evidence_refs"] == [
+        "ref_0001",
+        "ref_0002",
+    ]
 
 
 def test_generation_respects_configured_single_attempt_without_repair() -> None:

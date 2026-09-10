@@ -340,7 +340,7 @@ def test_postgres_generation_repair_and_provider_failure_are_durable() -> None:
             assert failed.provider_name == "mock"
             assert failed.configured_model == "deterministic-explanation-planner-v1"
             assert failed.provider_configuration_fingerprint is not None
-            assert failed.prompt_version == "explanation_prompt_v1"
+            assert failed.prompt_version == "explanation_prompt_v2"
             assert failed.prompt_fingerprint is not None
             assert timeout_attempt.status == "FAILED"
             assert timeout_attempt.error_category == "provider_timeout"
@@ -432,7 +432,7 @@ def test_postgres_two_failed_attempts_preserve_truthful_parent_and_audit() -> No
             assert parent.repaired is True
             assert parent.provider_kind == "deterministic"
             assert parent.provider_name == "mock"
-            assert parent.prompt_version == "explanation_prompt_v1"
+            assert parent.prompt_version == "explanation_prompt_v2"
             assert parent.prompt_fingerprint is not None
             assert [item.attempt_number for item in attempts] == [1, 2]
             assert [item.status for item in attempts] == ["FAILED", "FAILED"]

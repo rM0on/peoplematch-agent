@@ -10,7 +10,7 @@ from app.services.explanation.generation.provider import ExplanationProviderRequ
 from app.services.match_runs.contracts import canonical_fingerprint
 
 
-PROMPT_VERSION = "explanation_prompt_v1"
+PROMPT_VERSION = "explanation_prompt_v2"
 EVIDENCE_CONTRACT_VERSION = "provider_prompt_evidence_v1"
 OUTPUT_CONTRACT_VERSION = "explanation_plan_v1"
 RepairCategory = Literal[
@@ -22,6 +22,37 @@ _REPAIR_CATEGORIES = {
     "malformed_response",
     "schema_invalid",
     "grounding_invalid",
+}
+_REPAIR_GUIDANCE = {
+    "malformed_response": (
+        "response_was_not_a_single_json_object",
+        (
+            "return_exactly_one_json_object",
+            "conform_to_the_supplied_output_contract",
+            "preserve_candidate_coverage_order_and_ranks",
+            "do_not_add_candidate_facts",
+        ),
+    ),
+    "schema_invalid": (
+        "response_did_not_match_closed_output_contract",
+        (
+            "conform_to_the_supplied_output_contract",
+            "preserve_candidate_coverage_order_and_ranks",
+            "do_not_add_candidate_facts",
+        ),
+    ),
+    "grounding_invalid": (
+        "selection_not_grounded_in_supplied_evidence",
+        (
+            "use_only_exact_supplied_evidence_tuples",
+            "empty_missing_requirements_require_empty_interview_operations",
+            "rewrite_operations_require_exact_supported_evidence",
+            "unknown_evidence_references_are_forbidden",
+            "summary_refs_must_be_selected_reason_or_risk_refs",
+            "preserve_candidate_coverage_order_and_ranks",
+            "do_not_add_candidate_facts",
+        ),
+    ),
 }
 
 
@@ -40,8 +71,8 @@ def _repository_root() -> Path:
     return Path(__file__).resolve().parents[5]
 
 
-def _prompt_path() -> Path:
-    return Path(__file__).resolve().parent / "prompts" / "explanation_prompt_v1.txt"
+def _prompt_path(version: str) -> Path:
+    return Path(__file__).resolve().parent / "prompts" / f"{version}.txt"
 
 
 def _contract_path() -> Path:
@@ -62,20 +93,20 @@ def _load_output_contract() -> dict:
     return contract
 
 
-def load_explanation_prompt_v1() -> ExplanationPromptArtifact:
+def _load_explanation_prompt(version: str) -> ExplanationPromptArtifact:
     try:
-        system_instruction = _prompt_path().read_text(encoding="utf-8").strip()
+        system_instruction = _prompt_path(version).read_text(encoding="utf-8").strip()
     except OSError as error:
-        raise RuntimeError("explanation_prompt_v1 artifact is unavailable") from error
+        raise RuntimeError(f"{version} artifact is unavailable") from error
     if not system_instruction:
-        raise RuntimeError("explanation_prompt_v1 artifact is empty")
+        raise RuntimeError(f"{version} artifact is empty")
     evidence_contract_fingerprint = canonical_fingerprint(
         ProviderPromptEvidenceV1.model_json_schema()
     )
     output_contract_fingerprint = canonical_fingerprint(_load_output_contract())
     fingerprint = canonical_fingerprint(
         {
-            "prompt_version": PROMPT_VERSION,
+            "prompt_version": version,
             "evidence_contract_version": EVIDENCE_CONTRACT_VERSION,
             "evidence_contract_fingerprint": evidence_contract_fingerprint,
             "output_contract_version": OUTPUT_CONTRACT_VERSION,
@@ -84,7 +115,7 @@ def load_explanation_prompt_v1() -> ExplanationPromptArtifact:
         }
     )
     return ExplanationPromptArtifact(
-        prompt_version=PROMPT_VERSION,
+        prompt_version=version,
         evidence_contract_version=EVIDENCE_CONTRACT_VERSION,
         evidence_contract_fingerprint=evidence_contract_fingerprint,
         output_contract_version=OUTPUT_CONTRACT_VERSION,
@@ -92,6 +123,14 @@ def load_explanation_prompt_v1() -> ExplanationPromptArtifact:
         system_instruction=system_instruction,
         prompt_fingerprint=fingerprint,
     )
+
+
+def load_explanation_prompt_v1() -> ExplanationPromptArtifact:
+    return _load_explanation_prompt("explanation_prompt_v1")
+
+
+def load_explanation_prompt_v2() -> ExplanationPromptArtifact:
+    return _load_explanation_prompt(PROMPT_VERSION)
 
 
 def build_explanation_provider_request(
@@ -116,13 +155,19 @@ def build_explanation_provider_request(
         raise ValueError("max prompt bytes must be a bounded integer")
     if repair_category is not None and repair_category not in _REPAIR_CATEGORIES:
         raise ValueError("repair category is not supported")
-    artifact = load_explanation_prompt_v1()
+    artifact = load_explanation_prompt_v2()
     payload: dict[str, object] = {
         "evidence": evidence.model_dump(mode="json", exclude_none=False),
         "output_contract": _load_output_contract(),
     }
     if repair_category is not None:
-        payload["repair"] = {"attempt": 2, "category": repair_category}
+        validation_error_summary, constraints = _REPAIR_GUIDANCE[repair_category]
+        payload["repair"] = {
+            "attempt": 2,
+            "category": repair_category,
+            "validation_error_summary": validation_error_summary,
+            "constraints": list(constraints),
+        }
     user_instruction = json.dumps(
         payload,
         sort_keys=True,
@@ -144,4 +189,5 @@ __all__ = [
     "PROMPT_VERSION",
     "build_explanation_provider_request",
     "load_explanation_prompt_v1",
+    "load_explanation_prompt_v2",
 ]

@@ -28,7 +28,7 @@ from app.services.explanation.generation.errors import (
 from app.services.explanation.generation.grounding import ground_explanation_plan
 from app.services.explanation.generation.prompt import (
     build_explanation_provider_request,
-    load_explanation_prompt_v1,
+    load_explanation_prompt_v2,
 )
 from app.services.explanation.generation.provider import ExplanationProviderRequest
 from app.services.explanation.generation.reference_projection import (
@@ -59,7 +59,7 @@ class ExplanationGenerationPipeline:
     ) -> None:
         self.max_output_tokens = max_output_tokens
         self.max_prompt_bytes = max_prompt_bytes
-        prompt = load_explanation_prompt_v1()
+        prompt = load_explanation_prompt_v2()
         self.prompt_version = prompt.prompt_version
         self.prompt_fingerprint = prompt.prompt_fingerprint
 

@@ -94,6 +94,71 @@ def test_pipeline_rejects_invalid_json_and_semantically_forged_plan() -> None:
         pipeline.validate_and_render(json.dumps(payload), prepared)
 
 
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda payload, prepared: payload["candidates"][0].update(
+            {
+                "interview_question_operations": [
+                    {
+                        "operation": "ask_evidence_clarification",
+                        "evidence_refs": prepared.projected.payload.candidates[0]
+                        .facts.ranking_context[0]
+                        .evidence_refs,
+                    }
+                ]
+            }
+        ),
+        lambda payload, prepared: payload["candidates"][0].update(
+            {
+                "rewrite_operations": [
+                    {
+                        "operation": "surface_existing_skill",
+                        "evidence_refs": prepared.projected.payload.candidates[0]
+                        .facts.ranking_context[0]
+                        .evidence_refs,
+                    }
+                ]
+            }
+        ),
+        lambda payload, _prepared: payload["candidates"][0]["summary"].update(
+            {"evidence_refs": ["ref_9999"]}
+        ),
+        lambda payload, _prepared: payload["candidates"][0].update(
+            {
+                "interview_question_operations": [
+                    {
+                        "operation": "ask_evidence_clarification",
+                        "evidence_refs": ["ref_9999"],
+                    }
+                ]
+            }
+        ),
+    ],
+    ids=[
+        "interview_without_missing_requirement",
+        "unsupported_rewrite_operation",
+        "unsupported_evidence_reference",
+        "hallucinated_requirement_reference",
+    ],
+)
+def test_pipeline_rejects_schema_valid_but_ungrounded_qwen_selections(mutate) -> None:
+    from app.services.explanation.generation.contracts import ExplanationPlanV1
+    from app.services.explanation.generation.errors import ExplanationGroundingError
+
+    pipeline = _pipeline()
+    prepared = pipeline.prepare(_historical_run(), requested_top_k=1)
+    response = asyncio.run(
+        DeterministicExplanationProvider().generate(prepared.initial_request)
+    )
+    payload = json.loads(response.content)
+    mutate(payload, prepared)
+
+    ExplanationPlanV1.model_validate(payload)
+    with pytest.raises(ExplanationGroundingError):
+        pipeline.validate_and_render(json.dumps(payload), prepared)
+
+
 def test_pipeline_repair_request_is_bounded_and_never_echoes_invalid_output() -> None:
     pipeline = _pipeline()
     prepared = pipeline.prepare(_historical_run(), requested_top_k=1)
@@ -110,6 +175,12 @@ def test_pipeline_repair_request_is_bounded_and_never_echoes_invalid_output() ->
     assert json.loads(repair.user_instruction)["repair"] == {
         "attempt": 2,
         "category": "schema_invalid",
+        "validation_error_summary": "response_did_not_match_closed_output_contract",
+        "constraints": [
+            "conform_to_the_supplied_output_contract",
+            "preserve_candidate_coverage_order_and_ranks",
+            "do_not_add_candidate_facts",
+        ],
     }
 
 

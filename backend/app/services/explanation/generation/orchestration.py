@@ -26,6 +26,9 @@ from app.services.explanation.generation.provider import (
     ExplanationProviderTimeoutError,
     ExplanationProviderTransportError,
 )
+from app.services.explanation.generation.output_normalization import (
+    normalize_explanation_repair_output,
+)
 from app.schemas.explanation_generation import (
     explanation_detail_from_model,
     explanation_summary_from_model,
@@ -249,8 +252,11 @@ class ExplanationGenerationService:
             try:
                 response = await self.provider.generate(request)
                 observed_model = _safe_observed_model(response.observed_model)
+                content = response.content
+                if attempt_number > 1:
+                    content = normalize_explanation_repair_output(content)
                 rendered = self.pipeline.validate_and_render(
-                    response.content,
+                    content,
                     prepared,
                 )
             except (ExplanationPlanParseError, ExplanationGroundingError) as error:

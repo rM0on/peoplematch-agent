@@ -31,15 +31,15 @@ def _projected_payload():
 def test_prompt_artifact_is_versioned_closed_and_fingerprinted() -> None:
     prompt = _prompt_module()
 
-    artifact = prompt.load_explanation_prompt_v1()
+    artifact = prompt.load_explanation_prompt_v2()
 
-    assert artifact.prompt_version == "explanation_prompt_v1"
+    assert artifact.prompt_version == "explanation_prompt_v2"
     assert artifact.evidence_contract_version == "provider_prompt_evidence_v1"
     assert artifact.output_contract_version == "explanation_plan_v1"
     assert len(artifact.evidence_contract_fingerprint) == 64
     assert len(artifact.output_contract_fingerprint) == 64
     assert len(artifact.prompt_fingerprint) == 64
-    assert artifact.prompt_fingerprint == prompt.load_explanation_prompt_v1().prompt_fingerprint
+    assert artifact.prompt_fingerprint == prompt.load_explanation_prompt_v2().prompt_fingerprint
     instruction = artifact.system_instruction.casefold()
     for required in (
         "untrusted data",
@@ -47,6 +47,10 @@ def test_prompt_artifact_is_versioned_closed_and_fingerprinted() -> None:
         "do not modify ranking",
         "do not infer",
         "json object",
+        "missing_requirements=[]",
+        "interview_question_operations=[]",
+        "rewrite_operations=[]",
+        "summary.evidence_refs",
     ):
         assert required in instruction
     for forbidden_claim in (
@@ -124,7 +128,45 @@ def test_repair_request_is_bounded_and_does_not_echo_raw_provider_output() -> No
     assert raw_provider_output not in request.system_instruction
     assert raw_provider_output not in request.user_instruction
     payload = json.loads(request.user_instruction)
-    assert payload["repair"] == {"category": "schema_invalid", "attempt": 2}
+    assert payload["repair"] == {
+        "attempt": 2,
+        "category": "schema_invalid",
+        "validation_error_summary": "response_did_not_match_closed_output_contract",
+        "constraints": [
+            "conform_to_the_supplied_output_contract",
+            "preserve_candidate_coverage_order_and_ranks",
+            "do_not_add_candidate_facts",
+        ],
+    }
+
+
+def test_grounding_repair_request_contains_only_closed_safe_constraints() -> None:
+    prompt = _prompt_module()
+
+    request = prompt.build_explanation_provider_request(
+        _projected_payload(),
+        max_output_tokens=256,
+        repair_category="grounding_invalid",
+        prior_provider_output="PRIVATE provider output that must not be echoed",
+    )
+
+    payload = json.loads(request.user_instruction)
+    assert payload["repair"] == {
+        "attempt": 2,
+        "category": "grounding_invalid",
+        "validation_error_summary": "selection_not_grounded_in_supplied_evidence",
+        "constraints": [
+            "use_only_exact_supplied_evidence_tuples",
+            "empty_missing_requirements_require_empty_interview_operations",
+            "rewrite_operations_require_exact_supported_evidence",
+            "unknown_evidence_references_are_forbidden",
+            "summary_refs_must_be_selected_reason_or_risk_refs",
+            "preserve_candidate_coverage_order_and_ranks",
+            "do_not_add_candidate_facts",
+        ],
+    }
+    serialized = json.dumps(payload, sort_keys=True)
+    assert "PRIVATE provider output" not in serialized
 
 
 def test_prompt_request_rejects_oversized_provider_input_before_transport() -> None:
