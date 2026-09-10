@@ -380,6 +380,66 @@ def test_generation_pipeline_accepts_chinese_historical_labels_and_all_requireme
     assert prepared.effective_top_k == 2
 
 
+def test_generation_pipeline_accepts_spaced_slash_role_without_mutating_ranking() -> None:
+    import asyncio
+
+    from app.services.explanation.generation.pipeline import (
+        ExplanationGenerationPipeline,
+    )
+    from app.services.explanation.generation.mock_provider import (
+        DeterministicExplanationProvider,
+    )
+
+    run = _run()
+    run.results[0].candidate_input_snapshot["target_roles"] = [
+        "Search / Retrieval Engineer"
+    ]
+    _refresh_candidate_snapshot_fingerprint(run.results[0])
+    _refresh_result_fingerprint(run)
+    fingerprint_before = run.result_fingerprint
+    ranking_before = [
+        (item.candidate_id, item.result_rank, item.ltr_rank, item.ltr_score_raw)
+        for item in run.results
+    ]
+
+    pipeline = ExplanationGenerationPipeline(max_output_tokens=1024)
+    prepared = pipeline.prepare(
+        run,
+        requested_top_k=2,
+    )
+    response = asyncio.run(
+        DeterministicExplanationProvider().generate(prepared.initial_request)
+    )
+    output = pipeline.validate_and_render(response.content, prepared)
+
+    assert prepared.evidence_bundle.candidates[0].target_roles == [
+        "search/retrieval engineer"
+    ]
+    assert [item.candidate_id for item in output.candidates] == [
+        item.candidate_id for item in run.results[:2]
+    ]
+    assert run.result_fingerprint == fingerprint_before
+    assert [
+        (item.candidate_id, item.result_rank, item.ltr_rank, item.ltr_score_raw)
+        for item in run.results
+    ] == ranking_before
+
+
+@pytest.mark.parametrize(
+    "unsafe_label",
+    ("Search | Retrieval Engineer", "Search <script> Retrieval Engineer"),
+)
+def test_historical_text_label_still_rejects_unsafe_characters(
+    unsafe_label: str,
+) -> None:
+    from app.services.explanation.evidence.normalization import (
+        normalize_historical_text_label,
+    )
+
+    with pytest.raises(ValueError, match="bounded historical text label"):
+        normalize_historical_text_label(unsafe_label, "target roles")
+
+
 def test_candidate_input_order_does_not_change_canonical_bundle() -> None:
     module = _engine_module()
     builder = module.EvidenceBundleBuilder()

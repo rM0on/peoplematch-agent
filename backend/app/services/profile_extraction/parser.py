@@ -22,6 +22,9 @@ from app.schemas.extraction import (
     JobExtractionDraft,
     JobParseData,
 )
+from app.services.profile_extraction.normalization import (
+    normalize_job_extraction_payload,
+)
 from app.services.profile_extraction.prompts import (
     build_candidate_prompt,
     build_job_prompt,
@@ -227,6 +230,8 @@ class ProfileExtractionService:
             except json.JSONDecodeError as exc:
                 feedback = f"invalid JSON: {exc.msg}"
                 continue
+            if task == ExtractionTask.JOB:
+                decoded = normalize_job_extraction_payload(decoded)
             try:
                 validation_context = None
                 if schema in {CandidateExtractionDraft, JobExtractionDraft}:

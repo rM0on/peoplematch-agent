@@ -356,3 +356,61 @@ def test_phase13_chinese_demo_fixtures_use_the_existing_deterministic_contract()
         assert job.extraction.provider == "deterministic_mock"
 
     asyncio.run(scenario())
+
+
+def test_job_extraction_expands_only_known_short_technical_requirements() -> None:
+    import hashlib
+
+    from app.services.profile_extraction.mock_provider import MockStructuredOutputProvider
+
+    source = "招聘RAG工程师"
+    payload = json.loads(_raw("job_matching_engineer_output.json"))
+    for requirement, acronym in zip(
+        payload["must_have"],
+        ("RAG", "LLM", "NLP", "CV"),
+    ):
+        requirement["text"] = acronym
+    raw_provider_output = json.dumps(payload, ensure_ascii=False)
+
+    async def scenario():
+        provider = MockStructuredOutputProvider.with_responses([raw_provider_output])
+        result = await _service(provider, max_attempts=2).extract_job(source)
+
+        assert [item.text for item in result.draft.must_have] == [
+            "RAG（Retrieval-Augmented Generation）",
+            "LLM（Large Language Model）",
+            "NLP（Natural Language Processing）",
+            "CV（Computer Vision）",
+        ]
+        assert result.extraction.provider == "deterministic_mock"
+        assert result.extraction.prompt_version == "job_extraction_prompt_v1"
+        assert result.extraction.input_fingerprint == hashlib.sha256(
+            source.encode("utf-8")
+        ).hexdigest()
+        assert result.extraction.attempts == 1
+        assert result.extraction.repaired is False
+        assert provider.requests[0].source_text == source
+
+    asyncio.run(scenario())
+
+
+def test_job_extraction_does_not_expand_unknown_short_requirement() -> None:
+    from app.exceptions import ProviderOutputInvalidError
+    from app.services.profile_extraction.mock_provider import MockStructuredOutputProvider
+
+    payload = json.loads(_raw("job_matching_engineer_output.json"))
+    payload["must_have"][0]["text"] = "ABC"
+    raw_provider_output = json.dumps(payload, ensure_ascii=False)
+
+    async def scenario():
+        provider = MockStructuredOutputProvider.with_responses(
+            [raw_provider_output, raw_provider_output]
+        )
+        with pytest.raises(ProviderOutputInvalidError):
+            await _service(provider, max_attempts=2).extract_job(
+                "招聘算法工程师，要求具备明确且可验证的ABC相关项目经验，禁止补充来源中不存在的事实。"
+            )
+        assert len(provider.requests) == 2
+        assert "at least 5 characters" in provider.requests[1].validation_feedback
+
+    asyncio.run(scenario())

@@ -10,6 +10,9 @@ _SAFE_NORMALIZED_LABEL = re.compile(
     r"^[a-z0-9][a-z0-9_.:/+-]*(?: [a-z0-9][a-z0-9_.:/+-]*){0,11}$"
 )
 _SAFE_HISTORICAL_TEXT_PUNCTUATION = frozenset("._:/+()-")
+_SPACED_SLASH_BETWEEN_ALPHANUMERIC = re.compile(
+    r"(?<=[^\W_])\s*/\s*(?=[^\W_])"
+)
 
 
 def normalize_label(value: Any, label: str) -> str:
@@ -37,6 +40,7 @@ def normalize_historical_text_label(value: Any, label: str) -> str:
     if not isinstance(value, str):
         raise ValueError(f"{label} must be a historical string label")
     normalized = " ".join(unicodedata.normalize("NFKC", value).split()).casefold()
+    normalized = _SPACED_SLASH_BETWEEN_ALPHANUMERIC.sub("/", normalized)
     tokens = normalized.split(" ") if normalized else []
     if (
         not normalized
