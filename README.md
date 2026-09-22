@@ -462,6 +462,18 @@ scripts/                # readiness, data, index, model and evaluation tools
 screenshots/            # verified product captures used by this README
 ```
 
+## Deployment Status / 部署状态
+
+The project currently provides:
+
+1. a full local AI application runtime for portfolio review and interviews;
+2. a separately preserved production-deployment architecture preparation;
+3. a documented roadmap for resuming Oracle ARM + Cloudflare deployment.
+
+当前推荐使用 `portfolio-demo` 分支运行本地完整产品。公网部署准备成果保留在 `cloud-deployment-archive` 分支；公网部署暂时暂停，等待 Oracle Cloud、Cloudflare Tunnel 与 production secrets 等外部资源完成配置。暂停不代表删除部署能力，但当前仓库不声称已有公网 URL、线上用户、生产流量或 SLA。
+
+分支用途与恢复边界见 [Version Strategy](docs/version-strategy.md)。
+
 ## 当前边界
 
 PeopleMatch Agent 是一个**可本地运行、可复现、可审计的 AI 人才推荐原型**，不是 production SaaS。当前没有真实用户、客户、招聘结果、在线 A/B、生产流量、QPS / SLA、商业收益、ATS / Bonjour 集成或现实市场代表性。
