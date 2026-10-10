@@ -1,0 +1,55 @@
+{
+  "candidate_cohort_filters": {
+    "cities": [
+      "Beijing"
+    ],
+    "seniorities": [
+      "mid"
+    ]
+  },
+  "candidate_pool_count": 11,
+  "candidate_pool_ids": [
+    "cand_002",
+    "cand_006",
+    "cand_009",
+    "cand_016",
+    "cand_019",
+    "cand_021",
+    "cand_026",
+    "cand_031",
+    "cand_033",
+    "cand_040",
+    "cand_046"
+  ],
+  "candidate_pool_ids_sha256": "ab117cec55a011417aa78f3b4e99883ddcadc26591e0926df2ca09ee44aa05dc",
+  "candidate_pool_k": 20,
+  "candidate_pool_records_sha256": "16cd27db0171492739c93a1d747b4f1d17804b745a7d954054fb55a70b615f09",
+  "experiment_id": "fresh_top3_trusted_20261008T1420Z",
+  "implementation_sha256": {
+    "app\\api\\dependencies.py": "e52a663b54f3896a0ec81a0b6ef5e10d1e14e190a071c348f0eaef637583f4c3",
+    "app\\api\\router.py": "b3db43baeb2342f42bf75a6e8d7218a0b1ccc8c2a18486ab5e49eb010145a5e1",
+    "app\\api\\routes\\recruiter_propositions.py": "148e71c530a1c0d5989105081861757a7453c0ea73af673faa862236a3d60fc7",
+    "app\\schemas\\recruiter_proposition.py": "32f35d73286115ba2e68b0220731b1ac62e2f4680c3864e9d8b0a132c82a1e9f",
+    "app\\services\\explanation\\presentation\\adapter.py": "f2682e384680506510cf7b48eb1552b6e81f1e35b305407317ffda97252906d7",
+    "app\\services\\explanation\\presentation\\contracts_proposition_v1.py": "7212684831806c91f234fb28c0d05bf68984e6aaa8d48482272c4de60dfa499a",
+    "app\\services\\explanation\\presentation\\propositions_v1.py": "344989fe61552c589118f2aaf91c483bf796c98ee40deb43e9af044693eaf93a",
+    "app\\services\\explanation\\presentation\\structured_service.py": "f17bb010c047438a74f4723e42dec03da8f92fed74979c3e254fa046278575a7",
+    "tests\\fresh_top3_trusted_chain.py": "398bd595056211521c3cd117f7764582d632e1786425c194505a20be46005487"
+  },
+  "narrative_draft": "NOT_RUN",
+  "provider_modes": {
+    "explanation": [
+      "openai_compatible",
+      "qwen3.7-flash-2026-07-15"
+    ],
+    "extraction": [
+      "openai_compatible",
+      "qwen3.7-flash-2026-07-15"
+    ]
+  },
+  "ranking_variant": "ltr",
+  "request_sha256": "ca553a99e855e80200c5a90f8ac90d6e58f5ab21dee13e5f06715813e161fa51",
+  "status": "FROZEN_BEFORE_PROVIDER",
+  "synthetic_fixture_sha256": "917c1d07b5bbc9898f13e77f94a82332e76d7216229b3bb7b24e80f4f5d23da3",
+  "top_k": 3
+}

@@ -1,0 +1,73 @@
+{
+  "candidate_cohort_filters": {
+    "cities": [
+      "Beijing"
+    ],
+    "seniorities": [
+      "mid"
+    ]
+  },
+  "candidate_pool_count": 11,
+  "candidate_pool_ids": [
+    "cand_002",
+    "cand_006",
+    "cand_009",
+    "cand_016",
+    "cand_019",
+    "cand_021",
+    "cand_026",
+    "cand_031",
+    "cand_033",
+    "cand_040",
+    "cand_046"
+  ],
+  "candidate_pool_ids_sha256": "ab117cec55a011417aa78f3b4e99883ddcadc26591e0926df2ca09ee44aa05dc",
+  "candidate_pool_k": 20,
+  "candidate_pool_records_sha256": "16cd27db0171492739c93a1d747b4f1d17804b745a7d954054fb55a70b615f09",
+  "candidate_record_sha256": {
+    "cand_002": "2b29cd16e8264c8c02a0a32f009b2838c91162c90a84c3c88952498123a33a8d",
+    "cand_006": "a176814760339b7686dc6683dc11b4ae8702211327af68effc8d06e8b0c1359a",
+    "cand_009": "02a38823c6482489285598477e065ebd46f2a2bec2956ee11830670ac7caca3e",
+    "cand_016": "f1527cdf9305b640878583504c1c03e2fddea083d16279ddfdfc075927ac1676",
+    "cand_019": "23d85606e118569a38fb29bee8df3d426845a62343ab2dbe22946e93959fbbcd",
+    "cand_021": "7d04d37ab78097865b39936b8a11b051873849e0918d7cffed027a85148f649d",
+    "cand_026": "f733570973889957983dc22edbe4db6b8225e7360e1ceb0009b5eca237c4c1e2",
+    "cand_031": "38eccb45f41b58b876abe3fdad525216af9f5a047b183faeef7cb39d8bb11f7c",
+    "cand_033": "284d26de1a8e577960dbe9c068a5a6265d3fd73147d60c633a0c99ab8f14c79e",
+    "cand_040": "f469afe66d0019ee158191ec44bcb2f0ac6d3fc50c7adf4daeadb3d9d245be1d",
+    "cand_046": "0c88a56c373fbf869cff73160758fc7952475e2c06e6cf4d211de8045beaa6ca"
+  },
+  "experiment_id": "fresh_top3_trusted_final_20261009T0835Z",
+  "implementation_sha256": {
+    "app\\api\\dependencies.py": "e52a663b54f3896a0ec81a0b6ef5e10d1e14e190a071c348f0eaef637583f4c3",
+    "app\\api\\router.py": "b3db43baeb2342f42bf75a6e8d7218a0b1ccc8c2a18486ab5e49eb010145a5e1",
+    "app\\api\\routes\\recruiter_propositions.py": "148e71c530a1c0d5989105081861757a7453c0ea73af673faa862236a3d60fc7",
+    "app\\schemas\\recruiter_proposition.py": "32f35d73286115ba2e68b0220731b1ac62e2f4680c3864e9d8b0a132c82a1e9f",
+    "app\\services\\explanation\\generation\\grounding.py": "36fda8fd2bad46880db4d59a9f76bb47707510256979603084c0bac7da678f3d",
+    "app\\services\\explanation\\generation\\pipeline.py": "1df47d11b26e430339e5190a194286b4e91af9e8434e6c796f91fcce44853fd4",
+    "app\\services\\explanation\\generation\\prompts\\explanation_prompt_v4.txt": "e44259f278f6c4a6d3b7220646959f575556c32cba062742111844801cc297a0",
+    "app\\services\\explanation\\generation\\reference_projection.py": "df41b0fd34d5dca09d54380581f13b01bfd3dd67cd11fb3c3144063eda356bb8",
+    "app\\services\\explanation\\generation\\semantic_selection.py": "8115f44d3b760081f2209d4a8db988e619ea2d80e3247727dde57918375827c6",
+    "app\\services\\explanation\\presentation\\adapter.py": "f2682e384680506510cf7b48eb1552b6e81f1e35b305407317ffda97252906d7",
+    "app\\services\\explanation\\presentation\\contracts_proposition_v1.py": "7212684831806c91f234fb28c0d05bf68984e6aaa8d48482272c4de60dfa499a",
+    "app\\services\\explanation\\presentation\\propositions_v1.py": "344989fe61552c589118f2aaf91c483bf796c98ee40deb43e9af044693eaf93a",
+    "app\\services\\explanation\\presentation\\structured_service.py": "f17bb010c047438a74f4723e42dec03da8f92fed74979c3e254fa046278575a7",
+    "tests\\fresh_top3_trusted_chain.py": "9821c6f1a581e887d4f1cad0010b38f317c7feec64f2bca3627ab91fa407a214"
+  },
+  "narrative_draft": "NOT_RUN",
+  "provider_modes": {
+    "explanation": [
+      "openai_compatible",
+      "qwen3.7-flash-2026-07-15"
+    ],
+    "extraction": [
+      "openai_compatible",
+      "qwen3.7-flash-2026-07-15"
+    ]
+  },
+  "ranking_variant": "ltr",
+  "request_sha256": "50a290b49cb105dc631bb0df58e3f8ae42b97403fc4329f08a32c922ca7f246e",
+  "status": "FROZEN_BEFORE_PROVIDER",
+  "synthetic_fixture_sha256": "15b6322a45160a14d507bba2610a33fbda078b09620684231e73a477ed7ae678",
+  "top_k": 3
+}

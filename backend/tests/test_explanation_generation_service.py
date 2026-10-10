@@ -137,7 +137,11 @@ class _Provider:
         value = self.responses.pop(0)
         if isinstance(value, Exception):
             raise value
-        return SimpleNamespace(content=value, observed_model="observed-model")
+        content, finish_reason = value if isinstance(value, tuple) else (value, None)
+        return SimpleNamespace(
+            content=content, observed_model="observed-model",
+            finish_reason=finish_reason, http_status_code=200,
+        )
 
 
 class _Pipeline:
@@ -343,6 +347,30 @@ def test_generation_normalizes_reference_order_only_on_repair_attempt() -> None:
     ]
 
 
+def test_selection_protocol_never_normalizes_repair_output(monkeypatch) -> None:
+    from app.services.explanation.generation.errors import ExplanationPlanParseError
+
+    repair = json.dumps({"contract_version": "provider_explanation_selection_v1", "candidates": []})
+    service, _, _, _, _, _, pipeline = _service(
+        provider_responses=["invalid", repair],
+        pipeline_outcomes=[ExplanationPlanParseError(), "rendered-output"],
+    )
+    pipeline.protocol_version = "v4"
+    def forbidden_normalizer(_content):
+        raise AssertionError("legacy normalization entered selection protocol")
+    monkeypatch.setattr(
+        "app.services.explanation.generation.orchestration.normalize_explanation_repair_output",
+        forbidden_normalizer,
+    )
+
+    result = asyncio.run(service.generate(
+        MATCH_RUN_ID, requested_top_k=1, request_id="selection-repair-no-normalization",
+    ))
+
+    assert result.attempt_count == 2
+    assert pipeline.validated_contents[1] == repair
+
+
 def test_generation_respects_configured_single_attempt_without_repair() -> None:
     from app.services.explanation.generation.errors import (
         ExplanationGenerationFailedError,
@@ -428,6 +456,47 @@ def test_generation_failure_is_durable_safe_and_never_attempts_a_third_call(
     }
     assert tracker.events[-1] == "explanation.finalize_failed"
     assert tracker.active == 0
+
+
+def test_invalid_output_persists_distinct_safe_diagnostics_for_both_attempts() -> None:
+    from app.services.explanation.generation.errors import (
+        ExplanationGenerationFailedError,
+        ExplanationPlanParseError,
+    )
+
+    service, _, _, repository, _, provider, _ = _service(
+        provider_responses=[
+            ("PRIVATE_PROVIDER_OUTPUT_1", "length"),
+            ("PRIVATE_PROVIDER_OUTPUT_2", "stop"),
+        ],
+        pipeline_outcomes=[
+            ExplanationPlanParseError(
+                "PRIVATE_PROVIDER_OUTPUT_1",
+                stage="json_decode",
+                reason_code="json_invalid",
+                field_path="root",
+            ),
+            ExplanationPlanParseError(
+                "PRIVATE_PROVIDER_OUTPUT_2",
+                stage="schema_validation",
+                reason_code="missing",
+                field_path="candidates.0.summary",
+            ),
+        ],
+    )
+    with pytest.raises(ExplanationGenerationFailedError):
+        asyncio.run(
+            service.generate(MATCH_RUN_ID, requested_top_k=1, request_id="safe-diagnostics")
+        )
+    assert len(provider.calls) == 2
+    failure = repository.failed[-1]
+    assert failure["error_code"] == "invalid_output"
+    assert "attempt1=json_decode/json_invalid/root/http200/length" in failure["error_detail_safe"]
+    assert (
+        "attempt2=schema_validation/missing/candidates.0.summary/http200/stop"
+        in failure["error_detail_safe"]
+    )
+    assert "PRIVATE_PROVIDER_OUTPUT" not in failure["error_detail_safe"]
 
 
 def test_regeneration_creates_new_run_and_never_overwrites_history() -> None:

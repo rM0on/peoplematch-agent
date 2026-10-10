@@ -87,13 +87,13 @@ def test_prompt_request_contains_only_opaque_projection_and_closed_plan_schema()
     user_payload = json.loads(request.user_instruction)
     serialized = json.dumps(user_payload, sort_keys=True)
 
-    assert request.output_contract_version == "explanation_plan_v1"
+    assert request.output_contract_version == "provider_explanation_plan_v1"
     assert request.max_output_tokens == 512
     assert user_payload["evidence"]["contract_version"] == (
         "provider_prompt_evidence_v1"
     )
     assert user_payload["output_contract"]["x-contract-version"] == (
-        "explanation_plan_v1"
+        "provider_explanation_plan_v1"
     )
     assert user_payload["output_contract"]["additionalProperties"] is False
     assert "ref_0001" in serialized
@@ -111,6 +111,21 @@ def test_prompt_request_contains_only_opaque_projection_and_closed_plan_schema()
         "api_key",
     ):
         assert forbidden not in serialized
+
+
+def test_active_provider_contract_selects_summary_reason_without_ref_array() -> None:
+    request = _prompt_module().build_explanation_provider_request(
+        _projected_payload(), max_output_tokens=512,
+    )
+    schema = json.loads(request.user_instruction)["output_contract"]
+    summary = schema["$defs"]["ProviderPlanSummarySelection"]
+
+    assert request.output_contract_version == "provider_explanation_plan_v1"
+    assert "match_reason_index" in summary["properties"]
+    assert "evidence_refs" not in summary["properties"]
+    assert summary["additionalProperties"] is False
+    assert summary["properties"]["match_reason_index"]["minimum"] == 0
+    assert summary["properties"]["match_reason_index"]["maximum"] == 3
 
 
 def test_repair_request_is_bounded_and_does_not_echo_raw_provider_output() -> None:

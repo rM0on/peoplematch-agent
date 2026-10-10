@@ -11,6 +11,7 @@ from pydantic import (
     field_validator,
     model_validator,
 )
+from pydantic_core import PydanticCustomError
 
 from app.schemas.explanations import EvidenceId
 from app.schemas.job import RequirementCategory
@@ -257,9 +258,15 @@ class ExplanationPlanCandidate(GenerationContractModel):
     @model_validator(mode="after")
     def rank_one_has_no_comparison(self) -> "ExplanationPlanCandidate":
         if self.result_rank == 1 and self.why_not_top1 is not None:
-            raise ValueError("rank-one Explanation Plan cannot contain why_not_top1")
+            raise PydanticCustomError(
+                "candidate_comparison_forbidden",
+                "rank-one Explanation Plan cannot contain why_not_top1",
+            )
         if self.result_rank > 1 and self.why_not_top1 is None:
-            raise ValueError("non-top-one Explanation Plan requires why_not_top1")
+            raise PydanticCustomError(
+                "candidate_comparison_required",
+                "non-top-one Explanation Plan requires why_not_top1",
+            )
         category_order = {
             "skill_fit": 0,
             "project_evidence": 1,
@@ -269,15 +276,26 @@ class ExplanationPlanCandidate(GenerationContractModel):
         }
         order = [category_order[item.category] for item in self.match_reasons]
         if order != sorted(order) or len(order) != len(set(order)):
-            raise ValueError("match reason selections must be unique and canonical")
-        for label, selections in (
-            ("risk selections", self.risk_points),
-            ("interview selections", self.interview_question_operations),
-            ("rewrite selections", self.rewrite_operations),
+            raise PydanticCustomError(
+                "candidate_reason_order_invalid",
+                "match reason selections must be unique and canonical",
+            )
+        for label, code, selections in (
+            ("risk selections", "candidate_risk_order_invalid", self.risk_points),
+            (
+                "interview selections",
+                "candidate_interview_order_invalid",
+                self.interview_question_operations,
+            ),
+            (
+                "rewrite selections",
+                "candidate_rewrite_order_invalid",
+                self.rewrite_operations,
+            ),
         ):
             keys = [item.model_dump_json() for item in selections]
             if keys != sorted(keys) or len(keys) != len(set(keys)):
-                raise ValueError(f"{label} must be unique and canonical")
+                raise PydanticCustomError(code, f"{label} must be unique and canonical")
         return self
 
 
@@ -294,6 +312,51 @@ class ExplanationPlanV1(GenerationContractModel):
         if len(refs) != len(set(refs)):
             raise ValueError("Explanation Plan Candidate references must be unique")
         return self
+
+
+class ProviderPlanSummarySelection(GenerationContractModel):
+    """Select an already chosen reason without copying its opaque references."""
+
+    template_key: Literal["recorded_match_summary"]
+    match_reason_index: Annotated[StrictInt, Field(ge=0, le=3)]
+
+
+class ProviderExplanationPlanCandidate(ExplanationPlanCandidate):
+    summary: ProviderPlanSummarySelection
+
+    @model_validator(mode="after")
+    def summary_selects_existing_reason(self) -> "ProviderExplanationPlanCandidate":
+        if self.summary.match_reason_index >= len(self.match_reasons):
+            raise PydanticCustomError(
+                "candidate_summary_reason_index_invalid",
+                "summary must select an existing match reason",
+            )
+        return self
+
+
+class ProviderExplanationPlanV1(ExplanationPlanV1):
+    """Provider-only selection protocol; internal ExplanationPlanV1 stays unchanged."""
+
+    contract_version: Literal["provider_explanation_plan_v1"]
+    candidates: list[ProviderExplanationPlanCandidate] = Field(min_length=1, max_length=10)
+
+
+def bind_provider_explanation_plan(plan: ProviderExplanationPlanV1) -> ExplanationPlanV1:
+    """Bind summary refs from a selected reason before internal plan validation."""
+
+    candidates = []
+    for candidate in plan.candidates:
+        payload = candidate.model_dump(mode="json", exclude_none=False)
+        reason = candidate.match_reasons[candidate.summary.match_reason_index]
+        payload["summary"] = {
+            "template_key": candidate.summary.template_key,
+            "evidence_refs": list(reason.evidence_refs),
+        }
+        candidates.append(payload)
+    return ExplanationPlanV1.model_validate({
+        "contract_version": "explanation_plan_v1",
+        "candidates": candidates,
+    })
 
 
 class ResolvedReferenceSelection(GenerationContractModel):
@@ -344,6 +407,8 @@ class ResolvedExplanationPlanV1(GenerationContractModel):
 
 __all__ = [
     "ExplanationPlanV1",
+    "ProviderExplanationPlanV1",
     "ProviderPromptEvidenceV1",
     "ResolvedExplanationPlanV1",
+    "bind_provider_explanation_plan",
 ]

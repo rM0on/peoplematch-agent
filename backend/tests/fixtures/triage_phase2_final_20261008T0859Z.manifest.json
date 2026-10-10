@@ -1,0 +1,105 @@
+{
+  "cases": [
+    {
+      "candidate_id": "candidate_001",
+      "plan_sha256": "2e1df0a81cd47e6f8ef3be52496fb5c16717bdf05e574e6d342e12af9d22f70f",
+      "proposition_sha256": "d536f79c86b9b1c2ca2cef12c0d43bb6514f99ec606cc064494c2a7f92f86497",
+      "ranking_fingerprint": "dd58ce540bcb06351958fc45d7f951fdf5a78dda390b3084576693811e0852cd",
+      "request_sha256": "a20a42d4aef473002a372ca1e5f011442d8c8be1fc22ac83217f32d2e39c872d",
+      "run_id": "synthetic_phase3_group_1",
+      "scenario_id": "ai_agent_a",
+      "split": "development"
+    },
+    {
+      "candidate_id": "candidate_002",
+      "plan_sha256": "fad21cc0c7b860cbd961d41dde5924bb6314bc1e7801012b0764e601b36e0260",
+      "proposition_sha256": "47162377b6b30c7e429d8b9e0730fbac2610b2cce0ac3dede3b346f75c6f543d",
+      "ranking_fingerprint": "dd58ce540bcb06351958fc45d7f951fdf5a78dda390b3084576693811e0852cd",
+      "request_sha256": "69b67e6278722830efc54a8d44a6e07dc0a94d8d13f5436bdbf00a21d2b14672",
+      "run_id": "synthetic_phase3_group_1",
+      "scenario_id": "ai_agent_b",
+      "split": "development"
+    },
+    {
+      "candidate_id": "candidate_001",
+      "plan_sha256": "8b9a68b5b399f48b174bfa1009d240e6d17acbe88c5289702d78ecd1647c7b2e",
+      "proposition_sha256": "825e6e8b067a12c381b26e4fb294a45e05102dde3b1d132083df5b95c22af934",
+      "ranking_fingerprint": "97b9e02f0002044308dd706d3aa97c2ad42cec215828750d702e3b759d489ed7",
+      "request_sha256": "b6a031b1e82e75d21c1e26c226e6556e519b5b5093e1fa47db8beda84f5943d1",
+      "run_id": "synthetic_phase3_group_2",
+      "scenario_id": "recommendation_a",
+      "split": "development"
+    },
+    {
+      "candidate_id": "candidate_002",
+      "plan_sha256": "188cdba1f8b436294ecabcd77f293c7ceec2a8731af840892b47a6068510bf20",
+      "proposition_sha256": "e5c95a36f8e68bc19ce046e15664f1eca600435d50084d603e0f25c9b1c70acb",
+      "ranking_fingerprint": "97b9e02f0002044308dd706d3aa97c2ad42cec215828750d702e3b759d489ed7",
+      "request_sha256": "52c724bd0f5d64d0f5c70e57eaa2db377e4803c51b395a782f297c4bbf6a9a1d",
+      "run_id": "synthetic_phase3_group_2",
+      "scenario_id": "recommendation_b",
+      "split": "development"
+    },
+    {
+      "candidate_id": "candidate_001",
+      "plan_sha256": "911784c1031c29b6fd928c194cacb8daf73588a11debeb08d3d9007032b43960",
+      "proposition_sha256": "7289620d9b77802a4640364f7c4bc820ed1cf4b5118678aa0ca1a38331f24784",
+      "ranking_fingerprint": "443ac8dbf4405538a28b4611ec8f9ff2b76fb7a34eb293067623b74594f3cbb4",
+      "request_sha256": "88d00f91bc7370d1f63162fc4326c55c00e7a9e5b7bba0956083ffa94b354c64",
+      "run_id": "synthetic_phase3_group_3",
+      "scenario_id": "backend_a",
+      "split": "development"
+    },
+    {
+      "candidate_id": "candidate_002",
+      "plan_sha256": "ea0f89e8dfb3134f4734875cc96c07857dc9bc4adda2d98972e5084fdff883c7",
+      "proposition_sha256": "179a6ba2fdaa3b579ee2c994db50cd28ad02c9b5440c71e91ae381cebd5a2561",
+      "ranking_fingerprint": "443ac8dbf4405538a28b4611ec8f9ff2b76fb7a34eb293067623b74594f3cbb4",
+      "request_sha256": "c3c992c55d6d6a8bb9c02cc0e9c96eb1c6165653745ded9e4147daeca98f07d0",
+      "run_id": "synthetic_phase3_group_3",
+      "scenario_id": "backend_b",
+      "split": "development"
+    },
+    {
+      "candidate_id": "candidate_001",
+      "plan_sha256": "80784f4d627b38ffccc52473780c6652217e532118ab45bd7d2792912d16ea52",
+      "proposition_sha256": "d56ea64aa886ac0433d1b3789e383f99cc1374cfa708e9e6997fdd32990f85b5",
+      "ranking_fingerprint": "b31d8fd0689094c00461e4494a721e989309bf28fab2a386535de8b361ccc58e",
+      "request_sha256": "046c55b25313290381bfb57db7ddeb703cce4aa1c8f11eafb27c58aba51e8453",
+      "run_id": "synthetic_triage_holdout_10",
+      "scenario_id": "workflow_automation_holdout",
+      "split": "holdout"
+    },
+    {
+      "candidate_id": "candidate_001",
+      "plan_sha256": "7ea979805ad3b57f0a5d35a0a0ef4b2aa2a2478275080daf38f92479e6e40894",
+      "proposition_sha256": "a476624bd31ea83bd5ee7ab39c0cf4a3582bdae006e551d4f2b15c7173301c69",
+      "ranking_fingerprint": "6dbbca57c9de0b9768267751e031c4fbd3827f322a513a568e547de3c5d9e6b5",
+      "request_sha256": "244e7512e0fde0ada7d326a5cab12d84e32e107b628c268c662288c050ba367f",
+      "run_id": "synthetic_triage_holdout_11",
+      "scenario_id": "geospatial_ml_holdout",
+      "split": "holdout"
+    }
+  ],
+  "experiment_id": "triage_phase2_final_20261008T0859Z",
+  "fixture_sha256": "708a668060a8f988728a922dfe89f09634b6c45018bdd2b5e12d27fb61877dac",
+  "generation_budget": 8,
+  "implementation_sha256": "8919837247f87418a30cd8067a16a3498f15d63ab9a467ddd20573808baafacd",
+  "model": "qwen3.7-flash-2026-07-15",
+  "prereg_sha256": "20d68ae0c328abb4aedf37997ac6aae8c50d2ae6da8be0597eb0550ded619643",
+  "provider": "openai_compatible",
+  "recovered_gold_sha256": "61ac9ff120a863544e6f9e6cfaf1a2cb05768d2568563fd07275e8191fcd14d7",
+  "recovered_result_sha256": "3a32c42c573514771089feb21771fb87369c92e9f5b81ab36aeae58d28fffbcd",
+  "repair_enabled": false,
+  "samples": [
+    "ai_agent_a",
+    "ai_agent_b",
+    "recommendation_a",
+    "recommendation_b",
+    "backend_a",
+    "backend_b",
+    "workflow_automation_holdout",
+    "geospatial_ml_holdout"
+  ],
+  "status": "FROZEN"
+}

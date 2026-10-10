@@ -2,7 +2,7 @@
 
 ## Design goal
 
-The system separates probabilistic language tasks from ranking ownership. LLM providers structure inputs and plan explanations; deterministic retrieval, explicit features and LambdaMART decide candidate order; validation code controls what may be displayed.
+The system separates probabilistic language tasks from ranking ownership. LLM providers structure inputs and select candidate-scoped semantic options; deterministic retrieval, explicit features and LambdaMART decide candidate order. Code binds the selected options into the canonical ExplanationPlanV1, then grounding controls what may be displayed.
 
 ```mermaid
 flowchart TD
@@ -33,12 +33,15 @@ flowchart TD
 
     TopK --> Run[Immutable MatchRun]
     Run --> Evidence[Evidence Builder]
-    Evidence --> Projection[Opaque Provider Projection]
-    Projection --> Explain[Explanation Provider]
-    Explain --> Schema[ExplanationPlanV1 Validation]
+    Evidence --> Projection[Safe Provider Projection]
+    Projection --> Catalog[Candidate-scoped Semantic Option Catalog]
+    Catalog --> Explain[Provider Semantic Selection]
+    Explain --> Binder[Deterministic Binding]
+    Binder --> Schema[ExplanationPlanV1 Validation]
     Schema --> Grounding[Grounding Validation]
     Grounding --> Render[Deterministic Rendering]
-    Render --> Web
+    Render --> Proposition[RecruiterProposition]
+    Proposition --> Web
 
     Run --> Feedback[Feedback / Bad Case Review]
     LTR -. optional frozen experiment .-> CE[Cross-Encoder Reranking]
@@ -56,7 +59,8 @@ flowchart TD
 | LambdaMART | Default final candidate order and raw margin | Natural-language explanation |
 | Cross-Encoder | Optional experimental shortlist reorder | Default product order |
 | Evidence builder | Historical facts and ownership | New candidate facts |
-| Explanation provider | Structured wording plan | Ranking mutation or unsupported claims |
+| Explanation provider | Candidate-scoped semantic option selection | Rank, identity, evidence refs, structural binding or unsupported facts |
+| Deterministic binder | Canonical ExplanationPlanV1 assembly from validated handles | New candidate facts or invented sources |
 | Grounding validator | Evidence-reference integrity | Provider fallback or fact invention |
 
 ## Data and state
@@ -85,9 +89,10 @@ The frozen LambdaMART model and feature metadata determine ranking compatibility
 4. Ten frozen explicit features are calculated for each candidate/job pair.
 5. LambdaMART produces raw margins and the default Top-K order.
 6. MatchRun persists ordering, scores, provenance and evidence ownership.
-7. The provider receives opaque evidence references rather than unrestricted profile content.
-8. Schema and grounding validation reject unsupported output; one constrained repair may correct reference-format violations without adding facts.
-9. The rendered explanation is stored against the historical MatchRun and can be reviewed without altering ranking.
+7. A safe projection and candidate-scoped option catalog expose bounded, source-verified semantic choices to the provider.
+8. The provider selects options; application validation rejects unknown, duplicate, wrong-type and cross-candidate handles. It does not ask the model to copy ranks, evidence refs or structural relationships.
+9. The deterministic binder builds ExplanationPlanV1. Schema, provenance, candidate-isolation and grounding validation fail closed before render and persistence.
+10. The persisted explanation and canonical RecruiterProposition read the historical MatchRun without altering ranking.
 
 ## Invariants
 
@@ -100,3 +105,5 @@ The frozen LambdaMART model and feature metadata determine ranking compatibility
 ## Provider boundary
 
 Extraction and Explanation remain separate task domains while sharing the OpenAI-compatible transport. Each task can use deterministic mock or `openai_compatible` configuration independently. API keys remain backend environment variables and are never part of frontend state, screenshots, MatchRuns or evaluation artifacts.
+
+Free-text Recruiter Narrative is a separate experimental, human-review draft capability, not the trusted Explanation or RecruiterProposition path.

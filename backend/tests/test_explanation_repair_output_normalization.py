@@ -14,7 +14,7 @@ from test_explanation_evidence_engine import _run
 def _pipeline():
     from app.services.explanation.generation.pipeline import ExplanationGenerationPipeline
 
-    return ExplanationGenerationPipeline(max_output_tokens=512)
+    return ExplanationGenerationPipeline(max_output_tokens=512, protocol_version="v3")
 
 
 def _prepared_and_payload():
@@ -73,12 +73,12 @@ def test_repair_normalizer_canonicalizes_only_existing_evidence_reference_lists(
 
 
 def test_repair_normalizer_preserves_unknown_reference_for_grounding_rejection() -> None:
-    from app.services.explanation.generation.errors import ExplanationGroundingError
+    from app.services.explanation.generation.errors import ExplanationPlanParseError
 
     pipeline, _run_value, prepared, payload = _prepared_and_payload()
     payload["candidates"][0]["summary"]["evidence_refs"] = ["ref_9999"]
 
-    with pytest.raises(ExplanationGroundingError):
+    with pytest.raises(ExplanationPlanParseError):
         pipeline.validate_and_render(_normalize(payload), prepared)
 
 
@@ -87,7 +87,6 @@ def test_repair_normalizer_does_not_turn_hallucinated_evidence_into_grounded_fac
 
     pipeline, _run_value, prepared, payload = _prepared_and_payload()
     payload["candidates"][0]["match_reasons"][0]["evidence_refs"] = ["ref_9999"]
-    payload["candidates"][0]["summary"]["evidence_refs"] = ["ref_9999"]
 
     with pytest.raises(ExplanationGroundingError):
         pipeline.validate_and_render(_normalize(payload), prepared)
@@ -106,8 +105,10 @@ def test_repair_normalization_preserves_ranking_fingerprints_order_and_scores() 
         }
     )
     assert selected_refs
-    payload["candidates"][0]["summary"]["evidence_refs"] = (
-        list(reversed(selected_refs)) + [selected_refs[0]]
+    first_reason = payload["candidates"][0]["match_reasons"][0]
+    first_reason["evidence_refs"] = (
+        list(reversed(first_reason["evidence_refs"]))
+        + [first_reason["evidence_refs"][0]]
     )
     before = (
         run.ranking_input_fingerprint,

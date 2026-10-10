@@ -37,6 +37,12 @@ from app.services.explanation.generation.provider import (
 )
 from app.services.explanation.generation.orchestration import ExplanationGenerationService
 from app.services.explanation.generation.pipeline import ExplanationGenerationPipeline
+from app.repositories.recruiter_narrative_repository import RecruiterNarrativeRepository
+from app.services.explanation.presentation.factory import build_recruiter_narrative_provider
+from app.services.explanation.presentation.service import RecruiterNarrativeService
+from app.services.explanation.presentation.service_v2 import RecruiterNarrativeV2Service
+from app.services.explanation.presentation.service_v2_1 import RecruiterNarrativeV2_1Service
+from app.services.explanation.presentation.structured_service import RecruiterPropositionService
 from app.services.feedback.service import FeedbackService
 from app.services.bad_cases.service import BadCaseReviewService
 from app.services.demo.indexes import DemoIndexService
@@ -288,6 +294,70 @@ def get_explanation_generation_service() -> ExplanationGenerationService:
             max_prompt_bytes=settings.explanation_max_prompt_bytes,
         ),
         max_attempts=settings.explanation_max_attempts,
+    )
+
+
+@lru_cache
+def get_runtime_recruiter_narrative_provider():
+    return build_recruiter_narrative_provider(get_settings())
+
+
+async def close_runtime_recruiter_narrative_provider() -> None:
+    if get_runtime_recruiter_narrative_provider.cache_info().currsize == 0:
+        return
+    provider = get_runtime_recruiter_narrative_provider()
+    try:
+        await provider.aclose()
+    finally:
+        get_runtime_recruiter_narrative_provider.cache_clear()
+
+
+def get_recruiter_narrative_service() -> RecruiterNarrativeService:
+    return RecruiterNarrativeService(
+        repository=RecruiterNarrativeRepository(get_session_factory()),
+        provider=get_runtime_recruiter_narrative_provider(),
+        max_output_tokens=get_settings().recruiter_narrative_max_output_tokens,
+    )
+
+
+def get_recruiter_narrative_query_service() -> RecruiterNarrativeService:
+    return RecruiterNarrativeService(
+        repository=RecruiterNarrativeRepository(get_session_factory()),
+    )
+
+
+def get_recruiter_proposition_service() -> RecruiterPropositionService:
+    """Read historical grounded source only; no Narrative provider is initialized."""
+    return RecruiterPropositionService(
+        RecruiterNarrativeRepository(get_session_factory())
+    )
+
+
+def get_recruiter_narrative_v2_service() -> RecruiterNarrativeV2Service:
+    return RecruiterNarrativeV2Service(
+        repository=RecruiterNarrativeRepository(get_session_factory()),
+        provider=get_runtime_recruiter_narrative_provider(),
+        max_output_tokens=get_settings().recruiter_narrative_v2_max_output_tokens,
+    )
+
+
+def get_recruiter_narrative_v2_query_service() -> RecruiterNarrativeV2Service:
+    return RecruiterNarrativeV2Service(
+        repository=RecruiterNarrativeRepository(get_session_factory()),
+    )
+
+
+def get_recruiter_narrative_v2_1_service() -> RecruiterNarrativeV2_1Service:
+    return RecruiterNarrativeV2_1Service(
+        repository=RecruiterNarrativeRepository(get_session_factory()),
+        provider=get_runtime_recruiter_narrative_provider(),
+        max_output_tokens=get_settings().recruiter_narrative_v2_max_output_tokens,
+    )
+
+
+def get_recruiter_narrative_v2_1_query_service() -> RecruiterNarrativeV2_1Service:
+    return RecruiterNarrativeV2_1Service(
+        repository=RecruiterNarrativeRepository(get_session_factory()),
     )
 
 

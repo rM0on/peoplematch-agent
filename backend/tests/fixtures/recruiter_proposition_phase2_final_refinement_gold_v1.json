@@ -1,0 +1,121 @@
+{
+  "dataset_version": "semantic_intent_final_refinement_gold_v1",
+  "source_experiment": "semantic_intent_final_refinement_20261007T1335Z",
+  "source_artifact_sha256": "9B026ABCDCB102370071AFBEC2554270FE1594C58EF556CA743A7E959A3EB572",
+  "annotation_rule": "Independent manual semantic reading against canonical synthetic propositions and source terms. Selected handles and blind alarms are not proof. A question may still presuppose a candidate action. Uncertain is kept separate from confirmed unsupported.",
+  "cases": [
+    {
+      "scenario_id": "ai_agent_a", "split": "development", "items": [
+        {"field":"decision_summary","index":0,"quote":"建议优先安排人工技术复核","adjudication":"supported","category":"human_review_recommendation","rationale":"Priority review is canonical for this multi-requirement project-backed case."},
+        {"field":"decision_summary","index":0,"quote":"进一步评估其技术栈与岗位的契合度","adjudication":"supported","category":"verification_target","rationale":"This asks for a human assessment; it does not state that fit is established."},
+        {"field":"why_consider","index":0,"quote":"FastAPI 和 AI Agent 的需求存在关联","adjudication":"supported","category":"job_alignment","rationale":"Both topics are selected alignment propositions."},
+        {"field":"why_consider","index":0,"quote":"值得深入查看","adjudication":"supported","category":"review_value","rationale":"Priority human review is licensed for this case."},
+        {"field":"technical_signal","index":0,"quote":"项目材料中列出了包含 agent workflow、FastAPI、Python 和 RAG 的技术组合","adjudication":"supported","category":"material_technology_fact","rationale":"These exact terms occur in the synthetic project material."},
+        {"field":"technical_signal","index":0,"quote":"候选人简历中也提及了 agent workflow 技能","adjudication":"supported","category":"listed_skill_fact","rationale":"The skill is listed, not certified as proficiency."},
+        {"field":"technical_signal","index":1,"quote":"候选人材料中明确列出了 agent workflow 相关技能","adjudication":"supported","category":"listed_skill_fact","rationale":"Repeated but source-supported skill listing."},
+        {"field":"interview_focus","index":0,"quote":"是否实际参与过 agent workflow 的开发或设计","adjudication":"supported","category":"interview_hypothesis","rationale":"Participation itself is asked, not asserted."},
+        {"field":"interview_focus","index":0,"quote":"在其中承担的角色","adjudication":"supported","category":"interview_hypothesis","rationale":"Role is sought conditionally after participation is confirmed."},
+        {"field":"interview_focus","index":0,"quote":"做出特定技术选型或架构设计的依据","adjudication":"unsupported","category":"interview_presupposed_personal_action","rationale":"Participation would not establish that this person made an architecture or technology choice."},
+        {"field":"uncertainty","index":0,"quote":"尚无法从现有材料中确认候选人在 agent workflow、FastAPI、Python 及 RAG 等具体项目中的个人参与边界和实际贡献程度","adjudication":"supported","category":"material_unknown","rationale":"Personal scope remains unknown, not deficient."}
+      ]
+    },
+    {
+      "scenario_id": "ai_agent_b", "split": "development", "items": [
+        {"field":"decision_summary","index":0,"quote":"建议进行定向人工筛查","adjudication":"supported","category":"conditional_screen","rationale":"The canonical review action is conditional targeted screen."},
+        {"field":"decision_summary","index":0,"quote":"确认候选人在 Python 领域的具体参与深度","adjudication":"uncertain","category":"possible_experience_presupposition","rationale":"Could mean verify whether there was participation, but depth phrasing can presuppose it."},
+        {"field":"why_consider","index":0,"quote":"Python 要求存在关联","adjudication":"supported","category":"job_alignment","rationale":"The single selected alignment is Python."},
+        {"field":"why_consider","index":0,"quote":"初步筛选后做进一步关注","adjudication":"supported","category":"conditional_screen","rationale":"It remains conditional rather than an interview invitation."},
+        {"field":"technical_signal","index":0,"quote":"项目材料中涉及了评估（evaluation）、Python、排序（ranking）及检索（retrieval）等技术栈","adjudication":"supported","category":"material_technology_fact","rationale":"These are listed project technologies, not personal actions."},
+        {"field":"technical_signal","index":1,"quote":"具备评估（evaluation）相关的技能背景","adjudication":"unsupported","category":"listed_skill_to_background","rationale":"A listed skill does not establish a candidate's background or capability."},
+        {"field":"interview_focus","index":0,"quote":"您在过往项目中对模型或系统进行评估的具体范围","adjudication":"unsupported","category":"interview_presupposed_personal_action","rationale":"The question presupposes this person performed evaluation."},
+        {"field":"interview_focus","index":0,"quote":"您主要负责了哪些环节的评估工作","adjudication":"unsupported","category":"unsupported_responsibility","rationale":"It presupposes responsibility for evaluation work, which is not sourced."},
+        {"field":"uncertainty","index":0,"quote":"尚无法从现有材料中确认候选人在上述技术栈中的实际项目参与边界和具体职责范围","adjudication":"supported","category":"material_unknown","rationale":"The material does not establish individual scope or responsibility."}
+      ]
+    },
+    {
+      "scenario_id": "recommendation_a", "split": "development", "items": [
+        {"field":"decision_summary","index":0,"quote":"建议优先安排人工技术复核","adjudication":"supported","category":"human_review_recommendation","rationale":"Multiple project-backed JD alignments license priority review."},
+        {"field":"decision_summary","index":0,"quote":"深入验证匹配度","adjudication":"supported","category":"verification_target","rationale":"Fit is to be verified, not asserted."},
+        {"field":"why_consider","index":0,"quote":"排序（Ranking）需求存在重叠","adjudication":"supported","category":"job_alignment","rationale":"Ranking is in the selected alignment topics."},
+        {"field":"why_consider","index":0,"quote":"检索（Retrieval）能力","adjudication":"unsupported","category":"alignment_to_capability","rationale":"The selected relation supports retrieval direction, not confirmed candidate ability."},
+        {"field":"why_consider","index":0,"quote":"具备进一步探讨的价值","adjudication":"supported","category":"review_value","rationale":"This describes the value of reviewing, not an ability conclusion."},
+        {"field":"technical_signal","index":0,"quote":"项目材料中明确列出了包含评估、Python、排序和检索在内","adjudication":"supported","category":"material_technology_fact","rationale":"The four terms are present in the project material."},
+        {"field":"technical_signal","index":0,"quote":"完整技术栈","adjudication":"unsupported","category":"unsupported_completeness","rationale":"The four listed technologies do not prove a complete stack or end-to-end coverage."},
+        {"field":"technical_signal","index":0,"quote":"单独标记了评估技能","adjudication":"supported","category":"listed_skill_fact","rationale":"Evaluation is listed as a skill."},
+        {"field":"technical_signal","index":0,"quote":"显示出相关领域的覆盖","adjudication":"uncertain","category":"scope_strength_ambiguous","rationale":"May merely summarize listed topics, but could imply breadth of demonstrated experience."},
+        {"field":"technical_signal","index":1,"quote":"候选人材料中明确列出了评估（Evaluation）技能","adjudication":"supported","category":"listed_skill_fact","rationale":"Exact skill listing, albeit redundant."},
+        {"field":"interview_focus","index":0,"quote":"是否实际参与过涉及评估、Python、排序或检索的项目","adjudication":"supported","category":"interview_hypothesis","rationale":"Participation is not presupposed."},
+        {"field":"interview_focus","index":0,"quote":"在这些环节中的选择依据或评估标准","adjudication":"unsupported","category":"interview_presupposed_personal_action","rationale":"Being involved in a project does not establish personal selection or evaluation decisions."},
+        {"field":"uncertainty","index":0,"quote":"尚无法从现有材料中确认候选人在上述评估、Python、排序及检索相关项目中的具体参与范围","adjudication":"supported","category":"material_unknown","rationale":"Candidate project participation scope is not established."}
+      ]
+    },
+    {
+      "scenario_id": "recommendation_b", "split": "development", "items": [
+        {"field":"decision_summary","index":0,"quote":"建议先进行定向人工筛查","adjudication":"supported","category":"conditional_screen","rationale":"The weak overlap is not promoted to a technical interview."},
+        {"field":"decision_summary","index":0,"quote":"确认候选人在 Python 方面的实际参与情况","adjudication":"supported","category":"interview_hypothesis","rationale":"Participation is to be confirmed."},
+        {"field":"why_consider","index":0,"quote":"Python 技能与岗位需求存在方向上的关联","adjudication":"supported","category":"job_alignment","rationale":"One sourced Python overlap supports a directional relation only."},
+        {"field":"why_consider","index":0,"quote":"值得进一步探索","adjudication":"supported","category":"conditional_screen","rationale":"It does not commit to an interview or strong match."},
+        {"field":"technical_signal","index":0,"quote":"项目材料中涉及 Docker、FastAPI、PostgreSQL 和 Python 等技术栈","adjudication":"supported","category":"material_technology_fact","rationale":"Exact listed project terms."},
+        {"field":"technical_signal","index":0,"quote":"候选人材料中也列出了 Docker","adjudication":"supported","category":"listed_skill_fact","rationale":"Docker is listed as a skill."},
+        {"field":"interview_focus","index":0,"quote":"是否直接参与了 PostgreSQL 的使用","adjudication":"supported","category":"interview_hypothesis","rationale":"Personal use is asked, not asserted."},
+        {"field":"interview_focus","index":0,"quote":"您当时选择该数据库的技术依据或评估过程","adjudication":"unsupported","category":"interview_presupposed_personal_action","rationale":"Even if involved with PostgreSQL, the candidate need not have selected the database."},
+        {"field":"uncertainty","index":0,"quote":"尚无法从材料中确认候选人在 Docker、FastAPI、PostgreSQL 和 Python 相关项目中的具体个人参与边界","adjudication":"supported","category":"material_unknown","rationale":"Unknown participation is not a deficit."}
+      ]
+    },
+    {
+      "scenario_id": "backend_a", "split": "development", "items": [
+        {"field":"decision_summary","index":0,"quote":"建议优先安排人工技术复核","adjudication":"supported","category":"human_review_recommendation","rationale":"Multiple project-backed alignments license priority review."},
+        {"field":"decision_summary","index":0,"quote":"评估候选人在 FastAPI、PostgreSQL 和 Python 方面的实际技术深度","adjudication":"uncertain","category":"possible_capability_presupposition","rationale":"A verification target, but 'actual technical depth' can imply an established personal practice."},
+        {"field":"why_consider","index":0,"quote":"PostgreSQL 的需求存在关联","adjudication":"supported","category":"job_alignment","rationale":"This topic is selected for why-consider."},
+        {"field":"why_consider","index":1,"quote":"Python 的需求存在关联","adjudication":"supported","category":"job_alignment","rationale":"This topic is selected for why-consider."},
+        {"field":"technical_signal","index":0,"quote":"项目材料中列出了包含 Docker、FastAPI、PostgreSQL 和 Python 的技术栈","adjudication":"supported","category":"material_technology_fact","rationale":"The terms are directly listed in the project."},
+        {"field":"technical_signal","index":1,"quote":"候选人材料中列出了 Docker 技能","adjudication":"supported","category":"listed_skill_fact","rationale":"Skill listing without proficiency claim."},
+        {"field":"interview_focus","index":0,"quote":"是否参与过涉及 PostgreSQL 的项目","adjudication":"supported","category":"interview_hypothesis","rationale":"Participation remains a question."},
+        {"field":"interview_focus","index":0,"quote":"在其中承担的角色","adjudication":"supported","category":"interview_hypothesis","rationale":"Conditional role clarification is allowed."},
+        {"field":"interview_focus","index":0,"quote":"做出相关技术选择的依据","adjudication":"unsupported","category":"interview_presupposed_personal_action","rationale":"Participation does not establish that the candidate made technology decisions."},
+        {"field":"uncertainty","index":0,"quote":"尚无法从现有材料中确认候选人在 Docker、FastAPI、PostgreSQL 和 Python 相关项目中的具体参与范围","adjudication":"supported","category":"material_unknown","rationale":"Project participation is not established."}
+      ]
+    },
+    {
+      "scenario_id": "backend_b", "split": "development", "items": [
+        {"field":"decision_summary","index":0,"quote":"建议优先安排人工技术复核","adjudication":"supported","category":"human_review_recommendation","rationale":"The structured review proposition supports this action."},
+        {"field":"decision_summary","index":0,"quote":"评估候选人在 Python 和 RAG 领域的实际技术深度","adjudication":"uncertain","category":"possible_capability_presupposition","rationale":"May be read as assessment of an unknown, but 'actual depth' hints that practice already exists."},
+        {"field":"why_consider","index":0,"quote":"Python 语言及 RAG 架构方向上存在关联","adjudication":"supported","category":"job_alignment","rationale":"The selected relation supports Python and RAG direction, not mastery."},
+        {"field":"why_consider","index":0,"quote":"值得作为潜在人选进行探索","adjudication":"supported","category":"review_value","rationale":"It is a review suggestion, not an ability conclusion."},
+        {"field":"technical_signal","index":0,"quote":"项目材料中列出了包含 Python、Qdrant、RAG 及向量数据库的技术栈组合","adjudication":"supported","category":"material_technology_fact","rationale":"Exact material topics are listed."},
+        {"field":"interview_focus","index":0,"quote":"是否直接参与过涉及 Python、Qdrant、RAG 或向量数据库的具体项目","adjudication":"supported","category":"interview_hypothesis","rationale":"Participation is explicitly conditional."},
+        {"field":"interview_focus","index":0,"quote":"具体负责了哪些环节","adjudication":"unsupported","category":"unsupported_responsibility","rationale":"A positive participation answer does not prove responsibility for any module."},
+        {"field":"interview_focus","index":0,"quote":"做出相关技术选型或实现方式的依据","adjudication":"unsupported","category":"interview_presupposed_personal_action","rationale":"The question presupposes personal choice or implementation decisions."},
+        {"field":"uncertainty","index":0,"quote":"尚无法从现有材料中明确界定候选人在上述技术栈（Python、Qdrant、RAG、向量数据库）中的个人实际参与边界","adjudication":"supported","category":"material_unknown","rationale":"The material leaves personal participation open."}
+      ]
+    },
+    {
+      "scenario_id": "data_search_holdout", "split": "holdout", "items": [
+        {"field":"decision_summary","index":0,"quote":"岗位对 Kafka 的核心需求","adjudication":"supported","category":"job_requirement_fact","rationale":"Kafka is an explicit synthetic must-have requirement."},
+        {"field":"decision_summary","index":0,"quote":"建议优先安排人工技术复核","adjudication":"supported","category":"human_review_recommendation","rationale":"Two distinct project-backed alignments support priority review."},
+        {"field":"decision_summary","index":0,"quote":"评估其实际经验深度","adjudication":"unsupported","category":"project_technology_to_candidate_experience","rationale":"Project terms do not establish personal experience whose depth can be assessed."},
+        {"field":"why_consider","index":0,"quote":"Kafka 和 Elasticsearch 方向存在关联","adjudication":"supported","category":"job_alignment","rationale":"Both are sourced exact candidate/JD relations."},
+        {"field":"why_consider","index":0,"quote":"具备初步的探索价值","adjudication":"supported","category":"review_value","rationale":"Describes screening value, not a candidate capability."},
+        {"field":"technical_signal","index":0,"quote":"项目材料中列出了包含 Docker、Elasticsearch、Kafka 和 Python 的技术栈","adjudication":"supported","category":"material_technology_fact","rationale":"Exact project material technology list."},
+        {"field":"technical_signal","index":0,"quote":"候选人简历中也标注了 Docker 技能","adjudication":"supported","category":"listed_skill_fact","rationale":"Exact skill listing."},
+        {"field":"interview_focus","index":0,"quote":"是否直接参与过 Elasticsearch 的具体实施","adjudication":"supported","category":"interview_hypothesis","rationale":"The implementation involvement is to be confirmed."},
+        {"field":"interview_focus","index":0,"quote":"当时选择该技术栈的主要依据或考量因素","adjudication":"unsupported","category":"interview_presupposed_personal_action","rationale":"Even if involved, personal selection of the stack is not established."},
+        {"field":"uncertainty","index":0,"quote":"尚无法从现有材料中确认候选人在 Elasticsearch 和 Kafka 相关项目中的具体职责范围及参与边界","adjudication":"supported","category":"material_unknown","rationale":"Candidate duties remain unknown."}
+      ]
+    },
+    {
+      "scenario_id": "vision_api_holdout", "split": "holdout", "items": [
+        {"field":"decision_summary","index":0,"quote":"建议先进行定向人工筛查","adjudication":"supported","category":"conditional_screen","rationale":"One generic project-backed overlap permits only conditional screening."},
+        {"field":"decision_summary","index":0,"quote":"确认候选人在 Python 领域的实际参与深度","adjudication":"uncertain","category":"possible_experience_presupposition","rationale":"Could be an inquiry, but depth may presuppose personal practice."},
+        {"field":"why_consider","index":0,"quote":"Python 能力存在关联","adjudication":"supported","category":"job_alignment","rationale":"The phrase describes the JD's Python requirement, not proven candidate ability."},
+        {"field":"why_consider","index":0,"quote":"值得进一步探索其匹配度","adjudication":"supported","category":"conditional_screen","rationale":"Exploration does not claim strong match."},
+        {"field":"technical_signal","index":0,"quote":"项目材料中明确列出了 Docker、Python、Qdrant 和 Redis 等技术栈","adjudication":"supported","category":"material_technology_fact","rationale":"Exact synthetic project technology list."},
+        {"field":"technical_signal","index":0,"quote":"个人技能清单中也包含 Docker","adjudication":"supported","category":"listed_skill_fact","rationale":"Docker is listed, not certified as mastery."},
+        {"field":"interview_focus","index":0,"quote":"请描述您在项目中具体使用 Docker 的场景","adjudication":"unsupported","category":"project_technology_to_candidate_personal_action","rationale":"The question presupposes that this candidate personally used Docker."},
+        {"field":"interview_focus","index":0,"quote":"若回答涉及容器化部署或环境管理，可追问具体的镜像构建细节或编排逻辑","adjudication":"supported","category":"conditional_interview_branch","rationale":"The deployment follow-up is explicitly conditional on the answer; it is not an asserted project fact."},
+        {"field":"interview_focus","index":0,"quote":"若未直接负责，请说明您是如何了解该环节的","adjudication":"supported","category":"conditional_interview_branch","rationale":"This asks about a hypothetical response branch without asserting responsibility."},
+        {"field":"uncertainty","index":0,"quote":"尚无法从现有材料中确认候选人在 Docker、Python、Qdrant 及 Redis 相关项目中的具体职责边界和个人贡献程度","adjudication":"supported","category":"material_unknown","rationale":"Candidate responsibility and contribution are unresolved."}
+      ]
+    }
+  ]
+}

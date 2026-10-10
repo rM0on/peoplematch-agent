@@ -9,22 +9,22 @@
 | LambdaMART LTR | `data/eval/phase6/ltr_model_metadata_v1.json`、ignored native artifact | LTR Score 边界说明、R2 table | 构建并冻结 LambdaMART ranking baseline | 95.93% 招聘准确率 |
 | Optional CE | Phase 7 manifest/report | R2 CE row | 评估 pinned Cross-Encoder 并基于证据保留为实验 | 使用 CE 所以更先进/更准 |
 | MatchRun trace | Phase 8 services/contracts | Run ID、steps、fingerprint | 实现不可变排名历史与可追踪 provenance | 支持生产级审计合规 |
-| Grounded Explanation | Phase 9 Evidence Bundle/provider/rendering | Evidence refs、为什么推荐该候选人 | 让 LLM 在闭合证据计划上生成可校验解释 | LLM 自主发现事实或决定排名 |
+| Grounded Explanation | Phase 9 Evidence Bundle、Semantic Selection、Deterministic Binding、Grounding | Evidence refs、为什么值得人工复核 | 让 LLM 选择候选人范围内的语义选项，由程序绑定 canonical ExplanationPlanV1 并验证来源 | LLM 自主发现事实或决定排名 |
 | Feedback / BadCase | Phase 10 services/API/UI | 历史复核与 BadCase 页面 | 实现 append-only review loop 与并发保护 | 已形成线上持续学习闭环 |
 | Offline Evaluation | `docs/offline-evaluation.md`、final Test artifact | R1/R2 tables | 设计 incomplete-judgment、common-pool、Test-seal evaluator | 证明真实世界泛化或业务提升 |
-| Real LLM boundary | Phase 15 task adapters、shared transport、versioned prompts、status/error contracts | 任意 JD OpenAI-compatible MockTransport E2E + deterministic mock E2E | 实现 OpenAI-compatible Provider 接入边界、Prompt provenance、安全错误映射与 ranking invariance | 已验证所有 Provider、已生产接入某厂商或 live smoke 已通过 |
+| Real LLM boundary | Phase 15 task adapters、shared transport、versioned prompts、Fresh synthetic Top-3 artifacts | MockTransport E2E 与独立真实 Provider Extraction / Semantic Selection | 实现 OpenAI-compatible Provider 边界，并在受控 synthetic Fresh run 验证真实结构化链路 | 已验证所有 Provider、已生产接入某厂商或具有线上效果 |
 | 推荐产品语义 | `candidate-display-metadata.ts`、中文 Demo-only fixtures | 七步 Story、48 人基础池、Top-K 卡片 | 将岗位 Query → Candidate Retrieval → Ranking 链路做成可交互中文 Demo | 中文展示 metadata 改善了模型效果或改变了离线结果 |
 | Candidate Lifecycle | `candidate-pool-screen.tsx`、existing Candidate parse/list/index APIs | Resume 预览确认、人才库列表、JD-only 推荐 | 实现 Resume → Profile → Candidate Pool → 后续岗位推荐的显式本地流程 | 新增 runtime 候选人改变了冻结数据集或 Phase 11 结果 |
 
 ## 简历可用表述
 
-> 独立构建基于 Dense/BM25 Hybrid Retrieval + LightGBM LambdaMART 的人岗匹配本地原型，实现 schema-first Resume/JD 结构化、Evidence-grounded LLM Explanation、不可变 MatchRun、Feedback/BadCase Review 与可复现 Offline Evaluation。
+> 构建基于 Dense/BM25 Hybrid Retrieval + LightGBM LambdaMART 的人岗匹配本地原型，实现 schema-first Resume/JD 结构化、Evidence-grounded LLM Explanation、不可变 MatchRun、Feedback/BadCase Review 与可复现 Offline Evaluation。
 
 > 设计 incomplete-judgment 离线评测协议，在相同候选池上对比 Hybrid、LTR 与可选 Cross-Encoder；以 Test seal、artifact fingerprint 和明确 claim boundary 防止结果驱动调参。
 
 > 在独立 Extraction / Explanation 领域边界下复用 OpenAI-compatible transport，引入 provider-neutral 配置、版本化 Prompt、只读状态投影与安全错误映射，同时保留 deterministic mock 并验证 ranking invariance。
 
-Phase 15 最终验证证据：backend 全量 `865 passed, 58 skipped`；frontend `76 passed` 并在 Node `22.23.2` 下通过 typecheck/lint/build；browser E2E `3 passed`，覆盖 OpenAI-compatible 本地 MockTransport、deterministic mock 与安全限流恢复。没有 live credential，因此只能说接口边界与本地 workflow 已验证，不能说外部 Provider live smoke 已通过。
+Phase 15 当时的冻结验证证据：backend `865 passed, 58 skipped`；frontend `76 passed`，browser E2E `3 passed`。当时没有 live credential；**这不是当前项目的最终验证状态**。后续独立 synthetic Fresh Trusted Top-3 实验已验证真实 Provider Extraction / Semantic Selection、3/3 Grounding、3/3 RecruiterProposition、候选隔离、持久化回读与 ranking invariance。参见 `backend/tests/fixtures/fresh_top3_trusted_final_20261009T0835Z*`；它仍是本地受控验证，不代表线上招聘效果。
 
 ## 高频面试问题
 
@@ -50,7 +50,7 @@ Phase 15 最终验证证据：backend 全量 `865 passed, 58 skipped`；frontend
 
 ### Explanation 如何防幻觉？
 
-Provider 看到 opaque Evidence refs，只能返回 closed plan；后端拥有 Evidence Facts 并通过固定 renderer 生成最终文本。未知信息不补写。
+Provider 看到安全投影与 candidate-scoped semantic option handles，只选择语义对象；后端绑定身份、顺序、evidence refs 和来源关系，生成 canonical ExplanationPlanV1，再经 Grounding 与候选/来源校验。模型输出不是事实源；未知信息不补写。
 
 ### Feedback 为什么不自动变标签？
 

@@ -1,5 +1,7 @@
 # PeopleMatch Agent Portfolio Overview
 
+> Historical pre-Fresh screenshot walkthrough. The current, frozen recruiter-facing screenshot set and its run provenance are documented in [Final portfolio screenshots](../images/portfolio-final/README.md). Do not treat the older mock captures below as the real-provider Fresh Top-3 validation.
+
 PeopleMatch Agent is an **AI-powered talent matching and recommendation system**. A recruiter provides a Job Description (JD); the system structures the requirement, retrieves candidates from a talent pool, ranks them with LambdaMART, and generates explanations that must remain grounded in recorded evidence.
 
 它不是让 LLM 直接决定候选人顺序的简历匹配工具。系统把语义理解、候选召回、学习排序、证据解释和人工复核拆成可独立验证的阶段。
@@ -27,7 +29,7 @@ Resume Text → Structured Candidate Profile → Human Confirmation → Candidat
 
 - **AI application engineering:** schema-first extraction, provider isolation, safe error mapping and versioned prompts.
 - **Recommendation systems:** Dense/Sparse retrieval, Reciprocal Rank Fusion, explicit pair features and Learning-to-Rank.
-- **LLM safety:** opaque evidence projection, structured explanation plans, grounding validation and constrained repair.
+- **LLM safety:** safe evidence projection, candidate-scoped semantic selection, deterministic ExplanationPlanV1 binding and grounding validation. Historical full-object Provider and repair experiments are archived, not the current trusted path.
 - **Traceability:** immutable MatchRun history, model/configuration provenance and ranking fingerprints.
 - **Evaluation discipline:** frozen data/protocol boundaries, Retrieval and Ranking metrics, and explicit limitations.
 

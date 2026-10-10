@@ -1,0 +1,155 @@
+{
+  "archived_refinement_gold_sha256": "31d959913fe561ebbaffab4134d4d441b88e448776810958952840ace3af39ad",
+  "archived_refinement_sha256": "9b026abcdcb102370071afbec2554270fe1594c58ef556ca743a7e959a3eb572",
+  "audit_calls_budget": 8,
+  "cases": [
+    {
+      "intent_sha256": "56c1d868806944c53034a06be9788ea19fd6a91ff815e3a12ef88ccb7f546088",
+      "projection_sha256": "027882ec6e42f2e5200a5ba7c8e30dcb75aab24a265eb20c18d9ffcfafb3e4fc",
+      "propositions_sha256": "d536f79c86b9b1c2ca2cef12c0d43bb6514f99ec606cc064494c2a7f92f86497",
+      "ranking_sha256": "bc539e7713e42e9e4f58de20f3701cbf15dd1068086d2223f9a55cfc94d18648",
+      "request_sha256": "46f976b429511ef77d2fe6a7e1756ec325e3aa34ef7d0f7dc1dcdb9323ba52ce",
+      "requirements": [
+        "Python",
+        "RAG",
+        "AI Agent",
+        "FastAPI"
+      ],
+      "role": "AI Agent Engineer",
+      "sample_id": "ai_agent_a",
+      "split": "development"
+    },
+    {
+      "intent_sha256": "dbb14f7afe9e637758135ae174b4e26a3f27dcaed014a84f4be45acc7cd4ebbf",
+      "projection_sha256": "7573efece9e903b355485d2532f0269b8cd7d95936750583bb9df675af52d053",
+      "propositions_sha256": "d193505601cd50b62ccce5e3c0dea62ce0db5cb3cee557ea9792c063a8fa37ce",
+      "ranking_sha256": "bc539e7713e42e9e4f58de20f3701cbf15dd1068086d2223f9a55cfc94d18648",
+      "request_sha256": "0ca66c6c5a5f189c31730a3b87050c788ef934bf1b7d2028c27c41b4f312739c",
+      "requirements": [
+        "Python",
+        "RAG",
+        "AI Agent",
+        "FastAPI"
+      ],
+      "role": "AI Agent Engineer",
+      "sample_id": "ai_agent_b",
+      "split": "development"
+    },
+    {
+      "intent_sha256": "c24348af3ce1d240f95ddc94d88b15398d59eb58047da109a4019f5876e76be8",
+      "projection_sha256": "54a9d833b81d29aaafd0aa145dd412d46ed5e6ed13c95e2ba8a2ef0a27278931",
+      "propositions_sha256": "825e6e8b067a12c381b26e4fb294a45e05102dde3b1d132083df5b95c22af934",
+      "ranking_sha256": "904360968c26ba71d214dbe254225349e98835d922cfc52eae484ecac0e32a86",
+      "request_sha256": "c3f475a31e8351f0c715136dfb43756a3f64f784b8f125e035dc1ba37af7a998",
+      "requirements": [
+        "Python",
+        "Retrieval",
+        "LambdaMART",
+        "Evaluation"
+      ],
+      "role": "Recommendation Engineer",
+      "sample_id": "recommendation_a",
+      "split": "development"
+    },
+    {
+      "intent_sha256": "92f2dc34a2d2c61e323b26f6cc1bb0951aa219459e9118bfe9d8ff877d6317cb",
+      "projection_sha256": "6c19b306d7fe0a3bc68b8c8777c0fc49e4f41aa06e9424a6c88fc0fb46415a78",
+      "propositions_sha256": "6abf37bd835322839de83f94e533589d16c793ed63c2ec0d3c9d12ecf16802f1",
+      "ranking_sha256": "904360968c26ba71d214dbe254225349e98835d922cfc52eae484ecac0e32a86",
+      "request_sha256": "640193dc8a02ec3f8b676c51cb1cc0646bf5ec3c20e457cd360760fccd9b3f9b",
+      "requirements": [
+        "Python",
+        "Retrieval",
+        "LambdaMART",
+        "Evaluation"
+      ],
+      "role": "Recommendation Engineer",
+      "sample_id": "recommendation_b",
+      "split": "development"
+    },
+    {
+      "intent_sha256": "e584c3df008e06508042f7d47901f3384d46f98ac650d23daf00885d233c2b68",
+      "projection_sha256": "23e379b502f2563dcba1d796751a21b965ed1d999edfd3654ff54c06050fb28f",
+      "propositions_sha256": "0ea6cd8d686549579e6c7f9658ce1d212cc781d5a6071ee76e454cbc935d6735",
+      "ranking_sha256": "21872e350470bb803eb77fffdf307ad3df7bc6f857573ce0fe7d124f743a8811",
+      "request_sha256": "bde98cfa173b898735a77a1f12c4768cde6649fbc3569e49fa92adc31b97ca4a",
+      "requirements": [
+        "Python",
+        "FastAPI",
+        "PostgreSQL",
+        "RAG"
+      ],
+      "role": "AI Backend Engineer",
+      "sample_id": "backend_a",
+      "split": "development"
+    },
+    {
+      "intent_sha256": "8b7de5029e0b5ca546dd336109fa4b44bd2bd43c22e7ee645db9ba940ababfe6",
+      "projection_sha256": "3ef49c703c96edcd17306116ddb3513d6a024fc4898ae743982b63c38e3710b2",
+      "propositions_sha256": "0f139a289e386aabb831d71cb0ab85929a1e88b62ed243af9720daffae2d365e",
+      "ranking_sha256": "21872e350470bb803eb77fffdf307ad3df7bc6f857573ce0fe7d124f743a8811",
+      "request_sha256": "0f58bbb59b4ecd043f37c91d7bc5519f941ed9dddab2c9d9e23b01642dca07c9",
+      "requirements": [
+        "Python",
+        "FastAPI",
+        "PostgreSQL",
+        "RAG"
+      ],
+      "role": "AI Backend Engineer",
+      "sample_id": "backend_b",
+      "split": "development"
+    },
+    {
+      "intent_sha256": "7550f2934e3c4582c578ae905bc8857403c94d2d00008614782b99dd461cb704",
+      "projection_sha256": "caabb56edea38102ce4d7dba16b577c225b9436d165bcd0927973cf420facdb8",
+      "propositions_sha256": "7a470873ebf67c0e59e2817ce1f36b3d3ab4e21df5f71c8a49d4577f1be70628",
+      "ranking_sha256": "77dfd35a50679cf4c9b35e054f98eebb9209adf29b1d5f6c20817969c386d80b",
+      "request_sha256": "bae6b44ae10d5bef7dcc9a969b49bae87da1f212ebfc992ab1a55e1742766853",
+      "requirements": [
+        "Python",
+        "Kubernetes",
+        "MLflow",
+        "Observability"
+      ],
+      "role": "MLOps Platform Engineer",
+      "sample_id": "mlops_requirement_holdout",
+      "split": "holdout"
+    },
+    {
+      "intent_sha256": "d2f981610b2a9d1e827d9a5c77b71608e9ba788c48b7fd4a3fb3fb3c4d7ac0f2",
+      "projection_sha256": "75cbfd5665cf3a7855030b51f43f9e025722821f106e059670befc6947053a11",
+      "propositions_sha256": "fe316f5b38f5bc7a1bc7c8060d5a5b947186a5e1d91f573c93cf5db7ef32acad",
+      "ranking_sha256": "ef6ad12b97d515cc4c3c9d8a60fd1443fe21ba4b2cdffdcf9168ec65fa15092b",
+      "request_sha256": "a772ec4d683a9057bd3096c1352e317f14ff1da6e6b9e4ed0d4b957a32ba8604",
+      "requirements": [
+        "Python",
+        "Kafka",
+        "Flink",
+        "Monitoring"
+      ],
+      "role": "Streaming Data Engineer",
+      "sample_id": "streaming_data_holdout",
+      "split": "holdout"
+    }
+  ],
+  "experiment_id": "interview_semantics_phase2_20261007T1503Z",
+  "generation_calls_budget": 8,
+  "model": "qwen3.7-flash-2026-07-15",
+  "prereg_sha256": "8ad38aeba49a5baaca5922db469979ca4aa4a06d608f3af31aea3a49211aaf7f",
+  "prior_batches": "archived_unchanged",
+  "provider": "openai_compatible",
+  "record_type": "freeze_manifest",
+  "repair_enabled": false,
+  "source_sha256": {
+    "backend/app/services/explanation/generation/openai_compatible.py": "10e392345750a814fbddccb02500bd13239da68a5a6602d88787cf3f8d49871e",
+    "backend/app/services/explanation/presentation/facts_v2.py": "6bc5255de82ff4ad6e454bcc785523c470462dc9c7a7c2bd21f90c9c748f4af4",
+    "backend/app/services/explanation/presentation/generation_proposition_v1.py": "e1375f44aabc4a40eed095838e2bed7a5427e794004b753a71bab058bebb637d",
+    "backend/app/services/explanation/presentation/interview_semantics_proposition_v1.py": "fcd4a29177d157cd50f517a92bceafde3c610f77ab445ddd523801657ccdb989",
+    "backend/app/services/explanation/presentation/propositions_v1.py": "344989fe61552c589118f2aaf91c483bf796c98ee40deb43e9af044693eaf93a",
+    "backend/app/services/explanation/presentation/semantic_audit_proposition_v1.py": "dc284f320abe8968d3cf4df33e175469b66228dc6bf602003009f8c0ed66751c",
+    "backend/app/services/explanation/presentation/semantic_intent_proposition_v1.py": "691ad539ac9ee85380cda070e567ff1d527c1ad4f3bc79ba03fe425365fe8e30",
+    "backend/tests/narrative_interview_semantics_v1_live_experiment.py": "ea185bf0421af587519ea23b44251bafd64fe6ac6ff20c7c90c0f2e2a73cb359",
+    "backend/tests/narrative_v2_comparison_fixture.py": "3102505bbd29c0581b7d7e49fd297a265336f90f0fadb945748ccb813145961d"
+  },
+  "stop_rule": "infrastructure_or_protocol_failure_stops;semantic_failure_continues"
+}

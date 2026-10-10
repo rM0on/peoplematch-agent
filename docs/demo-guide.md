@@ -2,16 +2,23 @@
 
 本指南只使用 synthetic sandbox 数据。演示前先运行 `backend/.venv/Scripts/python.exe scripts/demo_doctor.py`；任何 `blocked` 项都应先处理。
 
-Phase 15 冻结时的 live-provider smoke 状态为 `NOT RUN — LOCAL PROVIDER CREDENTIAL REQUIRED`。默认 mock 演示，以及由本地 MockTransport 驱动的 OpenAI-compatible Browser → Next.js → FastAPI → PostgreSQL/Qdrant E2E 已验证；不要把 transport compatibility PASS 说成外部 Provider live PASS。
+Phase 15 冻结时的 live-provider smoke 状态为 `NOT RUN — LOCAL PROVIDER CREDENTIAL REQUIRED`，这是历史状态。后续独立的 synthetic Fresh Top-3 Trusted Chain 实验已真实验证 Extraction 与 Phase 9 Explanation；它不代表生产部署或真实候选人场景。Mock 回归与真实 Provider 结果仍须分开说明。
 
-## 3 分钟招聘者演示
+## 演示前准备
 
-1. 打开首页，用一句话定位：这是岗位 Query 驱动的 Candidate Retrieval + Ranking 推荐系统，LLM 不直接给排名。
-2. 打开“人才库管理”，说明 Resume 先解析为 Structured Profile；点击“加载中文 Resume 示例”→“解析候选人”，查看预览后再确认加入 Candidate Pool。该 runtime 候选人不进入 Phase 11 数据集。
-3. 回到“推荐工作台”，指出 JD 是检索 Query；点击“加载中文 JD 示例”→“开始推荐”，系统会从整个人才库执行候选召回与 Top-K 排序，不是给单份简历打分。
-4. 在结果页指出三件事：`LTR Score` 是排序模型分值，不是概率、匹配百分比、录用概率或推荐成功率；推荐等级只按当前 Top-K 名次展示；切换候选人时解释来自对应历史结果。
-5. 打开“推荐记录”或“复核历史结果”，说明 Feedback 是观察、BadCase 是调查，不会自动变成训练标签。
-6. 回到 README 指标表：LTR Test NDCG@5 为 0.9593，但只能解释为 5 个已暴露 synthetic Test Jobs 上的描述性结果。
+- 需要 Docker Desktop、匹配 metadata / fingerprint 的本地 LambdaMART artifact，以及已持久化的 synthetic Fresh MatchRun `22326fc2-1766-4c3c-a8f0-2cc81f70849c`。该记录不存在时不要把其他运行冒充为截图中的 Fresh Top-3。
+- 在仓库根目录用 PowerShell 执行 `docker compose up -d`、`docker compose ps`，确认 PostgreSQL、Redis、Qdrant、backend、frontend healthy；再打开 `http://localhost:8000/health` 和 `http://localhost:3000`。Docker 不可用时先启动 Docker Desktop，不要重跑 Ranking 来绕过环境问题。
+- 主演示是已持久化结果的只读路径，不需要 Provider 在线。若额外演示新 JD 而 Provider 不可用，应明确停止该可选步骤或在独立 mock 配置下演示；不要把 mock 说成 real，也不要更改已持久化 Fresh 结果。
+
+## 3–5 分钟作品集演示
+
+1. 打开 [Fresh Top-3 Recruiter View](http://localhost:3000/?runId=22326fc2-1766-4c3c-a8f0-2cc81f70849c)：这是 synthetic sandbox 的已持久化结果，不重新执行排序或调用模型。先指出复核动作、技术信号、核心未知与首要核实目标；复核不是录用建议或匹配概率。对应 [Hero 截图](images/portfolio-final/01-recruiter-view.png)。
+2. 在 cand_019、cand_033、cand_006 间切换，并在首位候选人的“查看依据”下钻到项目/技能来源和岗位 requirement；未知表示证据未建立，不是候选人缺陷。对应 [Evidence 截图](images/portfolio-final/02-evidence-provenance.png)。
+3. 展开 Engineering View：展示特征、Retrieval rank、LTR raw score、MatchRun 与 ranking fingerprint。原始分值只用于相对排序，不是概率。再打开 [Agent Run](http://localhost:3000/agent-run)，区分 persisted trace 与 derived explanation metadata。对应 [Engineering](images/portfolio-final/03-engineering-view.png) 与 [Agent Run](images/portfolio-final/04-agent-run.png) 截图。
+4. 打开 [离线评估](http://localhost:3000/evaluation)：同源比较 Hybrid、LambdaMART 与可选 CE，并指出 synthetic / post-exposure / incomplete judgments 的边界；CE 未超过默认 LTR。对应 [Eval 截图](images/portfolio-final/05-eval-dashboard.png)。
+5. 说明 Bad Case 人工复核闭环：独立 [Bad Case 截图](images/portfolio-final/06-bad-case-review.png) 来自一次性 synthetic review fixture，展示人工反馈、证据、根因与规划行动；它不是 Fresh Top-3 的真实模型失败。普通开发数据库若无复核记录，该页面可为空，不要临场伪造记录。
+
+如需演示新输入，再进入 `/workbench` 输入 synthetic JD；它可能调用配置的真实 Provider，不属于上述只读截图路径。自由 Recruiter Narrative 不是可信主视图的事实源，若展示必须标注“AI Narrative Draft / Requires Human Review”。
 
 ## 8–10 分钟技术演示
 
@@ -29,8 +36,8 @@ Phase 15 冻结时的 live-provider smoke 状态为 `NOT RUN — LOCAL PROVIDER 
 
 ### 3. Evidence 与历史
 
-- 展示“为什么推荐该候选人”、Evidence reference 与“不可变运行轨迹”。
-- Explanation provider 只返回闭合计划；后端从 Evidence Facts 渲染最终文本。
+- 展示 Recruiter View 的岗位关联、技术信号、未知与核实目标，并按需展开来源；不要把内部 ref ID 堆在默认页面。
+- Phase 9 Provider 只选择 candidate-scoped semantic options，程序确定性绑定 canonical ExplanationPlanV1；Grounding 验证后持久化。RecruiterProposition 从已存来源只读重建。
 - 生成解释前后 ranking order、score 与 fingerprint 不变。
 
 ### 4. Review loop
@@ -68,7 +75,7 @@ LLM_MODEL=your-model-id
 LLM_API_KEY=
 ```
 
-页面只显示“已配置”，不声称网络已连接。任意 JD 由 extraction task 结构化，解释 task 只读取 Evidence；LambdaMART 始终拥有排序。不要在演示、截图、日志或聊天中展示 Key。Live smoke 只使用 synthetic 输入；若要切回 mock，必须显式修改本地配置，系统不会把自动 fallback 伪装成 real success。
+页面只显示“已配置”，不声称网络已连接。任意 JD 由 extraction task 结构化，Phase 9 explanation task 只在安全 Evidence catalog 中选择；LambdaMART 始终拥有排序。不要在演示、截图、日志或聊天中展示 Key。Live smoke 只使用 synthetic 输入；若要切回 mock，必须显式修改本地配置，系统不会把自动 fallback 伪装成 real success。
 
 ## 常见故障恢复
 

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+from dataclasses import replace
 
 import httpx
 import pytest
@@ -122,6 +123,7 @@ def test_openai_compatible_transport_posts_only_closed_opaque_prompt_in_json_mod
             {"contract_version": "explanation_plan_v1", "candidates": []}
         )
         assert response.observed_model == "observed-provider-model"
+        assert response.http_status_code == 200
         assert not hasattr(response, "response_id")
         assert not hasattr(response, "raw_response")
 
@@ -153,6 +155,49 @@ def test_openai_compatible_transport_posts_only_closed_opaque_prompt_in_json_mod
     serialized_wire_body = json.dumps(body, sort_keys=True)
     for private_value in _PRIVATE_SENTINELS:
         assert private_value not in serialized_wire_body
+
+
+@pytest.mark.parametrize(
+    ("finish_reason", "expected"),
+    [("length", "length"), ("PRIVATE_PROVIDER_CONTENT", "other"),
+     (["PRIVATE_PROVIDER_CONTENT"], "other")],
+)
+def test_transport_preserves_only_safe_finish_reason(finish_reason, expected) -> None:
+    def handler(_request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, json={
+            "choices": [{"finish_reason": finish_reason, "message": {"content": "{\"x\":1}"}}],
+        })
+
+    async def scenario() -> None:
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            response = await _provider(client=client).generate(_request())
+        assert response.finish_reason == expected
+        assert "PRIVATE_PROVIDER_CONTENT" not in repr(response)
+
+    asyncio.run(scenario())
+
+
+def test_openai_compatible_transport_sends_native_json_schema_when_requested() -> None:
+    observed = {}
+    schema = {
+        "title": "RecruiterNarrativeV5", "type": "object",
+        "properties": {"why_consider": {"type": "array", "items": {"type": "string"}}},
+        "required": ["why_consider"], "additionalProperties": False,
+    }
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        observed.update(json.loads(request.content))
+        return httpx.Response(200, json={"choices": [{"message": {"content": '{"why_consider": []}'}}]})
+
+    async def scenario() -> None:
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            await _provider(client=client).generate(replace(_request(), response_schema=schema))
+
+    asyncio.run(scenario())
+    assert observed["response_format"] == {
+        "type": "json_schema",
+        "json_schema": {"name": "RecruiterNarrativeV5", "strict": True, "schema": schema},
+    }
 
 
 @pytest.mark.parametrize(
@@ -241,6 +286,73 @@ def test_openai_compatible_transport_discards_generic_http_error_body(
         assert private_body not in str(exc_info.value)
         assert _API_KEY not in str(exc_info.value)
         assert "raw_jd_private_text" not in str(exc_info.value)
+
+    asyncio.run(scenario())
+
+
+def test_provider_http_error_keeps_only_allowlisted_diagnostic_metadata() -> None:
+    private_body = f"Bearer {_API_KEY} raw_jd_private_text"
+
+    def handler(_request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            403,
+            json={"error": {"code": "insufficient_quota", "message": private_body}},
+            headers={"Retry-After": "120", "X-Request-Id": private_body},
+        )
+
+    async def scenario() -> None:
+        from app.services.explanation.generation.provider import ExplanationProviderHttpError
+
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            with pytest.raises(ExplanationProviderHttpError) as raised:
+                await _provider(client=client).generate(_request())
+        error = raised.value
+        assert error.status_code == 403
+        assert error.provider_error_code == "insufficient_quota"
+        assert error.retry_after_seconds == 120
+        assert error.received_response is True
+        assert private_body not in repr(error)
+        assert _API_KEY not in repr(error)
+
+    asyncio.run(scenario())
+
+
+def test_unknown_provider_error_code_is_not_echoed() -> None:
+    unsafe_code = _API_KEY
+
+    def handler(_request: httpx.Request) -> httpx.Response:
+        return httpx.Response(503, json={"code": unsafe_code})
+
+    async def scenario() -> None:
+        from app.services.explanation.generation.provider import ExplanationProviderHttpError
+
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            with pytest.raises(ExplanationProviderHttpError) as raised:
+                await _provider(client=client).generate(_request())
+        assert raised.value.provider_error_code is None
+        assert unsafe_code not in repr(raised.value)
+
+    asyncio.run(scenario())
+
+
+@pytest.mark.parametrize(("exception_type", "phase"), [
+    (httpx.ConnectTimeout, "connect"),
+    (httpx.ReadTimeout, "read"),
+    (httpx.WriteTimeout, "write"),
+])
+def test_provider_timeout_records_phase_without_network_details(exception_type, phase) -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        raise exception_type(f"Bearer {_API_KEY}", request=request)
+
+    async def scenario() -> None:
+        from app.services.explanation.generation.provider import ExplanationProviderTimeoutError
+
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            with pytest.raises(ExplanationProviderTimeoutError) as raised:
+                await _provider(client=client).generate(_request())
+        assert raised.value.phase == phase
+        assert raised.value.received_response is False
+        assert _API_KEY not in repr(raised.value)
 
     asyncio.run(scenario())
 

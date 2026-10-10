@@ -1,0 +1,17 @@
+Synthetic / fictional job description for Fresh Top-3 trusted-chain validation.
+
+Company: Fictional Workflow Lab (synthetic sandbox employer).
+Role: Internal Workflow Data Platform Backend Engineer.
+Location: remote within China. Seniority: mid-level. Product stage: zero-to-one internal prototype.
+The fictional team builds internal workflow and evidence-review tools, not a public product.
+
+Must-have requirements:
+- Python backend development.
+- FastAPI services and typed HTTP APIs.
+- PostgreSQL data modeling and query work.
+
+Nice-to-have requirements:
+- Redis for task coordination or caching.
+- Docker-based local service delivery.
+
+Evaluation focus: inspect concrete backend API and data-model evidence, identify unverified project participation, and ask which implementation steps the candidate personally performed.

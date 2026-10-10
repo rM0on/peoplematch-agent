@@ -11,7 +11,7 @@ test("runs an arbitrary JD through the OpenAI-compatible adapters without changi
   page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
 
   await page.setViewportSize({ width: 1440, height: 1024 });
-  await page.goto("/");
+  await page.goto("/workbench");
   await expect(page.getByText("OpenAI-compatible 已配置")).toBeVisible();
   await page.screenshot({ path: path.join(screenshotRoot, "phase15-jd-provider-status-1440x1024.png") });
   await page.getByLabel("岗位描述文本").fill(arbitraryJd);
@@ -62,7 +62,7 @@ test("runs an arbitrary JD through the OpenAI-compatible adapters without changi
 });
 
 test("renders a safe recoverable rate-limit error from the provider workflow", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/workbench");
   await page.getByLabel("岗位描述文本").fill(`${arbitraryJd} PHASE15_RATE_LIMIT`);
   await page.getByRole("button", { name: "开始推荐" }).click();
   const alert = page.getByRole("alert").filter({ hasText: "AI 服务请求过于频繁" });

@@ -12,6 +12,10 @@ from app.api.routes.explanations import router as explanations_router
 from app.api.routes.phase10 import router as phase10_router
 from app.api.routes.demo import router as demo_router
 from app.api.routes.provider_status import router as provider_status_router
+from app.api.routes.recruiter_narratives import router as recruiter_narratives_router
+from app.api.routes.recruiter_narratives_v2 import router as recruiter_narratives_v2_router
+from app.api.routes.recruiter_narratives_v2_1 import router as recruiter_narratives_v2_1_router
+from app.api.routes.recruiter_propositions import router as recruiter_propositions_router
 from app.core.config import get_settings
 
 
@@ -28,3 +32,7 @@ api_router.include_router(explanations_router, prefix=get_settings().api_v1_pref
 api_router.include_router(phase10_router, prefix=get_settings().api_v1_prefix)
 api_router.include_router(demo_router, prefix=get_settings().api_v1_prefix)
 api_router.include_router(provider_status_router, prefix=get_settings().api_v1_prefix)
+api_router.include_router(recruiter_narratives_router, prefix=get_settings().api_v1_prefix)
+api_router.include_router(recruiter_narratives_v2_router, prefix=get_settings().api_v1_prefix)
+api_router.include_router(recruiter_narratives_v2_1_router, prefix=get_settings().api_v1_prefix)
+api_router.include_router(recruiter_propositions_router, prefix=get_settings().api_v1_prefix)

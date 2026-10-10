@@ -7,11 +7,12 @@ import { SparkleIcon } from "@phosphor-icons/react/dist/csr/Sparkle";
 import { TargetIcon } from "@phosphor-icons/react/dist/csr/Target";
 import { UsersThreeIcon } from "@phosphor-icons/react/dist/csr/UsersThree";
 import { WarningCircleIcon } from "@phosphor-icons/react/dist/csr/WarningCircle";
+import { ChartBarIcon } from "@phosphor-icons/react/dist/csr/ChartBar";
 import Link from "next/link";
 
 import styles from "./matching-results.module.css";
 
-export function AppSidebar({ active = "matching" }: { active?: "matching" | "candidates" | "runs" | "bad-cases" }) {
+export function AppSidebar({ active = "recruiter" }: { active?: "recruiter" | "matching" | "candidates" | "runs" | "bad-cases" | "agent-run" | "evaluation" }) {
   return (
     <aside className={styles.sidebar} aria-label="Primary navigation">
       <Link className={styles.brand} href="/" aria-label="PeopleMatch Agent home">
@@ -27,7 +28,11 @@ export function AppSidebar({ active = "matching" }: { active?: "matching" | "can
       <nav className={styles.sidebarNav}>
         <div className={styles.navGroup}>
           <p className={styles.navLabel}>推荐与复核</p>
-          <Link className={`${styles.navItem} ${active === "matching" ? styles.navItemActive : ""}`} href="/">
+          <Link className={`${styles.navItem} ${active === "recruiter" ? styles.navItemActive : ""}`} href="/">
+            <TargetIcon size={17} weight="bold" />
+            <span>招聘筛查</span>
+          </Link>
+          <Link className={`${styles.navItem} ${active === "matching" ? styles.navItemActive : ""}`} href="/workbench">
             <TargetIcon size={17} weight="bold" />
             <span>推荐工作台</span>
           </Link>
@@ -39,9 +44,17 @@ export function AppSidebar({ active = "matching" }: { active?: "matching" | "can
             <ClockCounterClockwiseIcon size={17} />
             <span>推荐记录</span>
           </Link>
+          <Link className={`${styles.navItem} ${active === "agent-run" ? styles.navItemActive : ""}`} href="/agent-run">
+            <ClockCounterClockwiseIcon size={17} />
+            <span>Agent Run</span>
+          </Link>
           <Link className={`${styles.navItem} ${active === "bad-cases" ? styles.navItemActive : ""}`} href="/bad-cases">
             <WarningCircleIcon size={17} />
             <span>Bad Case 复核</span>
+          </Link>
+          <Link className={`${styles.navItem} ${active === "evaluation" ? styles.navItemActive : ""}`} href="/evaluation">
+            <ChartBarIcon size={17} />
+            <span>离线评估</span>
           </Link>
         </div>
       </nav>
@@ -52,7 +65,7 @@ export function AppSidebar({ active = "matching" }: { active?: "matching" | "can
           <span>Local Prototype</span>
         </div>
         <p>Synthetic demo · Evidence first</p>
-        <Link href={active === "matching" ? "#matching-results" : "/#matching-results"}>
+        <Link href={active === "matching" ? "#matching-results" : "/"}>
           <FolderOpenIcon size={15} />
           定位推荐结果
         </Link>

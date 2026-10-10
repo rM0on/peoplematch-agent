@@ -1,0 +1,43 @@
+.frame{max-width:1440px;margin:auto;padding:40px clamp(20px,4vw,72px) 56px;color:#19352e}
+.eyebrow,.sectionKicker{margin:0 0 12px;color:#2f7567;font-size:11px;font-weight:800;letter-spacing:.15em;text-transform:uppercase}
+.header{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:26px}
+.header h1{font-size:clamp(32px,3.5vw,55px);letter-spacing:-.045em;line-height:1.12;max-width:850px;margin:0 0 14px;font-weight:750}
+.header p:last-child{font-size:14px;color:#64756c;line-height:1.7;max-width:750px;margin:0}
+.trustBadge{flex:none;padding:9px 13px;background:#e0efe7;border:1px solid #c4dfcf;border-radius:100px;color:#1b6d55;font-size:12px;font-weight:750}
+.runPicker{display:flex;align-items:center;gap:18px;padding:14px 17px;background:#fff;border:1px solid #e3e6de;border-radius:14px;margin-bottom:24px}
+.runPicker>div{display:grid;gap:3px;margin-right:auto}.runPicker strong{font-size:13px}.runPicker span{font-size:11px;color:#738078}
+.runPicker select{min-width:220px;max-width:280px;padding:9px;border:1px solid #d9ded7;border-radius:8px;background:#fbfcf8;color:#263a32}
+.runPicker button{border:0;border-radius:8px;padding:10px 16px;background:#195e50;color:#fff;font-weight:700;cursor:pointer}
+.runPicker button:disabled{opacity:.55;cursor:wait}
+.state,.error{padding:32px;background:#fff;border:1px dashed #d9dfd5;border-radius:14px;color:#5f7167;line-height:1.7}.state strong{display:block;color:#1e3c31;font-size:18px}.state a{color:#176455;font-weight:700}.error{border-color:#e7c9bb;background:#fff8f3;color:#9a4431;margin-bottom:18px}
+.jobHeader{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;padding:26px 30px;background:#153b32;color:#fff;border-radius:16px 16px 0 0}
+.jobHeader .eyebrow{color:#99d9bd}.jobHeader h2{font-size:27px;letter-spacing:-.025em;margin:0 0 6px}.jobHeader p:last-child{margin:0;color:#c5d6cc;font-size:13px}.jobMeta{display:grid;gap:5px;text-align:right;color:#aacebd;font-size:11px}.jobMeta code{font-size:13px;color:#fff}
+.layout{display:grid;grid-template-columns:minmax(245px,310px) minmax(0,1fr);background:#fff;border:1px solid #dfe4dc;border-top:0;border-radius:0 0 16px 16px;min-height:590px;overflow:hidden}
+.shortlist{border-right:1px solid #e6e9e2;background:#f8faf5;padding:13px;display:flex;flex-direction:column;gap:8px}
+.candidate,.activeCandidate{display:flex;gap:15px;text-align:left;width:100%;padding:18px 16px;border:1px solid transparent;border-radius:11px;background:transparent;color:#1e382f;cursor:pointer;min-width:0}
+.activeCandidate{background:#fff;border-color:#c9ded0;box-shadow:0 4px 15px #1243310e}.candidate:hover{background:#eef4ed}
+.rank{font-size:13px;font-weight:800;color:#399178;line-height:1.4}.candidateMain{display:grid;gap:6px;min-width:0}.candidateMain strong{font-size:17px}.candidateMain small{font-size:11px;color:#73837a;overflow-wrap:anywhere}.action{font-size:11px;font-weight:800;color:#176454}.cardUnknown{font-size:11px;color:#966342;line-height:1.4;overflow-wrap:anywhere}
+.detail{padding:30px clamp(20px,3vw,45px);min-width:0}.detailHead{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;border-bottom:1px solid #e4e9e1;padding-bottom:22px}.detailHead h2{margin:0 0 5px;font-size:30px;letter-spacing:-.03em}.detailHead p:last-child{margin:0;color:#829087;font-size:12px}.actionLarge{padding:9px 14px;border:1px solid #b8d9c6;border-radius:8px;background:#eaf4eb;color:#17624b;font-weight:800;font-size:12px;white-space:nowrap}
+.priorityUnknown{display:grid;gap:5px;margin:24px 0;padding:16px 20px;border-left:3px solid #c69363;background:#fdf8ee;border-radius:0 9px 9px 0}.priorityUnknown span{font-size:10px;font-weight:800;color:#946542;letter-spacing:.08em}.priorityUnknown strong{font-size:14px;color:#654729;overflow-wrap:anywhere}.priorityUnknown small{font-size:11px;color:#927861}
+.priorityUnknown p{margin:8px 0 0;padding-top:9px;border-top:1px solid #eadfc9;color:#3b5f50;font-size:12px;font-weight:700;line-height:1.5}
+.briefGrid{display:grid;grid-template-columns:1fr 1fr;gap:30px 38px;margin-top:30px}.briefGrid section{min-width:0}.briefGrid h3{font-size:18px;margin:0 0 13px;letter-spacing:-.015em}.briefGrid ul{margin:0;padding:0;list-style:none}.evidenceItem{padding:10px 0;border-top:1px solid #e8ece5;font-size:13px;line-height:1.55;overflow-wrap:anywhere}.evidenceItem>span{font-weight:650}.evidenceItem details{margin-top:5px;color:#607a6c;font-size:11px}.evidenceItem summary{cursor:pointer;width:max-content;color:#28735c;font-weight:750}.evidenceItem details ul{padding:8px 0 0 12px}.evidenceItem details li{margin:4px 0;line-height:1.5;overflow-wrap:anywhere}.muted{font-size:12px;color:#84938a;line-height:1.7}
+.engineering{margin-top:31px;border-top:1px solid #e6e9e2;padding-top:17px;color:#536e5f;font-size:11px}.engineering summary{cursor:pointer;color:#427c65;font-weight:800}.engineering div{margin-top:12px;padding:14px;border-radius:8px;background:#f4f7f2;overflow-wrap:anywhere;line-height:1.7}.engineering p{margin:5px 0}.engineering code{font-size:10px}.engineering ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px 18px;padding-left:18px}.footer{font-size:11px;color:#7c8d81;margin-top:17px;line-height:1.6}
+@media(max-width:1100px){.layout{grid-template-columns:240px minmax(0,1fr)}.briefGrid{gap:24px}}
+@media(max-width:850px){.frame{padding:24px 16px 40px}.header,.jobHeader{flex-direction:column;align-items:flex-start}.jobMeta{text-align:left}.layout{grid-template-columns:1fr}.shortlist{border-right:0;border-bottom:1px solid #e6e9e2;flex-direction:row;overflow-x:auto}.candidate,.activeCandidate{min-width:200px}.detail{padding:25px 22px}.runPicker{flex-wrap:wrap}.runPicker>div{width:100%}}
+@media(max-width:570px){.briefGrid{grid-template-columns:1fr;gap:25px}.detailHead{flex-direction:column}.runPicker select{flex:1;min-width:0}.header h1{font-size:30px}.header p:last-child{font-size:12px}.jobHeader{padding:20px}.engineering ul{grid-template-columns:1fr}}
+.jobHeader a{color:#b9eed0;text-decoration:none;font-size:13px;font-weight:800}.runPicker input{padding:9px;border:1px solid #d9ded7;border-radius:8px;min-width:240px}.traceGrid{display:grid;grid-template-columns:1fr 1fr;gap:30px;background:#fff;padding:30px;border:1px solid #dfe4dc;border-radius:0 0 16px 16px}.traceGrid h2{font-size:18px;margin:0 0 15px}.traceGrid p,.traceGrid li{font-size:13px;line-height:1.7;color:#5a6f61}.traceGrid ol,.traceGrid ul{padding-left:19px}.traceGrid ol li{padding:8px 0;border-bottom:1px solid #e6ebe4}.traceGrid li b{display:block;color:#244d3a}.traceGrid li span{color:#187452;margin-right:14px}.traceGrid li small{color:#88998c}
+@media(max-width:850px){.traceGrid{grid-template-columns:1fr}}
+.engineeringBody{display:grid!important;grid-template-columns:1fr 1fr;gap:13px!important;padding:16px!important;background:#f5f8f4!important}
+.engineeringLead{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.engineeringLead>div{display:grid;gap:4px;padding:13px;background:#fff;border:1px solid #e1e9df;border-radius:9px}
+.engineeringLead span,.featureSection>span{font-size:10px;color:#668074;font-weight:800;letter-spacing:.07em}
+.engineeringLead strong{font-size:17px;color:#173b31;letter-spacing:-.02em}
+.engineeringLead small{font-size:10px;color:#789083}
+.featureSection,.engineeringTrace{min-width:0;padding:13px;background:#fff;border:1px solid #e1e9df;border-radius:9px}
+.featureSection ul{display:block;margin:9px 0 0;padding:0;list-style:none}.featureSection li{display:flex;justify-content:space-between;gap:10px;border-top:1px solid #edf0ea;padding:6px 0;font-size:11px}.featureSection li strong{font-variant-numeric:tabular-nums;color:#173b31}
+.engineeringTrace p{margin:3px 0 8px}.engineeringTrace code{overflow-wrap:anywhere}
+@media(max-width:700px){.engineeringBody,.engineeringLead{grid-template-columns:1fr!important}.engineeringLead{grid-column:auto}}
+.layout:has(.engineering[open]){grid-template-columns:1fr;min-height:0}
+.layout:has(.engineering[open]) .shortlist,.layout:has(.engineering[open]) .priorityUnknown,.layout:has(.engineering[open]) .briefGrid{display:none}
+.layout:has(.engineering[open]) .detail{padding-bottom:26px}
+@media(max-width:570px){.shortlist{flex-direction:column;overflow-x:visible;gap:2px}.candidate,.activeCandidate{min-width:0;width:100%;padding:11px 13px}.candidateMain{grid-template-columns:minmax(0,1fr) auto;column-gap:10px}.candidateMain strong,.candidateMain small{grid-column:1}.candidateMain .action{grid-column:2;grid-row:1 / span 2;align-self:center}.cardUnknown{grid-column:1/-1}}

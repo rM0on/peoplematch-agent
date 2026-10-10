@@ -159,7 +159,8 @@ function isMatchResult(value: unknown) {
 function isMatchRunDetail(value: unknown): value is MatchRunDetail {
   if (!isMatchRunSummary(value)) return false;
   const detail = value as Record<string, unknown>;
-  return Array.isArray(detail.results)
+  return (detail.result_fingerprint === undefined || (isString(detail.result_fingerprint) && /^[a-f0-9]{64}$/.test(detail.result_fingerprint)))
+    && Array.isArray(detail.results)
     && detail.results.every(isMatchResult)
     && Array.isArray(detail.steps)
     && detail.steps.every((step: unknown) => isObject(step)

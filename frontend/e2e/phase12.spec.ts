@@ -24,7 +24,7 @@ test("adds a Resume to the talent library and runs the JD-query recommendation f
   await expect(page.getByText(/候选人已加入人才库/)).toBeVisible({ timeout: 150_000 });
   await expect(page.getByText(/派生检索索引已刷新：49 位候选人/)).toBeVisible();
 
-  await page.goto("/");
+  await page.goto("/workbench");
   await expect(page.getByRole("heading", { name: "AI 人才推荐工作台" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "从岗位 Query 到 Top-K 候选人" })).toBeVisible();
   await expect(page.getByText(/岗位 JD 是推荐查询 Query/)).toBeVisible();
@@ -116,7 +116,7 @@ test("shows a recoverable provider failure without leaking provider details", as
       }),
     });
   });
-  await page.goto("/");
+  await page.goto("/workbench");
   await page.getByRole("button", { name: "加载中文 JD 示例" }).click();
   await page.getByRole("button", { name: "开始推荐" }).click();
   const alert = page.getByRole("alert").filter({ hasText: "模型服务" });

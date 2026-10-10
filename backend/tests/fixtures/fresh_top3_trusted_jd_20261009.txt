@@ -1,0 +1,18 @@
+Synthetic / fictional job description for Fresh Top-3 final trusted-chain validation.
+
+Company: Fictional Search Quality Studio (synthetic sandbox employer).
+Role: Search Quality Platform Engineer.
+Location: Beijing or remote within China. Seniority: mid-level. Product stage: established internal tooling.
+The fictional team builds tools for evaluating and improving document-search quality for internal users.
+
+Must-have requirements:
+- Python backend engineering for data or search services.
+- Search or information-retrieval systems, including retrieval quality analysis.
+- Reproducible evaluation workflows and clear technical metrics.
+
+Nice-to-have requirements:
+- FastAPI or equivalent typed HTTP service development.
+- PostgreSQL-backed data workflows.
+- Containerized local development with Docker.
+
+Evaluation focus: inspect concrete search-system and evaluation evidence, distinguish project technology from personal contribution, and identify the first requirement that needs direct verification.

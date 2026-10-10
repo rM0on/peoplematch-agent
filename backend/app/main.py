@@ -12,6 +12,7 @@ from app.middleware.request_id import RequestIdMiddleware
 from app.api.dependencies import (
     close_runtime_explanation_provider,
     close_runtime_extraction_provider,
+    close_runtime_recruiter_narrative_provider,
 )
 
 
@@ -28,6 +29,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     finally:
         await close_runtime_extraction_provider()
         await close_runtime_explanation_provider()
+        await close_runtime_recruiter_narrative_provider()
         logger.info("Application stopping")
 
 

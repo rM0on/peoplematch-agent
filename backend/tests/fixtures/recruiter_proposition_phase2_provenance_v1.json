@@ -1,0 +1,3966 @@
+{
+  "dataset_id": "recruiter_proposition_phase2_provenance_v1",
+  "source_fixture": "narrative_v2_comparison_fixture.build_comparison_group",
+  "cases": [
+    {
+      "scenario_id": "ai_agent_a",
+      "candidate_id": "candidate_001",
+      "result_rank": 1,
+      "propositions": [
+        {
+          "proposition_id": "proposition:09135c580449725f346d125ce1b4f06f",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "technical_alignment",
+          "subject": "candidate_material",
+          "predicate": "overlaps_job_requirement",
+          "modality": "alignment",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "agent workflow"
+          ],
+          "job_requirement_terms": [
+            "AI Agent"
+          ],
+          "source_fact_ids": [
+            "fact:afd086027549d5ab112cf1b099573894",
+            "fact:cdc1656c539d19de240e54dd16d46a23"
+          ],
+          "source_claim_ids": [
+            "claim:7fe2a16136c0edb2ed3fa3ebd7ef4839"
+          ],
+          "evidence_refs": [
+            "candidate:1:skill:5ebec5f5d2747991945d1b53f56c4562f001cde12b7b05e6427f1e5ef98d7acc",
+            "job_requirement:req_domain_2"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_domain_2"
+          ],
+          "allowed_fields": [
+            "why_consider",
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:153ac44ea81719a4636bfcefae1cc226",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "interview_target",
+          "subject": "interview_process",
+          "predicate": "verify_project_scope",
+          "modality": "hypothesis",
+          "polarity": "undetermined",
+          "topic_terms": [
+            "agent workflow",
+            "fastapi",
+            "python",
+            "rag"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:5a20e27fa3bbae7afd2757efadc93e17",
+            "fact:96557accbc549b7c15d5c58eea970fea"
+          ],
+          "source_claim_ids": [
+            "claim:4046da98d9d87ca3c74edb6eb3b786d7"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "interview_focus"
+          ]
+        },
+        {
+          "proposition_id": "proposition:1e431d1e849b63fefd0d47c6e59de665",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "human_review_recommendation",
+          "subject": "human_review",
+          "predicate": "prioritize_technical_review",
+          "modality": "recommendation",
+          "polarity": "undetermined",
+          "topic_terms": [
+            "agent workflow",
+            "fastapi",
+            "python",
+            "rag"
+          ],
+          "job_requirement_terms": [
+            "AI Agent",
+            "FastAPI",
+            "Python",
+            "RAG"
+          ],
+          "source_fact_ids": [
+            "fact:4e220996545a9f46d6cd7b420e8fccbe",
+            "fact:5a20e27fa3bbae7afd2757efadc93e17",
+            "fact:7cea730362dc5c250598d16e3522875c",
+            "fact:81f096985781fadd517a56b84a60391d",
+            "fact:96557accbc549b7c15d5c58eea970fea",
+            "fact:a9890f88a842584c871a6b40325f56c6"
+          ],
+          "source_claim_ids": [
+            "claim:09e70d023114672827183d4a6ae9a681",
+            "claim:15300a5e864808ddb96dcd59d14566ac",
+            "claim:1a421b14b1bf410eaecae60ca0a0c48b",
+            "claim:271a129ed0f2ae8e342e2b683094089f",
+            "claim:4046da98d9d87ca3c74edb6eb3b786d7",
+            "claim:aa28cd10c7eaeb2eefa6f78eb9b477d0",
+            "claim:b2e9272477fb681ae44ad17f0e2356f6",
+            "claim:b47f5150a5a3230651d17bf8bb80b548",
+            "claim:c6205245da573886d31536ac57cf4e80"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_domain_1",
+            "job_requirement:req_domain_2",
+            "job_requirement:req_domain_3",
+            "job_requirement:req_python"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_domain_1",
+            "job_requirement:req_domain_2",
+            "job_requirement:req_domain_3",
+            "job_requirement:req_python"
+          ],
+          "allowed_fields": [
+            "decision_summary",
+            "why_consider"
+          ]
+        },
+        {
+          "proposition_id": "proposition:227f304e8fc329379a810c83fb462466",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "technical_alignment",
+          "subject": "candidate_material",
+          "predicate": "overlaps_job_requirement",
+          "modality": "alignment",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "fastapi"
+          ],
+          "job_requirement_terms": [
+            "FastAPI"
+          ],
+          "source_fact_ids": [
+            "fact:4e220996545a9f46d6cd7b420e8fccbe",
+            "fact:96557accbc549b7c15d5c58eea970fea"
+          ],
+          "source_claim_ids": [
+            "claim:b2e9272477fb681ae44ad17f0e2356f6"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_domain_3"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_domain_3"
+          ],
+          "allowed_fields": [
+            "why_consider",
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:824bce483c725e7971d91a92c417e199",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "technical_alignment",
+          "subject": "candidate_material",
+          "predicate": "overlaps_job_requirement",
+          "modality": "alignment",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "agent workflow"
+          ],
+          "job_requirement_terms": [
+            "AI Agent"
+          ],
+          "source_fact_ids": [
+            "fact:81f096985781fadd517a56b84a60391d",
+            "fact:96557accbc549b7c15d5c58eea970fea"
+          ],
+          "source_claim_ids": [
+            "claim:c6205245da573886d31536ac57cf4e80"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_domain_2"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_domain_2"
+          ],
+          "allowed_fields": [
+            "why_consider",
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:86bf4c0bd7373ce85908021c1d10148c",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "technical_alignment",
+          "subject": "candidate_material",
+          "predicate": "overlaps_job_requirement",
+          "modality": "alignment",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "python"
+          ],
+          "job_requirement_terms": [
+            "Python"
+          ],
+          "source_fact_ids": [
+            "fact:7cea730362dc5c250598d16e3522875c",
+            "fact:96557accbc549b7c15d5c58eea970fea"
+          ],
+          "source_claim_ids": [
+            "claim:b47f5150a5a3230651d17bf8bb80b548"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_python"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_python"
+          ],
+          "allowed_fields": [
+            "why_consider",
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:9b083caf6c818e9ebafa0b0c200cf404",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "technical_alignment",
+          "subject": "candidate_material",
+          "predicate": "overlaps_job_requirement",
+          "modality": "alignment",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "rag"
+          ],
+          "job_requirement_terms": [
+            "RAG"
+          ],
+          "source_fact_ids": [
+            "fact:96557accbc549b7c15d5c58eea970fea",
+            "fact:a9890f88a842584c871a6b40325f56c6"
+          ],
+          "source_claim_ids": [
+            "claim:aa28cd10c7eaeb2eefa6f78eb9b477d0"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_domain_1"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_domain_1"
+          ],
+          "allowed_fields": [
+            "why_consider",
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:aeb776a71bfddc554e9c397ea415dbb7",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "material_unknown",
+          "subject": "selected_material",
+          "predicate": "project_scope_not_established",
+          "modality": "unknown",
+          "polarity": "undetermined",
+          "topic_terms": [
+            "agent workflow",
+            "fastapi",
+            "python",
+            "rag"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:5a20e27fa3bbae7afd2757efadc93e17",
+            "fact:96557accbc549b7c15d5c58eea970fea"
+          ],
+          "source_claim_ids": [
+            "claim:26bb68fbb6add0f1b9821f2baa3d1131"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "uncertainty"
+          ]
+        },
+        {
+          "proposition_id": "proposition:cd7af9c7fba6f0ecaba58e61b71192bf",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "listed_skill_observation",
+          "subject": "candidate_material",
+          "predicate": "lists_skill",
+          "modality": "fact",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "agent workflow"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:519b04b7a213ef213472785209beec08"
+          ],
+          "source_claim_ids": [],
+          "evidence_refs": [
+            "candidate:1:skill:5ebec5f5d2747991945d1b53f56c4562f001cde12b7b05e6427f1e5ef98d7acc"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:eb30bd9cd8823058228cef7ae7bdeb73",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "project_observation",
+          "subject": "project_material",
+          "predicate": "lists_project_technologies",
+          "modality": "fact",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "agent workflow",
+            "fastapi",
+            "python",
+            "rag"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:084bc7c9c26f56b7f7d17293e5d5d6db",
+            "fact:195dfa2191ee10b2b5348a5dc3715282",
+            "fact:7d884ab4c2dffcec09ec4909a73d2028",
+            "fact:95ccdd8e88ad0c1ca8a9c1ba1d6f3bd5"
+          ],
+          "source_claim_ids": [],
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "technical_signal"
+          ]
+        }
+      ],
+      "source_evidence_terms": {
+        "candidate:1:project:project_001": [
+          "ai agent",
+          "fastapi",
+          "python",
+          "rag"
+        ],
+        "candidate:1:skill:5ebec5f5d2747991945d1b53f56c4562f001cde12b7b05e6427f1e5ef98d7acc": [
+          "ai agent"
+        ],
+        "job_requirement:req_domain_1": [
+          "RAG"
+        ],
+        "job_requirement:req_domain_2": [
+          "AI Agent"
+        ],
+        "job_requirement:req_domain_3": [
+          "FastAPI"
+        ],
+        "job_requirement:req_python": [
+          "Python"
+        ]
+      },
+      "source_facts_v2": [
+        {
+          "fact_id": "fact:084bc7c9c26f56b7f7d17293e5d5d6db",
+          "kind": "project_practice",
+          "term": "rag",
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        },
+        {
+          "fact_id": "fact:195dfa2191ee10b2b5348a5dc3715282",
+          "kind": "project_practice",
+          "term": "fastapi",
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        },
+        {
+          "fact_id": "fact:519b04b7a213ef213472785209beec08",
+          "kind": "candidate_skill",
+          "term": "ai agent",
+          "evidence_refs": [
+            "candidate:1:skill:5ebec5f5d2747991945d1b53f56c4562f001cde12b7b05e6427f1e5ef98d7acc"
+          ],
+          "allowed_inference": "资料列出该技能；可归纳为相关技术方向并建议面试了解实践深度；不能推断能力深度、个人职责或项目结果"
+        },
+        {
+          "fact_id": "fact:7d884ab4c2dffcec09ec4909a73d2028",
+          "kind": "project_practice",
+          "term": "python",
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        },
+        {
+          "fact_id": "fact:95ccdd8e88ad0c1ca8a9c1ba1d6f3bd5",
+          "kind": "project_practice",
+          "term": "ai agent",
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        }
+      ],
+      "source_facts_v3": [
+        {
+          "fact_id": "fact:4e220996545a9f46d6cd7b420e8fccbe",
+          "kind": "job_alignment",
+          "concepts": [
+            "fastapi"
+          ],
+          "source_terms": [
+            "ai agent",
+            "fastapi",
+            "python",
+            "rag",
+            "fastapi"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_domain_3"
+          ],
+          "source_fact_ids": [
+            "fact:96557accbc549b7c15d5c58eea970fea"
+          ],
+          "allowed_inference": "候选材料与岗位要求存在技术方向关联；只能建议人工复核，不能断言胜任"
+        },
+        {
+          "fact_id": "fact:5a20e27fa3bbae7afd2757efadc93e17",
+          "kind": "interview_validation",
+          "concepts": [
+            "agent workflow",
+            "fastapi",
+            "python",
+            "rag"
+          ],
+          "source_terms": [
+            "ai agent",
+            "fastapi",
+            "python",
+            "rag"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "source_fact_ids": [
+            "fact:96557accbc549b7c15d5c58eea970fea"
+          ],
+          "allowed_inference": "仅可就材料所列技术提出假设性设计或工程取舍问题；不得写成已有经历"
+        },
+        {
+          "fact_id": "fact:7cea730362dc5c250598d16e3522875c",
+          "kind": "job_alignment",
+          "concepts": [
+            "python"
+          ],
+          "source_terms": [
+            "ai agent",
+            "fastapi",
+            "python",
+            "rag",
+            "python"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_python"
+          ],
+          "source_fact_ids": [
+            "fact:96557accbc549b7c15d5c58eea970fea"
+          ],
+          "allowed_inference": "候选材料与岗位要求存在技术方向关联；只能建议人工复核，不能断言胜任"
+        },
+        {
+          "fact_id": "fact:81f096985781fadd517a56b84a60391d",
+          "kind": "job_alignment",
+          "concepts": [
+            "agent workflow"
+          ],
+          "source_terms": [
+            "ai agent",
+            "fastapi",
+            "python",
+            "rag",
+            "agent workflow"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_domain_2"
+          ],
+          "source_fact_ids": [
+            "fact:96557accbc549b7c15d5c58eea970fea"
+          ],
+          "allowed_inference": "候选材料与岗位要求存在技术方向关联；只能建议人工复核，不能断言胜任"
+        },
+        {
+          "fact_id": "fact:96557accbc549b7c15d5c58eea970fea",
+          "kind": "project_evidence",
+          "concepts": [
+            "agent workflow",
+            "fastapi",
+            "python",
+            "rag"
+          ],
+          "source_terms": [
+            "ai agent",
+            "fastapi",
+            "python",
+            "rag"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "source_fact_ids": [
+            "fact:2dc0eee710025c722ca9b63748825875"
+          ],
+          "allowed_inference": "资料列出相关技术或项目覆盖范围；仅可谈方向与待核实问题，不推断个人职责、规模或结果"
+        },
+        {
+          "fact_id": "fact:a9890f88a842584c871a6b40325f56c6",
+          "kind": "job_alignment",
+          "concepts": [
+            "rag"
+          ],
+          "source_terms": [
+            "ai agent",
+            "fastapi",
+            "python",
+            "rag",
+            "rag"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_domain_1"
+          ],
+          "source_fact_ids": [
+            "fact:96557accbc549b7c15d5c58eea970fea"
+          ],
+          "allowed_inference": "候选材料与岗位要求存在技术方向关联；只能建议人工复核，不能断言胜任"
+        },
+        {
+          "fact_id": "fact:afd086027549d5ab112cf1b099573894",
+          "kind": "job_alignment",
+          "concepts": [
+            "agent workflow"
+          ],
+          "source_terms": [
+            "ai agent",
+            "agent workflow"
+          ],
+          "evidence_refs": [
+            "candidate:1:skill:5ebec5f5d2747991945d1b53f56c4562f001cde12b7b05e6427f1e5ef98d7acc",
+            "job_requirement:req_domain_2"
+          ],
+          "source_fact_ids": [
+            "fact:cdc1656c539d19de240e54dd16d46a23"
+          ],
+          "allowed_inference": "候选材料与岗位要求存在技术方向关联；只能建议人工复核，不能断言胜任"
+        },
+        {
+          "fact_id": "fact:cdc1656c539d19de240e54dd16d46a23",
+          "kind": "candidate_capability",
+          "concepts": [
+            "agent workflow"
+          ],
+          "source_terms": [
+            "ai agent"
+          ],
+          "evidence_refs": [
+            "candidate:1:skill:5ebec5f5d2747991945d1b53f56c4562f001cde12b7b05e6427f1e5ef98d7acc"
+          ],
+          "source_fact_ids": [
+            "fact:89aa482fd8400c15a5204866a6fa4bd5"
+          ],
+          "allowed_inference": "资料列出相关技术或项目覆盖范围；仅可谈方向与待核实问题，不推断个人职责、规模或结果"
+        }
+      ],
+      "source_claims_v4": [
+        {
+          "claim_id": "claim:09e70d023114672827183d4a6ae9a681",
+          "candidate_id": "candidate_001",
+          "claim_type": "review_recommendation",
+          "source_fact_ids": [
+            "fact:4e220996545a9f46d6cd7b420e8fccbe",
+            "fact:96557accbc549b7c15d5c58eea970fea"
+          ],
+          "relation_type": "alignment_plus_interview_focus",
+          "allowed_expression_scope": "human_review",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "agent workflow",
+            "fastapi",
+            "python",
+            "rag"
+          ],
+          "source_claim_ids": [
+            "claim:4046da98d9d87ca3c74edb6eb3b786d7",
+            "claim:b2e9272477fb681ae44ad17f0e2356f6"
+          ]
+        },
+        {
+          "claim_id": "claim:15300a5e864808ddb96dcd59d14566ac",
+          "candidate_id": "candidate_001",
+          "claim_type": "review_recommendation",
+          "source_fact_ids": [
+            "fact:96557accbc549b7c15d5c58eea970fea",
+            "fact:a9890f88a842584c871a6b40325f56c6"
+          ],
+          "relation_type": "alignment_plus_interview_focus",
+          "allowed_expression_scope": "human_review",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "agent workflow",
+            "fastapi",
+            "python",
+            "rag"
+          ],
+          "source_claim_ids": [
+            "claim:4046da98d9d87ca3c74edb6eb3b786d7",
+            "claim:aa28cd10c7eaeb2eefa6f78eb9b477d0"
+          ]
+        },
+        {
+          "claim_id": "claim:1a421b14b1bf410eaecae60ca0a0c48b",
+          "candidate_id": "candidate_001",
+          "claim_type": "review_recommendation",
+          "source_fact_ids": [
+            "fact:81f096985781fadd517a56b84a60391d",
+            "fact:96557accbc549b7c15d5c58eea970fea"
+          ],
+          "relation_type": "alignment_plus_interview_focus",
+          "allowed_expression_scope": "human_review",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "agent workflow",
+            "fastapi",
+            "python",
+            "rag"
+          ],
+          "source_claim_ids": [
+            "claim:4046da98d9d87ca3c74edb6eb3b786d7",
+            "claim:c6205245da573886d31536ac57cf4e80"
+          ]
+        },
+        {
+          "claim_id": "claim:26bb68fbb6add0f1b9821f2baa3d1131",
+          "candidate_id": "candidate_001",
+          "claim_type": "project_depth_validation",
+          "source_fact_ids": [
+            "fact:5a20e27fa3bbae7afd2757efadc93e17",
+            "fact:96557accbc549b7c15d5c58eea970fea"
+          ],
+          "relation_type": "verify_observed_scope",
+          "allowed_expression_scope": "project_verification",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "agent workflow",
+            "fastapi",
+            "python",
+            "rag"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:271a129ed0f2ae8e342e2b683094089f",
+          "candidate_id": "candidate_001",
+          "claim_type": "review_recommendation",
+          "source_fact_ids": [
+            "fact:7cea730362dc5c250598d16e3522875c",
+            "fact:96557accbc549b7c15d5c58eea970fea"
+          ],
+          "relation_type": "alignment_plus_interview_focus",
+          "allowed_expression_scope": "human_review",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "agent workflow",
+            "fastapi",
+            "python",
+            "rag"
+          ],
+          "source_claim_ids": [
+            "claim:4046da98d9d87ca3c74edb6eb3b786d7",
+            "claim:b47f5150a5a3230651d17bf8bb80b548"
+          ]
+        },
+        {
+          "claim_id": "claim:4046da98d9d87ca3c74edb6eb3b786d7",
+          "candidate_id": "candidate_001",
+          "claim_type": "interview_focus",
+          "source_fact_ids": [
+            "fact:5a20e27fa3bbae7afd2757efadc93e17",
+            "fact:96557accbc549b7c15d5c58eea970fea"
+          ],
+          "relation_type": "verify_observed_scope",
+          "allowed_expression_scope": "project_verification",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "agent workflow",
+            "fastapi",
+            "python",
+            "rag"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:7fe2a16136c0edb2ed3fa3ebd7ef4839",
+          "candidate_id": "candidate_001",
+          "claim_type": "skill_requirement_match",
+          "source_fact_ids": [
+            "fact:afd086027549d5ab112cf1b099573894",
+            "fact:cdc1656c539d19de240e54dd16d46a23"
+          ],
+          "relation_type": "listed_skill_overlap",
+          "allowed_expression_scope": "skill_observation",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "agent workflow"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:aa28cd10c7eaeb2eefa6f78eb9b477d0",
+          "candidate_id": "candidate_001",
+          "claim_type": "technical_alignment",
+          "source_fact_ids": [
+            "fact:96557accbc549b7c15d5c58eea970fea",
+            "fact:a9890f88a842584c871a6b40325f56c6"
+          ],
+          "relation_type": "observed_requirement_overlap",
+          "allowed_expression_scope": "technical_direction",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "rag"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:b2e9272477fb681ae44ad17f0e2356f6",
+          "candidate_id": "candidate_001",
+          "claim_type": "technical_alignment",
+          "source_fact_ids": [
+            "fact:4e220996545a9f46d6cd7b420e8fccbe",
+            "fact:96557accbc549b7c15d5c58eea970fea"
+          ],
+          "relation_type": "observed_requirement_overlap",
+          "allowed_expression_scope": "technical_direction",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "fastapi"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:b47f5150a5a3230651d17bf8bb80b548",
+          "candidate_id": "candidate_001",
+          "claim_type": "technical_alignment",
+          "source_fact_ids": [
+            "fact:7cea730362dc5c250598d16e3522875c",
+            "fact:96557accbc549b7c15d5c58eea970fea"
+          ],
+          "relation_type": "observed_requirement_overlap",
+          "allowed_expression_scope": "technical_direction",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "python"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:c6205245da573886d31536ac57cf4e80",
+          "candidate_id": "candidate_001",
+          "claim_type": "technical_alignment",
+          "source_fact_ids": [
+            "fact:81f096985781fadd517a56b84a60391d",
+            "fact:96557accbc549b7c15d5c58eea970fea"
+          ],
+          "relation_type": "observed_requirement_overlap",
+          "allowed_expression_scope": "technical_direction",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "agent workflow"
+          ],
+          "source_claim_ids": []
+        }
+      ],
+      "ranking_snapshot": {
+        "fingerprint": "dd58ce540bcb06351958fc45d7f951fdf5a78dda390b3084576693811e0852cd",
+        "order": [
+          "candidate_001",
+          "candidate_002"
+        ],
+        "ltr_scores": [
+          0.39,
+          0.38
+        ]
+      }
+    },
+    {
+      "scenario_id": "ai_agent_b",
+      "candidate_id": "candidate_002",
+      "result_rank": 2,
+      "propositions": [
+        {
+          "proposition_id": "proposition:04c964afc4ba3fd62c4cb9111f69e900",
+          "candidate_id": "candidate_002",
+          "result_rank": 2,
+          "kind": "interview_target",
+          "subject": "interview_process",
+          "predicate": "verify_project_scope",
+          "modality": "hypothesis",
+          "polarity": "undetermined",
+          "topic_terms": [
+            "evaluation",
+            "python",
+            "ranking",
+            "retrieval"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:518e13529138a0043cfd118132e13001",
+            "fact:63a7ba824a96e54d6182de1c026c158b"
+          ],
+          "source_claim_ids": [
+            "claim:26c53be73dc2fbbe5d4580c4b0f9cfbf"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "interview_focus"
+          ]
+        },
+        {
+          "proposition_id": "proposition:44c0f32604d0e3b675679e5dbcf65bdd",
+          "candidate_id": "candidate_002",
+          "result_rank": 2,
+          "kind": "material_unknown",
+          "subject": "selected_material",
+          "predicate": "project_scope_not_established",
+          "modality": "unknown",
+          "polarity": "undetermined",
+          "topic_terms": [
+            "evaluation",
+            "python",
+            "ranking",
+            "retrieval"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:518e13529138a0043cfd118132e13001",
+            "fact:63a7ba824a96e54d6182de1c026c158b"
+          ],
+          "source_claim_ids": [
+            "claim:c7620388b579f1b53e0c7c08e5b00b89"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "uncertainty"
+          ]
+        },
+        {
+          "proposition_id": "proposition:5c0e507c647e959dc463d241ba3775c3",
+          "candidate_id": "candidate_002",
+          "result_rank": 2,
+          "kind": "listed_skill_observation",
+          "subject": "candidate_material",
+          "predicate": "lists_skill",
+          "modality": "fact",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "evaluation"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:efee357e2cce89a03ceae4f1e4c38eab"
+          ],
+          "source_claim_ids": [],
+          "evidence_refs": [
+            "candidate:2:skill:f4268a658d0379cb9adc6fbcc3766c00a22569c527a7bdb4df118255734e984b"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:702b4a90181eacd4657d12209e8ebf6c",
+          "candidate_id": "candidate_002",
+          "result_rank": 2,
+          "kind": "project_observation",
+          "subject": "project_material",
+          "predicate": "lists_project_technologies",
+          "modality": "fact",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "evaluation",
+            "python",
+            "ranking",
+            "retrieval"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:0f5c711baccde75f503ff560a8147cfa",
+            "fact:167c8cf07bd1cdc13bd74541f1b8305d",
+            "fact:1b50eff0680cc3b3d6ad9a51f5dc3f5e",
+            "fact:ce0b09bdfb8a7f12d214726b37927136"
+          ],
+          "source_claim_ids": [],
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:c4727400b91c14d8ab41b951854f0d9f",
+          "candidate_id": "candidate_002",
+          "result_rank": 2,
+          "kind": "human_review_recommendation",
+          "subject": "human_review",
+          "predicate": "consider_targeted_screen",
+          "modality": "recommendation",
+          "polarity": "undetermined",
+          "topic_terms": [
+            "python"
+          ],
+          "job_requirement_terms": [
+            "Python"
+          ],
+          "source_fact_ids": [
+            "fact:26baa1f6d89aed3f0c2d5b55cc8bec0f",
+            "fact:518e13529138a0043cfd118132e13001",
+            "fact:63a7ba824a96e54d6182de1c026c158b"
+          ],
+          "source_claim_ids": [
+            "claim:254af068d20708e22ef9972682bb2061",
+            "claim:26c53be73dc2fbbe5d4580c4b0f9cfbf",
+            "claim:e934c93ddb5d3157551f6e0607f3c977"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002",
+            "job_requirement:req_python"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_python"
+          ],
+          "allowed_fields": [
+            "decision_summary",
+            "why_consider"
+          ]
+        },
+        {
+          "proposition_id": "proposition:fd35d138a00e7409db62206aba0bf4d4",
+          "candidate_id": "candidate_002",
+          "result_rank": 2,
+          "kind": "technical_alignment",
+          "subject": "candidate_material",
+          "predicate": "overlaps_job_requirement",
+          "modality": "alignment",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "python"
+          ],
+          "job_requirement_terms": [
+            "Python"
+          ],
+          "source_fact_ids": [
+            "fact:26baa1f6d89aed3f0c2d5b55cc8bec0f",
+            "fact:63a7ba824a96e54d6182de1c026c158b"
+          ],
+          "source_claim_ids": [
+            "claim:254af068d20708e22ef9972682bb2061"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002",
+            "job_requirement:req_python"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_python"
+          ],
+          "allowed_fields": [
+            "why_consider",
+            "technical_signal"
+          ]
+        }
+      ],
+      "source_evidence_terms": {
+        "candidate:2:project:project_002": [
+          "evaluation",
+          "lambdamart",
+          "python",
+          "retrieval"
+        ],
+        "candidate:2:skill:f4268a658d0379cb9adc6fbcc3766c00a22569c527a7bdb4df118255734e984b": [
+          "evaluation"
+        ],
+        "job_requirement:req_python": [
+          "Python"
+        ]
+      },
+      "source_facts_v2": [
+        {
+          "fact_id": "fact:0f5c711baccde75f503ff560a8147cfa",
+          "kind": "project_practice",
+          "term": "python",
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        },
+        {
+          "fact_id": "fact:167c8cf07bd1cdc13bd74541f1b8305d",
+          "kind": "project_practice",
+          "term": "evaluation",
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        },
+        {
+          "fact_id": "fact:1b50eff0680cc3b3d6ad9a51f5dc3f5e",
+          "kind": "project_practice",
+          "term": "retrieval",
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        },
+        {
+          "fact_id": "fact:ce0b09bdfb8a7f12d214726b37927136",
+          "kind": "project_practice",
+          "term": "lambdamart",
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        },
+        {
+          "fact_id": "fact:efee357e2cce89a03ceae4f1e4c38eab",
+          "kind": "candidate_skill",
+          "term": "evaluation",
+          "evidence_refs": [
+            "candidate:2:skill:f4268a658d0379cb9adc6fbcc3766c00a22569c527a7bdb4df118255734e984b"
+          ],
+          "allowed_inference": "资料列出该技能；可归纳为相关技术方向并建议面试了解实践深度；不能推断能力深度、个人职责或项目结果"
+        }
+      ],
+      "source_facts_v3": [
+        {
+          "fact_id": "fact:26baa1f6d89aed3f0c2d5b55cc8bec0f",
+          "kind": "job_alignment",
+          "concepts": [
+            "python"
+          ],
+          "source_terms": [
+            "evaluation",
+            "lambdamart",
+            "python",
+            "retrieval",
+            "python"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002",
+            "job_requirement:req_python"
+          ],
+          "source_fact_ids": [
+            "fact:63a7ba824a96e54d6182de1c026c158b"
+          ],
+          "allowed_inference": "候选材料与岗位要求存在技术方向关联；只能建议人工复核，不能断言胜任"
+        },
+        {
+          "fact_id": "fact:518e13529138a0043cfd118132e13001",
+          "kind": "interview_validation",
+          "concepts": [
+            "evaluation",
+            "python",
+            "ranking",
+            "retrieval"
+          ],
+          "source_terms": [
+            "evaluation",
+            "lambdamart",
+            "python",
+            "retrieval"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "source_fact_ids": [
+            "fact:63a7ba824a96e54d6182de1c026c158b"
+          ],
+          "allowed_inference": "仅可就材料所列技术提出假设性设计或工程取舍问题；不得写成已有经历"
+        },
+        {
+          "fact_id": "fact:63a7ba824a96e54d6182de1c026c158b",
+          "kind": "project_evidence",
+          "concepts": [
+            "evaluation",
+            "python",
+            "ranking",
+            "retrieval"
+          ],
+          "source_terms": [
+            "evaluation",
+            "lambdamart",
+            "python",
+            "retrieval"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "source_fact_ids": [
+            "fact:9909509a8b54b5debca1f0f8a95699bf"
+          ],
+          "allowed_inference": "资料列出相关技术或项目覆盖范围；仅可谈方向与待核实问题，不推断个人职责、规模或结果"
+        }
+      ],
+      "source_claims_v4": [
+        {
+          "claim_id": "claim:254af068d20708e22ef9972682bb2061",
+          "candidate_id": "candidate_002",
+          "claim_type": "technical_alignment",
+          "source_fact_ids": [
+            "fact:26baa1f6d89aed3f0c2d5b55cc8bec0f",
+            "fact:63a7ba824a96e54d6182de1c026c158b"
+          ],
+          "relation_type": "observed_requirement_overlap",
+          "allowed_expression_scope": "technical_direction",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "python"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:26c53be73dc2fbbe5d4580c4b0f9cfbf",
+          "candidate_id": "candidate_002",
+          "claim_type": "interview_focus",
+          "source_fact_ids": [
+            "fact:518e13529138a0043cfd118132e13001",
+            "fact:63a7ba824a96e54d6182de1c026c158b"
+          ],
+          "relation_type": "verify_observed_scope",
+          "allowed_expression_scope": "project_verification",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "evaluation",
+            "python",
+            "ranking",
+            "retrieval"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:c7620388b579f1b53e0c7c08e5b00b89",
+          "candidate_id": "candidate_002",
+          "claim_type": "project_depth_validation",
+          "source_fact_ids": [
+            "fact:518e13529138a0043cfd118132e13001",
+            "fact:63a7ba824a96e54d6182de1c026c158b"
+          ],
+          "relation_type": "verify_observed_scope",
+          "allowed_expression_scope": "project_verification",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "evaluation",
+            "python",
+            "ranking",
+            "retrieval"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:e934c93ddb5d3157551f6e0607f3c977",
+          "candidate_id": "candidate_002",
+          "claim_type": "review_recommendation",
+          "source_fact_ids": [
+            "fact:26baa1f6d89aed3f0c2d5b55cc8bec0f",
+            "fact:63a7ba824a96e54d6182de1c026c158b"
+          ],
+          "relation_type": "alignment_plus_interview_focus",
+          "allowed_expression_scope": "human_review",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "evaluation",
+            "python",
+            "ranking",
+            "retrieval"
+          ],
+          "source_claim_ids": [
+            "claim:254af068d20708e22ef9972682bb2061",
+            "claim:26c53be73dc2fbbe5d4580c4b0f9cfbf"
+          ]
+        }
+      ],
+      "ranking_snapshot": {
+        "fingerprint": "dd58ce540bcb06351958fc45d7f951fdf5a78dda390b3084576693811e0852cd",
+        "order": [
+          "candidate_001",
+          "candidate_002"
+        ],
+        "ltr_scores": [
+          0.39,
+          0.38
+        ]
+      }
+    },
+    {
+      "scenario_id": "recommendation_a",
+      "candidate_id": "candidate_001",
+      "result_rank": 1,
+      "propositions": [
+        {
+          "proposition_id": "proposition:0810e688b07af870c6a92725345d9ed1",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "material_unknown",
+          "subject": "selected_material",
+          "predicate": "project_scope_not_established",
+          "modality": "unknown",
+          "polarity": "undetermined",
+          "topic_terms": [
+            "evaluation",
+            "python",
+            "ranking",
+            "retrieval"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:7ff13c7354d77990d30eebbd78d6c369",
+            "fact:bac659d97ab172a98e40dbc0506b1ab2"
+          ],
+          "source_claim_ids": [
+            "claim:2716dcbbd813171a8ded58c64ee10127"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "uncertainty"
+          ]
+        },
+        {
+          "proposition_id": "proposition:0a45f3df58e30a5c0bbf936ad7c2a0cd",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "technical_alignment",
+          "subject": "candidate_material",
+          "predicate": "overlaps_job_requirement",
+          "modality": "alignment",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "ranking"
+          ],
+          "job_requirement_terms": [
+            "LambdaMART"
+          ],
+          "source_fact_ids": [
+            "fact:3eee7be9624b3d65e2c4414707aa8704",
+            "fact:7ff13c7354d77990d30eebbd78d6c369"
+          ],
+          "source_claim_ids": [
+            "claim:40730ef5bd182830966046924050ca69"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_domain_2"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_domain_2"
+          ],
+          "allowed_fields": [
+            "why_consider",
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:253b28126457518e37565c30e39f44ec",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "human_review_recommendation",
+          "subject": "human_review",
+          "predicate": "prioritize_technical_review",
+          "modality": "recommendation",
+          "polarity": "undetermined",
+          "topic_terms": [
+            "evaluation",
+            "python",
+            "ranking",
+            "retrieval"
+          ],
+          "job_requirement_terms": [
+            "Evaluation",
+            "LambdaMART",
+            "Python",
+            "Retrieval"
+          ],
+          "source_fact_ids": [
+            "fact:3eee7be9624b3d65e2c4414707aa8704",
+            "fact:7ff13c7354d77990d30eebbd78d6c369",
+            "fact:a2d5dd15a6292a9532d84be313c0f14e",
+            "fact:b865ca2e5c54979242af635e8605019f",
+            "fact:bac659d97ab172a98e40dbc0506b1ab2",
+            "fact:ea3a38336d716b5850b4408d1eb9ef8c"
+          ],
+          "source_claim_ids": [
+            "claim:40730ef5bd182830966046924050ca69",
+            "claim:528d11e6cfac61c155a5caca45db9147",
+            "claim:866f36dc5151bbeb2f05eb3835368327",
+            "claim:ac08090577b75f79a441a4852551bdc0",
+            "claim:cf65261925868d0926e991122d65e1ac",
+            "claim:e3d6daf55b2d3b247ada0f69d9b5c0e8",
+            "claim:e49f00ca1a0ed535b75aa6781c573a2c",
+            "claim:ea7cc31b5c7cf07dbcbab574235f43d2",
+            "claim:f5b0940aa16a1cefae2c4990111abaef"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_domain_1",
+            "job_requirement:req_domain_2",
+            "job_requirement:req_domain_3",
+            "job_requirement:req_python"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_domain_1",
+            "job_requirement:req_domain_2",
+            "job_requirement:req_domain_3",
+            "job_requirement:req_python"
+          ],
+          "allowed_fields": [
+            "decision_summary",
+            "why_consider"
+          ]
+        },
+        {
+          "proposition_id": "proposition:320fbe542f156667f782580df46c9d9b",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "listed_skill_observation",
+          "subject": "candidate_material",
+          "predicate": "lists_skill",
+          "modality": "fact",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "evaluation"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:93572d69b262dff09d5e4c9adeb07c43"
+          ],
+          "source_claim_ids": [],
+          "evidence_refs": [
+            "candidate:1:skill:fa79567c10004fb9cb06cb31e18b1622f6b71aa92f5c71c0c975118382e3f139"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:a1d50b119e2b1330c230e21174a2f9a0",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "technical_alignment",
+          "subject": "candidate_material",
+          "predicate": "overlaps_job_requirement",
+          "modality": "alignment",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "evaluation"
+          ],
+          "job_requirement_terms": [
+            "Evaluation"
+          ],
+          "source_fact_ids": [
+            "fact:0da1af75693be1ff0bb5178817832556",
+            "fact:da1e68d7c9f6de44e3db25d1af295b0a"
+          ],
+          "source_claim_ids": [
+            "claim:9fbb08586f990c8dece3aa26e2c70e07"
+          ],
+          "evidence_refs": [
+            "candidate:1:skill:fa79567c10004fb9cb06cb31e18b1622f6b71aa92f5c71c0c975118382e3f139",
+            "job_requirement:req_domain_3"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_domain_3"
+          ],
+          "allowed_fields": [
+            "why_consider",
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:a63530f4889205e8ce838f5d81f624c7",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "project_observation",
+          "subject": "project_material",
+          "predicate": "lists_project_technologies",
+          "modality": "fact",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "evaluation",
+            "python",
+            "ranking",
+            "retrieval"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:58a1473acd5b55f9fdb95957c1c34e37",
+            "fact:6611899648031647bccad325ea8d69ca",
+            "fact:7d884ab4c2dffcec09ec4909a73d2028",
+            "fact:f74b12b779d797c434bb7c38c6e2cb64"
+          ],
+          "source_claim_ids": [],
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:c4e970801a976d39acb1a065549b4b7e",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "technical_alignment",
+          "subject": "candidate_material",
+          "predicate": "overlaps_job_requirement",
+          "modality": "alignment",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "retrieval"
+          ],
+          "job_requirement_terms": [
+            "Retrieval"
+          ],
+          "source_fact_ids": [
+            "fact:7ff13c7354d77990d30eebbd78d6c369",
+            "fact:b865ca2e5c54979242af635e8605019f"
+          ],
+          "source_claim_ids": [
+            "claim:e49f00ca1a0ed535b75aa6781c573a2c"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_domain_1"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_domain_1"
+          ],
+          "allowed_fields": [
+            "why_consider",
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:ddcfe3ede036ea7a4f594e70c3a41316",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "interview_target",
+          "subject": "interview_process",
+          "predicate": "verify_project_scope",
+          "modality": "hypothesis",
+          "polarity": "undetermined",
+          "topic_terms": [
+            "evaluation",
+            "python",
+            "ranking",
+            "retrieval"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:7ff13c7354d77990d30eebbd78d6c369",
+            "fact:bac659d97ab172a98e40dbc0506b1ab2"
+          ],
+          "source_claim_ids": [
+            "claim:866f36dc5151bbeb2f05eb3835368327"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "interview_focus"
+          ]
+        },
+        {
+          "proposition_id": "proposition:de8844c71f15968a2e910c117d2f8ed2",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "technical_alignment",
+          "subject": "candidate_material",
+          "predicate": "overlaps_job_requirement",
+          "modality": "alignment",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "python"
+          ],
+          "job_requirement_terms": [
+            "Python"
+          ],
+          "source_fact_ids": [
+            "fact:7ff13c7354d77990d30eebbd78d6c369",
+            "fact:ea3a38336d716b5850b4408d1eb9ef8c"
+          ],
+          "source_claim_ids": [
+            "claim:f5b0940aa16a1cefae2c4990111abaef"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_python"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_python"
+          ],
+          "allowed_fields": [
+            "why_consider",
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:fad91e1304550266403cbaa86ba365ad",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "technical_alignment",
+          "subject": "candidate_material",
+          "predicate": "overlaps_job_requirement",
+          "modality": "alignment",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "evaluation"
+          ],
+          "job_requirement_terms": [
+            "Evaluation"
+          ],
+          "source_fact_ids": [
+            "fact:7ff13c7354d77990d30eebbd78d6c369",
+            "fact:a2d5dd15a6292a9532d84be313c0f14e"
+          ],
+          "source_claim_ids": [
+            "claim:528d11e6cfac61c155a5caca45db9147"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_domain_3"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_domain_3"
+          ],
+          "allowed_fields": [
+            "why_consider",
+            "technical_signal"
+          ]
+        }
+      ],
+      "source_evidence_terms": {
+        "candidate:1:project:project_001": [
+          "evaluation",
+          "lambdamart",
+          "python",
+          "retrieval"
+        ],
+        "candidate:1:skill:fa79567c10004fb9cb06cb31e18b1622f6b71aa92f5c71c0c975118382e3f139": [
+          "evaluation"
+        ],
+        "job_requirement:req_domain_1": [
+          "Retrieval"
+        ],
+        "job_requirement:req_domain_2": [
+          "LambdaMART"
+        ],
+        "job_requirement:req_domain_3": [
+          "Evaluation"
+        ],
+        "job_requirement:req_python": [
+          "Python"
+        ]
+      },
+      "source_facts_v2": [
+        {
+          "fact_id": "fact:58a1473acd5b55f9fdb95957c1c34e37",
+          "kind": "project_practice",
+          "term": "retrieval",
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        },
+        {
+          "fact_id": "fact:6611899648031647bccad325ea8d69ca",
+          "kind": "project_practice",
+          "term": "lambdamart",
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        },
+        {
+          "fact_id": "fact:7d884ab4c2dffcec09ec4909a73d2028",
+          "kind": "project_practice",
+          "term": "python",
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        },
+        {
+          "fact_id": "fact:93572d69b262dff09d5e4c9adeb07c43",
+          "kind": "candidate_skill",
+          "term": "evaluation",
+          "evidence_refs": [
+            "candidate:1:skill:fa79567c10004fb9cb06cb31e18b1622f6b71aa92f5c71c0c975118382e3f139"
+          ],
+          "allowed_inference": "资料列出该技能；可归纳为相关技术方向并建议面试了解实践深度；不能推断能力深度、个人职责或项目结果"
+        },
+        {
+          "fact_id": "fact:f74b12b779d797c434bb7c38c6e2cb64",
+          "kind": "project_practice",
+          "term": "evaluation",
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        }
+      ],
+      "source_facts_v3": [
+        {
+          "fact_id": "fact:0da1af75693be1ff0bb5178817832556",
+          "kind": "candidate_capability",
+          "concepts": [
+            "evaluation"
+          ],
+          "source_terms": [
+            "evaluation"
+          ],
+          "evidence_refs": [
+            "candidate:1:skill:fa79567c10004fb9cb06cb31e18b1622f6b71aa92f5c71c0c975118382e3f139"
+          ],
+          "source_fact_ids": [
+            "fact:744791ecc2fc73ad841a4595c7c0fa50"
+          ],
+          "allowed_inference": "资料列出相关技术或项目覆盖范围；仅可谈方向与待核实问题，不推断个人职责、规模或结果"
+        },
+        {
+          "fact_id": "fact:3eee7be9624b3d65e2c4414707aa8704",
+          "kind": "job_alignment",
+          "concepts": [
+            "ranking"
+          ],
+          "source_terms": [
+            "evaluation",
+            "lambdamart",
+            "python",
+            "retrieval",
+            "ranking"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_domain_2"
+          ],
+          "source_fact_ids": [
+            "fact:7ff13c7354d77990d30eebbd78d6c369"
+          ],
+          "allowed_inference": "候选材料与岗位要求存在技术方向关联；只能建议人工复核，不能断言胜任"
+        },
+        {
+          "fact_id": "fact:7ff13c7354d77990d30eebbd78d6c369",
+          "kind": "project_evidence",
+          "concepts": [
+            "evaluation",
+            "python",
+            "ranking",
+            "retrieval"
+          ],
+          "source_terms": [
+            "evaluation",
+            "lambdamart",
+            "python",
+            "retrieval"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "source_fact_ids": [
+            "fact:8b1312f2a2196e9ff87f6ae7f71fa792"
+          ],
+          "allowed_inference": "资料列出相关技术或项目覆盖范围；仅可谈方向与待核实问题，不推断个人职责、规模或结果"
+        },
+        {
+          "fact_id": "fact:a2d5dd15a6292a9532d84be313c0f14e",
+          "kind": "job_alignment",
+          "concepts": [
+            "evaluation"
+          ],
+          "source_terms": [
+            "evaluation",
+            "lambdamart",
+            "python",
+            "retrieval",
+            "evaluation"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_domain_3"
+          ],
+          "source_fact_ids": [
+            "fact:7ff13c7354d77990d30eebbd78d6c369"
+          ],
+          "allowed_inference": "候选材料与岗位要求存在技术方向关联；只能建议人工复核，不能断言胜任"
+        },
+        {
+          "fact_id": "fact:b865ca2e5c54979242af635e8605019f",
+          "kind": "job_alignment",
+          "concepts": [
+            "retrieval"
+          ],
+          "source_terms": [
+            "evaluation",
+            "lambdamart",
+            "python",
+            "retrieval",
+            "retrieval"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_domain_1"
+          ],
+          "source_fact_ids": [
+            "fact:7ff13c7354d77990d30eebbd78d6c369"
+          ],
+          "allowed_inference": "候选材料与岗位要求存在技术方向关联；只能建议人工复核，不能断言胜任"
+        },
+        {
+          "fact_id": "fact:bac659d97ab172a98e40dbc0506b1ab2",
+          "kind": "interview_validation",
+          "concepts": [
+            "evaluation",
+            "python",
+            "ranking",
+            "retrieval"
+          ],
+          "source_terms": [
+            "evaluation",
+            "lambdamart",
+            "python",
+            "retrieval"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "source_fact_ids": [
+            "fact:7ff13c7354d77990d30eebbd78d6c369"
+          ],
+          "allowed_inference": "仅可就材料所列技术提出假设性设计或工程取舍问题；不得写成已有经历"
+        },
+        {
+          "fact_id": "fact:da1e68d7c9f6de44e3db25d1af295b0a",
+          "kind": "job_alignment",
+          "concepts": [
+            "evaluation"
+          ],
+          "source_terms": [
+            "evaluation",
+            "evaluation"
+          ],
+          "evidence_refs": [
+            "candidate:1:skill:fa79567c10004fb9cb06cb31e18b1622f6b71aa92f5c71c0c975118382e3f139",
+            "job_requirement:req_domain_3"
+          ],
+          "source_fact_ids": [
+            "fact:0da1af75693be1ff0bb5178817832556"
+          ],
+          "allowed_inference": "候选材料与岗位要求存在技术方向关联；只能建议人工复核，不能断言胜任"
+        },
+        {
+          "fact_id": "fact:ea3a38336d716b5850b4408d1eb9ef8c",
+          "kind": "job_alignment",
+          "concepts": [
+            "python"
+          ],
+          "source_terms": [
+            "evaluation",
+            "lambdamart",
+            "python",
+            "retrieval",
+            "python"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_python"
+          ],
+          "source_fact_ids": [
+            "fact:7ff13c7354d77990d30eebbd78d6c369"
+          ],
+          "allowed_inference": "候选材料与岗位要求存在技术方向关联；只能建议人工复核，不能断言胜任"
+        }
+      ],
+      "source_claims_v4": [
+        {
+          "claim_id": "claim:2716dcbbd813171a8ded58c64ee10127",
+          "candidate_id": "candidate_001",
+          "claim_type": "project_depth_validation",
+          "source_fact_ids": [
+            "fact:7ff13c7354d77990d30eebbd78d6c369",
+            "fact:bac659d97ab172a98e40dbc0506b1ab2"
+          ],
+          "relation_type": "verify_observed_scope",
+          "allowed_expression_scope": "project_verification",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "evaluation",
+            "python",
+            "ranking",
+            "retrieval"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:40730ef5bd182830966046924050ca69",
+          "candidate_id": "candidate_001",
+          "claim_type": "technical_alignment",
+          "source_fact_ids": [
+            "fact:3eee7be9624b3d65e2c4414707aa8704",
+            "fact:7ff13c7354d77990d30eebbd78d6c369"
+          ],
+          "relation_type": "observed_requirement_overlap",
+          "allowed_expression_scope": "technical_direction",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "ranking"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:528d11e6cfac61c155a5caca45db9147",
+          "candidate_id": "candidate_001",
+          "claim_type": "technical_alignment",
+          "source_fact_ids": [
+            "fact:7ff13c7354d77990d30eebbd78d6c369",
+            "fact:a2d5dd15a6292a9532d84be313c0f14e"
+          ],
+          "relation_type": "observed_requirement_overlap",
+          "allowed_expression_scope": "technical_direction",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "evaluation"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:866f36dc5151bbeb2f05eb3835368327",
+          "candidate_id": "candidate_001",
+          "claim_type": "interview_focus",
+          "source_fact_ids": [
+            "fact:7ff13c7354d77990d30eebbd78d6c369",
+            "fact:bac659d97ab172a98e40dbc0506b1ab2"
+          ],
+          "relation_type": "verify_observed_scope",
+          "allowed_expression_scope": "project_verification",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "evaluation",
+            "python",
+            "ranking",
+            "retrieval"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:9fbb08586f990c8dece3aa26e2c70e07",
+          "candidate_id": "candidate_001",
+          "claim_type": "skill_requirement_match",
+          "source_fact_ids": [
+            "fact:0da1af75693be1ff0bb5178817832556",
+            "fact:da1e68d7c9f6de44e3db25d1af295b0a"
+          ],
+          "relation_type": "listed_skill_overlap",
+          "allowed_expression_scope": "skill_observation",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "evaluation"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:ac08090577b75f79a441a4852551bdc0",
+          "candidate_id": "candidate_001",
+          "claim_type": "review_recommendation",
+          "source_fact_ids": [
+            "fact:7ff13c7354d77990d30eebbd78d6c369",
+            "fact:b865ca2e5c54979242af635e8605019f"
+          ],
+          "relation_type": "alignment_plus_interview_focus",
+          "allowed_expression_scope": "human_review",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "evaluation",
+            "python",
+            "ranking",
+            "retrieval"
+          ],
+          "source_claim_ids": [
+            "claim:866f36dc5151bbeb2f05eb3835368327",
+            "claim:e49f00ca1a0ed535b75aa6781c573a2c"
+          ]
+        },
+        {
+          "claim_id": "claim:cf65261925868d0926e991122d65e1ac",
+          "candidate_id": "candidate_001",
+          "claim_type": "review_recommendation",
+          "source_fact_ids": [
+            "fact:7ff13c7354d77990d30eebbd78d6c369",
+            "fact:a2d5dd15a6292a9532d84be313c0f14e"
+          ],
+          "relation_type": "alignment_plus_interview_focus",
+          "allowed_expression_scope": "human_review",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "evaluation",
+            "python",
+            "ranking",
+            "retrieval"
+          ],
+          "source_claim_ids": [
+            "claim:528d11e6cfac61c155a5caca45db9147",
+            "claim:866f36dc5151bbeb2f05eb3835368327"
+          ]
+        },
+        {
+          "claim_id": "claim:e3d6daf55b2d3b247ada0f69d9b5c0e8",
+          "candidate_id": "candidate_001",
+          "claim_type": "review_recommendation",
+          "source_fact_ids": [
+            "fact:3eee7be9624b3d65e2c4414707aa8704",
+            "fact:7ff13c7354d77990d30eebbd78d6c369"
+          ],
+          "relation_type": "alignment_plus_interview_focus",
+          "allowed_expression_scope": "human_review",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "evaluation",
+            "python",
+            "ranking",
+            "retrieval"
+          ],
+          "source_claim_ids": [
+            "claim:40730ef5bd182830966046924050ca69",
+            "claim:866f36dc5151bbeb2f05eb3835368327"
+          ]
+        },
+        {
+          "claim_id": "claim:e49f00ca1a0ed535b75aa6781c573a2c",
+          "candidate_id": "candidate_001",
+          "claim_type": "technical_alignment",
+          "source_fact_ids": [
+            "fact:7ff13c7354d77990d30eebbd78d6c369",
+            "fact:b865ca2e5c54979242af635e8605019f"
+          ],
+          "relation_type": "observed_requirement_overlap",
+          "allowed_expression_scope": "technical_direction",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "retrieval"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:ea7cc31b5c7cf07dbcbab574235f43d2",
+          "candidate_id": "candidate_001",
+          "claim_type": "review_recommendation",
+          "source_fact_ids": [
+            "fact:7ff13c7354d77990d30eebbd78d6c369",
+            "fact:ea3a38336d716b5850b4408d1eb9ef8c"
+          ],
+          "relation_type": "alignment_plus_interview_focus",
+          "allowed_expression_scope": "human_review",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "evaluation",
+            "python",
+            "ranking",
+            "retrieval"
+          ],
+          "source_claim_ids": [
+            "claim:866f36dc5151bbeb2f05eb3835368327",
+            "claim:f5b0940aa16a1cefae2c4990111abaef"
+          ]
+        },
+        {
+          "claim_id": "claim:f5b0940aa16a1cefae2c4990111abaef",
+          "candidate_id": "candidate_001",
+          "claim_type": "technical_alignment",
+          "source_fact_ids": [
+            "fact:7ff13c7354d77990d30eebbd78d6c369",
+            "fact:ea3a38336d716b5850b4408d1eb9ef8c"
+          ],
+          "relation_type": "observed_requirement_overlap",
+          "allowed_expression_scope": "technical_direction",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "python"
+          ],
+          "source_claim_ids": []
+        }
+      ],
+      "ranking_snapshot": {
+        "fingerprint": "97b9e02f0002044308dd706d3aa97c2ad42cec215828750d702e3b759d489ed7",
+        "order": [
+          "candidate_001",
+          "candidate_002"
+        ],
+        "ltr_scores": [
+          0.39,
+          0.38
+        ]
+      }
+    },
+    {
+      "scenario_id": "recommendation_b",
+      "candidate_id": "candidate_002",
+      "result_rank": 2,
+      "propositions": [
+        {
+          "proposition_id": "proposition:05b324c23fd008d7f42a0e7910a1c7d9",
+          "candidate_id": "candidate_002",
+          "result_rank": 2,
+          "kind": "listed_skill_observation",
+          "subject": "candidate_material",
+          "predicate": "lists_skill",
+          "modality": "fact",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "docker"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:0c156014ecc151a19fc965eee6dca5a8"
+          ],
+          "source_claim_ids": [],
+          "evidence_refs": [
+            "candidate:2:skill:4271261582b803c1784fb43f50ef8b15cca9abbbbb5c6b7dea701d573509c1de"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:319430deb371acbbf4e26f5de36a9da4",
+          "candidate_id": "candidate_002",
+          "result_rank": 2,
+          "kind": "project_observation",
+          "subject": "project_material",
+          "predicate": "lists_project_technologies",
+          "modality": "fact",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:0f5c711baccde75f503ff560a8147cfa",
+            "fact:3001f3918878844af83e8cbcf31b0d2a",
+            "fact:455be071b2dee5534e84de0e706b3b3f",
+            "fact:6433c144207b0fb7c338f79f38bca74e"
+          ],
+          "source_claim_ids": [],
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:564266ee5056f411502608bd0fe8d7d2",
+          "candidate_id": "candidate_002",
+          "result_rank": 2,
+          "kind": "human_review_recommendation",
+          "subject": "human_review",
+          "predicate": "consider_targeted_screen",
+          "modality": "recommendation",
+          "polarity": "undetermined",
+          "topic_terms": [
+            "python"
+          ],
+          "job_requirement_terms": [
+            "Python"
+          ],
+          "source_fact_ids": [
+            "fact:1cc2e5d9cb28f573d078475da06e5a77",
+            "fact:3047a29cac4456fa965d49e24ca1ae7b",
+            "fact:deade484040ebc044ebbc31ffeb29420"
+          ],
+          "source_claim_ids": [
+            "claim:55b13d092873a0760a95a9cfbaab9251",
+            "claim:5ee773eebf80ae6b3ac0aac482f03f5e",
+            "claim:d8363be091bee1d30bd891d042bfac73"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002",
+            "job_requirement:req_python"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_python"
+          ],
+          "allowed_fields": [
+            "decision_summary",
+            "why_consider"
+          ]
+        },
+        {
+          "proposition_id": "proposition:74325d07882c7459c7338f06c9931937",
+          "candidate_id": "candidate_002",
+          "result_rank": 2,
+          "kind": "interview_target",
+          "subject": "interview_process",
+          "predicate": "verify_project_scope",
+          "modality": "hypothesis",
+          "polarity": "undetermined",
+          "topic_terms": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:1cc2e5d9cb28f573d078475da06e5a77",
+            "fact:3047a29cac4456fa965d49e24ca1ae7b"
+          ],
+          "source_claim_ids": [
+            "claim:5ee773eebf80ae6b3ac0aac482f03f5e"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "interview_focus"
+          ]
+        },
+        {
+          "proposition_id": "proposition:768406594abf11f9a007d0138b36e512",
+          "candidate_id": "candidate_002",
+          "result_rank": 2,
+          "kind": "technical_alignment",
+          "subject": "candidate_material",
+          "predicate": "overlaps_job_requirement",
+          "modality": "alignment",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "python"
+          ],
+          "job_requirement_terms": [
+            "Python"
+          ],
+          "source_fact_ids": [
+            "fact:1cc2e5d9cb28f573d078475da06e5a77",
+            "fact:deade484040ebc044ebbc31ffeb29420"
+          ],
+          "source_claim_ids": [
+            "claim:d8363be091bee1d30bd891d042bfac73"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002",
+            "job_requirement:req_python"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_python"
+          ],
+          "allowed_fields": [
+            "why_consider",
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:af2b380678f5226f1e6dc1f798c1294a",
+          "candidate_id": "candidate_002",
+          "result_rank": 2,
+          "kind": "material_unknown",
+          "subject": "selected_material",
+          "predicate": "project_scope_not_established",
+          "modality": "unknown",
+          "polarity": "undetermined",
+          "topic_terms": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:1cc2e5d9cb28f573d078475da06e5a77",
+            "fact:3047a29cac4456fa965d49e24ca1ae7b"
+          ],
+          "source_claim_ids": [
+            "claim:163ec49906f68f00f940d566218cb564"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "uncertainty"
+          ]
+        }
+      ],
+      "source_evidence_terms": {
+        "candidate:2:project:project_002": [
+          "docker",
+          "fastapi",
+          "postgresql",
+          "python"
+        ],
+        "candidate:2:skill:4271261582b803c1784fb43f50ef8b15cca9abbbbb5c6b7dea701d573509c1de": [
+          "docker"
+        ],
+        "job_requirement:req_python": [
+          "Python"
+        ]
+      },
+      "source_facts_v2": [
+        {
+          "fact_id": "fact:0c156014ecc151a19fc965eee6dca5a8",
+          "kind": "candidate_skill",
+          "term": "docker",
+          "evidence_refs": [
+            "candidate:2:skill:4271261582b803c1784fb43f50ef8b15cca9abbbbb5c6b7dea701d573509c1de"
+          ],
+          "allowed_inference": "资料列出该技能；可归纳为相关技术方向并建议面试了解实践深度；不能推断能力深度、个人职责或项目结果"
+        },
+        {
+          "fact_id": "fact:0f5c711baccde75f503ff560a8147cfa",
+          "kind": "project_practice",
+          "term": "python",
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        },
+        {
+          "fact_id": "fact:3001f3918878844af83e8cbcf31b0d2a",
+          "kind": "project_practice",
+          "term": "docker",
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        },
+        {
+          "fact_id": "fact:455be071b2dee5534e84de0e706b3b3f",
+          "kind": "project_practice",
+          "term": "fastapi",
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        },
+        {
+          "fact_id": "fact:6433c144207b0fb7c338f79f38bca74e",
+          "kind": "project_practice",
+          "term": "postgresql",
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        }
+      ],
+      "source_facts_v3": [
+        {
+          "fact_id": "fact:1cc2e5d9cb28f573d078475da06e5a77",
+          "kind": "project_evidence",
+          "concepts": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "source_terms": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "source_fact_ids": [
+            "fact:881d6fa8efd3c887c8baec25212945bc"
+          ],
+          "allowed_inference": "资料列出相关技术或项目覆盖范围；仅可谈方向与待核实问题，不推断个人职责、规模或结果"
+        },
+        {
+          "fact_id": "fact:3047a29cac4456fa965d49e24ca1ae7b",
+          "kind": "interview_validation",
+          "concepts": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "source_terms": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "source_fact_ids": [
+            "fact:1cc2e5d9cb28f573d078475da06e5a77"
+          ],
+          "allowed_inference": "仅可就材料所列技术提出假设性设计或工程取舍问题；不得写成已有经历"
+        },
+        {
+          "fact_id": "fact:deade484040ebc044ebbc31ffeb29420",
+          "kind": "job_alignment",
+          "concepts": [
+            "python"
+          ],
+          "source_terms": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python",
+            "python"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002",
+            "job_requirement:req_python"
+          ],
+          "source_fact_ids": [
+            "fact:1cc2e5d9cb28f573d078475da06e5a77"
+          ],
+          "allowed_inference": "候选材料与岗位要求存在技术方向关联；只能建议人工复核，不能断言胜任"
+        }
+      ],
+      "source_claims_v4": [
+        {
+          "claim_id": "claim:163ec49906f68f00f940d566218cb564",
+          "candidate_id": "candidate_002",
+          "claim_type": "project_depth_validation",
+          "source_fact_ids": [
+            "fact:1cc2e5d9cb28f573d078475da06e5a77",
+            "fact:3047a29cac4456fa965d49e24ca1ae7b"
+          ],
+          "relation_type": "verify_observed_scope",
+          "allowed_expression_scope": "project_verification",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:55b13d092873a0760a95a9cfbaab9251",
+          "candidate_id": "candidate_002",
+          "claim_type": "review_recommendation",
+          "source_fact_ids": [
+            "fact:1cc2e5d9cb28f573d078475da06e5a77",
+            "fact:deade484040ebc044ebbc31ffeb29420"
+          ],
+          "relation_type": "alignment_plus_interview_focus",
+          "allowed_expression_scope": "human_review",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "source_claim_ids": [
+            "claim:5ee773eebf80ae6b3ac0aac482f03f5e",
+            "claim:d8363be091bee1d30bd891d042bfac73"
+          ]
+        },
+        {
+          "claim_id": "claim:5ee773eebf80ae6b3ac0aac482f03f5e",
+          "candidate_id": "candidate_002",
+          "claim_type": "interview_focus",
+          "source_fact_ids": [
+            "fact:1cc2e5d9cb28f573d078475da06e5a77",
+            "fact:3047a29cac4456fa965d49e24ca1ae7b"
+          ],
+          "relation_type": "verify_observed_scope",
+          "allowed_expression_scope": "project_verification",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:d8363be091bee1d30bd891d042bfac73",
+          "candidate_id": "candidate_002",
+          "claim_type": "technical_alignment",
+          "source_fact_ids": [
+            "fact:1cc2e5d9cb28f573d078475da06e5a77",
+            "fact:deade484040ebc044ebbc31ffeb29420"
+          ],
+          "relation_type": "observed_requirement_overlap",
+          "allowed_expression_scope": "technical_direction",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "python"
+          ],
+          "source_claim_ids": []
+        }
+      ],
+      "ranking_snapshot": {
+        "fingerprint": "97b9e02f0002044308dd706d3aa97c2ad42cec215828750d702e3b759d489ed7",
+        "order": [
+          "candidate_001",
+          "candidate_002"
+        ],
+        "ltr_scores": [
+          0.39,
+          0.38
+        ]
+      }
+    },
+    {
+      "scenario_id": "backend_a",
+      "candidate_id": "candidate_001",
+      "result_rank": 1,
+      "propositions": [
+        {
+          "proposition_id": "proposition:1ed6b36c79a029f08406110ea413692e",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "material_unknown",
+          "subject": "selected_material",
+          "predicate": "project_scope_not_established",
+          "modality": "unknown",
+          "polarity": "undetermined",
+          "topic_terms": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:acb7f009d589eed4f1ae45a63f940f8f",
+            "fact:f63bd7e9cf7032fb5778d276a603e151"
+          ],
+          "source_claim_ids": [
+            "claim:aaed311d4165cc60483b47452b1d86f3"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "uncertainty"
+          ]
+        },
+        {
+          "proposition_id": "proposition:368417203c13b3ba0a9ffe45a6f50cf0",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "technical_alignment",
+          "subject": "candidate_material",
+          "predicate": "overlaps_job_requirement",
+          "modality": "alignment",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "postgresql"
+          ],
+          "job_requirement_terms": [
+            "PostgreSQL"
+          ],
+          "source_fact_ids": [
+            "fact:64ecc587bc9c74032552064ad500ffb2",
+            "fact:f63bd7e9cf7032fb5778d276a603e151"
+          ],
+          "source_claim_ids": [
+            "claim:8f93ff9be9b25a1102b03cebd5566024"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_domain_2"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_domain_2"
+          ],
+          "allowed_fields": [
+            "why_consider",
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:421a07aa80833f02f5b45193356d48ed",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "human_review_recommendation",
+          "subject": "human_review",
+          "predicate": "prioritize_technical_review",
+          "modality": "recommendation",
+          "polarity": "undetermined",
+          "topic_terms": [
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "job_requirement_terms": [
+            "FastAPI",
+            "PostgreSQL",
+            "Python"
+          ],
+          "source_fact_ids": [
+            "fact:503df4ff133fe81af840d9d6121298f9",
+            "fact:64ecc587bc9c74032552064ad500ffb2",
+            "fact:acb7f009d589eed4f1ae45a63f940f8f",
+            "fact:ad3d13ac60eb77d975b13651a2cc9751",
+            "fact:f63bd7e9cf7032fb5778d276a603e151"
+          ],
+          "source_claim_ids": [
+            "claim:0857dda0a7c2d3cd01a42accbae36612",
+            "claim:5d9cd61f9637ca0ac5d334abbeffdb0c",
+            "claim:60a65a6a50c846358be479ff4ecba6f2",
+            "claim:68bcbadb9f37c203b34f954a9b7a8ebc",
+            "claim:7ac6234fba20722cddaef9279d0b3a98",
+            "claim:8f93ff9be9b25a1102b03cebd5566024",
+            "claim:f4eb093ba33bbc20265a45e9bfe0ff6b"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_domain_1",
+            "job_requirement:req_domain_2",
+            "job_requirement:req_python"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_domain_1",
+            "job_requirement:req_domain_2",
+            "job_requirement:req_python"
+          ],
+          "allowed_fields": [
+            "decision_summary",
+            "why_consider"
+          ]
+        },
+        {
+          "proposition_id": "proposition:5a75b0060610cd4565e4086804ae69c9",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "interview_target",
+          "subject": "interview_process",
+          "predicate": "verify_project_scope",
+          "modality": "hypothesis",
+          "polarity": "undetermined",
+          "topic_terms": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:acb7f009d589eed4f1ae45a63f940f8f",
+            "fact:f63bd7e9cf7032fb5778d276a603e151"
+          ],
+          "source_claim_ids": [
+            "claim:5d9cd61f9637ca0ac5d334abbeffdb0c"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "interview_focus"
+          ]
+        },
+        {
+          "proposition_id": "proposition:981ecd9494501c62364df6eae39e96f6",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "technical_alignment",
+          "subject": "candidate_material",
+          "predicate": "overlaps_job_requirement",
+          "modality": "alignment",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "python"
+          ],
+          "job_requirement_terms": [
+            "Python"
+          ],
+          "source_fact_ids": [
+            "fact:503df4ff133fe81af840d9d6121298f9",
+            "fact:f63bd7e9cf7032fb5778d276a603e151"
+          ],
+          "source_claim_ids": [
+            "claim:f4eb093ba33bbc20265a45e9bfe0ff6b"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_python"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_python"
+          ],
+          "allowed_fields": [
+            "why_consider",
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:98f5cff49261d435b97618d95d6549f7",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "listed_skill_observation",
+          "subject": "candidate_material",
+          "predicate": "lists_skill",
+          "modality": "fact",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "docker"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:b69f29965d39566b09f56f94090c98ff"
+          ],
+          "source_claim_ids": [],
+          "evidence_refs": [
+            "candidate:1:skill:0dc9ad7205e20e0f023bcc9df0f1aa06ea5f5f25b8b1c32b98ec0b7aabcc3cd6"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:a2e4bff06b65957a1b0fec061334d2f9",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "technical_alignment",
+          "subject": "candidate_material",
+          "predicate": "overlaps_job_requirement",
+          "modality": "alignment",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "fastapi"
+          ],
+          "job_requirement_terms": [
+            "FastAPI"
+          ],
+          "source_fact_ids": [
+            "fact:ad3d13ac60eb77d975b13651a2cc9751",
+            "fact:f63bd7e9cf7032fb5778d276a603e151"
+          ],
+          "source_claim_ids": [
+            "claim:7ac6234fba20722cddaef9279d0b3a98"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_domain_1"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_domain_1"
+          ],
+          "allowed_fields": [
+            "why_consider",
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:e534a047f11509ff9ef6c27bc1bcc266",
+          "candidate_id": "candidate_001",
+          "result_rank": 1,
+          "kind": "project_observation",
+          "subject": "project_material",
+          "predicate": "lists_project_technologies",
+          "modality": "fact",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:195dfa2191ee10b2b5348a5dc3715282",
+            "fact:37ebd94835fe40cedb3fc94dda983fce",
+            "fact:4617ee0eab6e54af5230f31f6cadc646",
+            "fact:7d884ab4c2dffcec09ec4909a73d2028"
+          ],
+          "source_claim_ids": [],
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "technical_signal"
+          ]
+        }
+      ],
+      "source_evidence_terms": {
+        "candidate:1:project:project_001": [
+          "docker",
+          "fastapi",
+          "postgresql",
+          "python"
+        ],
+        "candidate:1:skill:0dc9ad7205e20e0f023bcc9df0f1aa06ea5f5f25b8b1c32b98ec0b7aabcc3cd6": [
+          "docker"
+        ],
+        "job_requirement:req_domain_1": [
+          "FastAPI"
+        ],
+        "job_requirement:req_domain_2": [
+          "PostgreSQL"
+        ],
+        "job_requirement:req_python": [
+          "Python"
+        ]
+      },
+      "source_facts_v2": [
+        {
+          "fact_id": "fact:195dfa2191ee10b2b5348a5dc3715282",
+          "kind": "project_practice",
+          "term": "fastapi",
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        },
+        {
+          "fact_id": "fact:37ebd94835fe40cedb3fc94dda983fce",
+          "kind": "project_practice",
+          "term": "postgresql",
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        },
+        {
+          "fact_id": "fact:4617ee0eab6e54af5230f31f6cadc646",
+          "kind": "project_practice",
+          "term": "docker",
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        },
+        {
+          "fact_id": "fact:7d884ab4c2dffcec09ec4909a73d2028",
+          "kind": "project_practice",
+          "term": "python",
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        },
+        {
+          "fact_id": "fact:b69f29965d39566b09f56f94090c98ff",
+          "kind": "candidate_skill",
+          "term": "docker",
+          "evidence_refs": [
+            "candidate:1:skill:0dc9ad7205e20e0f023bcc9df0f1aa06ea5f5f25b8b1c32b98ec0b7aabcc3cd6"
+          ],
+          "allowed_inference": "资料列出该技能；可归纳为相关技术方向并建议面试了解实践深度；不能推断能力深度、个人职责或项目结果"
+        }
+      ],
+      "source_facts_v3": [
+        {
+          "fact_id": "fact:503df4ff133fe81af840d9d6121298f9",
+          "kind": "job_alignment",
+          "concepts": [
+            "python"
+          ],
+          "source_terms": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python",
+            "python"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_python"
+          ],
+          "source_fact_ids": [
+            "fact:f63bd7e9cf7032fb5778d276a603e151"
+          ],
+          "allowed_inference": "候选材料与岗位要求存在技术方向关联；只能建议人工复核，不能断言胜任"
+        },
+        {
+          "fact_id": "fact:64ecc587bc9c74032552064ad500ffb2",
+          "kind": "job_alignment",
+          "concepts": [
+            "postgresql"
+          ],
+          "source_terms": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python",
+            "postgresql"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_domain_2"
+          ],
+          "source_fact_ids": [
+            "fact:f63bd7e9cf7032fb5778d276a603e151"
+          ],
+          "allowed_inference": "候选材料与岗位要求存在技术方向关联；只能建议人工复核，不能断言胜任"
+        },
+        {
+          "fact_id": "fact:acb7f009d589eed4f1ae45a63f940f8f",
+          "kind": "interview_validation",
+          "concepts": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "source_terms": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "source_fact_ids": [
+            "fact:f63bd7e9cf7032fb5778d276a603e151"
+          ],
+          "allowed_inference": "仅可就材料所列技术提出假设性设计或工程取舍问题；不得写成已有经历"
+        },
+        {
+          "fact_id": "fact:ad3d13ac60eb77d975b13651a2cc9751",
+          "kind": "job_alignment",
+          "concepts": [
+            "fastapi"
+          ],
+          "source_terms": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python",
+            "fastapi"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001",
+            "job_requirement:req_domain_1"
+          ],
+          "source_fact_ids": [
+            "fact:f63bd7e9cf7032fb5778d276a603e151"
+          ],
+          "allowed_inference": "候选材料与岗位要求存在技术方向关联；只能建议人工复核，不能断言胜任"
+        },
+        {
+          "fact_id": "fact:f63bd7e9cf7032fb5778d276a603e151",
+          "kind": "project_evidence",
+          "concepts": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "source_terms": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "evidence_refs": [
+            "candidate:1:project:project_001"
+          ],
+          "source_fact_ids": [
+            "fact:a060d17611054bc556c97ed6fcecddf3"
+          ],
+          "allowed_inference": "资料列出相关技术或项目覆盖范围；仅可谈方向与待核实问题，不推断个人职责、规模或结果"
+        }
+      ],
+      "source_claims_v4": [
+        {
+          "claim_id": "claim:0857dda0a7c2d3cd01a42accbae36612",
+          "candidate_id": "candidate_001",
+          "claim_type": "review_recommendation",
+          "source_fact_ids": [
+            "fact:64ecc587bc9c74032552064ad500ffb2",
+            "fact:f63bd7e9cf7032fb5778d276a603e151"
+          ],
+          "relation_type": "alignment_plus_interview_focus",
+          "allowed_expression_scope": "human_review",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "source_claim_ids": [
+            "claim:5d9cd61f9637ca0ac5d334abbeffdb0c",
+            "claim:8f93ff9be9b25a1102b03cebd5566024"
+          ]
+        },
+        {
+          "claim_id": "claim:5d9cd61f9637ca0ac5d334abbeffdb0c",
+          "candidate_id": "candidate_001",
+          "claim_type": "interview_focus",
+          "source_fact_ids": [
+            "fact:acb7f009d589eed4f1ae45a63f940f8f",
+            "fact:f63bd7e9cf7032fb5778d276a603e151"
+          ],
+          "relation_type": "verify_observed_scope",
+          "allowed_expression_scope": "project_verification",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:60a65a6a50c846358be479ff4ecba6f2",
+          "candidate_id": "candidate_001",
+          "claim_type": "review_recommendation",
+          "source_fact_ids": [
+            "fact:503df4ff133fe81af840d9d6121298f9",
+            "fact:f63bd7e9cf7032fb5778d276a603e151"
+          ],
+          "relation_type": "alignment_plus_interview_focus",
+          "allowed_expression_scope": "human_review",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "source_claim_ids": [
+            "claim:5d9cd61f9637ca0ac5d334abbeffdb0c",
+            "claim:f4eb093ba33bbc20265a45e9bfe0ff6b"
+          ]
+        },
+        {
+          "claim_id": "claim:68bcbadb9f37c203b34f954a9b7a8ebc",
+          "candidate_id": "candidate_001",
+          "claim_type": "review_recommendation",
+          "source_fact_ids": [
+            "fact:ad3d13ac60eb77d975b13651a2cc9751",
+            "fact:f63bd7e9cf7032fb5778d276a603e151"
+          ],
+          "relation_type": "alignment_plus_interview_focus",
+          "allowed_expression_scope": "human_review",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "source_claim_ids": [
+            "claim:5d9cd61f9637ca0ac5d334abbeffdb0c",
+            "claim:7ac6234fba20722cddaef9279d0b3a98"
+          ]
+        },
+        {
+          "claim_id": "claim:7ac6234fba20722cddaef9279d0b3a98",
+          "candidate_id": "candidate_001",
+          "claim_type": "technical_alignment",
+          "source_fact_ids": [
+            "fact:ad3d13ac60eb77d975b13651a2cc9751",
+            "fact:f63bd7e9cf7032fb5778d276a603e151"
+          ],
+          "relation_type": "observed_requirement_overlap",
+          "allowed_expression_scope": "technical_direction",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "fastapi"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:8f93ff9be9b25a1102b03cebd5566024",
+          "candidate_id": "candidate_001",
+          "claim_type": "technical_alignment",
+          "source_fact_ids": [
+            "fact:64ecc587bc9c74032552064ad500ffb2",
+            "fact:f63bd7e9cf7032fb5778d276a603e151"
+          ],
+          "relation_type": "observed_requirement_overlap",
+          "allowed_expression_scope": "technical_direction",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "postgresql"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:aaed311d4165cc60483b47452b1d86f3",
+          "candidate_id": "candidate_001",
+          "claim_type": "project_depth_validation",
+          "source_fact_ids": [
+            "fact:acb7f009d589eed4f1ae45a63f940f8f",
+            "fact:f63bd7e9cf7032fb5778d276a603e151"
+          ],
+          "relation_type": "verify_observed_scope",
+          "allowed_expression_scope": "project_verification",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "docker",
+            "fastapi",
+            "postgresql",
+            "python"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:f4eb093ba33bbc20265a45e9bfe0ff6b",
+          "candidate_id": "candidate_001",
+          "claim_type": "technical_alignment",
+          "source_fact_ids": [
+            "fact:503df4ff133fe81af840d9d6121298f9",
+            "fact:f63bd7e9cf7032fb5778d276a603e151"
+          ],
+          "relation_type": "observed_requirement_overlap",
+          "allowed_expression_scope": "technical_direction",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "python"
+          ],
+          "source_claim_ids": []
+        }
+      ],
+      "ranking_snapshot": {
+        "fingerprint": "443ac8dbf4405538a28b4611ec8f9ff2b76fb7a34eb293067623b74594f3cbb4",
+        "order": [
+          "candidate_001",
+          "candidate_002"
+        ],
+        "ltr_scores": [
+          0.39,
+          0.38
+        ]
+      }
+    },
+    {
+      "scenario_id": "backend_b",
+      "candidate_id": "candidate_002",
+      "result_rank": 2,
+      "propositions": [
+        {
+          "proposition_id": "proposition:23f9448e0d8bd61bbfe4c46c40cbe94f",
+          "candidate_id": "candidate_002",
+          "result_rank": 2,
+          "kind": "technical_alignment",
+          "subject": "candidate_material",
+          "predicate": "overlaps_job_requirement",
+          "modality": "alignment",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "python"
+          ],
+          "job_requirement_terms": [
+            "Python"
+          ],
+          "source_fact_ids": [
+            "fact:1131ebe2a9db4677408ef22ca0472520",
+            "fact:9d5d9d8e0c282c1670e3a690aca3bc49"
+          ],
+          "source_claim_ids": [
+            "claim:b3f2dc73fcd377475908724fb4785e93"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002",
+            "job_requirement:req_python"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_python"
+          ],
+          "allowed_fields": [
+            "why_consider",
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:440dcf2a873b026129910412abd028be",
+          "candidate_id": "candidate_002",
+          "result_rank": 2,
+          "kind": "interview_target",
+          "subject": "interview_process",
+          "predicate": "verify_project_scope",
+          "modality": "hypothesis",
+          "polarity": "undetermined",
+          "topic_terms": [
+            "python",
+            "qdrant",
+            "rag",
+            "vector database"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:26f773a96766557b96c84a4b44f19646",
+            "fact:9d5d9d8e0c282c1670e3a690aca3bc49"
+          ],
+          "source_claim_ids": [
+            "claim:ae7dd7f6ce80f1782d63754a80d1a354"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "interview_focus"
+          ]
+        },
+        {
+          "proposition_id": "proposition:457a7459fdb2aa7388ffa1e2de2ad52f",
+          "candidate_id": "candidate_002",
+          "result_rank": 2,
+          "kind": "material_unknown",
+          "subject": "selected_material",
+          "predicate": "project_scope_not_established",
+          "modality": "unknown",
+          "polarity": "undetermined",
+          "topic_terms": [
+            "python",
+            "qdrant",
+            "rag",
+            "vector database"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:26f773a96766557b96c84a4b44f19646",
+            "fact:9d5d9d8e0c282c1670e3a690aca3bc49"
+          ],
+          "source_claim_ids": [
+            "claim:ee7fd1195d5a2b609220e3ba2f1b4af1"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "uncertainty"
+          ]
+        },
+        {
+          "proposition_id": "proposition:4682f200f561784462efc12a1c316ae0",
+          "candidate_id": "candidate_002",
+          "result_rank": 2,
+          "kind": "technical_alignment",
+          "subject": "candidate_material",
+          "predicate": "overlaps_job_requirement",
+          "modality": "alignment",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "python"
+          ],
+          "job_requirement_terms": [
+            "Python"
+          ],
+          "source_fact_ids": [
+            "fact:37d7778aa6d0fde9b6fd8b47b2ea2f9c",
+            "fact:7872d98174eea051b194918e29e0c1c8"
+          ],
+          "source_claim_ids": [
+            "claim:0d114eb7a99ffaaad08b0090d9bd015a"
+          ],
+          "evidence_refs": [
+            "candidate:2:skill:cb0982cf4f4881ad083438fecd0743926200177191ecc44099fb4c38ce482239",
+            "job_requirement:req_python"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_python"
+          ],
+          "allowed_fields": [
+            "why_consider",
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:63f5b914e4c6051903119a4830f0c13c",
+          "candidate_id": "candidate_002",
+          "result_rank": 2,
+          "kind": "technical_alignment",
+          "subject": "candidate_material",
+          "predicate": "overlaps_job_requirement",
+          "modality": "alignment",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "rag"
+          ],
+          "job_requirement_terms": [
+            "RAG"
+          ],
+          "source_fact_ids": [
+            "fact:6959127241740f98a8ae098d26742ebf",
+            "fact:9d5d9d8e0c282c1670e3a690aca3bc49"
+          ],
+          "source_claim_ids": [
+            "claim:a35a5e0fbd9cc4518d6a2266011454c1"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002",
+            "job_requirement:req_domain_3"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_domain_3"
+          ],
+          "allowed_fields": [
+            "why_consider",
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:9f4eacd2a085a6dbbac44f71dd924d60",
+          "candidate_id": "candidate_002",
+          "result_rank": 2,
+          "kind": "human_review_recommendation",
+          "subject": "human_review",
+          "predicate": "prioritize_technical_review",
+          "modality": "recommendation",
+          "polarity": "undetermined",
+          "topic_terms": [
+            "python",
+            "rag"
+          ],
+          "job_requirement_terms": [
+            "Python",
+            "RAG"
+          ],
+          "source_fact_ids": [
+            "fact:1131ebe2a9db4677408ef22ca0472520",
+            "fact:26f773a96766557b96c84a4b44f19646",
+            "fact:6959127241740f98a8ae098d26742ebf",
+            "fact:9d5d9d8e0c282c1670e3a690aca3bc49"
+          ],
+          "source_claim_ids": [
+            "claim:a35a5e0fbd9cc4518d6a2266011454c1",
+            "claim:a62fee5e6e9f8bdf00d46ed422c0540c",
+            "claim:ae7dd7f6ce80f1782d63754a80d1a354",
+            "claim:b3f2dc73fcd377475908724fb4785e93",
+            "claim:ff8949fcc0218696adc33dcf6e4aa810"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002",
+            "job_requirement:req_domain_3",
+            "job_requirement:req_python"
+          ],
+          "job_requirement_refs": [
+            "job_requirement:req_domain_3",
+            "job_requirement:req_python"
+          ],
+          "allowed_fields": [
+            "decision_summary",
+            "why_consider"
+          ]
+        },
+        {
+          "proposition_id": "proposition:aeecf10089e2402b888094f2a74b92ea",
+          "candidate_id": "candidate_002",
+          "result_rank": 2,
+          "kind": "listed_skill_observation",
+          "subject": "candidate_material",
+          "predicate": "lists_skill",
+          "modality": "fact",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "python"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:e99e94237435c41bb8a1ff7b993225a7"
+          ],
+          "source_claim_ids": [],
+          "evidence_refs": [
+            "candidate:2:skill:cb0982cf4f4881ad083438fecd0743926200177191ecc44099fb4c38ce482239"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "technical_signal"
+          ]
+        },
+        {
+          "proposition_id": "proposition:cbc4f5134c70d99ab8eda944cbce3957",
+          "candidate_id": "candidate_002",
+          "result_rank": 2,
+          "kind": "project_observation",
+          "subject": "project_material",
+          "predicate": "lists_project_technologies",
+          "modality": "fact",
+          "polarity": "affirmative",
+          "topic_terms": [
+            "python",
+            "qdrant",
+            "rag",
+            "vector database"
+          ],
+          "job_requirement_terms": [],
+          "source_fact_ids": [
+            "fact:0f5c711baccde75f503ff560a8147cfa",
+            "fact:62379218b529abd3490dc3b14d834b3d",
+            "fact:8ced768149cf202c85f6ffccc0bbda81",
+            "fact:8eea9b301c95abc07c641fcc623094f4"
+          ],
+          "source_claim_ids": [],
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "job_requirement_refs": [],
+          "allowed_fields": [
+            "technical_signal"
+          ]
+        }
+      ],
+      "source_evidence_terms": {
+        "candidate:2:project:project_002": [
+          "python",
+          "qdrant",
+          "rag",
+          "vector database"
+        ],
+        "candidate:2:skill:cb0982cf4f4881ad083438fecd0743926200177191ecc44099fb4c38ce482239": [
+          "python"
+        ],
+        "job_requirement:req_domain_3": [
+          "RAG"
+        ],
+        "job_requirement:req_python": [
+          "Python"
+        ]
+      },
+      "source_facts_v2": [
+        {
+          "fact_id": "fact:0f5c711baccde75f503ff560a8147cfa",
+          "kind": "project_practice",
+          "term": "python",
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        },
+        {
+          "fact_id": "fact:62379218b529abd3490dc3b14d834b3d",
+          "kind": "project_practice",
+          "term": "qdrant",
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        },
+        {
+          "fact_id": "fact:8ced768149cf202c85f6ffccc0bbda81",
+          "kind": "project_practice",
+          "term": "vector database",
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        },
+        {
+          "fact_id": "fact:8eea9b301c95abc07c641fcc623094f4",
+          "kind": "project_practice",
+          "term": "rag",
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "allowed_inference": "项目记录涉及该技术；可归纳为相关应用实践，并建议面试询问设计与工程取舍；不能推断个人构建、开发、部署、优化等动作，也不能推断主导、规模或业绩"
+        },
+        {
+          "fact_id": "fact:e99e94237435c41bb8a1ff7b993225a7",
+          "kind": "candidate_skill",
+          "term": "python",
+          "evidence_refs": [
+            "candidate:2:skill:cb0982cf4f4881ad083438fecd0743926200177191ecc44099fb4c38ce482239"
+          ],
+          "allowed_inference": "资料列出该技能；可归纳为相关技术方向并建议面试了解实践深度；不能推断能力深度、个人职责或项目结果"
+        }
+      ],
+      "source_facts_v3": [
+        {
+          "fact_id": "fact:1131ebe2a9db4677408ef22ca0472520",
+          "kind": "job_alignment",
+          "concepts": [
+            "python"
+          ],
+          "source_terms": [
+            "python",
+            "qdrant",
+            "rag",
+            "vector database",
+            "python"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002",
+            "job_requirement:req_python"
+          ],
+          "source_fact_ids": [
+            "fact:9d5d9d8e0c282c1670e3a690aca3bc49"
+          ],
+          "allowed_inference": "候选材料与岗位要求存在技术方向关联；只能建议人工复核，不能断言胜任"
+        },
+        {
+          "fact_id": "fact:26f773a96766557b96c84a4b44f19646",
+          "kind": "interview_validation",
+          "concepts": [
+            "python",
+            "qdrant",
+            "rag",
+            "vector database"
+          ],
+          "source_terms": [
+            "python",
+            "qdrant",
+            "rag",
+            "vector database"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "source_fact_ids": [
+            "fact:9d5d9d8e0c282c1670e3a690aca3bc49"
+          ],
+          "allowed_inference": "仅可就材料所列技术提出假设性设计或工程取舍问题；不得写成已有经历"
+        },
+        {
+          "fact_id": "fact:37d7778aa6d0fde9b6fd8b47b2ea2f9c",
+          "kind": "candidate_capability",
+          "concepts": [
+            "python"
+          ],
+          "source_terms": [
+            "python"
+          ],
+          "evidence_refs": [
+            "candidate:2:skill:cb0982cf4f4881ad083438fecd0743926200177191ecc44099fb4c38ce482239"
+          ],
+          "source_fact_ids": [
+            "fact:d123812b7e8f9e55e0743f7410dfbe05"
+          ],
+          "allowed_inference": "资料列出相关技术或项目覆盖范围；仅可谈方向与待核实问题，不推断个人职责、规模或结果"
+        },
+        {
+          "fact_id": "fact:6959127241740f98a8ae098d26742ebf",
+          "kind": "job_alignment",
+          "concepts": [
+            "rag"
+          ],
+          "source_terms": [
+            "python",
+            "qdrant",
+            "rag",
+            "vector database",
+            "rag"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002",
+            "job_requirement:req_domain_3"
+          ],
+          "source_fact_ids": [
+            "fact:9d5d9d8e0c282c1670e3a690aca3bc49"
+          ],
+          "allowed_inference": "候选材料与岗位要求存在技术方向关联；只能建议人工复核，不能断言胜任"
+        },
+        {
+          "fact_id": "fact:7872d98174eea051b194918e29e0c1c8",
+          "kind": "job_alignment",
+          "concepts": [
+            "python"
+          ],
+          "source_terms": [
+            "python",
+            "python"
+          ],
+          "evidence_refs": [
+            "candidate:2:skill:cb0982cf4f4881ad083438fecd0743926200177191ecc44099fb4c38ce482239",
+            "job_requirement:req_python"
+          ],
+          "source_fact_ids": [
+            "fact:37d7778aa6d0fde9b6fd8b47b2ea2f9c"
+          ],
+          "allowed_inference": "候选材料与岗位要求存在技术方向关联；只能建议人工复核，不能断言胜任"
+        },
+        {
+          "fact_id": "fact:9d5d9d8e0c282c1670e3a690aca3bc49",
+          "kind": "project_evidence",
+          "concepts": [
+            "python",
+            "qdrant",
+            "rag",
+            "vector database"
+          ],
+          "source_terms": [
+            "python",
+            "qdrant",
+            "rag",
+            "vector database"
+          ],
+          "evidence_refs": [
+            "candidate:2:project:project_002"
+          ],
+          "source_fact_ids": [
+            "fact:9964a077a3b2ec36640cb095bcc026f0"
+          ],
+          "allowed_inference": "资料列出相关技术或项目覆盖范围；仅可谈方向与待核实问题，不推断个人职责、规模或结果"
+        }
+      ],
+      "source_claims_v4": [
+        {
+          "claim_id": "claim:0d114eb7a99ffaaad08b0090d9bd015a",
+          "candidate_id": "candidate_002",
+          "claim_type": "skill_requirement_match",
+          "source_fact_ids": [
+            "fact:37d7778aa6d0fde9b6fd8b47b2ea2f9c",
+            "fact:7872d98174eea051b194918e29e0c1c8"
+          ],
+          "relation_type": "listed_skill_overlap",
+          "allowed_expression_scope": "skill_observation",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "python"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:a35a5e0fbd9cc4518d6a2266011454c1",
+          "candidate_id": "candidate_002",
+          "claim_type": "technical_alignment",
+          "source_fact_ids": [
+            "fact:6959127241740f98a8ae098d26742ebf",
+            "fact:9d5d9d8e0c282c1670e3a690aca3bc49"
+          ],
+          "relation_type": "observed_requirement_overlap",
+          "allowed_expression_scope": "technical_direction",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "rag"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:a62fee5e6e9f8bdf00d46ed422c0540c",
+          "candidate_id": "candidate_002",
+          "claim_type": "review_recommendation",
+          "source_fact_ids": [
+            "fact:1131ebe2a9db4677408ef22ca0472520",
+            "fact:9d5d9d8e0c282c1670e3a690aca3bc49"
+          ],
+          "relation_type": "alignment_plus_interview_focus",
+          "allowed_expression_scope": "human_review",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "python",
+            "qdrant",
+            "rag",
+            "vector database"
+          ],
+          "source_claim_ids": [
+            "claim:ae7dd7f6ce80f1782d63754a80d1a354",
+            "claim:b3f2dc73fcd377475908724fb4785e93"
+          ]
+        },
+        {
+          "claim_id": "claim:ae7dd7f6ce80f1782d63754a80d1a354",
+          "candidate_id": "candidate_002",
+          "claim_type": "interview_focus",
+          "source_fact_ids": [
+            "fact:26f773a96766557b96c84a4b44f19646",
+            "fact:9d5d9d8e0c282c1670e3a690aca3bc49"
+          ],
+          "relation_type": "verify_observed_scope",
+          "allowed_expression_scope": "project_verification",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "python",
+            "qdrant",
+            "rag",
+            "vector database"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:b3f2dc73fcd377475908724fb4785e93",
+          "candidate_id": "candidate_002",
+          "claim_type": "technical_alignment",
+          "source_fact_ids": [
+            "fact:1131ebe2a9db4677408ef22ca0472520",
+            "fact:9d5d9d8e0c282c1670e3a690aca3bc49"
+          ],
+          "relation_type": "observed_requirement_overlap",
+          "allowed_expression_scope": "technical_direction",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "python"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:ee7fd1195d5a2b609220e3ba2f1b4af1",
+          "candidate_id": "candidate_002",
+          "claim_type": "project_depth_validation",
+          "source_fact_ids": [
+            "fact:26f773a96766557b96c84a4b44f19646",
+            "fact:9d5d9d8e0c282c1670e3a690aca3bc49"
+          ],
+          "relation_type": "verify_observed_scope",
+          "allowed_expression_scope": "project_verification",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "python",
+            "qdrant",
+            "rag",
+            "vector database"
+          ],
+          "source_claim_ids": []
+        },
+        {
+          "claim_id": "claim:ff8949fcc0218696adc33dcf6e4aa810",
+          "candidate_id": "candidate_002",
+          "claim_type": "review_recommendation",
+          "source_fact_ids": [
+            "fact:6959127241740f98a8ae098d26742ebf",
+            "fact:9d5d9d8e0c282c1670e3a690aca3bc49"
+          ],
+          "relation_type": "alignment_plus_interview_focus",
+          "allowed_expression_scope": "human_review",
+          "forbidden_expression_scope": [
+            "personal_ownership",
+            "production_scale",
+            "business_outcome",
+            "ability_grade",
+            "hiring_decision"
+          ],
+          "concepts": [
+            "python",
+            "qdrant",
+            "rag",
+            "vector database"
+          ],
+          "source_claim_ids": [
+            "claim:a35a5e0fbd9cc4518d6a2266011454c1",
+            "claim:ae7dd7f6ce80f1782d63754a80d1a354"
+          ]
+        }
+      ],
+      "ranking_snapshot": {
+        "fingerprint": "443ac8dbf4405538a28b4611ec8f9ff2b76fb7a34eb293067623b74594f3cbb4",
+        "order": [
+          "candidate_001",
+          "candidate_002"
+        ],
+        "ltr_scores": [
+          0.39,
+          0.38
+        ]
+      }
+    }
+  ]
+}

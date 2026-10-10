@@ -196,6 +196,7 @@ export type MatchRunSummary = {
 };
 
 export type MatchRunDetail = MatchRunSummary & {
+  result_fingerprint?: string;
   results: MatchResult[];
   steps: Array<{ sequence: number; step_name: string; status: string; duration_ms: number | null }>;
 };

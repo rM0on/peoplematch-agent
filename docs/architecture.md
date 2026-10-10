@@ -11,8 +11,8 @@ PeopleMatch Agent is a local monorepo with these logical areas:
 | Storage | Durable profile, historical execution, explanation, and review data | **CURRENT:** PostgreSQL profiles, immutable Phase 8/9 history, and append-only Phase 10 Feedback/BadCase audit |
 | Retrieval | Candidate/job first-stage recall and vector search | **CURRENT / PHASE 4 COMPLETED:** versioned documents, local pretrained dense embeddings, Qdrant exact search, BM25, explicit filters, RRF, and offline retrieval evaluation |
 | Feature Engineering | Versioned pair features and diagnostics | **CURRENT / PHASE 5 COMPLETED / FROZEN:** label-free on-demand extraction that preserves retrieval order |
-| Ranking | LTR, final scoring, and reranking | **CURRENT / PHASE 6 FROZEN + PHASE 7 FROZEN:** deterministic LightGBM LambdaMART followed by one pinned frozen Cross-Encoder Job-to-Candidates rerank; no final hiring score |
-| AI Provider | Structured extraction and bounded explanation planning | **PHASE 15 COMPLETED / FROZEN:** independent extraction/explanation task adapters share one OpenAI-compatible transport, versioned prompts, provider-neutral config, provenance, and safe failure mapping; providers never own ranking or persisted facts |
+| Ranking | LTR, final scoring, and reranking | **CURRENT / PHASE 6 FROZEN + PHASE 7 FROZEN:** deterministic LightGBM LambdaMART owns the default final order; the pinned Cross-Encoder remains an explicit optional experiment, not a default rerank or hiring score |
+| AI Provider | Structured extraction and bounded semantic selection | **CURRENT / PHASE 9 OPTION B:** extraction and explanation adapters share OpenAI-compatible transport; explanation selects candidate-scoped options, while code binds canonical plan structure and Grounding checks sources. The provider never owns ranking or persisted facts |
 | Evaluation | Stage-aware local offline evaluation | **PHASE 11 COMPLETED / FROZEN:** full-corpus retrieval, common-pool judged-condensed ranking, explicit pairwise evidence, sealed post-exposure Test evaluation, separate explanation/review/latency diagnostics, and immutable artifacts |
 | Cache / ephemeral state | Later caching and coordination | Redis container config **CURRENT**; business usage **PLANNED** |
 
@@ -20,7 +20,7 @@ PeopleMatch Agent is a local monorepo with these logical areas:
 
 **CURRENT / PHASE 15 COMPLETED / FROZEN:** Recommendation and ingestion remain separate product flows. A Job Description is the default recommendation Query and drives schema-first Job understanding → Candidate Retrieval → Feature Engineering → LambdaMART Top-K → Evidence-grounded Explanation. Resume Text belongs to talent-library management: the user previews a schema-validated Candidate Profile, explicitly confirms persistence, and then refreshes the derived Qdrant index. PostgreSQL remains profile truth; runtime candidates do not mutate the frozen 48-person dataset or Phase 11 artifacts.
 
-Extraction and explanation remain separate domains but compose one shared OpenAI-compatible transport rather than adding parallel clients. Each task independently selects deterministic mock or `openai_compatible`, loads its own versioned Prompt asset, and records a non-secret configuration/prompt fingerprint. The read-only status projection describes configuration, not network connectivity. Missing configuration, timeout, rate limit, unavailable service, and invalid structured output fail explicitly without automatic mock fallback. The browser uses typed runtime-validated contracts and exposes raw LTR margin, Evidence refs, and immutable trace without inventing a probability or hiring score. The external live-provider smoke is not claimed because no local credential was configured.
+Extraction and explanation remain separate domains but compose one shared OpenAI-compatible transport rather than adding parallel clients. Each task independently selects deterministic mock or `openai_compatible`, loads its own versioned Prompt asset, and records a non-secret configuration/prompt fingerprint. The read-only status projection describes configuration, not network connectivity. Missing configuration, timeout, rate limit, unavailable service, and invalid structured output fail explicitly without automatic mock fallback. The browser uses typed runtime-validated contracts and exposes raw LTR margin, Evidence refs, and immutable trace without inventing a probability or hiring score. The Phase 15 freeze had no local live credential; a later, separate synthetic Fresh Top-3 controlled run verified real-provider Extraction and Phase 9 semantic selection, not production operation.
 
 The frozen file-backed `phase11_eval_protocol_v1` evaluator and selected artifacts are read-only Phase 12 evidence. The corrected formal run `20260831T173246Z_test_corrected_final` preserves Sparse and LTR as predeclared Dev leaders. Its five synthetic Test Jobs remain a post-exposure fixed sandbox evaluation, not pristine held-out or real-world generalization. See `docs/offline-evaluation.md`.
 
@@ -60,9 +60,11 @@ Fusion --> FeatureService["Feature engineering service\nCURRENT / PHASE 5 COMPLE
     CrossEncoder --> Finalize
     Finalize --> Lifecycle
     Lifecycle --> Evidence["Phase 9.2 historical Evidence Bundle + facts\nFROZEN"]
-    Evidence --> Projection["Opaque provider-reference projection\nCURRENT"]
-    Projection --> Planner["Provider-neutral structured planner\nmock or OpenAI-compatible"]
-    Planner --> Grounding["Reference resolution + deterministic grounding"]
+    Evidence --> Projection["Safe provider projection\nCURRENT"]
+    Projection --> Catalog["Candidate-scoped semantic option catalog"]
+    Catalog --> Selection["Provider semantic selection\nmock or OpenAI-compatible"]
+    Selection --> Binder["Deterministic ExplanationPlanV1 binding"]
+    Binder --> Grounding["Candidate/source validation + grounding"]
     Grounding --> Templates["Backend templates\nexplanation_output_v1"]
     Templates --> ExplanationLifecycle["Short explanation lifecycle transactions"]
     ExplanationLifecycle --> PG
@@ -74,7 +76,7 @@ The MatchRun request first creates durable `RUNNING` history through an independ
 
 ## Final Local Prototype Architecture
 
-Phase 10 adds frozen bounded frontend Feedback and Bad Case review on top of the immutable historical and service boundaries. Phase 11's completed offline evaluator remains separate from APIs and runtime ranking and preserves incomplete-judgment, common-pool, Test-seal, provenance, immutability, and claim-boundary rules. Its Dev and post-exposure Test artifacts are descriptive synthetic evidence only. Phase 9.2 supplies deterministic evidence facts from durable historical execution context, while Phase 9.3/9.4 provides only a constrained provider planning boundary and deterministic backend rendering; it does not make causal claims or alter ranking. Phase 6 remains the stronger/default ranking baseline and Phase 7 is an optional experimental pinned comparison, neither of which is a final match score.
+Phase 10 adds frozen bounded frontend Feedback and Bad Case review on top of the immutable historical and service boundaries. Phase 11's completed offline evaluator remains separate from APIs and runtime ranking and preserves incomplete-judgment, common-pool, Test-seal, provenance, immutability, and claim-boundary rules. Its Dev and post-exposure Test artifacts are descriptive synthetic evidence only. Current Phase 9 builds deterministic EvidenceFacts from durable historical context, lets the provider select candidate-scoped semantic options, and binds canonical ExplanationPlanV1 structure in code before Grounding and rendering. It does not make causal claims or alter ranking. Phase 6 remains the default ranking baseline and Phase 7 is an optional experimental pinned comparison, neither of which is a final match score.
 
 The target remains a modular monolith unless a measured need justifies a different deployment boundary. Phase 0 does not introduce microservices, Kubernetes, authentication, or distributed infrastructure.
 
@@ -91,9 +93,11 @@ flowchart TD
     LTR --> History["Persisted MatchRun history"]
     CrossEncoder --> History
     History --> EvidenceFacts["Phase 9.2 deterministic\nevidence facts"]
-    EvidenceFacts --> Projection["Opaque provider references\nCURRENT"]
-    Projection --> Plan["explanation_plan_v1\nprovider selection only"]
-    Plan --> Explanation["Grounded backend templates\nCURRENT"]
+    EvidenceFacts --> Projection["Safe projection + semantic option catalog"]
+    Projection --> Selection["Provider semantic selection only"]
+    Selection --> Binder["Deterministic binder\ncanonical ExplanationPlanV1"]
+    Binder --> Grounding["Grounding + candidate/source validation"]
+    Grounding --> Explanation["Rendered explanation + RecruiterProposition"]
 ```
 
 ## Request and Error Flow

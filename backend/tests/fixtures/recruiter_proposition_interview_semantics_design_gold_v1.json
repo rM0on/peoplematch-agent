@@ -1,0 +1,81 @@
+{
+  "version": "recruiter_proposition_interview_semantics_design_gold_v1",
+  "status": "offline_design_only_not_generation_contract",
+  "source_run": "recruiter_proposition_phase2_final_refinement_20261007T1335Z.jsonl",
+  "source_run_sha256": "9B026ABCDCB102370071AFBEC2554270FE1594C58EF556CA743A7E959A3EB572",
+  "source_gold": "recruiter_proposition_phase2_final_refinement_gold_v1.json",
+  "source_gold_sha256": "31D959913FE561EBBAFFAB4134D4D441B88E448776810958952840ACE3AF39AD",
+  "question_preconditions": {
+    "participation_existence": ["source_project_or_job_requirement"],
+    "participation_scope": ["confirmed_personal_participation_or_explicit_if_participated_condition"],
+    "decision_responsibility": ["confirmed_personal_participation_or_explicit_if_participated_condition"],
+    "decision_rationale": ["confirmed_personal_decision_responsibility_or_explicit_if_personally_decided_condition"],
+    "requirement_verification": ["validated_job_requirement_ref", "no_candidate_deficiency_assertion"]
+  },
+  "cases": [
+    {
+      "scenario_id": "ai_agent_a", "split": "development", "review_strength": "priority_human_review",
+      "old_focus_topic": "agent workflow", "desired_question_kind": "participation_existence",
+      "target_job_requirement_ref": "job_requirement:req_domain_2", "target_topic": "AI Agent",
+      "source_relation": "project_backed_alignment", "decision_responsibility_established": false,
+      "invalid_gold_categories": ["interview_presupposed_personal_action"],
+      "desired_semantic_path": ["verify_personal_participation", "if_confirmed_verify_participation_scope", "separately_verify_decision_responsibility", "only_if_confirmed_ask_decision_rationale"]
+    },
+    {
+      "scenario_id": "ai_agent_b", "split": "development", "review_strength": "conditional_targeted_screen",
+      "old_focus_topic": "evaluation", "desired_question_kind": "requirement_verification",
+      "target_job_requirement_ref": "job_requirement:req_domain_2", "target_topic": "AI Agent",
+      "source_relation": "job_requirement_without_candidate_alignment", "decision_responsibility_established": false,
+      "invalid_gold_categories": ["interview_presupposed_personal_action", "unsupported_responsibility"],
+      "desired_semantic_path": ["screen_for_job_requirement_practice", "if_claimed_request_specific_example", "do_not_infer_candidate_deficiency"]
+    },
+    {
+      "scenario_id": "recommendation_a", "split": "development", "review_strength": "priority_human_review",
+      "old_focus_topic": "retrieval", "desired_question_kind": "participation_existence",
+      "target_job_requirement_ref": "job_requirement:req_domain_1", "target_topic": "Retrieval",
+      "source_relation": "project_backed_alignment", "decision_responsibility_established": false,
+      "invalid_gold_categories": ["interview_presupposed_personal_action"],
+      "desired_semantic_path": ["verify_personal_participation", "if_confirmed_verify_participation_scope", "separately_verify_decision_responsibility", "only_if_confirmed_ask_decision_rationale"]
+    },
+    {
+      "scenario_id": "recommendation_b", "split": "development", "review_strength": "conditional_targeted_screen",
+      "old_focus_topic": "postgresql", "desired_question_kind": "requirement_verification",
+      "target_job_requirement_ref": "job_requirement:req_domain_1", "target_topic": "Retrieval",
+      "source_relation": "job_requirement_without_candidate_alignment", "decision_responsibility_established": false,
+      "invalid_gold_categories": ["interview_presupposed_personal_action"],
+      "desired_semantic_path": ["screen_for_job_requirement_practice", "if_claimed_request_specific_example", "do_not_infer_candidate_deficiency"]
+    },
+    {
+      "scenario_id": "backend_a", "split": "development", "review_strength": "priority_human_review",
+      "old_focus_topic": "postgresql", "desired_question_kind": "participation_existence",
+      "target_job_requirement_ref": "job_requirement:req_domain_1", "target_topic": "FastAPI",
+      "source_relation": "project_backed_alignment", "decision_responsibility_established": false,
+      "invalid_gold_categories": ["interview_presupposed_personal_action"],
+      "desired_semantic_path": ["verify_personal_participation", "if_confirmed_verify_participation_scope", "separately_verify_decision_responsibility", "only_if_confirmed_ask_decision_rationale"]
+    },
+    {
+      "scenario_id": "backend_b", "split": "development", "review_strength": "priority_human_review",
+      "old_focus_topic": "python", "desired_question_kind": "participation_existence",
+      "target_job_requirement_ref": "job_requirement:req_domain_3", "target_topic": "RAG",
+      "source_relation": "project_backed_alignment", "decision_responsibility_established": false,
+      "invalid_gold_categories": ["unsupported_responsibility", "interview_presupposed_personal_action"],
+      "desired_semantic_path": ["verify_personal_participation", "if_confirmed_verify_participation_scope", "separately_verify_decision_responsibility", "only_if_confirmed_ask_decision_rationale"]
+    },
+    {
+      "scenario_id": "data_search_holdout", "split": "holdout", "review_strength": "priority_human_review",
+      "old_focus_topic": "elasticsearch", "desired_question_kind": "participation_existence",
+      "target_job_requirement_ref": "job_requirement:req_domain_1", "target_topic": "Elasticsearch",
+      "source_relation": "project_backed_alignment", "decision_responsibility_established": false,
+      "invalid_gold_categories": ["interview_presupposed_personal_action"],
+      "desired_semantic_path": ["verify_personal_participation", "if_confirmed_verify_participation_scope", "separately_verify_decision_responsibility", "only_if_confirmed_ask_decision_rationale"]
+    },
+    {
+      "scenario_id": "vision_api_holdout", "split": "holdout", "review_strength": "conditional_targeted_screen",
+      "old_focus_topic": "docker", "desired_question_kind": "requirement_verification",
+      "target_job_requirement_ref": "job_requirement:req_domain_3", "target_topic": "Computer Vision",
+      "source_relation": "job_requirement_without_candidate_alignment", "decision_responsibility_established": false,
+      "invalid_gold_categories": ["project_technology_to_candidate_personal_action"],
+      "desired_semantic_path": ["screen_for_job_requirement_practice", "if_claimed_request_specific_example", "do_not_infer_candidate_deficiency"]
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 
 ## Why not pure LLM ranking?
 
-LLMs are useful for semantic understanding, schema-constrained extraction and natural-language explanation. They are not the ranking owner because candidate ordering must support stable comparison, feature inspection, offline evaluation and historical reproduction.
+LLMs are useful for semantic understanding, schema-constrained extraction and candidate-scoped semantic selection. They are not the ranking owner because candidate ordering must support stable comparison, feature inspection, offline evaluation and historical reproduction.
 
 A provider response may vary, time out or fail schema validation. None of those conditions should silently change an already produced shortlist. PeopleMatch Agent therefore freezes the ranking result before explanation begins.
 
@@ -30,14 +30,14 @@ The persisted result fingerprint, candidate order and LTR margins are therefore 
 
 ## Why Evidence grounding?
 
-Fluent text is not proof. The provider receives a bounded projection of candidate/job/ranking evidence using opaque references. Its structured plan must pass:
+Fluent text is not proof. The provider sees a safe projection and candidate-scoped catalog of source-verified semantic options. It selects short handles, while code binds the option contents into ExplanationPlanV1. The resulting plan must pass:
 
 1. `ExplanationPlanV1` schema validation;
 2. evidence ownership and reference validation;
 3. grounding rules for strengths, risks, missing requirements and interview questions;
 4. deterministic rendering before persistence.
 
-If an output is structurally valid but violates grounding, the system may perform one constrained repair. The repair can normalize existing references but cannot create evidence or candidate facts.
+The current selection protocol rejects unknown, duplicate, wrong-type and cross-candidate handles. It never silently normalizes an invalid selection into a valid one. The historical v2/v3 full-object Provider protocol and its repair diagnostics remain archived, but are not the current trusted path. Real-provider failures in evidence-reference and cross-field contracts motivated this ownership change: LLM selects semantic objects; code binds identity, refs, ordering and provenance.
 
 ## Why is Cross-Encoder optional?
 

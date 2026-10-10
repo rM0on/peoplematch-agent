@@ -121,8 +121,16 @@ class ExplanationGenerationService:
         self.id_factory = id_factory
         self.clock = clock
 
-    async def _fail_run(self, explanation_run_id: str, code: str) -> None:
+    async def _fail_run(
+        self,
+        explanation_run_id: str,
+        code: str,
+        *,
+        safe_diagnostics: tuple[str, ...] = (),
+    ) -> None:
         detail = _SAFE_FAILURE_DETAILS.get(code, _SAFE_FAILURE_DETAILS["internal_error"])
+        if code == "invalid_output" and safe_diagnostics:
+            detail += "; " + "; ".join(safe_diagnostics)
         await self.explanation_repository.finalize_failed(
             explanation_run_id,
             completed_at=self.clock(),
@@ -230,6 +238,7 @@ class ExplanationGenerationService:
         observed_model = None
         final_code = "internal_error"
         attempt_count = 0
+        safe_diagnostics: list[str] = []
         for attempt_number in range(1, self.max_attempts + 1):
             attempt_count = attempt_number
             try:
@@ -253,7 +262,7 @@ class ExplanationGenerationService:
                 response = await self.provider.generate(request)
                 observed_model = _safe_observed_model(response.observed_model)
                 content = response.content
-                if attempt_number > 1:
+                if attempt_number > 1 and getattr(self.pipeline, "protocol_version", "v3") == "v3":
                     content = normalize_explanation_repair_output(content)
                 rendered = self.pipeline.validate_and_render(
                     content,
@@ -261,6 +270,23 @@ class ExplanationGenerationService:
                 )
             except (ExplanationPlanParseError, ExplanationGroundingError) as error:
                 final_code = _provider_failure_code(error)
+                if isinstance(error, ExplanationPlanParseError):
+                    status = getattr(response, "http_status_code", None)
+                    safe_status = (
+                        f"http{status}"
+                        if type(status) is int and 200 <= status <= 299
+                        else "http_unknown"
+                    )
+                    finish = getattr(response, "finish_reason", None)
+                    safe_finish = finish if isinstance(finish, str) and finish in {
+                        "stop", "length", "content_filter", "tool_calls",
+                        "function_call", "other",
+                    } else "finish_unknown"
+                    safe_diagnostics.append(
+                        f"attempt{attempt_number}="
+                        f"{error.stage}/{error.reason_code}/{error.field_path}/"
+                        f"{safe_status}/{safe_finish}"
+                    )
                 await self._finish_attempt(
                     explanation_run_id,
                     attempt_number=attempt_number,
@@ -310,7 +336,11 @@ class ExplanationGenerationService:
                 break
 
         if rendered is None:
-            await self._fail_run(explanation_run_id, final_code)
+            await self._fail_run(
+                explanation_run_id,
+                final_code,
+                safe_diagnostics=tuple(safe_diagnostics),
+            )
             raise ExplanationGenerationFailedError(
                 explanation_run_id=explanation_run_id,
                 failure_code=final_code,

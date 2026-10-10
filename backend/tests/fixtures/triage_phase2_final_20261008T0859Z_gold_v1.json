@@ -1,0 +1,109 @@
+{
+  "dataset_version": "triage_phase2_final_gold_v1",
+  "source_experiment": "triage_phase2_final_20261008T0859Z",
+  "source_artifact_sha256": "2A95AC93D9A9F11D86097B672DA252930ECDE1C1B5255352AD53A42BC17057C2",
+  "annotation_rule": "Independent manual review against each field's preselected RecruiterProposition, sourced JD requirement and first_check. Model-selected Handles and blind audit are not entailment proof. A direct scope question without an established participation fact is an unsupported presupposition. A source-backed extra technical topic is still unsupported against the frozen single first_check intent, but is not a fabricated technical fact. An implicit whether-plus-scope conjunction is uncertain rather than automatically called a confirmed assertion.",
+  "cases": [
+    {
+      "scenario_id": "ai_agent_a", "split": "development", "language": "english",
+      "first_check_compliant": false, "recommendation_strength_compliant": true,
+      "quality_note": "Readable but mostly a literal semantic-field summary; interview lists four topics instead of one FastAPI first check.",
+      "items": [
+        {"field":"decision_summary","index":0,"quote":"Prioritize this candidate for technical review","adjudication":"supported","category":"priority_human_review"},
+        {"field":"why_consider","index":0,"quote":"material overlaps with the FastAPI requirement","adjudication":"supported","category":"job_alignment"},
+        {"field":"technical_signal","index":0,"quote":"project material lists agent workflow, fastapi, python, and rag technologies","adjudication":"supported","category":"project_technology_observation"},
+        {"field":"interview_focus","index":0,"quote":"candidate's participation scope","adjudication":"unsupported","category":"presupposed_participation_scope"},
+        {"field":"interview_focus","index":0,"quote":"agent workflow, fastapi, python, and rag","adjudication":"unsupported","category":"first_check_scope_leakage"},
+        {"field":"uncertainty","index":0,"quote":"project scope is not established","adjudication":"supported","category":"material_unknown"}
+      ]
+    },
+    {
+      "scenario_id": "ai_agent_b", "split": "development", "language": "chinese",
+      "first_check_compliant": false, "recommendation_strength_compliant": true,
+      "quality_note": "Conditional screen is correct, but the first question omits its sourced Python target and remains generic.",
+      "items": [
+        {"field":"decision_summary","index":0,"quote":"有条件的人工定向筛查","adjudication":"supported","category":"conditional_targeted_screen"},
+        {"field":"why_consider","index":0,"quote":"与岗位要求的 Python 存在关联","adjudication":"supported","category":"job_alignment"},
+        {"field":"technical_signal","index":0,"quote":"项目材料中列出了包含 Python 的技术栈","adjudication":"supported","category":"project_technology_observation"},
+        {"field":"interview_focus","index":0,"quote":"是否参与了相关项目及其具体范围","adjudication":"uncertain","category":"implicit_conditional_scope_and_topic_omission"},
+        {"field":"uncertainty","index":0,"quote":"尚未明确候选人在选定材料中的个人参与程度","adjudication":"supported","category":"material_unknown"}
+      ]
+    },
+    {
+      "scenario_id": "recommendation_a", "split": "development", "language": "english",
+      "first_check_compliant": true, "recommendation_strength_compliant": true,
+      "quality_note": "LambdaMART is role-relevant, but the direct participation-scope question presupposes participation and the prose reads like a schema translation.",
+      "items": [
+        {"field":"decision_summary","index":0,"quote":"prioritizing this candidate for a technical review","adjudication":"supported","category":"priority_human_review"},
+        {"field":"why_consider","index":0,"quote":"overlaps with the job requirement for LambdaMART","adjudication":"supported","category":"job_alignment"},
+        {"field":"technical_signal","index":0,"quote":"project material lists technologies relevant to evaluation and ranking","adjudication":"supported","category":"project_technology_observation"},
+        {"field":"interview_focus","index":0,"quote":"candidate's participation scope","adjudication":"unsupported","category":"presupposed_participation_scope"},
+        {"field":"uncertainty","index":0,"quote":"specific scope of the candidate's involvement in the selected material is not established","adjudication":"supported","category":"material_unknown"}
+      ]
+    },
+    {
+      "scenario_id": "recommendation_b", "split": "development", "language": "chinese",
+      "first_check_compliant": false, "recommendation_strength_compliant": true,
+      "quality_note": "Screen action is calibrated but the question expands the Python first check into four project technologies, including off-role terms.",
+      "items": [
+        {"field":"decision_summary","index":0,"quote":"针对性人工筛查","adjudication":"supported","category":"conditional_targeted_screen"},
+        {"field":"why_consider","index":0,"quote":"Python 技术栈与岗位要求方向存在关联","adjudication":"supported","category":"job_alignment"},
+        {"field":"technical_signal","index":0,"quote":"Docker、FastAPI、PostgreSQL 和 Python 的技术组合","adjudication":"supported","category":"project_technology_observation"},
+        {"field":"interview_focus","index":0,"quote":"Docker、FastAPI、PostgreSQL 或 Python","adjudication":"unsupported","category":"first_check_scope_leakage"},
+        {"field":"interview_focus","index":0,"quote":"以及其参与的具体范围","adjudication":"uncertain","category":"implicit_conditional_scope"},
+        {"field":"uncertainty","index":0,"quote":"尚不清楚候选人在上述技术项目中的具体个人参与情况","adjudication":"supported","category":"material_unknown"}
+      ]
+    },
+    {
+      "scenario_id": "backend_a", "split": "development", "language": "english",
+      "first_check_compliant": false, "recommendation_strength_compliant": true,
+      "quality_note": "The one PostgreSQL screening target becomes a four-technology question and an assumed participation scope.",
+      "items": [
+        {"field":"decision_summary","index":0,"quote":"prioritizing this candidate for technical review","adjudication":"supported","category":"priority_human_review"},
+        {"field":"why_consider","index":0,"quote":"overlaps with the job requirement for PostgreSQL","adjudication":"supported","category":"job_alignment"},
+        {"field":"technical_signal","index":0,"quote":"project material lists technologies including Docker, FastAPI, PostgreSQL, and Python","adjudication":"supported","category":"project_technology_observation"},
+        {"field":"interview_focus","index":0,"quote":"candidate's participation scope","adjudication":"unsupported","category":"presupposed_participation_scope"},
+        {"field":"interview_focus","index":0,"quote":"Docker, FastAPI, PostgreSQL, or Python","adjudication":"unsupported","category":"first_check_scope_leakage"},
+        {"field":"uncertainty","index":0,"quote":"specific project scope regarding Docker, FastAPI, PostgreSQL, and Python is not established","adjudication":"supported","category":"material_unknown"}
+      ]
+    },
+    {
+      "scenario_id": "backend_b", "split": "development", "language": "chinese",
+      "first_check_compliant": false, "recommendation_strength_compliant": true,
+      "quality_note": "No confirmed factual upgrade, but the question omits the sourced Python first-check topic and repeats the unknown.",
+      "items": [
+        {"field":"decision_summary","index":0,"quote":"优先进行技术复核","adjudication":"supported","category":"priority_human_review"},
+        {"field":"why_consider","index":0,"quote":"Python 技能与岗位要求方向存在关联","adjudication":"supported","category":"job_alignment"},
+        {"field":"technical_signal","index":0,"quote":"项目材料中列出了包含 Qdrant、RAG 和向量数据库的技术栈","adjudication":"supported","category":"project_technology_observation"},
+        {"field":"interview_focus","index":0,"quote":"是否参与了相关项目，以及其参与的具体范围","adjudication":"uncertain","category":"implicit_conditional_scope_and_topic_omission"},
+        {"field":"uncertainty","index":0,"quote":"尚未明确候选人在该项目中的具体参与程度","adjudication":"supported","category":"material_unknown"}
+      ]
+    },
+    {
+      "scenario_id": "workflow_automation_holdout", "split": "holdout", "language": "english",
+      "first_check_compliant": false, "recommendation_strength_compliant": true,
+      "quality_note": "Priority action is structurally justified, but the briefing surfaces generic Python instead of the stronger workflow signal; Redis enters the question although it is not the chosen first check.",
+      "items": [
+        {"field":"decision_summary","index":0,"quote":"Prioritize this candidate for technical review","adjudication":"supported","category":"priority_human_review"},
+        {"field":"why_consider","index":0,"quote":"overlaps with the required Python skill","adjudication":"supported","category":"job_alignment"},
+        {"field":"technical_signal","index":0,"quote":"Project materials list technologies including API integration, Python, Redis, and task orchestration","adjudication":"supported","category":"project_technology_observation"},
+        {"field":"interview_focus","index":0,"quote":"scope of participation","adjudication":"unsupported","category":"presupposed_participation_scope"},
+        {"field":"interview_focus","index":0,"quote":"Python and Redis projects","adjudication":"unsupported","category":"first_check_scope_leakage"},
+        {"field":"uncertainty","index":0,"quote":"project scope regarding task orchestration is not established","adjudication":"supported","category":"material_unknown"}
+      ]
+    },
+    {
+      "scenario_id": "geospatial_ml_holdout", "split": "holdout", "language": "english",
+      "first_check_compliant": false, "recommendation_strength_compliant": true,
+      "quality_note": "Conditional screen is preserved, but generic Python overlap and a Docker/FastAPI/Python/Redis question do not convey the Geospatial ML gap or useful next step.",
+      "items": [
+        {"field":"decision_summary","index":0,"quote":"conditional targeted screen for human review","adjudication":"supported","category":"conditional_targeted_screen"},
+        {"field":"why_consider","index":0,"quote":"overlaps with the Python job requirement","adjudication":"supported","category":"job_alignment"},
+        {"field":"technical_signal","index":0,"quote":"Project material lists technologies including docker, fastapi, python, and redis","adjudication":"supported","category":"project_technology_observation"},
+        {"field":"interview_focus","index":0,"quote":"participation in docker, fastapi, python, or redis","adjudication":"unsupported","category":"first_check_scope_leakage"},
+        {"field":"interview_focus","index":0,"quote":"Verify project scope regarding participation","adjudication":"uncertain","category":"possible_participation_presupposition"},
+        {"field":"uncertainty","index":0,"quote":"specific project scope involving docker, fastapi, python, or redis is not established","adjudication":"supported","category":"material_unknown"}
+      ]
+    }
+  ]
+}

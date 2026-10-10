@@ -8,11 +8,13 @@
 
 **LLM understands. Retrieval finds. LambdaMART ranks. Evidence keeps explanations grounded.**
 
-[快速体验](#本地运行) · [系统架构](docs/portfolio/architecture.md) · [工程决策](docs/portfolio/engineering-decisions.md) · [离线评估](docs/offline-evaluation.md) · [面试讲解](docs/portfolio/interview-guide.md)
+[Portfolio PDF](docs/portfolio/PeopleMatch-Agent-Portfolio.pdf) · [Demo Guide](docs/demo-guide.md) · [系统架构](docs/portfolio/architecture.md) · [离线评估](docs/offline-evaluation.md) · [本地运行](#本地运行)
 
-![PeopleMatch Agent 产品总览](docs/images/portfolio/01_product_overview.png)
+![Fresh Top-3 Recruiter View：复核动作、证据信号与核心未知](docs/images/portfolio-final/01-recruiter-view.png)
 
 > 当前状态：完整本地 AI Application Prototype。默认 deterministic mock 便于复现；同时支持 OpenAI-compatible Provider。项目不声称已形成生产 SaaS、真实用户规模或线上招聘效果。
+
+受控 synthetic Fresh Top-3 验证了真实 Provider Extraction / Semantic Selection、3/3 grounded Explanation 与 3/3 canonical RecruiterProposition，并核对了候选隔离、持久化回读和排序不变量；这是本地端到端验证，不是生产招聘效果。自由 Recruiter Narrative 仍为 **Experimental / Requires Human Review**。
 
 ## Three Key Ideas
 
@@ -26,44 +28,38 @@
 
 ## Product Walkthrough
 
-### 1. JD-first 推荐：岗位是 Query，人才库是搜索空间
+### 1. 招聘筛查：先看谁值得复核、还缺什么证据
 
-默认 deterministic Mock Mode 使用已登记的 synthetic JD fixtures，保证本地演示与测试可复现；配置 OpenAI-compatible Real Provider 后，推荐入口支持用户输入新的岗位 JD。两种模式均复用 Candidate Pool → Retrieval → LambdaMART → Explanation 流程，“加载示例 JD”只是辅助入口。
+默认视图读取已持久化的 synthetic Fresh Top-3：复核动作、关键技术信号、核心未知和首要核实目标来自 MatchRun、Evidence 与结构化 RecruiterProposition。它不是自动录用建议。新的 JD 可从 `/workbench` 输入；默认 deterministic Mock Mode 便于复现，配置 OpenAI-compatible Provider 后可运行真实结构化任务。
 
-![JD 输入与推荐流程](docs/images/portfolio/02_jd_matching_flow.png)
+这张首页截图即上方的 Recruiter View Hero；不会为了展示页面而重新运行 Ranking 或 Provider。
 
-### 2. Top-K Candidate Ranking
+### 2. Evidence-grounded Explanation
+
+每条可信解释绑定 Candidate Evidence、Job Requirement 与校验状态。Phase 9 的真实 Provider 选择候选人范围内的语义对象；程序确定性绑定结构关系，随后通过 ExplanationPlanV1 与 Grounding 校验。非法选择 fail closed，不会作为事实直接展示。
+
+![展开的证据来源：招聘判断、候选项目材料与岗位要求](docs/images/portfolio-final/02-evidence-provenance.png)
+
+### 3. Top-K Candidate Ranking
 
 候选人顺序由冻结的 Hybrid Retrieval + Feature Engineering + LambdaMART 流水线产生。页面保留排序模型原始分值（LTR Score），并明确它**不是匹配概率、录用概率或百分比评分**。
 
-![Top-K Candidate Ranking](docs/images/portfolio/03_candidate_ranking.png)
-
-### 3. Evidence-grounded Explanation
-
-每条解释绑定 Candidate Evidence、Job Requirement 与校验状态。真实 Provider 输出需要依次通过 Schema Validation 与 Grounding Validation；不受支持的陈述会被拒绝或进入受约束修复，而不是直接展示。
-
-![Evidence-grounded Explanation](docs/images/portfolio/04_evidence_explanation.png)
+![Engineering View：排序特征、LTR 原始分值及运行指纹](docs/images/portfolio-final/03-engineering-view.png)
 
 <details>
-<summary><strong>查看更多真实产品界面</strong></summary>
+<summary><strong>查看运行轨迹与人工复核界面</strong></summary>
 
 #### MatchRun Trace
 
 MatchRun 保存推荐运行、ranking provenance 与 evidence projection，支持历史结果复核。当前 UI 展示的是已持久化阶段，而不是伪造的全链路日志。
 
-![MatchRun Trace](docs/images/portfolio/05_matchrun_trace.png)
+![Agent Run：持久化轨迹与派生解释阶段分开展示](docs/images/portfolio-final/04-agent-run.png)
 
-#### Candidate Lifecycle
+#### Bad Case Review
 
-Resume Text 可以通过现有 extraction contract 生成 Structured Candidate Profile。截图停留在确认前的预览阶段，没有向冻结候选池写入数据。
+截图来自独立、可丢弃的 synthetic sandbox 复核样本，展示人工反馈、引用证据、根因分析与规划行动；它不是 Fresh Top-3 的真实模型失败，也不会自动修改历史排序或训练标签。
 
-![Candidate Lifecycle](docs/images/portfolio/06_candidate_lifecycle.png)
-
-#### Feedback Review
-
-截图展示已完成 MatchRun 的人工评价表单：反馈绑定历史结果，不会重写原始候选顺序，也不会自动污染训练标签。Bad Case Review 是独立复核能力，本图不将其冒充为已展示页面。
-
-![历史推荐 Feedback Review](docs/images/portfolio/07_feedback_badcase.png)
+![Bad Case Review：人工反馈、证据、根因与规划行动](docs/images/portfolio-final/06-bad-case-review.png)
 
 </details>
 
@@ -109,11 +105,14 @@ flowchart TD
 
     TOP --> MR[Immutable MatchRun]
     MR --> EB[Evidence Builder]
-    EB --> EP[Explanation Provider]
-    EP --> SV[Schema Validation]
+    EB --> CAT[Safe Semantic Option Catalog]
+    CAT --> EP[Provider Semantic Selection]
+    EP --> BIND[Deterministic Binder]
+    BIND --> SV[ExplanationPlanV1 Validation]
     SV --> GV[Grounding Validation]
     GV --> EX[Evidence-grounded Explanation]
-    EX --> UI
+    EX --> RP[RecruiterProposition]
+    RP --> UI
 
     UI --> FB[Feedback / Bad Case Review]
     FB --> PG
@@ -139,22 +138,22 @@ flowchart TD
 ```text
 MatchRun Evidence projection
         ↓
-Explanation planning
+Candidate-scoped semantic option catalog
         ↓
-ExplanationPlanV1 schema validation
+Provider semantic selection + application validation
         ↓
-Evidence grounding validation
+Deterministic binding into ExplanationPlanV1
         ↓
-Constrained repair（仅修复允许的结构/引用问题）
+Evidence grounding + candidate/source validation
         ↓
-Validated explanation
+Persisted explanation + structured RecruiterProposition
 ```
 
 核心约束：
 
 - strengths 必须引用 Candidate Evidence；
 - risks / interview questions 必须来自已记录的 missing requirement 或合法 evidence；
-- repair output 只能规范化白名单结构，不能创造 candidate facts；
+- Provider 不负责复制 evidence refs、rank、candidate identity 或结构关系；非法 selection fail closed；
 - unknown evidence reference 与 hallucinated evidence 必须 fail closed；
 - explanation 前后 Candidate ordering、LTR Score 与 ranking fingerprint 保持不变。
 
@@ -172,7 +171,7 @@ Phase 11 使用冻结的 synthetic curated dataset 进行描述性离线评估�
 
 ### Ranking — Test R2
 
-| Method | NDCG@5 | NDCG@10 | MRR@10 | Pairwise |
+| Method | NDCG@5 | NDCG@10 | MRR@10 | Pairwise Accuracy |
 | --- | ---: | ---: | ---: | ---: |
 | Hybrid baseline | 0.7920 | 0.8343 | 0.90 | 0.80 |
 | **LambdaMART** | **0.9593** | **0.9597** | **1.00** | **1.00** |
@@ -180,9 +179,11 @@ Phase 11 使用冻结的 synthetic curated dataset 进行描述性离线评估�
 
 > **必须同时阅读的边界：** 这些是 synthetic sandbox 的离线描述性结果，不是招聘准确率，也不能推断真实业务提升。冻结数据包含 24 个 Jobs、48 个 Candidates 与 288 条显式 judgments；Test 仅 5 个 Jobs，judgment coverage 为 25%，且部分 Test queries 曾在更早阶段暴露。由于不完整 judgments，项目没有把标准 Precision@K 作为正式结论。
 
-其中 **48 Candidates** 是 Phase 11 frozen evaluation base；截图中的 **61 Candidates** 来自当前本地 runtime 对 synthetic profiles 的增量导入与索引，仅用于产品流程演示，不进入 Phase 11 evaluation，也不改变上述冻结指标。
+其中 **48 Candidates** 是 Phase 11 frozen evaluation base。开发数据库可能同时存在 synthetic、mock parse 与其他来源的记录；Fresh Top-3 演示使用预先冻结的 pure synthetic cohort，不把混合开发库或演示截图算进 Phase 11 指标。
 
 数据、协议、fingerprint 与完整限制见 [Offline Evaluation](docs/offline-evaluation.md) 和 [Dataset Card](docs/dataset-card.md)。
+
+![冻结离线评估：Hybrid、LambdaMART 与 CE 的同源比较及边界](docs/images/portfolio-final/05-eval-dashboard.png)
 
 ## Engineering Evidence
 
@@ -197,7 +198,7 @@ Phase 11 使用冻结的 synthetic curated dataset 进行描述性离线评估�
 | Review loop | Feedback 与 Bad Case 支持人工复核，但不伪装为线上 continuous learning |
 | Evaluation integrity | Phase 11 artifacts、dataset split 与结果冻结，变更通过保护审计 |
 
-真实 Provider 边界：Qwen3.7-plus 曾在本地、受控、脱敏的 OpenAI-compatible smoke 中验证 extraction 与 grounded explanation compatibility；该过程不是仓库内可复现的公开 artifact，也不应被解读为公网部署证明。默认 Mock 路径用于 CI、测试与可复现演示。
+真实 Provider 边界：synthetic Fresh Top-3 受控实验以 `qwen3.7-flash-2026-07-15` 验证了结构化 Extraction 与 Phase 9 semantic selection → grounding 链路；这不是公网部署、真实招聘用户或线上效果证明。默认 Mock 路径用于 CI、测试与可复现演示。
 
 ## Technology Stack
 
@@ -220,6 +221,8 @@ Phase 11 使用冻结的 synthetic curated dataset 进行描述性离线评估�
 - 项目要求的已验证 LambdaMART artifact 与 metadata
 
 > 仓库不把大模型或未授权二进制 artifact 当作普通源码提交。Fresh clone 在启动前必须获得与 metadata / fingerprint 匹配的 ranking artifact；如果 artifact 未提供，系统应 fail closed，而不是回退到假排序。当前交付边界与恢复证据见 [Portfolio Evidence](docs/portfolio-evidence.md)。
+
+若要从仓库内冻结的训练数据重建小型 LambdaMART native artifact，可在安装 backend 依赖后运行 `.\backend\.venv\Scripts\python.exe scripts\train_ltr.py --write`，再运行 `.\backend\.venv\Scripts\python.exe scripts\check_ltr_artifacts.py` 校验。预训练 embedding / Cross-Encoder 文件同样不随 Git 提交；请按 [Demo Guide](docs/demo-guide.md) 的本地准备步骤检查，不要绕过 artifact 校验。
 
 ### 1. 配置本地环境
 
@@ -267,8 +270,17 @@ npm run build
 
 实际 Demo 路径见 [Demo Guide](docs/demo-guide.md)。
 
+### 招聘筛查视图（本地原型）
+
+首页是只读 Recruiter View：从已持久化的 MatchRun、Evidence-grounded Explanation 与 canonical RecruiterProposition 读取人工复核动作、技术信号、未知项和首要核实目标。可从历史运行选择记录，或按 [Demo Guide](docs/demo-guide.md) 打开已持久化的 synthetic Fresh Top-3 演示记录；页面不重新运行排序，也不把 LTR raw score 解释为概率。原 JD 输入工作台移至 `/workbench`，运行轨迹位于 `/agent-run`。
+
+自由 Recruiter Narrative 仍为 **Experimental / Requires Human Review**，不参与可信招聘判断或排名。该视图是 local prototype 与 synthetic sandbox 演示，不代表生产部署、真实招聘用户或零幻觉保证。
+
 ## Portfolio Deep Dives
 
+- [Final Portfolio PDF](docs/portfolio/PeopleMatch-Agent-Portfolio.pdf) — 10 页横版工程案例
+- [Demo Guide](docs/demo-guide.md) — 3–5 分钟只读演示与环境恢复
+- [Documentation Index](docs/README.md) — 当前主路径与历史实验分层导航
 - [Portfolio Overview](docs/portfolio/overview.md) — 产品定位、截图证据与展示边界
 - [Architecture](docs/portfolio/architecture.md) — 组件职责、数据流和不可变边界
 - [Engineering Decisions](docs/portfolio/engineering-decisions.md) — 为什么不是纯 LLM、为什么使用 LambdaMART
@@ -285,7 +297,7 @@ npm run build
 ## 当前边界
 
 - Local AI application prototype，不是 automated hiring decision system。
-- Candidate Pool 与 evaluation 数据均为 synthetic / sandbox 数据，不包含真实候选人隐私。
+- 本作品集演示使用冻结的 synthetic candidate cohort 与 synthetic evaluation 数据；开发数据库的其他记录不进入截图或离线指标。
 - 离线指标只描述当前冻结数据集，不能代表真实招聘结果。
 - 所有推荐应由招聘人员结合面试与背景核验进行人工复核。
 - LLM 负责理解与证据约束表达；LambdaMART 始终负责默认最终排序。

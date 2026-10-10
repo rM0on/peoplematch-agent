@@ -1,0 +1,115 @@
+{
+  "dataset_version": "semantic_intent_recovered_gold_v1",
+  "source_experiment": "semantic_intent_v1_phase2_recovered_20261007T0858Z",
+  "source_artifact_sha256": "3A32C42C573514771089FEB21771FB87369C92E9F5B81AB36AEAE58D28FFFBCD",
+  "annotation_rule": "Independent human reading of synthetic prose against canonical propositions and source terms; selected handles and blind alarms are not proof. Quotes identify substantive semantic fragments. Uncertain means a plausible presupposition cannot be adjudicated confidently from the wording alone.",
+  "cases": [
+    {
+      "scenario_id": "ai_agent_a",
+      "split": "development",
+      "items": [
+        {"field": "decision_summary", "index": 0, "quote": "建议优先安排人工技术复核", "category": "human_review_recommendation", "adjudication": "supported"},
+        {"field": "why_consider", "index": 0, "quote": "候选人的技能方向与岗位所需的 AI Agent、FastAPI、Python 及 RAG 等技术栈存在关联", "category": "job_alignment", "adjudication": "supported"},
+        {"field": "why_consider", "index": 0, "quote": "值得进一步探索", "category": "human_review_recommendation", "adjudication": "supported"},
+        {"field": "technical_signal", "index": 0, "quote": "材料中列出的项目涉及 agent workflow、fastapi、python 和 rag 等技术", "category": "material_technology_fact", "adjudication": "supported"},
+        {"field": "technical_signal", "index": 0, "quote": "候选人简历中也列出了 agent workflow 相关技能", "category": "listed_skill_fact", "adjudication": "supported"},
+        {"field": "interview_focus", "index": 0, "quote": "面试中可了解候选人在 agent workflow、fastapi、python 及 rag 相关项目中的具体工作范围", "category": "interview_target", "adjudication": "supported"},
+        {"field": "uncertainty", "index": 0, "quote": "目前尚无法确认候选人在上述技术领域的具体项目范围", "category": "material_unknown", "adjudication": "supported"}
+      ],
+      "intent_focus_deviation": ["why_consider mentions Python and RAG beyond the two selected alignment focuses; both exist elsewhere in the canonical proposition set"]
+    },
+    {
+      "scenario_id": "ai_agent_b",
+      "split": "development",
+      "items": [
+        {"field": "decision_summary", "index": 0, "quote": "建议进行定向人工了解，以进一步核实情况", "category": "human_review_recommendation", "adjudication": "supported"},
+        {"field": "why_consider", "index": 0, "quote": "候选人的技能方向与岗位所需的 Python 技术存在关联", "category": "job_alignment", "adjudication": "supported"},
+        {"field": "technical_signal", "index": 0, "quote": "项目材料中涉及 evaluation、python、ranking 和 retrieval 等技术", "category": "material_technology_fact", "adjudication": "supported"},
+        {"field": "technical_signal", "index": 0, "quote": "候选人材料中列出了 evaluation 技能", "category": "listed_skill_fact", "adjudication": "supported"},
+        {"field": "interview_focus", "index": 0, "quote": "面试中可关注对评估、Python、排序及检索相关工作的具体参与范围的了解", "category": "interview_target", "adjudication": "supported"},
+        {"field": "uncertainty", "index": 0, "quote": "目前尚无法确认上述技术在具体项目中的实际覆盖范围", "category": "material_unknown", "adjudication": "supported"}
+      ],
+      "intent_focus_deviation": []
+    },
+    {
+      "scenario_id": "recommendation_a",
+      "split": "development",
+      "items": [
+        {"field": "decision_summary", "index": 0, "quote": "建议优先安排人工技术复核", "category": "human_review_recommendation", "adjudication": "supported"},
+        {"field": "decision_summary", "index": 0, "quote": "以进一步评估候选人的实际技术深度", "category": "interview_target", "adjudication": "supported"},
+        {"field": "why_consider", "index": 0, "quote": "候选人材料中列出的技能方向与岗位要求的 LambdaMART、检索（Retrieval）及评估（Evaluation）存在关联，值得继续了解", "category": "job_alignment", "adjudication": "supported"},
+        {"field": "technical_signal", "index": 0, "quote": "项目材料涉及评估、Python、排序和检索等技术", "category": "material_technology_fact", "adjudication": "supported"},
+        {"field": "technical_signal", "index": 0, "quote": "候选人简历中也列出了评估相关技能", "category": "listed_skill_fact", "adjudication": "supported"},
+        {"field": "interview_focus", "index": 0, "quote": "候选人如何具体开展评估工作", "category": "project_technology_to_candidate_action", "adjudication": "unsupported", "issue": "Presupposes the candidate personally carried out evaluation work; the project only lists the technology and role is unknown."},
+        {"field": "interview_focus", "index": 0, "quote": "Python、排序和检索技术在其中的实际应用情况", "category": "project_technology_to_project_use", "adjudication": "uncertain", "issue": "The question may seek verification, but the phrasing may presuppose actual use beyond a project technology list."},
+        {"field": "uncertainty", "index": 0, "quote": "目前尚无法从现有材料中确认该项目具体的评估范围", "category": "material_unknown", "adjudication": "supported"}
+      ],
+      "intent_focus_deviation": ["why_consider mentions LambdaMART and Evaluation beyond the two selected alignment focuses; canonical propositions support both"]
+    },
+    {
+      "scenario_id": "recommendation_b",
+      "split": "development",
+      "items": [
+        {"field": "decision_summary", "index": 0, "quote": "建议进行定向人工面试", "category": "review_strength_upgrade", "adjudication": "unsupported", "issue": "The structured action is only consider_targeted_screen, not scheduling an interview."},
+        {"field": "decision_summary", "index": 0, "quote": "重点核实 Python 相关经验", "category": "alignment_to_experience", "adjudication": "unsupported", "issue": "A Python overlap does not establish candidate experience."},
+        {"field": "why_consider", "index": 0, "quote": "候选人的技能方向与岗位所需的 Python 要求存在关联", "category": "job_alignment", "adjudication": "supported"},
+        {"field": "technical_signal", "index": 0, "quote": "项目材料中涉及 Docker、FastAPI、PostgreSQL 和 Python 等技术栈", "category": "material_technology_fact", "adjudication": "supported"},
+        {"field": "technical_signal", "index": 0, "quote": "候选人材料中也列出了 Docker 技能", "category": "listed_skill_fact", "adjudication": "supported"},
+        {"field": "interview_focus", "index": 0, "quote": "在面试中了解候选人在涉及 Docker、FastAPI、PostgreSQL 和 Python 的项目中的具体参与范围", "category": "interview_target", "adjudication": "supported"},
+        {"field": "uncertainty", "index": 0, "quote": "目前尚无法确认候选人在上述技术项目中的具体职责范围", "category": "material_unknown", "adjudication": "supported"}
+      ],
+      "intent_focus_deviation": []
+    },
+    {
+      "scenario_id": "backend_a",
+      "split": "development",
+      "items": [
+        {"field": "decision_summary", "index": 0, "quote": "建议优先安排人工技术复核", "category": "human_review_recommendation", "adjudication": "supported"},
+        {"field": "why_consider", "index": 0, "quote": "候选人的技能方向与岗位对 PostgreSQL 和 Python 的要求存在关联", "category": "job_alignment", "adjudication": "supported"},
+        {"field": "technical_signal", "index": 0, "quote": "项目材料中涉及 Docker、FastAPI、PostgreSQL 和 Python 等技术栈", "category": "material_technology_fact", "adjudication": "supported"},
+        {"field": "technical_signal", "index": 0, "quote": "候选人简历中也列出了 Docker 技能", "category": "listed_skill_fact", "adjudication": "supported"},
+        {"field": "interview_focus", "index": 0, "quote": "面试中可进一步了解候选人在 Docker、FastAPI、PostgreSQL 及 Python 相关项目中的具体参与范围", "category": "interview_target", "adjudication": "supported"},
+        {"field": "uncertainty", "index": 0, "quote": "目前尚无法确认所选材料中关于 Docker、FastAPI、PostgreSQL 和 Python 的项目具体规模或边界", "category": "material_unknown", "adjudication": "supported"}
+      ],
+      "intent_focus_deviation": []
+    },
+    {
+      "scenario_id": "backend_b",
+      "split": "development",
+      "items": [
+        {"field": "decision_summary", "index": 0, "quote": "建议优先安排人工技术复核", "category": "human_review_recommendation", "adjudication": "supported"},
+        {"field": "why_consider", "index": 0, "quote": "候选人的技能方向与岗位所需的 Python 及 RAG 技术存在关联，值得进一步探索", "category": "job_alignment", "adjudication": "supported"},
+        {"field": "technical_signal", "index": 0, "quote": "材料中列出的技术方向包括 Python、Qdrant、RAG 及向量数据库", "category": "material_technology_fact", "adjudication": "supported"},
+        {"field": "interview_focus", "index": 0, "quote": "面试中可针对 Python、Qdrant、RAG 及向量数据库的项目范围进行了解", "category": "interview_target", "adjudication": "supported"},
+        {"field": "uncertainty", "index": 0, "quote": "目前尚无法确认候选人在上述技术方面的具体项目范围", "category": "material_unknown", "adjudication": "supported"}
+      ],
+      "intent_focus_deviation": []
+    },
+    {
+      "scenario_id": "llm_application_holdout",
+      "split": "holdout",
+      "items": [
+        {"field": "decision_summary", "index": 0, "quote": "建议优先安排人工技术复核", "category": "human_review_recommendation", "adjudication": "supported"},
+        {"field": "why_consider", "index": 0, "quote": "候选人的技能方向与岗位所需的 RAG、Python 及 Qdrant 技术栈存在关联，值得进一步探索", "category": "job_alignment", "adjudication": "supported"},
+        {"field": "technical_signal", "index": 0, "quote": "项目材料中涉及 prompt engineering、python、qdrant 和 rag 等技术", "category": "material_technology_fact", "adjudication": "supported"},
+        {"field": "technical_signal", "index": 0, "quote": "候选人简历中也列出了 prompt engineering 技能", "category": "listed_skill_fact", "adjudication": "supported"},
+        {"field": "interview_focus", "index": 0, "quote": "面试中可关注如何验证其在上述技术（prompt engineering、python、qdrant、rag）方面的实际项目范围", "category": "interview_target", "adjudication": "supported"},
+        {"field": "uncertainty", "index": 0, "quote": "目前尚无法确认候选人在这些技术上的具体项目范围", "category": "material_unknown", "adjudication": "supported"}
+      ],
+      "intent_focus_deviation": ["why_consider mentions Qdrant beyond the two selected alignment focuses; canonical propositions support it"]
+    },
+    {
+      "scenario_id": "search_ranking_holdout",
+      "split": "holdout",
+      "items": [
+        {"field": "decision_summary", "index": 0, "quote": "建议进行定向人工了解，以进一步评估候选人与岗位的关联度", "category": "human_review_recommendation", "adjudication": "supported"},
+        {"field": "why_consider", "index": 0, "quote": "候选人材料中列出的技能方向与岗位要求的 Python 存在关联，值得继续了解", "category": "job_alignment", "adjudication": "supported"},
+        {"field": "technical_signal", "index": 0, "quote": "项目材料中涉及 Docker、Embedding、Python 和 Redis 等技术方向", "category": "material_technology_fact", "adjudication": "supported"},
+        {"field": "technical_signal", "index": 0, "quote": "候选人材料中也列出了 Docker 技能", "category": "listed_skill_fact", "adjudication": "supported"},
+        {"field": "interview_focus", "index": 0, "quote": "面试中可关注如何验证项目在相关技术栈（如 Docker、Embedding、Python、Redis）中的具体范围和应用场景", "category": "project_technology_to_project_use", "adjudication": "uncertain", "issue": "Could be an open verification target or could presuppose application beyond the listed technologies."},
+        {"field": "uncertainty", "index": 0, "quote": "目前尚无法从现有材料中确认所选项目在 Docker、Embedding、Python 和 Redis 方面的具体范围和细节", "category": "material_unknown", "adjudication": "supported"}
+      ],
+      "intent_focus_deviation": []
+    }
+  ]
+}

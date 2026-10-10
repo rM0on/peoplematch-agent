@@ -1,6 +1,6 @@
-import { MatchingResultsScreen } from "@/features/matching-results/matching-results-screen";
+import { RecruiterViewScreen } from "@/features/recruiter-view/recruiter-view-screen";
 
 
 export default function Home() {
-  return <MatchingResultsScreen />;
+  return <RecruiterViewScreen />;
 }

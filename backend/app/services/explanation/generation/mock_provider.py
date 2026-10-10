@@ -5,7 +5,7 @@ import json
 from pydantic import ValidationError
 
 from app.services.explanation.generation.contracts import (
-    ExplanationPlanV1,
+    ProviderExplanationPlanV1,
     PlanInterviewQuestionOperation,
     PlanMatchReason,
     PlanRiskPoint,
@@ -17,6 +17,7 @@ from app.services.explanation.generation.provider import (
     ExplanationProviderResponse,
 )
 from app.services.explanation.generation.contracts import ProviderPromptEvidenceV1
+from app.services.explanation.generation.semantic_selection import ProviderExplanationSelectionV1
 from app.services.match_runs.contracts import canonical_fingerprint
 
 
@@ -43,7 +44,9 @@ class DeterministicExplanationProvider:
     async def generate(
         self, request: ExplanationProviderRequest
     ) -> ExplanationProviderResponse:
-        if request.output_contract_version != "explanation_plan_v1":
+        if request.output_contract_version == "provider_explanation_selection_v1":
+            return self._generate_selection(request)
+        if request.output_contract_version != "provider_explanation_plan_v1":
             raise ExplanationProviderMalformedResponseError()
         try:
             envelope = json.loads(request.user_instruction)
@@ -105,7 +108,7 @@ class DeterministicExplanationProvider:
                     "result_rank": candidate.result_rank,
                     "summary": {
                         "template_key": "recorded_match_summary",
-                        "evidence_refs": reasons[0].evidence_refs,
+                        "match_reason_index": 0,
                     },
                     "match_reasons": [
                         item.model_dump(mode="json") for item in reasons
@@ -125,12 +128,55 @@ class DeterministicExplanationProvider:
                     "rewrite_operations": [],
                 }
             )
-        plan = ExplanationPlanV1(
-            contract_version="explanation_plan_v1",
+        plan = ProviderExplanationPlanV1(
+            contract_version="provider_explanation_plan_v1",
             candidates=candidates,
         )
         return ExplanationProviderResponse(
             content=plan.model_dump_json(exclude_none=False),
+            observed_model=self.descriptor.configured_model,
+        )
+
+    def _generate_selection(self, request: ExplanationProviderRequest) -> ExplanationProviderResponse:
+        try:
+            envelope = json.loads(request.user_instruction)
+            catalog = envelope["option_catalog"]
+            if catalog["contract_version"] != "provider_semantic_option_catalog_v1":
+                raise ValueError
+            candidates = []
+            for candidate in catalog["candidates"]:
+                chosen_reasons = []
+                categories = set()
+                for option in candidate["options"]:
+                    if option["kind"] == "reason" and option["category"] not in categories:
+                        chosen_reasons.append(option["handle"])
+                        categories.add(option["category"])
+                    if len(chosen_reasons) == 4:
+                        break
+                if not chosen_reasons:
+                    raise ValueError
+                candidates.append({
+                    "candidate_ref": candidate["candidate_ref"],
+                    "match_reason_handles": chosen_reasons,
+                    "risk_handles": [
+                        option["handle"] for option in candidate["options"]
+                        if option["kind"] == "risk"
+                    ][:4],
+                    "interview_handles": [
+                        option["handle"] for option in candidate["options"]
+                        if option["kind"] == "interview"
+                    ][:3],
+                    "rewrite_handles": [],
+                    "summary_primary_reason_handle": chosen_reasons[0],
+                })
+            selection = ProviderExplanationSelectionV1.model_validate({
+                "contract_version": "provider_explanation_selection_v1",
+                "candidates": candidates,
+            })
+        except (KeyError, TypeError, ValueError, ValidationError, json.JSONDecodeError):
+            raise ExplanationProviderMalformedResponseError() from None
+        return ExplanationProviderResponse(
+            content=selection.model_dump_json(),
             observed_model=self.descriptor.configured_model,
         )
 

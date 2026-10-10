@@ -1,0 +1,728 @@
+{
+  "dataset_id": "recruiter_proposition_phase2_semantic_gold_v1",
+  "version": 1,
+  "source": {
+    "model": "qwen3.7-flash-2026-07-15",
+    "origin": "Six prior real-provider synthetic outputs recovered from the original local experiment stdout; no regeneration.",
+    "original_raw_provider_responses_available": false,
+    "original_blind_extractor_atoms_available": true,
+    "previous_observed_gates": {
+      "http": "6/6",
+      "native_schema": "6/6",
+      "handle": "6/6",
+      "repair": 0,
+      "blind_audit_pass": "0/6"
+    },
+    "warning": "Narrative prose and historical blind extractor atoms are preserved. Full raw HTTP responses were not retained; results are observational and synthetic-only."
+  },
+  "taxonomy": {
+    "generation_semantics": [
+      "material_technology_fact",
+      "listed_skill_fact",
+      "job_alignment",
+      "human_review_recommendation",
+      "material_unknown",
+      "interview_target"
+    ],
+    "audit_unsupported": [
+      "alignment_to_experience",
+      "alignment_to_capability",
+      "project_technology_to_candidate_action",
+      "project_technology_to_project_use",
+      "project_technology_to_candidate_experience",
+      "weak_overlap_to_strong_match",
+      "alignment_strength_upgrade",
+      "unsupported_responsibility",
+      "unsupported_scale",
+      "unsupported_outcome",
+      "unsupported_familiarity_proficiency"
+    ],
+    "uncertainty_reasons": [
+      "implicit_strength",
+      "implicit_topic",
+      "coreference_implicit_topic"
+    ]
+  },
+  "cases": [
+    {
+      "scenario_id": "ai_agent_a",
+      "group": 1,
+      "role": "AI Agent Engineer",
+      "candidate_label": "A",
+      "candidate_id": "candidate_001",
+      "result_rank": 1,
+      "narrative": {
+        "decision_summary": "该候选人的材料中明确列出了 Agent Workflow、FastAPI、Python 和 RAG 相关的项目技术栈，且其技术方向与 AI Agent Engineer 岗位的核心需求高度重合。鉴于这些关键技能的匹配度，建议优先安排人工技术复核以进一步评估其深度。",
+        "why_consider": [
+          "候选人的技术背景与岗位对 AI Agent 方向的期望一致，特别是在 Agent Workflow 方面存在重叠。",
+          "候选人具备 FastAPI 框架的相关经验，符合岗位技术要求。"
+        ],
+        "technical_signal": [
+          "材料中直接提及了 Agent Workflow 技能。",
+          "项目材料中展示了包含 Agent Workflow、FastAPI、Python 和 RAG 的技术组合。"
+        ],
+        "interview_focus": [
+          "下一轮面试需重点确认候选人在 Agent Workflow、FastAPI、Python 及 RAG 方面的具体项目范围与实践细节。"
+        ],
+        "uncertainty": [
+          "目前尚无法从现有材料中确切评估候选人在上述技术领域的实际项目范围与落地情况。"
+        ]
+      },
+      "gold": [
+        {
+          "field": "decision_summary",
+          "index": 0,
+          "quote": "材料中明确列出了 Agent Workflow、FastAPI、Python 和 RAG 相关的项目技术栈",
+          "category": "material_technology_fact",
+          "adjudication": "supported"
+        },
+        {
+          "field": "decision_summary",
+          "index": 0,
+          "quote": "与 AI Agent Engineer 岗位的核心需求高度重合",
+          "category": "alignment_strength_upgrade",
+          "adjudication": "unsupported",
+          "issue": "unsupported_strength"
+        },
+        {
+          "field": "decision_summary",
+          "index": 0,
+          "quote": "建议优先安排人工技术复核",
+          "category": "human_review_recommendation",
+          "adjudication": "supported"
+        },
+        {
+          "field": "why_consider",
+          "index": 0,
+          "quote": "技术背景与岗位对 AI Agent 方向的期望一致",
+          "category": "alignment_strength_upgrade",
+          "adjudication": "uncertain",
+          "issue": "implicit_strength"
+        },
+        {
+          "field": "why_consider",
+          "index": 0,
+          "quote": "在 Agent Workflow 方面存在重叠",
+          "category": "job_alignment",
+          "adjudication": "supported"
+        },
+        {
+          "field": "why_consider",
+          "index": 1,
+          "quote": "候选人具备 FastAPI 框架的相关经验",
+          "category": "project_technology_to_candidate_experience",
+          "adjudication": "unsupported",
+          "issue": "experience_upgrade"
+        },
+        {
+          "field": "why_consider",
+          "index": 1,
+          "quote": "符合岗位技术要求",
+          "category": "alignment_to_capability",
+          "adjudication": "unsupported",
+          "issue": "fit_conclusion"
+        },
+        {
+          "field": "technical_signal",
+          "index": 0,
+          "quote": "材料中直接提及了 Agent Workflow 技能",
+          "category": "listed_skill_fact",
+          "adjudication": "supported"
+        },
+        {
+          "field": "technical_signal",
+          "index": 1,
+          "quote": "项目材料中展示了包含 Agent Workflow、FastAPI、Python 和 RAG 的技术组合",
+          "category": "material_technology_fact",
+          "adjudication": "supported"
+        },
+        {
+          "field": "interview_focus",
+          "index": 0,
+          "quote": "重点确认候选人在 Agent Workflow、FastAPI、Python 及 RAG 方面的具体项目范围与实践细节",
+          "category": "interview_target",
+          "adjudication": "supported"
+        },
+        {
+          "field": "uncertainty",
+          "index": 0,
+          "quote": "尚无法从现有材料中确切评估候选人在上述技术领域的实际项目范围与落地情况",
+          "category": "material_unknown",
+          "adjudication": "supported"
+        }
+      ]
+    },
+    {
+      "scenario_id": "ai_agent_b",
+      "group": 1,
+      "role": "AI Agent Engineer",
+      "candidate_label": "B",
+      "candidate_id": "candidate_002",
+      "result_rank": 2,
+      "narrative": {
+        "decision_summary": "该候选人的技术方向与 AI Agent Engineer 岗位高度契合，具备 Python 基础及评估相关经验，建议进入定向人工筛查环节。",
+        "why_consider": [
+          "候选人的技能栈与岗位核心需求（Python）存在重叠，且材料中明确提及了评估（evaluation）相关的技术观察和项目技术列表，显示出良好的方向一致性。",
+          "候选人材料中列出了评估（evaluation）技能，并涉及包含 Python、ranking 和 retrieval 的项目技术，表明其背景与该领域相关。"
+        ],
+        "technical_signal": [
+          "候选人材料中明确列出了评估（evaluation）技能。",
+          "项目材料中列出了涉及 evaluation、python、ranking 和 retrieval 的技术栈。"
+        ],
+        "interview_focus": [
+          "下一轮面试需重点确认候选人在评估、Python、排序及检索方面的具体项目范围，以验证其实际参与深度。"
+        ],
+        "uncertainty": [
+          "目前尚无法确认候选人所涉项目的具体范围和规模。"
+        ]
+      },
+      "gold": [
+        {
+          "field": "decision_summary",
+          "index": 0,
+          "quote": "与 AI Agent Engineer 岗位高度契合",
+          "category": "weak_overlap_to_strong_match",
+          "adjudication": "unsupported",
+          "issue": "unsupported_strength"
+        },
+        {
+          "field": "decision_summary",
+          "index": 0,
+          "quote": "具备 Python 基础及评估相关经验",
+          "category": "alignment_to_experience",
+          "adjudication": "unsupported",
+          "issue": "experience_upgrade"
+        },
+        {
+          "field": "decision_summary",
+          "index": 0,
+          "quote": "建议进入定向人工筛查环节",
+          "category": "human_review_recommendation",
+          "adjudication": "supported"
+        },
+        {
+          "field": "why_consider",
+          "index": 0,
+          "quote": "与岗位核心需求（Python）存在重叠",
+          "category": "job_alignment",
+          "adjudication": "supported"
+        },
+        {
+          "field": "why_consider",
+          "index": 0,
+          "quote": "材料中明确提及了评估（evaluation）相关的技术观察和项目技术列表",
+          "category": "material_technology_fact",
+          "adjudication": "supported"
+        },
+        {
+          "field": "why_consider",
+          "index": 0,
+          "quote": "良好的方向一致性",
+          "category": "alignment_strength_upgrade",
+          "adjudication": "unsupported",
+          "issue": "unsupported_strength"
+        },
+        {
+          "field": "why_consider",
+          "index": 1,
+          "quote": "材料中列出了评估（evaluation）技能",
+          "category": "listed_skill_fact",
+          "adjudication": "supported"
+        },
+        {
+          "field": "why_consider",
+          "index": 1,
+          "quote": "包含 Python、ranking 和 retrieval 的项目技术",
+          "category": "material_technology_fact",
+          "adjudication": "supported"
+        },
+        {
+          "field": "why_consider",
+          "index": 1,
+          "quote": "其背景与该领域相关",
+          "category": "job_alignment",
+          "adjudication": "uncertain",
+          "issue": "implicit_topic"
+        },
+        {
+          "field": "technical_signal",
+          "index": 0,
+          "quote": "材料中明确列出了评估（evaluation）技能",
+          "category": "listed_skill_fact",
+          "adjudication": "supported"
+        },
+        {
+          "field": "technical_signal",
+          "index": 1,
+          "quote": "项目材料中列出了涉及 evaluation、python、ranking 和 retrieval 的技术栈",
+          "category": "material_technology_fact",
+          "adjudication": "supported"
+        },
+        {
+          "field": "interview_focus",
+          "index": 0,
+          "quote": "确认候选人在评估、Python、排序及检索方面的具体项目范围",
+          "category": "interview_target",
+          "adjudication": "supported"
+        },
+        {
+          "field": "uncertainty",
+          "index": 0,
+          "quote": "尚无法确认候选人所涉项目的具体范围和规模",
+          "category": "material_unknown",
+          "adjudication": "supported"
+        }
+      ]
+    },
+    {
+      "scenario_id": "recommendation_a",
+      "group": 2,
+      "role": "Recommendation Engineer",
+      "candidate_label": "A",
+      "candidate_id": "candidate_001",
+      "result_rank": 1,
+      "narrative": {
+        "decision_summary": "该候选人的经历与推荐工程师岗位在评估、排序及检索方向上高度契合，建议优先进行人工技术复核。",
+        "why_consider": [
+          "候选人在排序（Ranking）领域的经验与岗位对 LambdaMART 等算法的要求存在重叠，具备相关的技术信号。",
+          "其背景涉及评估（Evaluation）、Python 开发以及检索（Retrieval）技术，这些方向均与岗位职责要求相吻合。"
+        ],
+        "technical_signal": [
+          "材料中明确列出了评估（Evaluation）技能。",
+          "项目材料中提及了评估、Python、排序和检索等技术栈。"
+        ],
+        "interview_focus": [
+          "下一轮面试需重点确认候选人在评估、Python、排序及检索相关项目中的具体职责范围与边界。"
+        ],
+        "uncertainty": [
+          "目前尚无法确定候选人所参与项目的具体规模与复杂度。"
+        ]
+      },
+      "gold": [
+        {
+          "field": "decision_summary",
+          "index": 0,
+          "quote": "候选人的经历",
+          "category": "alignment_to_experience",
+          "adjudication": "uncertain",
+          "issue": "generic_experience_reference"
+        },
+        {
+          "field": "decision_summary",
+          "index": 0,
+          "quote": "在评估、排序及检索方向上高度契合",
+          "category": "alignment_strength_upgrade",
+          "adjudication": "unsupported",
+          "issue": "unsupported_strength"
+        },
+        {
+          "field": "decision_summary",
+          "index": 0,
+          "quote": "建议优先进行人工技术复核",
+          "category": "human_review_recommendation",
+          "adjudication": "supported"
+        },
+        {
+          "field": "why_consider",
+          "index": 0,
+          "quote": "候选人在排序（Ranking）领域的经验",
+          "category": "project_technology_to_candidate_experience",
+          "adjudication": "unsupported",
+          "issue": "experience_upgrade"
+        },
+        {
+          "field": "why_consider",
+          "index": 0,
+          "quote": "与岗位对 LambdaMART 等算法的要求存在重叠",
+          "category": "job_alignment",
+          "adjudication": "supported"
+        },
+        {
+          "field": "why_consider",
+          "index": 0,
+          "quote": "具备相关的技术信号",
+          "category": "job_alignment",
+          "adjudication": "uncertain",
+          "issue": "implicit_strength"
+        },
+        {
+          "field": "why_consider",
+          "index": 1,
+          "quote": "其背景涉及评估（Evaluation）、Python 开发以及检索（Retrieval）技术",
+          "category": "project_technology_to_candidate_experience",
+          "adjudication": "unsupported",
+          "issue": "experience_upgrade"
+        },
+        {
+          "field": "why_consider",
+          "index": 1,
+          "quote": "这些方向均与岗位职责要求相吻合",
+          "category": "job_alignment",
+          "adjudication": "uncertain",
+          "issue": "coreference_implicit_topic"
+        },
+        {
+          "field": "technical_signal",
+          "index": 0,
+          "quote": "材料中明确列出了评估（Evaluation）技能",
+          "category": "listed_skill_fact",
+          "adjudication": "supported"
+        },
+        {
+          "field": "technical_signal",
+          "index": 1,
+          "quote": "项目材料中提及了评估、Python、排序和检索等技术栈",
+          "category": "material_technology_fact",
+          "adjudication": "supported"
+        },
+        {
+          "field": "interview_focus",
+          "index": 0,
+          "quote": "重点确认候选人在评估、Python、排序及检索相关项目中的具体职责范围与边界",
+          "category": "interview_target",
+          "adjudication": "supported"
+        },
+        {
+          "field": "uncertainty",
+          "index": 0,
+          "quote": "尚无法确定候选人所参与项目的具体规模与复杂度",
+          "category": "material_unknown",
+          "adjudication": "supported"
+        }
+      ]
+    },
+    {
+      "scenario_id": "recommendation_b",
+      "group": 2,
+      "role": "Recommendation Engineer",
+      "candidate_label": "B",
+      "candidate_id": "candidate_002",
+      "result_rank": 2,
+      "narrative": {
+        "decision_summary": "该候选人在项目材料中明确展示了 Docker、FastAPI、PostgreSQL 和 Python 的技术栈，与岗位方向存在重叠。建议进行定向人工筛查以进一步评估匹配度。",
+        "why_consider": [
+          "候选人具备 Python 技术背景，且项目经历涉及 Docker、FastAPI、PostgreSQL 等关键技术，符合岗位相关方向。",
+          "候选人在项目中使用了 Docker、FastAPI、PostgreSQL 和 Python 等技术栈。"
+        ],
+        "technical_signal": [
+          "候选人列出了 Docker 技能。",
+          "候选人的项目材料中包含了 Docker、FastAPI、PostgreSQL 和 Python 等技术。"
+        ],
+        "interview_focus": [
+          "下一轮面试需重点核实候选人在 Docker、FastAPI、PostgreSQL 和 Python 相关项目中的具体职责范围。"
+        ],
+        "uncertainty": [
+          "目前尚无法确认候选人在上述技术项目中的具体参与范围和贡献程度。"
+        ]
+      },
+      "gold": [
+        {
+          "field": "decision_summary",
+          "index": 0,
+          "quote": "项目材料中明确展示了 Docker、FastAPI、PostgreSQL 和 Python 的技术栈",
+          "category": "material_technology_fact",
+          "adjudication": "supported"
+        },
+        {
+          "field": "decision_summary",
+          "index": 0,
+          "quote": "与岗位方向存在重叠",
+          "category": "job_alignment",
+          "adjudication": "supported"
+        },
+        {
+          "field": "decision_summary",
+          "index": 0,
+          "quote": "建议进行定向人工筛查",
+          "category": "human_review_recommendation",
+          "adjudication": "supported"
+        },
+        {
+          "field": "why_consider",
+          "index": 0,
+          "quote": "候选人具备 Python 技术背景",
+          "category": "alignment_to_experience",
+          "adjudication": "unsupported",
+          "issue": "experience_upgrade"
+        },
+        {
+          "field": "why_consider",
+          "index": 0,
+          "quote": "项目经历涉及 Docker、FastAPI、PostgreSQL 等关键技术",
+          "category": "material_technology_fact",
+          "adjudication": "supported"
+        },
+        {
+          "field": "why_consider",
+          "index": 0,
+          "quote": "符合岗位相关方向",
+          "category": "job_alignment",
+          "adjudication": "uncertain",
+          "issue": "implicit_strength"
+        },
+        {
+          "field": "why_consider",
+          "index": 1,
+          "quote": "候选人在项目中使用了 Docker、FastAPI、PostgreSQL 和 Python 等技术栈",
+          "category": "project_technology_to_candidate_action",
+          "adjudication": "unsupported",
+          "issue": "personal_action_upgrade"
+        },
+        {
+          "field": "technical_signal",
+          "index": 0,
+          "quote": "候选人列出了 Docker 技能",
+          "category": "listed_skill_fact",
+          "adjudication": "supported"
+        },
+        {
+          "field": "technical_signal",
+          "index": 1,
+          "quote": "项目材料中包含了 Docker、FastAPI、PostgreSQL 和 Python 等技术",
+          "category": "material_technology_fact",
+          "adjudication": "supported"
+        },
+        {
+          "field": "interview_focus",
+          "index": 0,
+          "quote": "核实候选人在 Docker、FastAPI、PostgreSQL 和 Python 相关项目中的具体职责范围",
+          "category": "interview_target",
+          "adjudication": "supported"
+        },
+        {
+          "field": "uncertainty",
+          "index": 0,
+          "quote": "尚无法确认候选人在上述技术项目中的具体参与范围和贡献程度",
+          "category": "material_unknown",
+          "adjudication": "supported"
+        }
+      ]
+    },
+    {
+      "scenario_id": "backend_a",
+      "group": 3,
+      "role": "AI Backend Engineer",
+      "candidate_label": "A",
+      "candidate_id": "candidate_001",
+      "result_rank": 1,
+      "narrative": {
+        "decision_summary": "该候选人的项目经历与岗位方向高度契合，建议优先进行人工技术复核。",
+        "why_consider": [
+          "候选人在 Python、PostgreSQL 和 FastAPI 方面的背景与岗位要求存在重叠，具备相关的技术信号。",
+          "其过往项目中明确使用了 Docker、FastAPI、PostgreSQL 和 Python 等技术栈，提供了具体的技术观察依据。"
+        ],
+        "technical_signal": [
+          "候选人材料中列出了 Docker 技能，并在项目中展示了相关技术的应用。"
+        ],
+        "interview_focus": [
+          "下一轮面试需重点确认其在 Docker、FastAPI、PostgreSQL 和 Python 项目中的具体职责范围与实施细节。"
+        ],
+        "uncertainty": [
+          "目前尚无法确定候选人在涉及 Docker、FastAPI、PostgreSQL 和 Python 的项目中的具体工作范围是否已明确界定。"
+        ]
+      },
+      "gold": [
+        {
+          "field": "decision_summary",
+          "index": 0,
+          "quote": "项目经历与岗位方向高度契合",
+          "category": "alignment_strength_upgrade",
+          "adjudication": "unsupported",
+          "issue": "unsupported_strength"
+        },
+        {
+          "field": "decision_summary",
+          "index": 0,
+          "quote": "建议优先进行人工技术复核",
+          "category": "human_review_recommendation",
+          "adjudication": "supported"
+        },
+        {
+          "field": "why_consider",
+          "index": 0,
+          "quote": "候选人在 Python、PostgreSQL 和 FastAPI 方面的背景",
+          "category": "project_technology_to_candidate_experience",
+          "adjudication": "unsupported",
+          "issue": "experience_upgrade"
+        },
+        {
+          "field": "why_consider",
+          "index": 0,
+          "quote": "与岗位要求存在重叠",
+          "category": "job_alignment",
+          "adjudication": "supported"
+        },
+        {
+          "field": "why_consider",
+          "index": 0,
+          "quote": "具备相关的技术信号",
+          "category": "job_alignment",
+          "adjudication": "uncertain",
+          "issue": "implicit_strength"
+        },
+        {
+          "field": "why_consider",
+          "index": 1,
+          "quote": "其过往项目中明确使用了 Docker、FastAPI、PostgreSQL 和 Python 等技术栈",
+          "category": "project_technology_to_project_use",
+          "adjudication": "unsupported",
+          "issue": "personal_action_upgrade"
+        },
+        {
+          "field": "why_consider",
+          "index": 1,
+          "quote": "提供了具体的技术观察依据",
+          "category": "material_technology_fact",
+          "adjudication": "uncertain",
+          "issue": "meta_evidence_language"
+        },
+        {
+          "field": "technical_signal",
+          "index": 0,
+          "quote": "材料中列出了 Docker 技能",
+          "category": "listed_skill_fact",
+          "adjudication": "supported"
+        },
+        {
+          "field": "technical_signal",
+          "index": 0,
+          "quote": "在项目中展示了相关技术的应用",
+          "category": "material_technology_fact",
+          "adjudication": "uncertain",
+          "issue": "coreference_implicit_topic"
+        },
+        {
+          "field": "interview_focus",
+          "index": 0,
+          "quote": "重点确认其在 Docker、FastAPI、PostgreSQL 和 Python 项目中的具体职责范围与实施细节",
+          "category": "interview_target",
+          "adjudication": "supported"
+        },
+        {
+          "field": "uncertainty",
+          "index": 0,
+          "quote": "尚无法确定候选人在涉及 Docker、FastAPI、PostgreSQL 和 Python 的项目中的具体工作范围是否已明确界定",
+          "category": "material_unknown",
+          "adjudication": "supported"
+        }
+      ]
+    },
+    {
+      "scenario_id": "backend_b",
+      "group": 3,
+      "role": "AI Backend Engineer",
+      "candidate_label": "B",
+      "candidate_id": "candidate_002",
+      "result_rank": 2,
+      "narrative": {
+        "decision_summary": "该候选人的材料明确列出了 Python、Qdrant、RAG 及向量数据库等技术栈，与 AI Backend Engineer 岗位的核心需求高度重合。鉴于技术方向匹配度高，建议优先安排人工技术复核以深入评估其工程落地能力。",
+        "why_consider": [
+          "候选人简历中明确提及掌握 Python 语言，且项目经验中涉及 RAG（检索增强生成）相关技术，这与岗位对 Python 及 RAG 能力的要求直接对应。"
+        ],
+        "technical_signal": [
+          "材料中清晰罗列了 Python 作为主要编程语言，并在项目中使用了 Qdrant 和向量数据库来支持 RAG 架构，显示出对当前 AI 后端主流技术栈的熟悉度。"
+        ],
+        "interview_focus": [
+          "下一轮面试需重点确认候选人在实际项目中对 Python、Qdrant、RAG 及向量数据库的具体应用范围和技术深度，以验证其技术细节的真实性。"
+        ],
+        "uncertainty": [
+          "目前尚无法从现有材料中确切评估候选人在上述技术栈中的具体项目规模、职责边界及最终产出效果，这些关键信息有待进一步核实。"
+        ]
+      },
+      "gold": [
+        {
+          "field": "decision_summary",
+          "index": 0,
+          "quote": "材料明确列出了 Python、Qdrant、RAG 及向量数据库等技术栈",
+          "category": "material_technology_fact",
+          "adjudication": "supported"
+        },
+        {
+          "field": "decision_summary",
+          "index": 0,
+          "quote": "与 AI Backend Engineer 岗位的核心需求高度重合",
+          "category": "alignment_strength_upgrade",
+          "adjudication": "unsupported",
+          "issue": "unsupported_strength"
+        },
+        {
+          "field": "decision_summary",
+          "index": 0,
+          "quote": "技术方向匹配度高",
+          "category": "alignment_strength_upgrade",
+          "adjudication": "unsupported",
+          "issue": "unsupported_strength"
+        },
+        {
+          "field": "decision_summary",
+          "index": 0,
+          "quote": "建议优先安排人工技术复核",
+          "category": "human_review_recommendation",
+          "adjudication": "supported"
+        },
+        {
+          "field": "why_consider",
+          "index": 0,
+          "quote": "简历中明确提及掌握 Python 语言",
+          "category": "unsupported_familiarity_proficiency",
+          "adjudication": "unsupported",
+          "issue": "proficiency_upgrade"
+        },
+        {
+          "field": "why_consider",
+          "index": 0,
+          "quote": "项目经验中涉及 RAG（检索增强生成）相关技术",
+          "category": "project_technology_to_candidate_experience",
+          "adjudication": "unsupported",
+          "issue": "experience_upgrade"
+        },
+        {
+          "field": "why_consider",
+          "index": 0,
+          "quote": "与岗位对 Python 及 RAG 能力的要求直接对应",
+          "category": "alignment_to_capability",
+          "adjudication": "unsupported",
+          "issue": "fit_conclusion"
+        },
+        {
+          "field": "technical_signal",
+          "index": 0,
+          "quote": "Python 作为主要编程语言",
+          "category": "unsupported_familiarity_proficiency",
+          "adjudication": "unsupported",
+          "issue": "primary_language_upgrade"
+        },
+        {
+          "field": "technical_signal",
+          "index": 0,
+          "quote": "在项目中使用了 Qdrant 和向量数据库来支持 RAG 架构",
+          "category": "project_technology_to_candidate_action",
+          "adjudication": "unsupported",
+          "issue": "personal_action_upgrade"
+        },
+        {
+          "field": "technical_signal",
+          "index": 0,
+          "quote": "对当前 AI 后端主流技术栈的熟悉度",
+          "category": "unsupported_familiarity_proficiency",
+          "adjudication": "unsupported",
+          "issue": "proficiency_upgrade"
+        },
+        {
+          "field": "interview_focus",
+          "index": 0,
+          "quote": "重点确认候选人在实际项目中对 Python、Qdrant、RAG 及向量数据库的具体应用范围和技术深度",
+          "category": "interview_target",
+          "adjudication": "supported"
+        },
+        {
+          "field": "uncertainty",
+          "index": 0,
+          "quote": "尚无法从现有材料中确切评估候选人在上述技术栈中的具体项目规模、职责边界及最终产出效果",
+          "category": "material_unknown",
+          "adjudication": "supported"
+        }
+      ]
+    }
+  ]
+}

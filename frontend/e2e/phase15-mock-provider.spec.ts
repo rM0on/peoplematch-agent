@@ -16,7 +16,7 @@ test("preserves the deterministic mock provider product workflow", async ({ page
   await expect(page.getByText("候选人 001")).toBeVisible();
   await page.screenshot({ path: path.join(screenshotRoot, "phase15-talent-library-1440x1024.png") });
 
-  await page.goto("/");
+  await page.goto("/workbench");
   await expect(page.getByText("Deterministic Mock")).toBeVisible();
   await page.getByRole("button", { name: "加载中文 JD 示例" }).click();
   const matchResponsePromise = page.waitForResponse((response) => response.url().endsWith("/api/v1/match-runs") && response.request().method() === "POST");

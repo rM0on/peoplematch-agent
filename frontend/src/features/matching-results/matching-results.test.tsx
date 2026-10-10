@@ -180,7 +180,7 @@ describe("MatchingResultsScreen Phase 12 demo", () => {
     expect(screen.getByText("技术 ID · cand_005")).toBeTruthy();
     expect(screen.getAllByText("1.254321")).toHaveLength(2);
     expect(screen.getAllByText("排序模型分值（LTR Score）").length).toBeGreaterThanOrEqual(2);
-    expect(screen.getAllByText("高度推荐").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("排序 #1").length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText("该分值仅用于候选人排序，不是匹配概率、录用概率或推荐成功率。")).toBeTruthy();
     expect(screen.getByText("为什么推荐该候选人")).toBeTruthy();
     expect(screen.getByRole("heading", { name: "推荐优势" })).toBeTruthy();
@@ -206,7 +206,7 @@ describe("MatchingResultsScreen Phase 12 demo", () => {
     expect(document.body.textContent).not.toMatch(/准确率|95\.9%|final score/i);
     await user.click(screen.getByRole("button", { name: /查看第 2 名/ }));
     expect(screen.getAllByText("0.875000")).toHaveLength(2);
-    expect(screen.getAllByText("推荐").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("排序 #2").length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText("该候选人保留在第二位。")).toBeTruthy();
   });
 

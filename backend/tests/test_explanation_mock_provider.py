@@ -5,7 +5,7 @@ import json
 
 from app.core.config import Settings
 from app.services.explanation.evidence import build_evidence_facts
-from app.services.explanation.generation.contracts import ExplanationPlanV1
+from app.services.explanation.generation.contracts import ProviderExplanationPlanV1
 from app.services.explanation.generation.prompt import (
     build_explanation_provider_request,
 )
@@ -38,8 +38,8 @@ def test_mock_provider_is_deterministic_closed_and_offline() -> None:
 
     first = asyncio.run(provider.generate(request))
     second = asyncio.run(provider.generate(request))
-    first_plan = ExplanationPlanV1.model_validate_json(first.content)
-    second_plan = ExplanationPlanV1.model_validate_json(second.content)
+    first_plan = ProviderExplanationPlanV1.model_validate_json(first.content)
+    second_plan = ProviderExplanationPlanV1.model_validate_json(second.content)
 
     assert first == second
     assert first_plan == second_plan
@@ -63,7 +63,7 @@ def test_mock_provider_selects_only_exact_fact_tuples_and_deterministic_gaps() -
 
     bundle = _missing_requirement_bundle()
     projected, request = _request(bundle)
-    plan = ExplanationPlanV1.model_validate_json(
+    plan = ProviderExplanationPlanV1.model_validate_json(
         asyncio.run(DeterministicExplanationProvider().generate(request)).content
     )
     candidate = plan.candidates[0]
@@ -103,7 +103,7 @@ def test_mock_provider_preserves_candidate_coverage_and_top1_structure() -> None
     )
 
     projected, request = _request(_two_candidate_bundle())
-    plan = ExplanationPlanV1.model_validate_json(
+    plan = ProviderExplanationPlanV1.model_validate_json(
         asyncio.run(DeterministicExplanationProvider().generate(request)).content
     )
 

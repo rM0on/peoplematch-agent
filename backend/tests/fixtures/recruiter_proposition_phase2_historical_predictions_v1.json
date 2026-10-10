@@ -1,0 +1,1878 @@
+{
+  "dataset_id": "recruiter_proposition_phase2_historical_predictions_v1",
+  "source": "Recovered from original synthetic-only experiment stdout in the local Codex session rollout dated 2026-08-30; six lines at session JSONL line 42305. No Provider recall.",
+  "cases": [
+    {
+      "scenario_id": "ai_agent_a",
+      "scenario": "AI Agent Engineer",
+      "candidate": "A",
+      "candidate_id": "candidate_001",
+      "provider": "openai_compatible",
+      "model": "qwen3.7-flash-2026-07-15",
+      "http_status": 200,
+      "schema": "PASS",
+      "handle": "PASS",
+      "repair": 0,
+      "narrative": {
+        "candidate_id": "candidate_001",
+        "contract_version": "recruiter_proposition_generation_v1",
+        "decision_summary": {
+          "proposition_refs": [
+            "proposition:1e431d1e849b63fefd0d47c6e59de665"
+          ],
+          "text": "该候选人的材料中明确列出了 Agent Workflow、FastAPI、Python 和 RAG 相关的项目技术栈，且其技术方向与 AI Agent Engineer 岗位的核心需求高度重合。鉴于这些关键技能的匹配度，建议优先安排人工技术复核以进一步评估其深度。"
+        },
+        "interview_focus": [
+          {
+            "proposition_refs": [
+              "proposition:153ac44ea81719a4636bfcefae1cc226"
+            ],
+            "text": "下一轮面试需重点确认候选人在 Agent Workflow、FastAPI、Python 及 RAG 方面的具体项目范围与实践细节。"
+          }
+        ],
+        "result_rank": 1,
+        "technical_signal": [
+          {
+            "proposition_refs": [
+              "proposition:cd7af9c7fba6f0ecaba58e61b71192bf"
+            ],
+            "text": "材料中直接提及了 Agent Workflow 技能。"
+          },
+          {
+            "proposition_refs": [
+              "proposition:eb30bd9cd8823058228cef7ae7bdeb73"
+            ],
+            "text": "项目材料中展示了包含 Agent Workflow、FastAPI、Python 和 RAG 的技术组合。"
+          }
+        ],
+        "uncertainty": [
+          {
+            "proposition_refs": [
+              "proposition:aeb776a71bfddc554e9c397ea415dbb7"
+            ],
+            "text": "目前尚无法从现有材料中确切评估候选人在上述技术领域的实际项目范围与落地情况。"
+          }
+        ],
+        "why_consider": [
+          {
+            "proposition_refs": [
+              "proposition:09135c580449725f346d125ce1b4f06f",
+              "proposition:824bce483c725e7971d91a92c417e199"
+            ],
+            "text": "候选人的技术背景与岗位对 AI Agent 方向的期望一致，特别是在 Agent Workflow 方面存在重叠。"
+          },
+          {
+            "proposition_refs": [
+              "proposition:227f304e8fc329379a810c83fb462466"
+            ],
+            "text": "候选人具备 FastAPI 框架的相关经验，符合岗位技术要求。"
+          }
+        ]
+      },
+      "selected_handles": {
+        "decision_summary": [
+          [
+            "P03"
+          ]
+        ],
+        "interview_focus": [
+          [
+            "P02"
+          ]
+        ],
+        "technical_signal": [
+          [
+            "P09"
+          ],
+          [
+            "P10"
+          ]
+        ],
+        "uncertainty": [
+          [
+            "P08"
+          ]
+        ],
+        "why_consider": [
+          [
+            "P01",
+            "P05"
+          ],
+          [
+            "P04"
+          ]
+        ]
+      },
+      "audit_http_status": 200,
+      "audit_schema": "PASS",
+      "semantic_audit": "FAIL",
+      "semantic_atom_count": 11,
+      "semantic_atoms": [
+        {
+          "atoms": [
+            {
+              "category": "project_technology",
+              "quote": "该候选人的材料中明确列出了 Agent Workflow、FastAPI、Python 和 RAG 相关的项目技术栈",
+              "review_strength": "none",
+              "topics": [
+                "Agent Workflow",
+                "FastAPI",
+                "Python",
+                "RAG"
+              ]
+            },
+            {
+              "category": "strong_alignment",
+              "quote": "且其技术方向与 AI Agent Engineer 岗位的核心需求高度重合",
+              "review_strength": "none",
+              "topics": []
+            },
+            {
+              "category": "human_review_action",
+              "quote": "鉴于这些关键技能的匹配度，建议优先安排人工技术复核以进一步评估其深度",
+              "review_strength": "priority",
+              "topics": []
+            }
+          ],
+          "field": "decision_summary",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "job_alignment",
+              "quote": "候选人的技术背景与岗位对 AI Agent 方向的期望一致",
+              "review_strength": "none",
+              "topics": [
+                "AI Agent"
+              ]
+            },
+            {
+              "category": "job_alignment",
+              "quote": "特别是在 Agent Workflow 方面存在重叠",
+              "review_strength": "none",
+              "topics": [
+                "Agent Workflow"
+              ]
+            }
+          ],
+          "field": "why_consider",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "project_technology",
+              "quote": "候选人具备 FastAPI 框架的相关经验",
+              "review_strength": "none",
+              "topics": [
+                "FastAPI"
+              ]
+            },
+            {
+              "category": "other_assertion",
+              "quote": "符合岗位技术要求",
+              "review_strength": "none",
+              "topics": []
+            }
+          ],
+          "field": "why_consider",
+          "item_index": 1
+        },
+        {
+          "atoms": [
+            {
+              "category": "project_technology",
+              "quote": "材料中直接提及了 Agent Workflow 技能",
+              "review_strength": "none",
+              "topics": [
+                "Agent Workflow"
+              ]
+            }
+          ],
+          "field": "technical_signal",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "project_technology",
+              "quote": "项目材料中展示了包含 Agent Workflow、FastAPI、Python 和 RAG 的技术组合",
+              "review_strength": "none",
+              "topics": [
+                "Agent Workflow",
+                "FastAPI",
+                "Python",
+                "RAG"
+              ]
+            }
+          ],
+          "field": "technical_signal",
+          "item_index": 1
+        },
+        {
+          "atoms": [
+            {
+              "category": "interview_target",
+              "quote": "下一轮面试需重点确认候选人在 Agent Workflow、FastAPI、Python 及 RAG 方面的具体项目范围与实践细节",
+              "review_strength": "none",
+              "topics": [
+                "Agent Workflow",
+                "FastAPI",
+                "Python",
+                "RAG"
+              ]
+            }
+          ],
+          "field": "interview_focus",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "material_unknown",
+              "quote": "目前尚无法从现有材料中确切评估候选人在上述技术领域的实际项目范围与落地情况",
+              "review_strength": "none",
+              "topics": []
+            }
+          ],
+          "field": "uncertainty",
+          "item_index": 0
+        }
+      ],
+      "semantic_audit_issues": [
+        {
+          "code": "UNSUPPORTED_SEMANTIC_CATEGORY",
+          "field": "decision_summary",
+          "item_index": 0,
+          "quote": "且其技术方向与 AI Agent Engineer 岗位的核心需求高度重合"
+        },
+        {
+          "code": "UNSUPPORTED_SEMANTIC_CATEGORY",
+          "field": "why_consider",
+          "item_index": 1,
+          "quote": "符合岗位技术要求"
+        }
+      ],
+      "legacy_shadow": [
+        {
+          "field": "decision_summary",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "FAIL",
+          "validator_reason": "technical_concept_outside_claim_scope"
+        },
+        {
+          "field": "why_consider",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "PASS",
+          "validator_reason": null
+        },
+        {
+          "field": "why_consider",
+          "guard_reason": null,
+          "item_index": 1,
+          "status": "FAIL",
+          "validator_reason": "unsupported_ability_conclusion"
+        },
+        {
+          "field": "technical_signal",
+          "item_index": 0,
+          "reason": "no_equivalent_v4_claim_lineage",
+          "status": "NOT_COMPARABLE"
+        },
+        {
+          "field": "technical_signal",
+          "item_index": 1,
+          "reason": "no_equivalent_v4_claim_lineage",
+          "status": "NOT_COMPARABLE"
+        },
+        {
+          "field": "interview_focus",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "PASS",
+          "validator_reason": null
+        },
+        {
+          "field": "uncertainty",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "FAIL",
+          "validator_reason": "verification_modality_missing"
+        }
+      ],
+      "latency_seconds": 107.219,
+      "audit_latency_seconds": 55.313,
+      "ranking_unchanged": true
+    },
+    {
+      "scenario_id": "ai_agent_b",
+      "scenario": "AI Agent Engineer",
+      "candidate": "B",
+      "candidate_id": "candidate_002",
+      "provider": "openai_compatible",
+      "model": "qwen3.7-flash-2026-07-15",
+      "http_status": 200,
+      "schema": "PASS",
+      "handle": "PASS",
+      "repair": 0,
+      "narrative": {
+        "candidate_id": "candidate_002",
+        "contract_version": "recruiter_proposition_generation_v1",
+        "decision_summary": {
+          "proposition_refs": [
+            "proposition:c4727400b91c14d8ab41b951854f0d9f"
+          ],
+          "text": "该候选人的技术方向与 AI Agent Engineer 岗位高度契合，具备 Python 基础及评估相关经验，建议进入定向人工筛查环节。"
+        },
+        "interview_focus": [
+          {
+            "proposition_refs": [
+              "proposition:04c964afc4ba3fd62c4cb9111f69e900"
+            ],
+            "text": "下一轮面试需重点确认候选人在评估、Python、排序及检索方面的具体项目范围，以验证其实际参与深度。"
+          }
+        ],
+        "result_rank": 2,
+        "technical_signal": [
+          {
+            "proposition_refs": [
+              "proposition:5c0e507c647e959dc463d241ba3775c3"
+            ],
+            "text": "候选人材料中明确列出了评估（evaluation）技能。"
+          },
+          {
+            "proposition_refs": [
+              "proposition:702b4a90181eacd4657d12209e8ebf6c"
+            ],
+            "text": "项目材料中列出了涉及 evaluation、python、ranking 和 retrieval 的技术栈。"
+          }
+        ],
+        "uncertainty": [
+          {
+            "proposition_refs": [
+              "proposition:44c0f32604d0e3b675679e5dbcf65bdd"
+            ],
+            "text": "目前尚无法确认候选人所涉项目的具体范围和规模。"
+          }
+        ],
+        "why_consider": [
+          {
+            "proposition_refs": [
+              "proposition:fd35d138a00e7409db62206aba0bf4d4"
+            ],
+            "text": "候选人的技能栈与岗位核心需求（Python）存在重叠，且材料中明确提及了评估（evaluation）相关的技术观察和项目技术列表，显示出良好的方向一致性。"
+          },
+          {
+            "proposition_refs": [
+              "proposition:c4727400b91c14d8ab41b951854f0d9f",
+              "proposition:fd35d138a00e7409db62206aba0bf4d4"
+            ],
+            "text": "候选人材料中列出了评估（evaluation）技能，并涉及包含 Python、ranking 和 retrieval 的项目技术，表明其背景与该领域相关。"
+          }
+        ]
+      },
+      "selected_handles": {
+        "decision_summary": [
+          [
+            "P05"
+          ]
+        ],
+        "interview_focus": [
+          [
+            "P01"
+          ]
+        ],
+        "technical_signal": [
+          [
+            "P03"
+          ],
+          [
+            "P04"
+          ]
+        ],
+        "uncertainty": [
+          [
+            "P02"
+          ]
+        ],
+        "why_consider": [
+          [
+            "P06"
+          ],
+          [
+            "P05",
+            "P06"
+          ]
+        ]
+      },
+      "audit_http_status": 200,
+      "audit_schema": "PASS",
+      "semantic_audit": "FAIL",
+      "semantic_atom_count": 14,
+      "semantic_atoms": [
+        {
+          "atoms": [
+            {
+              "category": "strong_alignment",
+              "quote": "该候选人的技术方向与 AI Agent Engineer 岗位高度契合",
+              "review_strength": "none",
+              "topics": []
+            },
+            {
+              "category": "candidate_action_or_responsibility",
+              "quote": "具备 Python 基础及评估相关经验",
+              "review_strength": "none",
+              "topics": []
+            },
+            {
+              "category": "human_review_action",
+              "quote": "建议进入定向人工筛查环节",
+              "review_strength": "conditional",
+              "topics": []
+            }
+          ],
+          "field": "decision_summary",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "job_alignment",
+              "quote": "候选人的技能栈与岗位核心需求（Python）存在重叠",
+              "review_strength": "none",
+              "topics": []
+            },
+            {
+              "category": "project_technology",
+              "quote": "且材料中明确提及了评估（evaluation）相关的技术观察和项目技术列表",
+              "review_strength": "none",
+              "topics": []
+            },
+            {
+              "category": "other_assertion",
+              "quote": "显示出良好的方向一致性",
+              "review_strength": "none",
+              "topics": []
+            }
+          ],
+          "field": "why_consider",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "project_technology",
+              "quote": "候选人材料中列出了评估（evaluation）技能",
+              "review_strength": "none",
+              "topics": []
+            },
+            {
+              "category": "project_technology",
+              "quote": "并涉及包含 Python、ranking 和 retrieval 的项目技术",
+              "review_strength": "none",
+              "topics": []
+            },
+            {
+              "category": "job_alignment",
+              "quote": "表明其背景与该领域相关",
+              "review_strength": "none",
+              "topics": []
+            }
+          ],
+          "field": "why_consider",
+          "item_index": 1
+        },
+        {
+          "atoms": [
+            {
+              "category": "project_technology",
+              "quote": "候选人材料中明确列出了评估（evaluation）技能",
+              "review_strength": "none",
+              "topics": []
+            }
+          ],
+          "field": "technical_signal",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "project_technology",
+              "quote": "项目材料中列出了涉及 evaluation、python、ranking 和 retrieval 的技术栈",
+              "review_strength": "none",
+              "topics": []
+            }
+          ],
+          "field": "technical_signal",
+          "item_index": 1
+        },
+        {
+          "atoms": [
+            {
+              "category": "interview_target",
+              "quote": "下一轮面试需重点确认候选人在评估、Python、排序及检索方面的具体项目范围",
+              "review_strength": "none",
+              "topics": []
+            },
+            {
+              "category": "interview_target",
+              "quote": "以验证其实际参与深度",
+              "review_strength": "none",
+              "topics": []
+            }
+          ],
+          "field": "interview_focus",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "material_unknown",
+              "quote": "目前尚无法确认候选人所涉项目的具体范围和规模",
+              "review_strength": "none",
+              "topics": []
+            }
+          ],
+          "field": "uncertainty",
+          "item_index": 0
+        }
+      ],
+      "semantic_audit_issues": [
+        {
+          "code": "UNSUPPORTED_SEMANTIC_CATEGORY",
+          "field": "decision_summary",
+          "item_index": 0,
+          "quote": "该候选人的技术方向与 AI Agent Engineer 岗位高度契合"
+        },
+        {
+          "code": "UNSUPPORTED_SEMANTIC_CATEGORY",
+          "field": "decision_summary",
+          "item_index": 0,
+          "quote": "具备 Python 基础及评估相关经验"
+        },
+        {
+          "code": "TECHNICAL_TOPIC_NOT_EXTRACTED",
+          "field": "why_consider",
+          "item_index": 0,
+          "quote": "候选人的技能栈与岗位核心需求（Python）存在重叠"
+        },
+        {
+          "code": "TECHNICAL_TOPIC_NOT_EXTRACTED",
+          "field": "why_consider",
+          "item_index": 0,
+          "quote": "且材料中明确提及了评估（evaluation）相关的技术观察和项目技术列表"
+        },
+        {
+          "code": "UNSUPPORTED_SEMANTIC_CATEGORY",
+          "field": "why_consider",
+          "item_index": 0,
+          "quote": "显示出良好的方向一致性"
+        },
+        {
+          "code": "TECHNICAL_TOPIC_NOT_EXTRACTED",
+          "field": "why_consider",
+          "item_index": 1,
+          "quote": "候选人材料中列出了评估（evaluation）技能"
+        },
+        {
+          "code": "TECHNICAL_TOPIC_NOT_EXTRACTED",
+          "field": "why_consider",
+          "item_index": 1,
+          "quote": "并涉及包含 Python、ranking 和 retrieval 的项目技术"
+        },
+        {
+          "code": "TECHNICAL_TOPIC_NOT_EXTRACTED",
+          "field": "why_consider",
+          "item_index": 1,
+          "quote": "表明其背景与该领域相关"
+        },
+        {
+          "code": "TECHNICAL_TOPIC_NOT_EXTRACTED",
+          "field": "technical_signal",
+          "item_index": 0,
+          "quote": "候选人材料中明确列出了评估（evaluation）技能"
+        },
+        {
+          "code": "TECHNICAL_TOPIC_NOT_EXTRACTED",
+          "field": "technical_signal",
+          "item_index": 1,
+          "quote": "项目材料中列出了涉及 evaluation、python、ranking 和 retrieval 的技术栈"
+        }
+      ],
+      "legacy_shadow": [
+        {
+          "field": "decision_summary",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "FAIL",
+          "validator_reason": "unsupported_ability_conclusion"
+        },
+        {
+          "field": "why_consider",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "FAIL",
+          "validator_reason": "technical_concept_outside_claim_scope"
+        },
+        {
+          "field": "why_consider",
+          "guard_reason": null,
+          "item_index": 1,
+          "status": "FAIL",
+          "validator_reason": "technical_concept_outside_claim_scope"
+        },
+        {
+          "field": "technical_signal",
+          "item_index": 0,
+          "reason": "no_equivalent_v4_claim_lineage",
+          "status": "NOT_COMPARABLE"
+        },
+        {
+          "field": "technical_signal",
+          "item_index": 1,
+          "reason": "no_equivalent_v4_claim_lineage",
+          "status": "NOT_COMPARABLE"
+        },
+        {
+          "field": "interview_focus",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "PASS",
+          "validator_reason": null
+        },
+        {
+          "field": "uncertainty",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "PASS",
+          "validator_reason": null
+        }
+      ],
+      "latency_seconds": 94.657,
+      "audit_latency_seconds": 56.282,
+      "ranking_unchanged": true
+    },
+    {
+      "scenario_id": "recommendation_a",
+      "scenario": "Recommendation Engineer",
+      "candidate": "A",
+      "candidate_id": "candidate_001",
+      "provider": "openai_compatible",
+      "model": "qwen3.7-flash-2026-07-15",
+      "http_status": 200,
+      "schema": "PASS",
+      "handle": "PASS",
+      "repair": 0,
+      "narrative": {
+        "candidate_id": "candidate_001",
+        "contract_version": "recruiter_proposition_generation_v1",
+        "decision_summary": {
+          "proposition_refs": [
+            "proposition:253b28126457518e37565c30e39f44ec"
+          ],
+          "text": "该候选人的经历与推荐工程师岗位在评估、排序及检索方向上高度契合，建议优先进行人工技术复核。"
+        },
+        "interview_focus": [
+          {
+            "proposition_refs": [
+              "proposition:ddcfe3ede036ea7a4f594e70c3a41316"
+            ],
+            "text": "下一轮面试需重点确认候选人在评估、Python、排序及检索相关项目中的具体职责范围与边界。"
+          }
+        ],
+        "result_rank": 1,
+        "technical_signal": [
+          {
+            "proposition_refs": [
+              "proposition:320fbe542f156667f782580df46c9d9b"
+            ],
+            "text": "材料中明确列出了评估（Evaluation）技能。"
+          },
+          {
+            "proposition_refs": [
+              "proposition:a63530f4889205e8ce838f5d81f624c7"
+            ],
+            "text": "项目材料中提及了评估、Python、排序和检索等技术栈。"
+          }
+        ],
+        "uncertainty": [
+          {
+            "proposition_refs": [
+              "proposition:0810e688b07af870c6a92725345d9ed1"
+            ],
+            "text": "目前尚无法确定候选人所参与项目的具体规模与复杂度。"
+          }
+        ],
+        "why_consider": [
+          {
+            "proposition_refs": [
+              "proposition:0a45f3df58e30a5c0bbf936ad7c2a0cd"
+            ],
+            "text": "候选人在排序（Ranking）领域的经验与岗位对 LambdaMART 等算法的要求存在重叠，具备相关的技术信号。"
+          },
+          {
+            "proposition_refs": [
+              "proposition:a1d50b119e2b1330c230e21174a2f9a0",
+              "proposition:c4e970801a976d39acb1a065549b4b7e",
+              "proposition:de8844c71f15968a2e910c117d2f8ed2",
+              "proposition:fad91e1304550266403cbaa86ba365ad"
+            ],
+            "text": "其背景涉及评估（Evaluation）、Python 开发以及检索（Retrieval）技术，这些方向均与岗位职责要求相吻合。"
+          }
+        ]
+      },
+      "selected_handles": {
+        "decision_summary": [
+          [
+            "P03"
+          ]
+        ],
+        "interview_focus": [
+          [
+            "P08"
+          ]
+        ],
+        "technical_signal": [
+          [
+            "P04"
+          ],
+          [
+            "P06"
+          ]
+        ],
+        "uncertainty": [
+          [
+            "P01"
+          ]
+        ],
+        "why_consider": [
+          [
+            "P02"
+          ],
+          [
+            "P05",
+            "P07",
+            "P09",
+            "P10"
+          ]
+        ]
+      },
+      "audit_http_status": 200,
+      "audit_schema": "PASS",
+      "semantic_audit": "FAIL",
+      "semantic_atom_count": 10,
+      "semantic_atoms": [
+        {
+          "atoms": [
+            {
+              "category": "strong_alignment",
+              "quote": "该候选人的经历与推荐工程师岗位在评估、排序及检索方向上高度契合",
+              "review_strength": "none",
+              "topics": [
+                "评估",
+                "排序",
+                "检索"
+              ]
+            },
+            {
+              "category": "human_review_action",
+              "quote": "建议优先进行人工技术复核",
+              "review_strength": "priority",
+              "topics": []
+            }
+          ],
+          "field": "decision_summary",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "job_alignment",
+              "quote": "候选人在排序（Ranking）领域的经验与岗位对 LambdaMART 等算法的要求存在重叠",
+              "review_strength": "none",
+              "topics": [
+                "排序",
+                "LambdaMART"
+              ]
+            },
+            {
+              "category": "other_assertion",
+              "quote": "具备相关的技术信号",
+              "review_strength": "none",
+              "topics": []
+            }
+          ],
+          "field": "why_consider",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "project_technology",
+              "quote": "其背景涉及评估（Evaluation）、Python 开发以及检索（Retrieval）技术",
+              "review_strength": "none",
+              "topics": [
+                "评估",
+                "Python",
+                "检索"
+              ]
+            },
+            {
+              "category": "job_alignment",
+              "quote": "这些方向均与岗位职责要求相吻合",
+              "review_strength": "none",
+              "topics": [
+                "评估",
+                "Python",
+                "检索"
+              ]
+            }
+          ],
+          "field": "why_consider",
+          "item_index": 1
+        },
+        {
+          "atoms": [
+            {
+              "category": "project_technology",
+              "quote": "材料中明确列出了评估（Evaluation）技能",
+              "review_strength": "none",
+              "topics": [
+                "评估"
+              ]
+            }
+          ],
+          "field": "technical_signal",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "project_technology",
+              "quote": "项目材料中提及了评估、Python、排序和检索等技术栈",
+              "review_strength": "none",
+              "topics": [
+                "评估",
+                "Python",
+                "排序",
+                "检索"
+              ]
+            }
+          ],
+          "field": "technical_signal",
+          "item_index": 1
+        },
+        {
+          "atoms": [
+            {
+              "category": "interview_target",
+              "quote": "下一轮面试需重点确认候选人在评估、Python、排序及检索相关项目中的具体职责范围与边界",
+              "review_strength": "none",
+              "topics": [
+                "评估",
+                "Python",
+                "排序",
+                "检索"
+              ]
+            }
+          ],
+          "field": "interview_focus",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "material_unknown",
+              "quote": "目前尚无法确定候选人所参与项目的具体规模与复杂度",
+              "review_strength": "none",
+              "topics": []
+            }
+          ],
+          "field": "uncertainty",
+          "item_index": 0
+        }
+      ],
+      "semantic_audit_issues": [
+        {
+          "code": "UNSUPPORTED_SEMANTIC_CATEGORY",
+          "field": "decision_summary",
+          "item_index": 0,
+          "quote": "该候选人的经历与推荐工程师岗位在评估、排序及检索方向上高度契合"
+        },
+        {
+          "code": "UNSUPPORTED_SEMANTIC_CATEGORY",
+          "field": "why_consider",
+          "item_index": 0,
+          "quote": "具备相关的技术信号"
+        },
+        {
+          "code": "TOPIC_NOT_IN_QUOTE",
+          "field": "why_consider",
+          "item_index": 1,
+          "quote": "这些方向均与岗位职责要求相吻合"
+        }
+      ],
+      "legacy_shadow": [
+        {
+          "field": "decision_summary",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "PASS",
+          "validator_reason": null
+        },
+        {
+          "field": "why_consider",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "PASS",
+          "validator_reason": null
+        },
+        {
+          "field": "why_consider",
+          "guard_reason": null,
+          "item_index": 1,
+          "status": "PASS",
+          "validator_reason": null
+        },
+        {
+          "field": "technical_signal",
+          "item_index": 0,
+          "reason": "no_equivalent_v4_claim_lineage",
+          "status": "NOT_COMPARABLE"
+        },
+        {
+          "field": "technical_signal",
+          "item_index": 1,
+          "reason": "no_equivalent_v4_claim_lineage",
+          "status": "NOT_COMPARABLE"
+        },
+        {
+          "field": "interview_focus",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "PASS",
+          "validator_reason": null
+        },
+        {
+          "field": "uncertainty",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "FAIL",
+          "validator_reason": "verification_modality_missing"
+        }
+      ],
+      "latency_seconds": 95.906,
+      "audit_latency_seconds": 41.109,
+      "ranking_unchanged": true
+    },
+    {
+      "scenario_id": "recommendation_b",
+      "scenario": "Recommendation Engineer",
+      "candidate": "B",
+      "candidate_id": "candidate_002",
+      "provider": "openai_compatible",
+      "model": "qwen3.7-flash-2026-07-15",
+      "http_status": 200,
+      "schema": "PASS",
+      "handle": "PASS",
+      "repair": 0,
+      "narrative": {
+        "candidate_id": "candidate_002",
+        "contract_version": "recruiter_proposition_generation_v1",
+        "decision_summary": {
+          "proposition_refs": [
+            "proposition:564266ee5056f411502608bd0fe8d7d2"
+          ],
+          "text": "该候选人在项目材料中明确展示了 Docker、FastAPI、PostgreSQL 和 Python 的技术栈，与岗位方向存在重叠。建议进行定向人工筛查以进一步评估匹配度。"
+        },
+        "interview_focus": [
+          {
+            "proposition_refs": [
+              "proposition:74325d07882c7459c7338f06c9931937"
+            ],
+            "text": "下一轮面试需重点核实候选人在 Docker、FastAPI、PostgreSQL 和 Python 相关项目中的具体职责范围。"
+          }
+        ],
+        "result_rank": 2,
+        "technical_signal": [
+          {
+            "proposition_refs": [
+              "proposition:05b324c23fd008d7f42a0e7910a1c7d9"
+            ],
+            "text": "候选人列出了 Docker 技能。"
+          },
+          {
+            "proposition_refs": [
+              "proposition:319430deb371acbbf4e26f5de36a9da4"
+            ],
+            "text": "候选人的项目材料中包含了 Docker、FastAPI、PostgreSQL 和 Python 等技术。"
+          }
+        ],
+        "uncertainty": [
+          {
+            "proposition_refs": [
+              "proposition:af2b380678f5226f1e6dc1f798c1294a"
+            ],
+            "text": "目前尚无法确认候选人在上述技术项目中的具体参与范围和贡献程度。"
+          }
+        ],
+        "why_consider": [
+          {
+            "proposition_refs": [
+              "proposition:768406594abf11f9a007d0138b36e512"
+            ],
+            "text": "候选人具备 Python 技术背景，且项目经历涉及 Docker、FastAPI、PostgreSQL 等关键技术，符合岗位相关方向。"
+          },
+          {
+            "proposition_refs": [
+              "proposition:564266ee5056f411502608bd0fe8d7d2"
+            ],
+            "text": "候选人在项目中使用了 Docker、FastAPI、PostgreSQL 和 Python 等技术栈。"
+          }
+        ]
+      },
+      "selected_handles": {
+        "decision_summary": [
+          [
+            "P03"
+          ]
+        ],
+        "interview_focus": [
+          [
+            "P04"
+          ]
+        ],
+        "technical_signal": [
+          [
+            "P01"
+          ],
+          [
+            "P02"
+          ]
+        ],
+        "uncertainty": [
+          [
+            "P06"
+          ]
+        ],
+        "why_consider": [
+          [
+            "P05"
+          ],
+          [
+            "P03"
+          ]
+        ]
+      },
+      "audit_http_status": 200,
+      "audit_schema": "PASS",
+      "semantic_audit": "FAIL",
+      "semantic_atom_count": 11,
+      "semantic_atoms": [
+        {
+          "atoms": [
+            {
+              "category": "project_technology",
+              "quote": "该候选人在项目材料中明确展示了 Docker、FastAPI、PostgreSQL 和 Python 的技术栈",
+              "review_strength": "none",
+              "topics": [
+                "Docker",
+                "FastAPI",
+                "PostgreSQL",
+                "Python"
+              ]
+            },
+            {
+              "category": "job_alignment",
+              "quote": "与岗位方向存在重叠",
+              "review_strength": "none",
+              "topics": []
+            },
+            {
+              "category": "human_review_action",
+              "quote": "建议进行定向人工筛查以进一步评估匹配度",
+              "review_strength": "conditional",
+              "topics": []
+            }
+          ],
+          "field": "decision_summary",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "candidate_deficiency",
+              "quote": "候选人具备 Python 技术背景",
+              "review_strength": "none",
+              "topics": [
+                "Python"
+              ]
+            },
+            {
+              "category": "project_technology",
+              "quote": "且项目经历涉及 Docker、FastAPI、PostgreSQL 等关键技术",
+              "review_strength": "none",
+              "topics": [
+                "Docker",
+                "FastAPI",
+                "PostgreSQL"
+              ]
+            },
+            {
+              "category": "job_alignment",
+              "quote": "符合岗位相关方向",
+              "review_strength": "none",
+              "topics": []
+            }
+          ],
+          "field": "why_consider",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "project_technology",
+              "quote": "候选人在项目中使用了 Docker、FastAPI、PostgreSQL 和 Python 等技术栈",
+              "review_strength": "none",
+              "topics": [
+                "Docker",
+                "FastAPI",
+                "PostgreSQL",
+                "Python"
+              ]
+            }
+          ],
+          "field": "why_consider",
+          "item_index": 1
+        },
+        {
+          "atoms": [
+            {
+              "category": "project_technology",
+              "quote": "候选人列出了 Docker 技能",
+              "review_strength": "none",
+              "topics": [
+                "Docker"
+              ]
+            }
+          ],
+          "field": "technical_signal",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "project_technology",
+              "quote": "候选人的项目材料中包含了 Docker、FastAPI、PostgreSQL 和 Python 等技术",
+              "review_strength": "none",
+              "topics": [
+                "Docker",
+                "FastAPI",
+                "PostgreSQL",
+                "Python"
+              ]
+            }
+          ],
+          "field": "technical_signal",
+          "item_index": 1
+        },
+        {
+          "atoms": [
+            {
+              "category": "interview_target",
+              "quote": "下一轮面试需重点核实候选人在 Docker、FastAPI、PostgreSQL 和 Python 相关项目中的具体职责范围",
+              "review_strength": "none",
+              "topics": [
+                "Docker",
+                "FastAPI",
+                "PostgreSQL",
+                "Python"
+              ]
+            }
+          ],
+          "field": "interview_focus",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "material_unknown",
+              "quote": "目前尚无法确认候选人在上述技术项目中的具体参与范围和贡献程度",
+              "review_strength": "none",
+              "topics": []
+            }
+          ],
+          "field": "uncertainty",
+          "item_index": 0
+        }
+      ],
+      "semantic_audit_issues": [
+        {
+          "code": "TECHNICAL_TOPIC_NOT_EXTRACTED",
+          "field": "decision_summary",
+          "item_index": 0,
+          "quote": "与岗位方向存在重叠"
+        },
+        {
+          "code": "UNSUPPORTED_SEMANTIC_CATEGORY",
+          "field": "why_consider",
+          "item_index": 0,
+          "quote": "候选人具备 Python 技术背景"
+        },
+        {
+          "code": "TECHNICAL_TOPIC_NOT_EXTRACTED",
+          "field": "why_consider",
+          "item_index": 0,
+          "quote": "符合岗位相关方向"
+        }
+      ],
+      "legacy_shadow": [
+        {
+          "field": "decision_summary",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "FAIL",
+          "validator_reason": "technical_concept_outside_claim_scope"
+        },
+        {
+          "field": "why_consider",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "FAIL",
+          "validator_reason": "technical_concept_outside_claim_scope"
+        },
+        {
+          "field": "why_consider",
+          "guard_reason": null,
+          "item_index": 1,
+          "status": "FAIL",
+          "validator_reason": "technical_concept_outside_claim_scope"
+        },
+        {
+          "field": "technical_signal",
+          "item_index": 0,
+          "reason": "no_equivalent_v4_claim_lineage",
+          "status": "NOT_COMPARABLE"
+        },
+        {
+          "field": "technical_signal",
+          "item_index": 1,
+          "reason": "no_equivalent_v4_claim_lineage",
+          "status": "NOT_COMPARABLE"
+        },
+        {
+          "field": "interview_focus",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "PASS",
+          "validator_reason": null
+        },
+        {
+          "field": "uncertainty",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "PASS",
+          "validator_reason": null
+        }
+      ],
+      "latency_seconds": 92.266,
+      "audit_latency_seconds": 45.625,
+      "ranking_unchanged": true
+    },
+    {
+      "scenario_id": "backend_a",
+      "scenario": "AI Backend Engineer",
+      "candidate": "A",
+      "candidate_id": "candidate_001",
+      "provider": "openai_compatible",
+      "model": "qwen3.7-flash-2026-07-15",
+      "http_status": 200,
+      "schema": "PASS",
+      "handle": "PASS",
+      "repair": 0,
+      "narrative": {
+        "candidate_id": "candidate_001",
+        "contract_version": "recruiter_proposition_generation_v1",
+        "decision_summary": {
+          "proposition_refs": [
+            "proposition:421a07aa80833f02f5b45193356d48ed"
+          ],
+          "text": "该候选人的项目经历与岗位方向高度契合，建议优先进行人工技术复核。"
+        },
+        "interview_focus": [
+          {
+            "proposition_refs": [
+              "proposition:5a75b0060610cd4565e4086804ae69c9"
+            ],
+            "text": "下一轮面试需重点确认其在 Docker、FastAPI、PostgreSQL 和 Python 项目中的具体职责范围与实施细节。"
+          }
+        ],
+        "result_rank": 1,
+        "technical_signal": [
+          {
+            "proposition_refs": [
+              "proposition:98f5cff49261d435b97618d95d6549f7",
+              "proposition:e534a047f11509ff9ef6c27bc1bcc266"
+            ],
+            "text": "候选人材料中列出了 Docker 技能，并在项目中展示了相关技术的应用。"
+          }
+        ],
+        "uncertainty": [
+          {
+            "proposition_refs": [
+              "proposition:1ed6b36c79a029f08406110ea413692e"
+            ],
+            "text": "目前尚无法确定候选人在涉及 Docker、FastAPI、PostgreSQL 和 Python 的项目中的具体工作范围是否已明确界定。"
+          }
+        ],
+        "why_consider": [
+          {
+            "proposition_refs": [
+              "proposition:368417203c13b3ba0a9ffe45a6f50cf0",
+              "proposition:981ecd9494501c62364df6eae39e96f6",
+              "proposition:a2e4bff06b65957a1b0fec061334d2f9"
+            ],
+            "text": "候选人在 Python、PostgreSQL 和 FastAPI 方面的背景与岗位要求存在重叠，具备相关的技术信号。"
+          },
+          {
+            "proposition_refs": [
+              "proposition:368417203c13b3ba0a9ffe45a6f50cf0",
+              "proposition:981ecd9494501c62364df6eae39e96f6",
+              "proposition:a2e4bff06b65957a1b0fec061334d2f9"
+            ],
+            "text": "其过往项目中明确使用了 Docker、FastAPI、PostgreSQL 和 Python 等技术栈，提供了具体的技术观察依据。"
+          }
+        ]
+      },
+      "selected_handles": {
+        "decision_summary": [
+          [
+            "P03"
+          ]
+        ],
+        "interview_focus": [
+          [
+            "P04"
+          ]
+        ],
+        "technical_signal": [
+          [
+            "P06",
+            "P08"
+          ]
+        ],
+        "uncertainty": [
+          [
+            "P01"
+          ]
+        ],
+        "why_consider": [
+          [
+            "P02",
+            "P05",
+            "P07"
+          ],
+          [
+            "P02",
+            "P05",
+            "P07"
+          ]
+        ]
+      },
+      "audit_http_status": 200,
+      "audit_schema": "PASS",
+      "semantic_audit": "FAIL",
+      "semantic_atom_count": 10,
+      "semantic_atoms": [
+        {
+          "atoms": [
+            {
+              "category": "strong_alignment",
+              "quote": "该候选人的项目经历与岗位方向高度契合",
+              "review_strength": "none",
+              "topics": []
+            },
+            {
+              "category": "human_review_action",
+              "quote": "建议优先进行人工技术复核",
+              "review_strength": "priority",
+              "topics": []
+            }
+          ],
+          "field": "decision_summary",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "job_alignment",
+              "quote": "候选人在 Python、PostgreSQL 和 FastAPI 方面的背景与岗位要求存在重叠",
+              "review_strength": "none",
+              "topics": [
+                "Python",
+                "PostgreSQL",
+                "FastAPI"
+              ]
+            },
+            {
+              "category": "other_assertion",
+              "quote": "具备相关的技术信号",
+              "review_strength": "none",
+              "topics": []
+            }
+          ],
+          "field": "why_consider",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "project_technology",
+              "quote": "其过往项目中明确使用了 Docker、FastAPI、PostgreSQL 和 Python 等技术栈",
+              "review_strength": "none",
+              "topics": [
+                "Docker",
+                "FastAPI",
+                "PostgreSQL",
+                "Python"
+              ]
+            },
+            {
+              "category": "other_assertion",
+              "quote": "提供了具体的技术观察依据",
+              "review_strength": "none",
+              "topics": []
+            }
+          ],
+          "field": "why_consider",
+          "item_index": 1
+        },
+        {
+          "atoms": [
+            {
+              "category": "project_technology",
+              "quote": "候选人材料中列出了 Docker 技能",
+              "review_strength": "none",
+              "topics": [
+                "Docker"
+              ]
+            },
+            {
+              "category": "project_technology",
+              "quote": "并在项目中展示了相关技术的应用",
+              "review_strength": "none",
+              "topics": [
+                "Docker"
+              ]
+            }
+          ],
+          "field": "technical_signal",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "interview_target",
+              "quote": "下一轮面试需重点确认其在 Docker、FastAPI、PostgreSQL 和 Python 项目中的具体职责范围与实施细节",
+              "review_strength": "none",
+              "topics": [
+                "Docker",
+                "FastAPI",
+                "PostgreSQL",
+                "Python"
+              ]
+            }
+          ],
+          "field": "interview_focus",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "material_unknown",
+              "quote": "目前尚无法确定候选人在涉及 Docker、FastAPI、PostgreSQL 和 Python 的项目中的具体工作范围是否已明确界定",
+              "review_strength": "none",
+              "topics": [
+                "Docker",
+                "FastAPI",
+                "PostgreSQL",
+                "Python"
+              ]
+            }
+          ],
+          "field": "uncertainty",
+          "item_index": 0
+        }
+      ],
+      "semantic_audit_issues": [
+        {
+          "code": "UNSUPPORTED_SEMANTIC_CATEGORY",
+          "field": "decision_summary",
+          "item_index": 0,
+          "quote": "该候选人的项目经历与岗位方向高度契合"
+        },
+        {
+          "code": "UNSUPPORTED_SEMANTIC_CATEGORY",
+          "field": "why_consider",
+          "item_index": 0,
+          "quote": "具备相关的技术信号"
+        },
+        {
+          "code": "UNSUPPORTED_SEMANTIC_CATEGORY",
+          "field": "why_consider",
+          "item_index": 1,
+          "quote": "提供了具体的技术观察依据"
+        },
+        {
+          "code": "TOPIC_NOT_IN_QUOTE",
+          "field": "technical_signal",
+          "item_index": 0,
+          "quote": "并在项目中展示了相关技术的应用"
+        }
+      ],
+      "legacy_shadow": [
+        {
+          "field": "decision_summary",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "PASS",
+          "validator_reason": null
+        },
+        {
+          "field": "why_consider",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "PASS",
+          "validator_reason": null
+        },
+        {
+          "field": "why_consider",
+          "guard_reason": null,
+          "item_index": 1,
+          "status": "FAIL",
+          "validator_reason": "technical_concept_outside_claim_scope"
+        },
+        {
+          "field": "technical_signal",
+          "item_index": 0,
+          "reason": "no_equivalent_v4_claim_lineage",
+          "status": "NOT_COMPARABLE"
+        },
+        {
+          "field": "interview_focus",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "PASS",
+          "validator_reason": null
+        },
+        {
+          "field": "uncertainty",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "FAIL",
+          "validator_reason": "verification_modality_missing"
+        }
+      ],
+      "latency_seconds": 110.063,
+      "audit_latency_seconds": 47.735,
+      "ranking_unchanged": true
+    },
+    {
+      "scenario_id": "backend_b",
+      "scenario": "AI Backend Engineer",
+      "candidate": "B",
+      "candidate_id": "candidate_002",
+      "provider": "openai_compatible",
+      "model": "qwen3.7-flash-2026-07-15",
+      "http_status": 200,
+      "schema": "PASS",
+      "handle": "PASS",
+      "repair": 0,
+      "narrative": {
+        "candidate_id": "candidate_002",
+        "contract_version": "recruiter_proposition_generation_v1",
+        "decision_summary": {
+          "proposition_refs": [
+            "proposition:9f4eacd2a085a6dbbac44f71dd924d60"
+          ],
+          "text": "该候选人的材料明确列出了 Python、Qdrant、RAG 及向量数据库等技术栈，与 AI Backend Engineer 岗位的核心需求高度重合。鉴于技术方向匹配度高，建议优先安排人工技术复核以深入评估其工程落地能力。"
+        },
+        "interview_focus": [
+          {
+            "proposition_refs": [
+              "proposition:440dcf2a873b026129910412abd028be"
+            ],
+            "text": "下一轮面试需重点确认候选人在实际项目中对 Python、Qdrant、RAG 及向量数据库的具体应用范围和技术深度，以验证其技术细节的真实性。"
+          }
+        ],
+        "result_rank": 2,
+        "technical_signal": [
+          {
+            "proposition_refs": [
+              "proposition:aeecf10089e2402b888094f2a74b92ea",
+              "proposition:cbc4f5134c70d99ab8eda944cbce3957"
+            ],
+            "text": "材料中清晰罗列了 Python 作为主要编程语言，并在项目中使用了 Qdrant 和向量数据库来支持 RAG 架构，显示出对当前 AI 后端主流技术栈的熟悉度。"
+          }
+        ],
+        "uncertainty": [
+          {
+            "proposition_refs": [
+              "proposition:457a7459fdb2aa7388ffa1e2de2ad52f"
+            ],
+            "text": "目前尚无法从现有材料中确切评估候选人在上述技术栈中的具体项目规模、职责边界及最终产出效果，这些关键信息有待进一步核实。"
+          }
+        ],
+        "why_consider": [
+          {
+            "proposition_refs": [
+              "proposition:63f5b914e4c6051903119a4830f0c13c",
+              "proposition:9f4eacd2a085a6dbbac44f71dd924d60"
+            ],
+            "text": "候选人简历中明确提及掌握 Python 语言，且项目经验中涉及 RAG（检索增强生成）相关技术，这与岗位对 Python 及 RAG 能力的要求直接对应。"
+          }
+        ]
+      },
+      "selected_handles": {
+        "decision_summary": [
+          [
+            "P06"
+          ]
+        ],
+        "interview_focus": [
+          [
+            "P02"
+          ]
+        ],
+        "technical_signal": [
+          [
+            "P07",
+            "P08"
+          ]
+        ],
+        "uncertainty": [
+          [
+            "P03"
+          ]
+        ],
+        "why_consider": [
+          [
+            "P05",
+            "P06"
+          ]
+        ]
+      },
+      "audit_http_status": 200,
+      "audit_schema": "PASS",
+      "semantic_audit": "FAIL",
+      "semantic_atom_count": 14,
+      "semantic_atoms": [
+        {
+          "atoms": [
+            {
+              "category": "project_technology",
+              "quote": "该候选人的材料明确列出了 Python、Qdrant、RAG 及向量数据库等技术栈",
+              "review_strength": "none",
+              "topics": [
+                "Python",
+                "Qdrant",
+                "RAG",
+                "向量数据库"
+              ]
+            },
+            {
+              "category": "strong_alignment",
+              "quote": "与 AI Backend Engineer 岗位的核心需求高度重合",
+              "review_strength": "none",
+              "topics": []
+            },
+            {
+              "category": "human_review_action",
+              "quote": "建议优先安排人工技术复核以深入评估其工程落地能力",
+              "review_strength": "priority",
+              "topics": []
+            }
+          ],
+          "field": "decision_summary",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "project_technology",
+              "quote": "候选人简历中明确提及掌握 Python 语言",
+              "review_strength": "none",
+              "topics": [
+                "Python"
+              ]
+            },
+            {
+              "category": "project_technology",
+              "quote": "且项目经验中涉及 RAG（检索增强生成）相关技术",
+              "review_strength": "none",
+              "topics": [
+                "RAG"
+              ]
+            },
+            {
+              "category": "strong_alignment",
+              "quote": "这与岗位对 Python 及 RAG 能力的要求直接对应",
+              "review_strength": "none",
+              "topics": [
+                "Python",
+                "RAG"
+              ]
+            }
+          ],
+          "field": "why_consider",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "project_technology",
+              "quote": "材料中清晰罗列了 Python 作为主要编程语言",
+              "review_strength": "none",
+              "topics": [
+                "Python"
+              ]
+            },
+            {
+              "category": "project_technology",
+              "quote": "并在项目中使用了 Qdrant 和向量数据库来支持 RAG 架构",
+              "review_strength": "none",
+              "topics": [
+                "Qdrant",
+                "向量数据库",
+                "RAG"
+              ]
+            },
+            {
+              "category": "other_assertion",
+              "quote": "显示出对当前 AI 后端主流技术栈的熟悉度",
+              "review_strength": "none",
+              "topics": []
+            }
+          ],
+          "field": "technical_signal",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "interview_target",
+              "quote": "下一轮面试需重点确认候选人在实际项目中对 Python、Qdrant、RAG 及向量数据库的具体应用范围和技术深度",
+              "review_strength": "none",
+              "topics": [
+                "Python",
+                "Qdrant",
+                "RAG",
+                "向量数据库"
+              ]
+            },
+            {
+              "category": "interview_target",
+              "quote": "以验证其技术细节的真实性",
+              "review_strength": "none",
+              "topics": []
+            }
+          ],
+          "field": "interview_focus",
+          "item_index": 0
+        },
+        {
+          "atoms": [
+            {
+              "category": "material_unknown",
+              "quote": "目前尚无法从现有材料中确切评估候选人在上述技术栈中的具体项目规模",
+              "review_strength": "none",
+              "topics": []
+            },
+            {
+              "category": "material_unknown",
+              "quote": "职责边界及最终产出效果",
+              "review_strength": "none",
+              "topics": []
+            },
+            {
+              "category": "material_unknown",
+              "quote": "这些关键信息有待进一步核实",
+              "review_strength": "none",
+              "topics": []
+            }
+          ],
+          "field": "uncertainty",
+          "item_index": 0
+        }
+      ],
+      "semantic_audit_issues": [
+        {
+          "code": "UNSUPPORTED_SEMANTIC_CATEGORY",
+          "field": "decision_summary",
+          "item_index": 0,
+          "quote": "与 AI Backend Engineer 岗位的核心需求高度重合"
+        },
+        {
+          "code": "UNEXTRACTED_SEMANTIC_TEXT",
+          "field": "decision_summary",
+          "item_index": 0,
+          "quote": ""
+        },
+        {
+          "code": "UNSUPPORTED_SEMANTIC_CATEGORY",
+          "field": "why_consider",
+          "item_index": 0,
+          "quote": "这与岗位对 Python 及 RAG 能力的要求直接对应"
+        },
+        {
+          "code": "UNSUPPORTED_SEMANTIC_CATEGORY",
+          "field": "technical_signal",
+          "item_index": 0,
+          "quote": "显示出对当前 AI 后端主流技术栈的熟悉度"
+        }
+      ],
+      "legacy_shadow": [
+        {
+          "field": "decision_summary",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "FAIL",
+          "validator_reason": "technical_concept_outside_claim_scope"
+        },
+        {
+          "field": "why_consider",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "FAIL",
+          "validator_reason": "unsupported_ability_conclusion"
+        },
+        {
+          "field": "technical_signal",
+          "item_index": 0,
+          "reason": "no_equivalent_v4_claim_lineage",
+          "status": "NOT_COMPARABLE"
+        },
+        {
+          "field": "interview_focus",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "PASS",
+          "validator_reason": null
+        },
+        {
+          "field": "uncertainty",
+          "guard_reason": null,
+          "item_index": 0,
+          "status": "FAIL",
+          "validator_reason": "technical_concept_outside_claim_scope"
+        }
+      ],
+      "latency_seconds": 91.469,
+      "audit_latency_seconds": 42.812,
+      "ranking_unchanged": true
+    }
+  ]
+}

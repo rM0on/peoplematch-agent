@@ -835,13 +835,20 @@
     justify-content:stretch
   }
   .navGroup {
-    width:100%;
     display:grid;
-    grid-template-columns:1fr 1fr
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    width:100%;
+    gap:2px
   }
   .navItem {
     min-width:0;
-    justify-content:center
+    justify-content:center;
+    white-space:nowrap;
+    font-size:11px;
+    padding:0 5px
+  }
+  .sidebarNav {
+    overflow-x:visible
   }
   .hero,.jobBar,.storyHeader,.sectionTitle,.inputFooter,.resultHeader,.scoreHeader {
     align-items:stretch;
