@@ -22,6 +22,12 @@ Phase 15 冻结时的 live-provider smoke 状态为 `NOT RUN — LOCAL PROVIDER 
 
 ## 8–10 分钟技术演示
 
+### V5 要求核实工作台（只读扩展）
+
+在已有、可信的 synthetic MatchRun 中选定候选人，点击“逐项核实岗位核心要求”，进入 `/requirement-review?runId=<MatchRun ID>&explanationId=<Explanation ID>`。先看 must-have、Unknown 和下一步人工核实；展开一条来源，说明它是历史 Evidence Bundle 的元数据，不是可变当前档案或原始简历。切换候选人时，必须从对应 Explanation 重新进入。若服务端返回额外、缺失或跨候选来源，页面应拒绝建立可信视图，即使 HTTP 状态为 200。
+
+这个页面只读；不会触发 Provider 或 Ranking。历史 Fresh Top-3 的保存记录与 2026-10-18 独立 seeded PostgreSQL 的新 synthetic fixture 是两个不同验证对象。普通 fresh clone 不能自动恢复前者；按 [V5 复现层级](v5-reproduction-guide.md) 判断能演示到哪一步。不要将只运行 Vitest 或 synthetic HTTP fixture 说成数据库跨模块验证。
+
 ### 1. 输入与结构化
 
 - 说明 mock 模式确保测试与 E2E 可复现；Real mode 让 extraction/explanation 两个独立任务 adapter 共享 OpenAI-compatible transport。

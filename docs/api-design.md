@@ -211,6 +211,14 @@ The response contains durable run/request identities, lifecycle timestamps, work
 
 A valid missing-Job request creates a FAILED run and returns `match_run_execution_failed` with `run_id` and the safe failure code. Other ranking/CE failures are retained the same way. Referenced mutable profiles return `profile_history_conflict` on deletion. There is no update, delete, retry, replay, result-detail, or explanation endpoint in Phase 8.
 
+## V5 Requirement Review GET (read-only)
+
+`GET /api/v1/match-explanations/{match_explanation_id}/requirement-review` projects one already-persisted explanation into `RequirementReviewV1`. The route is wired through `backend/app/api/router.py` and uses the canonical persisted Evidence Bundle plus `RecruiterPropositionService`; it does not run retrieval, ranking or a Provider. A valid result identifies its MatchRun, Candidate, result rank, Explanation and ranking fingerprint, and lists job requirements in the historical Job snapshot order. `not_assessed` / `Unknown` means the displayed evidence does not establish that requirement; it is not a negative candidate judgment.
+
+The service rejects missing or mismatched identities, incorrect Job Requirement references, foreign-candidate evidence and invalid source ownership. Source descriptors are **closed** over the propositions actually delivered to this view: all used references must be present, and unused candidate descriptors are not supplied. Missing explanation returns the existing 404 envelope; invalid historical contract returns 409. The typed frontend client independently checks the same identity and source-closure conditions and withholds the trusted page even if HTTP returned 200. The UI is at `/requirement-review?runId=<run>&explanationId=<id>` after selecting a saved candidate in Recruiter View.
+
+For exact schema and rejection cases inspect `backend/app/schemas/requirement_review.py`, `backend/tests/test_requirement_review_workbench.py`, `frontend/src/lib/requirement-review.ts`, and `frontend/src/lib/requirement-review.test.ts`. Synthetic HTTP UI tests and the saved 2026-10-18 disposable PostgreSQL audit are different validation tiers; see [V5 reproduction](v5-reproduction-guide.md). This endpoint never updates a MatchRun, ExplanationRun or ranking fingerprint.
+
 ## Frozen Mutation Policy
 
 Records imported from frozen dataset `1.0.0` are read-only through mutation APIs. PATCH or DELETE returns HTTP 409 with error code `frozen_record`. This prevents API activity from silently changing the fixed evaluation fixture. API-created records remain mutable and deletable.

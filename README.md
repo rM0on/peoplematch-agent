@@ -8,11 +8,23 @@
 
 **LLM understands. Retrieval finds. LambdaMART ranks. Evidence keeps explanations grounded.**
 
-[Portfolio PDF](docs/portfolio/PeopleMatch-Agent-Portfolio.pdf) · [Demo Guide](docs/demo-guide.md) · [系统架构](docs/portfolio/architecture.md) · [离线评估](docs/offline-evaluation.md) · [本地运行](#本地运行)
+[V5 工作台](#v5-岗位要求核实工作台) · [Public Portfolio](docs/portfolio/v5/PeopleMatch-AI-Native-Engineer-Public-Portfolio.pdf) · [Executive Brief](docs/portfolio/v5/PeopleMatch-AI-Native-Engineer-Public-Executive-Brief.pdf) · [演示指南](docs/demo-guide.md) · [复现层级](docs/v5-reproduction-guide.md)
 
 ![Fresh Top-3 Recruiter View：复核动作、证据信号与核心未知](docs/images/portfolio-final/01-recruiter-view.png)
 
 > 当前状态：完整本地 AI Application Prototype。默认 deterministic mock 便于复现；同时支持 OpenAI-compatible Provider。项目不声称已形成生产 SaaS、真实用户规模或线上招聘效果。
+
+## V5 岗位要求核实工作台
+
+这份源码修订包含只读的 Requirement Review Workbench：招聘人员从已保存的 MatchRun / Explanation 进入，逐项查看 must-have、nice-to-have、候选材料线索、尚待核实的 Unknown 和历史来源元数据。它帮助人决定**下一步核实什么**，不重新排序、不调用 Provider，也不把“没有证据”写成“候选人没有能力”。
+
+![V5 Requirement Review：独立 synthetic PostgreSQL 回读的真实浏览器画面](docs/images/requirement-review-v5.png)
+
+后端按历史 Evidence Bundle 与结构化 Proposition 构建投影；`GET /api/v1/match-explanations/{id}/requirement-review` 只返回实际展示命题所使用的候选来源。客户端还会核对 Run、Candidate、Rank、Explanation、指纹和来源闭包：**HTTP 200 可以与可信页面拒绝展示同时成立**。该页面使用的截图来自本地隔离 synthetic 数据库，不是生产招聘记录；[截图来源与验证范围](docs/release/v5-publication/engineering-case.md)。
+
+V5 的关键工程案例是“任务契约 → 后端/前端实现 → 独立代码审查 → 来源归属与闭包修复 → 测试、持久化回读和浏览器验收”。真实 Mission、源码、拒绝性测试和审查结论的入口见 [AI-Native 工程案例](docs/release/v5-publication/engineering-case.md)。代表性 Codex 指令若出现，均标为基于产物的复盘，不是恢复的逐字历史聊天。公开版 [Evidence Pack](docs/portfolio/v5/PeopleMatch-AI-Native-Engineering-Evidence-Pack.zip) 只包含审查过的精选材料，不是数据库转储或完整开发工作区。
+
+复现分三级：[A / 源码与定向测试，B / 独立 synthetic V5 演示，C / 历史 Fresh Trusted Run](docs/v5-reproduction-guide.md)。A、B 的成功不等于历史 Qwen Top-3 重新执行；C 需要对应持久化数据与模型 artifact，普通 clone 不自动恢复。V5 仍是本地原型，未宣称生产招聘效果。
 
 受控 synthetic Fresh Top-3 验证了真实 Provider Extraction / Semantic Selection、3/3 grounded Explanation 与 3/3 canonical RecruiterProposition，并核对了候选隔离、持久化回读和排序不变量；这是本地端到端验证，不是生产招聘效果。自由 Recruiter Narrative 仍为 **Experimental / Requires Human Review**。
 
@@ -30,7 +42,7 @@
 
 ### 1. 招聘筛查：先看谁值得复核、还缺什么证据
 
-默认视图读取已持久化的 synthetic Fresh Top-3：复核动作、关键技术信号、核心未知和首要核实目标来自 MatchRun、Evidence 与结构化 RecruiterProposition。它不是自动录用建议。新的 JD 可从 `/workbench` 输入；默认 deterministic Mock Mode 便于复现，配置 OpenAI-compatible Provider 后可运行真实结构化任务。
+在保存了历史 synthetic Fresh Top-3 的本地演示环境中，Recruiter View 读取已持久化的 MatchRun、Evidence 与结构化 RecruiterProposition，展示复核动作、技术信号、未知和核实目标；普通 fresh clone 不自动拥有这条历史 Run。它不是自动录用建议。新的 JD 可从 `/workbench` 输入；deterministic Mock Mode 仅适用于注册的 synthetic fixture，配置 OpenAI-compatible Provider 后可运行结构化任务。
 
 这张首页截图即上方的 Recruiter View Hero；不会为了展示页面而重新运行 Ranking 或 Provider。
 

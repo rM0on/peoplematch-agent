@@ -16,6 +16,7 @@ from app.api.routes.recruiter_narratives import router as recruiter_narratives_r
 from app.api.routes.recruiter_narratives_v2 import router as recruiter_narratives_v2_router
 from app.api.routes.recruiter_narratives_v2_1 import router as recruiter_narratives_v2_1_router
 from app.api.routes.recruiter_propositions import router as recruiter_propositions_router
+from app.api.routes.requirement_reviews import router as requirement_reviews_router
 from app.core.config import get_settings
 
 
@@ -36,3 +37,4 @@ api_router.include_router(recruiter_narratives_router, prefix=get_settings().api
 api_router.include_router(recruiter_narratives_v2_router, prefix=get_settings().api_v1_prefix)
 api_router.include_router(recruiter_narratives_v2_1_router, prefix=get_settings().api_v1_prefix)
 api_router.include_router(recruiter_propositions_router, prefix=get_settings().api_v1_prefix)
+api_router.include_router(requirement_reviews_router, prefix=get_settings().api_v1_prefix)

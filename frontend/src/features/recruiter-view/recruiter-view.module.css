@@ -41,3 +41,4 @@
 .layout:has(.engineering[open]) .shortlist,.layout:has(.engineering[open]) .priorityUnknown,.layout:has(.engineering[open]) .briefGrid{display:none}
 .layout:has(.engineering[open]) .detail{padding-bottom:26px}
 @media(max-width:570px){.shortlist{flex-direction:column;overflow-x:visible;gap:2px}.candidate,.activeCandidate{min-width:0;width:100%;padding:11px 13px}.candidateMain{grid-template-columns:minmax(0,1fr) auto;column-gap:10px}.candidateMain strong,.candidateMain small{grid-column:1}.candidateMain .action{grid-column:2;grid-row:1 / span 2;align-self:center}.cardUnknown{grid-column:1/-1}}
+.requirementLink{display:inline-block;margin-top:25px;padding:12px 17px;border-radius:8px;background:#174e3d;color:#fff;text-decoration:none;font-size:13px;font-weight:800}.requirementLink:hover{background:#0b3d2f}
