@@ -1,6 +1,7 @@
 import { cleanup, render, screen, fireEvent } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { RequirementReviewScreen } from "./requirement-review-screen";
+import { isRequirementReview } from "@/lib/requirement-review";
 
 vi.mock("next/navigation", () => ({ useSearchParams: () => new URLSearchParams(window.location.search) }));
 
@@ -18,7 +19,7 @@ const sampleReview = { contract_version: "requirement_review_v1", role_title: "A
   source_descriptors: [{ evidence_ref: "candidate:1:project:p1", source_kind: "historical_project", description: "历史项目 p1 · 技术栈 Python、FastAPI" }],
   cross_requirement_propositions: [], requirements: [{ requirement_id: "req-python", priority: "must_have", text: "Python",
     diagnostic_status: "matched", evidence_status: "available", source_refs: ["job_requirement:req-python"],
-    propositions: [{ proposition_id: "prop-12345678", candidate_id: "cand-1", result_rank: 1, kind: "technical_alignment", subject: "candidate_material", predicate: "overlaps_job_requirement", modality: "alignment", polarity: "affirmative", topic_terms: ["Python"], job_requirement_terms: ["Python"], source_fact_ids: ["fact-1"], source_claim_ids: [], allowed_fields: ["why_consider"], evidence_refs: ["candidate:1:project:p1", "job_requirement:req-python"], job_requirement_refs: ["job_requirement:req-python"] }] },
+    propositions: [{ proposition_id: "prop-12345678", candidate_id: "cand-1", result_rank: 1, kind: "technical_alignment", subject: "candidate_material", predicate: "overlaps_job_requirement", modality: "alignment", polarity: "affirmative", topic_terms: ["Python"], job_requirement_terms: ["Python"], source_fact_ids: ["fact-1"], source_claim_ids: [], allowed_fields: ["why_consider", "technical_signal"], evidence_refs: ["candidate:1:project:p1", "job_requirement:req-python"], job_requirement_refs: ["job_requirement:req-python"] }] },
     { requirement_id: "req-search", priority: "must_have", text: "Search systems", diagnostic_status: "not_assessed", evidence_status: "not_assessed", source_refs: ["job_requirement:req-search"], propositions: [] }] };
 
 beforeEach(() => { window.history.replaceState(null, "", "/requirement-review?runId=run-1&explanationId=42"); mocks.loadRun.mockResolvedValue(sampleRun); mocks.loadReview.mockResolvedValue(sampleReview); });
@@ -64,5 +65,46 @@ describe("Requirement Review Workbench", () => {
     expect(await screen.findByText("Second requirement")).toBeTruthy();
     expect(screen.queryByText("Search systems")).toBeNull();
     expect(screen.getByText(/Second role/)).toBeTruthy();
+  });
+  it("lets a reviewer inspect historical candidate sources for cross-requirement leads", async () => {
+    const aggregate = {
+      ...sampleReview.requirements[0].propositions[0],
+      proposition_id: "prop-aggregate-1",
+      evidence_refs: ["candidate:1:project:p1", "job_requirement:req-python", "job_requirement:req-search"],
+      job_requirement_refs: ["job_requirement:req-python", "job_requirement:req-search"],
+    };
+    const aggregateReview = {
+      ...sampleReview,
+      cross_requirement_propositions: [aggregate],
+      requirements: sampleReview.requirements.map((item) => ({ ...item, propositions: [] })),
+    };
+    expect(isRequirementReview(aggregateReview)).toBe(true);
+    mocks.loadReview.mockResolvedValue(aggregateReview);
+    render(<RequirementReviewScreen />);
+    expect(await screen.findByText("跨要求线索")).toBeTruthy();
+    fireEvent.click(screen.getByText("查看跨要求来源元数据"));
+    expect(screen.getByText(/历史项目 p1 · 技术栈 Python、FastAPI/)).toBeTruthy();
+    expect(screen.getByText(/candidate:1:project:p1/)).toBeTruthy();
+    expect(document.body.textContent).toContain("不作为任何单项要求的证明");
+  });
+  it("recovers a previously failed query after another query and a successful retry", async () => {
+    const secondRun = { ...sampleRun,
+      explanationRun: { ...sampleRun.explanationRun, explanations: [{ match_explanation_id: 43, candidate_id: "cand-1", result_rank: 1 }] },
+      briefs: [{ ...sampleRun.briefs[0], source_explanation_id: 43 }],
+    };
+    mocks.loadReview.mockRejectedValueOnce(new Error("temporary failure"))
+      .mockResolvedValueOnce({ ...sampleReview, source_explanation_id: 43,
+        requirements: [{ ...sampleReview.requirements[1], text: "Second requirement" }], source_descriptors: [] })
+      .mockResolvedValueOnce(sampleReview);
+    mocks.loadRun.mockResolvedValueOnce(secondRun).mockResolvedValueOnce(sampleRun);
+    const view = render(<RequirementReviewScreen />);
+    expect(await screen.findByRole("alert")).toBeTruthy();
+    window.history.pushState(null, "", "/requirement-review?runId=run-1&explanationId=43");
+    view.rerender(<RequirementReviewScreen />);
+    expect(await screen.findByText("Second requirement")).toBeTruthy();
+    window.history.pushState(null, "", "/requirement-review?runId=run-1&explanationId=42");
+    view.rerender(<RequirementReviewScreen />);
+    expect(await screen.findByText("Search systems")).toBeTruthy();
+    expect(screen.queryByRole("alert")).toBeNull();
   });
 });

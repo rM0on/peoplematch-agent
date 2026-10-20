@@ -42,7 +42,7 @@ export function RequirementReviewScreen() {
     let cancelled = false;
     loadRequirementReview(explanationId)
       .then(async (review) => ({ review, run: await loadTrustedRecruiterRun(runId, review.explanation_run_id) }))
-      .then(({ run, review }) => { if (!cancelled) setValue({ key: requestKey, run, review: assertRequirementReviewOwnership(review, run) }); })
+      .then(({ run, review }) => { if (!cancelled) { setValue({ key: requestKey, run, review: assertRequirementReviewOwnership(review, run) }); setFailedKey(null); } })
       .catch(() => { if (!cancelled) setFailedKey(requestKey); });
     return () => { cancelled = true; };
   }, [runId, explanationId, valid, requestKey]);
@@ -73,7 +73,7 @@ export function RequirementReviewScreen() {
                   : "当前精选解释没有针对该要求的单项来源；请人工继续核实。"}</p>}
               </article>)}</div></section> : null;
           })}
-        </div><aside className={styles.guide}><span>HOW TO READ</span><h2>有来源，才谈判断。</h2><p>诊断状态与精选解释是两条不同的线索：诊断可能发现材料关联，却未被选入本次解释。这里展示历史 Evidence Bundle 元数据，并非原始文档。任何线索都不等于技能已证实。</p><div><strong>跨要求线索</strong><p>以下命题同时指向多个要求，不作为任何单项要求的证明。</p>{review.cross_requirement_propositions.map((item) => <p key={item.proposition_id} className={styles.aggregate}>{propositionLabel(item)}<br/><small>{item.job_requirement_refs.join(" · ")}</small></p>)}</div><div><strong>人工复核路径</strong><ol><li>查看历史来源元数据，确认材料与要求的关联</li><li>对 Unknown 提出定向核实问题</li><li>保留未证实事项，不升级为招聘结论</li></ol></div><small>Source · Explanation #{review.source_explanation_id} / Ranking fingerprint {review.ranking_fingerprint.slice(0,12)}…</small></aside></div>
+        </div><aside className={styles.guide}><span>HOW TO READ</span><h2>有来源，才谈判断。</h2><p>诊断状态与精选解释是两条不同的线索：诊断可能发现材料关联，却未被选入本次解释。这里展示历史 Evidence Bundle 元数据，并非原始文档。任何线索都不等于技能已证实。</p><div><strong>跨要求线索</strong><p>以下命题同时指向多个要求，不作为任何单项要求的证明。</p>{review.cross_requirement_propositions.map((item) => <article key={item.proposition_id} className={styles.aggregate}><p>{propositionLabel(item)}</p><p>{item.job_requirement_refs.join(" · ")}</p><details><summary>查看跨要求来源元数据</summary><ul>{item.evidence_refs.map((ref) => <li key={ref}>{evidenceLabel(ref, review)}<br/><code>{ref}</code></li>)}</ul></details></article>)}</div><div><strong>人工复核路径</strong><ol><li>查看历史来源元数据，确认材料与要求的关联</li><li>对 Unknown 提出定向核实问题</li><li>保留未证实事项，不升级为招聘结论</li></ol></div><small>Source · Explanation #{review.source_explanation_id} / Ranking fingerprint {review.ranking_fingerprint.slice(0,12)}…</small></aside></div>
         <footer className={styles.footer}>Local synthetic prototype · Read-only projection of canonical persisted sources · Qwen 不负责排序，本页不调用 Provider。</footer>
       </>}
     </div></main>

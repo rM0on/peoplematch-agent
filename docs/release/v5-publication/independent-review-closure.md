@@ -23,7 +23,7 @@ The V5 URL contains a saved explanation ID, but the old client loaded only the l
 The post-fix independent review found that `candidate:1:project:` with an empty project ID and a matching descriptor was still accepted from an HTTP-200 response. The V5 response Schema had a prefix-only pattern. Normal backend generation gets IDs from the historical Evidence Builder, but an external response validator should reject malformed IDs itself.
 
 - **RED:** new backend Schema regression exited 1 (`Failed: DID NOT RAISE`), and the frontend Vitest case failed `expected true to be false` for that exact source. A runtime probe of the preserved old source confirmed acceptance.
-- **Fix:** response Schema now uses full-match validation against the Evidence Builder's bounded historical ID grammar. Frontend candidate evidence and descriptors use the same rank, 64-character skill digest or bounded project/project-record ID grammar. No Evidence Builder, Ranking or Grounding code changed.
+- **Initial fix:** response Schema used full-match validation against the Evidence Builder's bounded historical ID grammar. The first frontend guard used rank plus a 64-character skill digest or bounded project/project-record ID grammar; the later independent correction below supersedes that first guard. No Evidence Builder, Ranking or Grounding code changed.
 - **GREEN:** backend V5 10/10 and related backend 117/117; frontend focused 3/3 and full 104/104. Existing canonical projection fixtures still pass.
 
 A final independent pass then compared this new guard with the existing Phase 9 `EvidenceId` contract. It found that the first guard rejected a legitimate 32-character skill digest and accepted a project suffix containing `:`. New backend and frontend tests both failed before the correction. The backend descriptor now reuses the canonical Phase 9 patterns; the client mirrors their 32–64 lowercase-hex skill digest and colon-free project ID grammar. The same focused tests then passed, followed by 117/117 backend, 104/104 frontend, TypeScript, ESLint and the default Turbopack production build. This alignment changes only the V5 read/projection contract, not the historical Evidence Builder.
@@ -33,7 +33,7 @@ A final independent pass then compared this new guard with the existing Phase 9 
 | Check | Current candidate result | Boundary |
 |---|---|---|
 | Backend focused tests | 117 passed, 0 failed/skipped; JUnit in local release audit | No current PostgreSQL service used |
-| Frontend Vitest | 104 passed, 0 failed/skipped; JUnit in local release audit | Includes the new historical-run regression |
+| Frontend Vitest | Initial committed candidate: 104 passed; later local pre-push UI patch: 106 passed, 0 failed/skipped; JUnit in local release audit | Two new UI regressions are not part of the original commit |
 | TypeScript / ESLint | Exit 0 each | Isolated worktree with `npm ci` dependencies |
 | Default production build | Next.js 16.3.0 Turbopack exit 0; `/requirement-review` generated | The earlier junction snapshot failure is a different environment |
 | Synthetic production-page browser | 1440px and 390px history and malformed-source paths passed | HTTP fixture, not independent PostgreSQL |
@@ -42,3 +42,14 @@ A final independent pass then compared this new guard with the existing Phase 9 
 | Qwen / Ranking / historical Fresh Top-3 | **NOT RERUN** | Frozen evidence only |
 
 No frozen Ranking, Grounding, MatchRun or historical database content was modified by these corrections. A local release-candidate commit does not itself publish any V5 file; remote publication requires explicit user approval.
+
+## Later pre-push UI review · 2026-10-20
+
+An independent read-only review found that cross-requirement propositions already carried historical candidate source descriptors in the validated API response, but the separate aggregate panel showed only proposition text and job references. A second, lower-severity state bug kept a previously failed query in the error view after the same query later loaded successfully. Both findings concern presentation; neither changes ranking, persisted evidence, API schemas or the rule that aggregate propositions are not single-requirement proof.
+
+- **RED:** two new component tests failed against the unmodified screen: the aggregate panel had no candidate-source expansion, and an A→B→A recovery sequence stayed in the error state. The first Vitest attempt was denied before execution by the local approval system and is not counted as RED. A later approved Vitest run produced the actual two failures.
+- **Fix:** the separate aggregate panel now expands `evidence_refs` through the same validated historical descriptor catalog used by single-requirement rows. A successful ownership-checked fetch clears the matching prior error state. The aggregate test fixture now passes the real `isRequirementReview` contract check; it does not substitute for an API/database integration test.
+- **GREEN:** the focused component suite passed 5/5, then full frontend Vitest passed 106/106 with zero failures/skips. TypeScript, ESLint and the default Next.js 16.3.0 Turbopack build exited 0. In a synthetic HTTP fixture backed by the actual V5 projection service, production Next.js plus Playwright verified aggregate source expansion, historical-link selection, candidate switch, no horizontal overflow and no page error at 1440px and 390px. A separate HTTP-200 malformed-source fixture was still rejected at both sizes. This was not a PostgreSQL rerun.
+- **Independent re-review:** the UI still keeps aggregate propositions outside individual requirement rows, reads only the validated review descriptor catalog and clears failure state after ownership verification. No new blocking code finding was reported. The reviewer initially noted that the mocked aggregate fixture had not been checked against the real validator; that test-quality gap was corrected before the final 106-test run.
+
+This addendum describes local pre-push work after the original candidate commit. The original candidate SHA alone does not contain this UI correction; verify the separate fix commit in the release branch before citing it. The user authorized the existing Git author identity for the local fix commit. Remote publication still requires separate explicit approval.
