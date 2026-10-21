@@ -109,16 +109,21 @@ async function getBrief(explanationId: number): Promise<StructuredRecruiterBrief
   return readApi(`/api/v1/match-explanations/${explanationId}/recruiter-propositions`, isBrief);
 }
 
-export async function loadTrustedRecruiterRun(runId: string): Promise<TrustedRecruiterRun> {
+export async function loadTrustedRecruiterRun(runId: string, explanationRunId?: string): Promise<TrustedRecruiterRun> {
   const matchRun = (await getMatchRun(runId)).data;
   if (matchRun.status !== "COMPLETED" || !matchRun.job_id || !/^[a-f0-9]{64}$/.test(String(matchRun.result_fingerprint))) {
     throw new Error("MatchRun 尚未完成或缺少排序指纹。");
   }
-  const histories = (await listExplanationRuns(runId)).data;
-  const complete = histories.items.filter((item) => item.status === "COMPLETED")
-    .sort((left, right) => (right.completed_at ?? "").localeCompare(left.completed_at ?? ""))[0];
-  if (!complete) throw new Error("此 MatchRun 尚无完成的可信解释。");
-  const explanationRun = (await getExplanationRun(complete.explanation_run_id)).data;
+  let selectedId = explanationRunId;
+  if (selectedId === undefined) {
+    const histories = (await listExplanationRuns(runId)).data;
+    const complete = histories.items.filter((item) => item.status === "COMPLETED")
+      .sort((left, right) => (right.completed_at ?? "").localeCompare(left.completed_at ?? ""))[0];
+    if (!complete) throw new Error("此 MatchRun 尚无完成的可信解释。");
+    selectedId = complete.explanation_run_id;
+  }
+  if (!selectedId) throw new Error("ExplanationRun 身份缺失。");
+  const explanationRun = (await getExplanationRun(selectedId)).data;
   const briefs = await Promise.all(explanationRun.explanations.map((item) => getBrief(item.match_explanation_id)));
   assertTrustedBriefs(matchRun as typeof matchRun & { result_fingerprint: string }, explanationRun, briefs);
   const job = await readApi(`/api/v1/jobs/${encodeURIComponent(matchRun.job_id)}`, (value): value is JobDraft => isRecord(value) && typeof value.role_title === "string" && Array.isArray(value.must_have) && Array.isArray(value.nice_to_have));

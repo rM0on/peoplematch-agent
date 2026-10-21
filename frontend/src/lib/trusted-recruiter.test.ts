@@ -1,6 +1,9 @@
-import { describe, expect, it } from "vitest";
-import { assertTrustedBriefs, reviewActionLabel, propositionLabel, primaryVerificationTarget, verificationPrompt } from "./trusted-recruiter";
+import { describe, expect, it, vi } from "vitest";
+import { assertTrustedBriefs, loadTrustedRecruiterRun, reviewActionLabel, propositionLabel, primaryVerificationTarget, verificationPrompt } from "./trusted-recruiter";
 import type { RecruiterProposition, StructuredRecruiterBrief } from "@/types/trusted-recruiter";
+
+const api = vi.hoisted(() => ({ getMatchRun: vi.fn(), listExplanationRuns: vi.fn(), getExplanationRun: vi.fn() }));
+vi.mock("@/lib/phase10-api", async (original) => ({ ...(await original<typeof import("@/lib/phase10-api")>()), ...api }));
 
 const proposition = (overrides = {}): RecruiterProposition => ({
   proposition_id: "prop-12345678", candidate_id: "cand_019", result_rank: 1,
@@ -65,5 +68,32 @@ describe("trusted recruiter read model", () => {
     const target = proposition({ kind: "interview_target", predicate: "verify_open_requirement", topic_terms: ["Retrieval"], job_requirement_terms: ["A very long JD requirement"] });
     expect(verificationPrompt(target)).toBe("先确认是否有与「Retrieval」相关、可说明的证据。");
     expect(verificationPrompt(target)).not.toMatch(/负责|主导|已具备/);
+  });
+  it("loads the persisted ExplanationRun named by an older V5 review instead of the latest run", async () => {
+    const previous = process.env.NEXT_PUBLIC_API_BASE_URL;
+    process.env.NEXT_PUBLIC_API_BASE_URL = "http://127.0.0.1:8765";
+    api.getMatchRun.mockResolvedValue({ data: { ...run, job_id: "job-1", status: "COMPLETED" } });
+    api.listExplanationRuns.mockResolvedValue({ data: { items: [
+      { explanation_run_id: "ex-new", status: "COMPLETED", completed_at: "2026-10-20" },
+      { explanation_run_id: "ex-1", status: "COMPLETED", completed_at: "2026-10-19" },
+    ] } });
+    api.getExplanationRun.mockResolvedValue({ data: explanation });
+    vi.stubGlobal("fetch", vi.fn().mockImplementation(async (url: string) => ({ ok: true, json: async () => ({ success: true,
+      data: url.includes("recruiter-propositions") ? brief() : url.includes("/jobs/")
+        ? { role_title: "Synthetic role", must_have: [], nice_to_have: [] }
+        : { candidate_id: "cand_019", name: "Synthetic Candidate", projects: [], skills: [] },
+    }) })));
+    try {
+      const trusted = await loadTrustedRecruiterRun("run-1", "ex-1");
+      expect(trusted.explanationRun.explanation_run_id).toBe("ex-1");
+      expect(api.getExplanationRun).toHaveBeenCalledWith("ex-1");
+      expect(api.listExplanationRuns).not.toHaveBeenCalled();
+      api.getExplanationRun.mockResolvedValue({ data: { ...explanation, match_run_id: "other-run" } });
+      await expect(loadTrustedRecruiterRun("run-1", "ex-1")).rejects.toThrow("trusted_run_ownership_mismatch");
+    } finally {
+      vi.unstubAllGlobals();
+      api.getMatchRun.mockReset(); api.listExplanationRuns.mockReset(); api.getExplanationRun.mockReset();
+      process.env.NEXT_PUBLIC_API_BASE_URL = previous;
+    }
   });
 });

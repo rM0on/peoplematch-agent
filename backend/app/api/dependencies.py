@@ -43,6 +43,7 @@ from app.services.explanation.presentation.service import RecruiterNarrativeServ
 from app.services.explanation.presentation.service_v2 import RecruiterNarrativeV2Service
 from app.services.explanation.presentation.service_v2_1 import RecruiterNarrativeV2_1Service
 from app.services.explanation.presentation.structured_service import RecruiterPropositionService
+from app.services.requirement_review.service import RequirementReviewService
 from app.services.feedback.service import FeedbackService
 from app.services.bad_cases.service import BadCaseReviewService
 from app.services.demo.indexes import DemoIndexService
@@ -331,6 +332,12 @@ def get_recruiter_proposition_service() -> RecruiterPropositionService:
     return RecruiterPropositionService(
         RecruiterNarrativeRepository(get_session_factory())
     )
+
+
+def get_requirement_review_service() -> RequirementReviewService:
+    """Reuse canonical persisted-source and proposition validation; never call a Provider."""
+    repository = RecruiterNarrativeRepository(get_session_factory())
+    return RequirementReviewService(repository, RecruiterPropositionService(repository))
 
 
 def get_recruiter_narrative_v2_service() -> RecruiterNarrativeV2Service:
